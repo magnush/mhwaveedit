@@ -24,7 +24,7 @@
 #include "gettext.h"
 #include "help.h"
 
-int help_page_count =      11
+int help_page_count = 11
 ;
 char *help_page_titles[] = {
      N_("General"),

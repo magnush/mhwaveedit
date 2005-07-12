@@ -1,0 +1,20 @@
+Editing
+
+You make selections by dragging the mouse over the sample view. You can hear what you've currently selected by clicking on the "play selection" button (the button with the yellow arrow) or by selecting 'Play selection' from the Play menu.
+
+You can use the cursor to refine the selection. Use the 'Selection start at cursor' and 'Selection end at cursor' buttons to move the selection starting point or the selection end point to the current cursor position. You can also drag the selection endpoints using the mouse.
+
+The 'Cut' and 'Copy' functions work like in any other software. 
+
+The 'Paste' function insert the clipboard contents at the cursor position. The 'Paste over' function works like 'Paste', except that it overwrites the data after the insert position. 
+
+The 'Paste mix' function combines the clipboard data with the data at the cursor position.
+
+The 'Paste as new' function opens a new window and puts the clipboard contents into it. 
+
+The 'Crop' function deletes all parts of the file that are not selected.
+
+The 'Silence selection' function replaces the selected part with silence. To avoid clicks, the silent part is a line that meets the wave at the endpoints.
+
+All editing functions work non-destructively, that is, the file you're editing isn't actually changed until you save it (the effects also work this way).
+

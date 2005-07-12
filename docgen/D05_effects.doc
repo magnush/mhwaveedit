@@ -1,0 +1,52 @@
+Effects
+
+mhWaveEdit has a few simple effects, which are available from the 'Effects' menu. 
+
+ * Fade in/out
+
+   This creates a linear fade in or fade out effect.
+
+ * Normalize
+
+   This amplifies the sound as much as possible without getting clipping distortion. 
+
+ * Volume adjust/fade...
+
+   This effect lets you select a starting volume and a ending volume and amplifies the selection fading from the starting volume to the ending volume.
+
+   Note that volumes above 100% may cause sound distortion. Use the 'Find top volume' to find out the maximum amplification possible without distortion. (You can use this for normalizing samples.) 
+
+   By setting starting volume and ending volume to the same value you get a simple amplification of the sound. 
+
+ * Convert samplerate...
+
+   This converts the samplerate of the entire file to one you specify. There are different methods for doing this, usually the one in the top has the best quality but can take longer than the other methode.
+
+ * Convert sample format...
+
+   This converts the sample format of the entire file.
+
+   The 'Don't actually change the data' option can be used if the program was wrong about the file's format.
+
+ * Byte swap
+
+   This "byte swaps" the selected part. It can be used to repair damaged files where the byte order is wrong. Note that if the sound looks alright but plays wrong, you should not use this option, instead you should use the "byte-swap output" option in the Preferences dialog.
+
+ * Mix channels...
+
+   This mixes all channels of the file together to a mono sound.
+
+ * Split channel...
+
+   This copies the first channel to a new channel in the sound, converting mono to stereo etc.
+
+ * Combine channels...
+
+   This effect lets you create a new sound by a linear combination of the old channels. This means you can do channel mixing / swapping / balance / panning / amplification etc. by entering different values. For example, to swap the left and right channel, you select that the new Channel 1 should be 0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 should be 100% of the old Channel 1 and 0% of the old Channel 2 
+
+ * Speed adjustment...
+
+   This effect changes the speed of the selection. The tone will change as well.
+
+mhWaveEdit supports LADSPA effects and can also make use of most of the SoX utility's effects. All supported effects can be found by choosing the 'Effects...' menu item. 
+

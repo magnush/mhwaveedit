@@ -1,0 +1,44 @@
+Keyboard shortcuts
+
+F1            Help
+F12           Record
+
+Ctrl+(number) Set mark
+(number)      Goto mark
+
+Ctrl+P        Preferences
+Ctrl+E        Effects
+
+Ctrl+O        Open file
+Ctrl+S        Save file
+Ctrl+U        Save selection as
+
+Ctrl+C        Copy
+Ctrl+X        Cut
+Ctrl+D        Delete
+Ctrl+V        Paste
+Ctrl+Z        Undo
+Ctrl+A        Select all
+
+Ctrl+G        Position cursor (Go to)
+Ctrl+H        Position cursor at file start
+Ctrl+J        Position cursor at file end
+Ctrl+K        Position cursor at selection start
+Ctrl+L        Position cursor at selection end
+
+Ctrl+Q        Selection start at cursor
+Ctrl+W        Selection end at cursor
+
++,=           Zoom in
+-             Zoom out
+>             Zoom to selection
+<             Zoom all
+Arrow keys    Scroll left/right
+
+<space>       Play/Stop
+,             Play from cursor pos
+.             Stop
+/             Play selection
+Ctrl+arrow    Nudge playback forward/backward
+(             Play first 3 seconds of selection
+)             Play last 3 seconds of selection

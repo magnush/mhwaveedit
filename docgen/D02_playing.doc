@@ -1,0 +1,7 @@
+Playing
+
+Playing a file is simple, just load the file and press the play button. The green play button plays from the current position. The yellow play button plays the current selection, or the entire file if nothing is selected. Stop the playback with the stop button (with the red square). 
+
+The playback speed can be varied by adjusting the slider to the far right. 
+
+You can do normal editing while the file is playing.

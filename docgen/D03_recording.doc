@@ -1,0 +1,7 @@
+Recording
+
+Recording is done with 'Record...' on the Play menu, or the Record button (the red circle). A dialog box will pop up where you can select what format you want to record in. After selecting the format, meters and numbers will appear showing info about the volume level of the sound input. 
+
+When you want to start recording, press the "Start recording" button. When you've recorded everything you wanted to, press the Finish button and the record dialog will disappear and newly recorded sound will show up in a new window.
+
+Currently it is impossible to play and record at the same time, so the playback will stop when you record.

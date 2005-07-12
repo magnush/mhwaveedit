@@ -1,0 +1,41 @@
+Configure options
+
+For most people, just using ./configure without any arguments should work fine, but here are some options that the configure-script supports:
+
+--disable-gtk2
+
+  If you have both GTK+ 1.2 and GTK+ 2.0 installed and want to use GTK+ 1.2, 
+  specify this option.
+
+--without-portaudio 
+--without-sdl
+--without-alsalib
+--without-oss
+--without-jack
+  
+  Specifying this option will leave out a sound driver, even if 
+  it's libs and headers are found.
+
+--without-libsndfile
+--without-libsamplerate
+
+  Specifying this option will leave out libsndfile/libsamplerate 
+  support, even if the library is found.
+
+--with-libsndfile=prefix
+--with-libsamplerate=prefix
+
+  This lets you specify the prefix where libsndfile/libsamplerate is 
+  installed if it wasn't auto-detected.
+
+--with-double-samples
+
+  Use double precision floating point numbers for sample processing. If
+  you intend to edit 32-bit files, you should enable this. 
+  
+--without-check-casts
+
+  This option disables the run-time type cast checking. It makes some parts of
+  the program faster, but makes it harder to debug.
+
+

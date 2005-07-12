@@ -1,0 +1,15 @@
+
+This directory contains the templates for both the README file and 
+the on-line help and scripts to generate README and help.c. The generated 
+files in the releases are always kept up to date so regular users and 
+package makers need not to use the files in this directory.
+
+The first line of the doc files are the header. The rest is just plain 
+text.
+
+R*.doc + D*.doc -> ../README
+O*.doc + D*.doc -> ../src/help.c
+
+The doc files should not contain backslashes, and they should only 
+contain newlines where you really want them (section breaks etc). 
+

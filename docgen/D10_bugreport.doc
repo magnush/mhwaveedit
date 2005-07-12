@@ -1,0 +1,15 @@
+Bug reporting
+
+If you find a bug or flaw in the program, first check the mhWaveEdit web page's list of bugs found after the release. If it isn't there, mail a bug report describing the bug to: magnus.hjorth@home.se
+
+In case of a crash, please do not send me any core dumps. They are huge and completely useless to me. Instead, create a backtrace. Backtraces tell you exactly where the program crashed.
+
+How to create a backtrace:
+1. Enable core dumps: ulimit -c unlimited
+2. Run the program:   mhwaveedit
+3. Make the program crash. You should now get a file named core or core.1234 in the directory you're in.
+4. Run gdb with the program and core file: 
+   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt
+5. After gdb has loaded, use the command: bt
+6. Quit gdb with the command: quit
+7. Now you should have a back trace in the file backtrace.txt

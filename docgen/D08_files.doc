@@ -1,0 +1,8 @@
+Files
+
+mhWaveEdit creates a directory ~/.mhwaveedit where it stores configuration information. 
+
+The configuration file is called config. It can be hand edited, but the easiest way is through 'Preferences' on the Edit menu.
+
+Temporary files are by default also stored in the ~/.mhwaveedit directory. Which directories to use can be set through the preferences dialog. To get the best performance, you should have one temporary directory for each local filesystem. The temporary files have names of the form "mhwaveedit-temp-<pid>-nnnn". Do NOT open or remove temporary files with the same pid number as a currently running mhWaveEdit.
+
