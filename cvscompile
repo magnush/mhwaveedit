@@ -1,6 +1,13 @@
+#! /bin/sh
+
+# Script to compile mhWaveEdit from CVS
+# Configure options can be given on command line
+# Requires autoconf, automake and some other stuff
+
 cd docgen; sh gendocs.sh; cd ..
-automake
 aclocal
+autoheader
+automake
 autoconf
-./configure --enable-werror
+./configure $*
 make
