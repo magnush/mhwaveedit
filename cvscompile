@@ -1,0 +1,4 @@
+cd docgen; sh gendocs.sh; cd ..
+autoreconf
+./configure --enable-werror
+make
