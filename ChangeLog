@@ -1,3 +1,7 @@
+2005-07-13  Magnus Hjorth  <magnus@manges.d>
+
+	* Released version 1.4.2.
+
 2005-07-11  Magnus Hjorth  <magnus@manges.d>
 
 	* src/chunkview.c (chunk_view_expose): Off-by-one error detected
