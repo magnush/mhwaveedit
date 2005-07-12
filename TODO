@@ -1,0 +1,53 @@
+If you have something you would like to add to this list, send a mail to
+magnus.hjorth@home.se
+
+Things I would like to do sooner or later:
+
+UI stuff:
+
+* Check for old tempfiles on startup
+* Be able to do some stuff with only one channel (select, play, copy)
+* Display mouse pointer position.
+* Song split function
+* Command to suspend the current session and exit. The whole session
+  (windows, tempfiles, history, clipboard, marks, selections etc)
+  could then be recalled another time.
+  * Integrate with the LASH session handling system.
+* Do the I/O for the view with async IO or thread.
+* Logarithmic (dB) peak display. 
+* Amplitude scale
+* Preview function in effect browser
+
+Editing:
+* Make the insert silence function click-free (keeping the same amplitude
+  as the surrounding sound)
+* Shaped dithering
+* Redo function.
+
+Playback/recording:
+
+* Option to record until silence.
+* Full duplex sound drivers.
+  * Recording in sync with playback.
+  * Recording anytime without stopping playback.
+* Separating input and output driver where possible.
+* Auto-detect which sound driver to use. 
+* Show remaining possible recording time while recording.
+* Do recording in completely separate thread/process
+* FFT display while playing
+* On-the-fly samplerate conversion in sound drivers (if played
+  format not supported).
+* aRTs support.
+* Place cursor exactly where we stopped on low-latency sound drivers.
+* Record a few seconds "ahead" so you can start recording a bit too
+  late without missing anything.
+
+File formats:
+
+* Keeping the compressed data as much as possible when editing mp3/ogg
+* Remember mp3/ogg metadata (artist, title etc)
+* A better export function.
+
+Other:
+
+* Add more accelerator keys and make sure they don't clash.

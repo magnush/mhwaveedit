@@ -1,0 +1,2154 @@
+2005-07-11  Magnus Hjorth  <magnus@manges.d>
+
+	* src/chunkview.c (chunk_view_expose): Off-by-one error detected
+	by Valgrind.
+
+2005-06-28  Magnus Hjorth  <magnus@manges.d>
+
+	* src/mainwindow.c (do_stop): Support auto return mode. 
+
+	* src/chunk.c (chunk_interpolate_endpoints): Forgot to sink the
+	original chunk after converting.
+
+2005-06-26  Magnus Hjorth  <magnus@manges.d>
+
+	* src/mainwindow.c (edit_silence): Fixed to work with dithering
+	support.
+
+2005-06-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/dataformat.c (convert_array): Added triangular dithering support.
+
+2005-06-12  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/configdialog.c (config_dialog_init): Added option to choose
+	speed conversion method.
+
+2005-06-09  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/filetypes.c: Change putenv("VARIABLE") calls into unsetenv calls.
+
+2005-06-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.4.1.
+
+2005-06-06  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-jack.c (mhjack_output_select_format): Refuse format if
+	sample rate is wrong.
+	(mhjack_output_suggest_format): Set the proper sample rate.
+
+	* src/player.c (player_play_main): Support auto-conversion of
+	sample rate when varispeed is enabled.
+
+2005-05-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/gtkfiles.c (get_filename_main): When using GtkFileChooser,
+	handle the case where last_filename is a directory properly.
+
+2005-05-17  Dmitry "MAD" Artamonow  <mad_soft@inbox.ru>
+
+	* src/sound-jack.c (mhjack_autoconnect): Patch to fix bug with
+	auto-connection of JACK ports.
+
+2005-05-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.4.0.
+
+2005-05-11  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (chunk_view_size_allocate): Fix bug that caused
+	time scale to become invisible under GTK2.
+
+2005-05-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/player.c (get_realpos_main): Never return values higher than
+	chunk length.
+	(player_stop): Stop stop position before unref:ing the chunk.
+
+2005-05-05  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.c: Changed the default colors.
+
+	* src/ladspacore.c: Changed calls to fprintf/perror to
+	console_message/console_perror
+
+	* src/sound.c (sound_init): Make error message a bit more
+	informative.
+
+	* src/chunkview.c (chunk_view_set_selection): Added if-case to
+	avoid exposing the whole selection while resizing it under GTK2.
+
+	* src/soxdialog.c (sox_dialog_register_main): Don't close the
+	pipe's FD after forking.
+
+	* src/main.c (main): Moved gtk_init up so GTK options like
+	--g-fatal-warnings can be used. 
+
+	* src/viewcache.c (view_cache_draw_part): Use gdk_draw_segments
+	instead of gdk_draw_lines.
+
+2005-05-03  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.c (main): Added --driver option.
+
+	* src/sound-jack.c: Added auto-connection support.
+
+2005-04-30  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (do_play): Fix bug where moving the speed
+	slider in a not playing window caused speed to change.
+
+2005-04-27  Konstantin Korikov  <lostclus@ukr.net>
+
+	* Added NLS support and Russian (ru) translation.
+
+2005-04-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/gtkfiles.h: Added include sys/types.h. Required for off_t on
+	some systems.
+
+2005-04-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.3.8.
+
+	* src/rateest.c (rateest_log_data): Don't treat low ratio on the
+	first period as underrun. To prevent false underrun detection when
+	changing speeds.
+
+	* src/rateest.c (LOW_RATIO_THRESHOLD): Lowered to 0.7 because ALSA
+	OSS emulation caused false underrun detection, causing cursor to
+	jump. 
+
+2005-04-18  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Added configure option to choose default sound driver.
+
+2005-04-15  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/player.c: Make the cursor track speed changes better.
+
+2005-04-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_filter_tofmt): Fix error that occur when
+	running with convert==TRUE and Chunk format already is in fp
+	format.
+
+2005-04-13  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_init): Forgot to hide the speed
+	label if the speed slider is hidden by default.
+	(mainwindow_init): Prevent speed label changes from resizing the
+	sample view. 
+
+2005-04-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-jack.c (mhjack_output_stop): Fixed a bug that caused
+	playing short sections to just output silence.
+
+	* src/sound.h: Support displaying other error messages than the
+	generic "format not supported" message when starting recording and
+	playback.
+
+2005-04-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_init): Changed the zoom sliders
+	into GtkVScale widgets.
+
+	* src/sound-sun.c (sunaud_output_suggest_format): This one
+	modified as well. 
+
+	* src/sound-jack.c (mhjack_output_suggest_format): Changed to
+	avoid infinite loops.
+
+	* src/player.c (get_new_data): Fixed small loop problem. 
+
+2005-04-06  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_convert_sampletype): Didn't copy the
+	offsets/lengths properly.
+
+2005-03-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/configdialog.c (config_dialog_init): Replaced caption "draw
+	view" with "draw waveform"
+
+2005-03-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.3.7.
+
+2005-03-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/filetypes.c (chunk_save): Let the user choose format before
+	doing anything with the file.
+
+	* src/sound-esound.c: Added jump delay and settings dialog.
+
+	* src/float_box.c: Added floatbox_check_limit function.
+
+2005-03-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (do_stop): Update cursor position after stopping.
+
+	* src/player.c (player_work): Modified logic for stopping.
+
+2005-03-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (chunk_view_button_press): Double clicks should
+	only be handled when done with the first mouse button.
+
+	* src/sound-portaudio.c (portaudio_output_select_format): Set
+	played_bytes to zero before calling Pa_OpenStream.
+
+	* src/sound.h: Removed output_played_bytes call and changed the
+	output_stop call.
+
+	* src/player.c (get_new_data): Fix playing selection without loop.
+
+2005-03-03  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-sun.c (sunaud_select_format): Forgot return statement
+	at the end.
+
+2005-02-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.6.
+
+2005-02-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-esound.c (esound_init): Pass NULL as host, and libesd
+	will check ESPEAKER for us. 
+
+	* src/sound-oss.c (oss_try_format): Reversed endian-ness fixed. 
+
+2005-02-18  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/gtkfiles.c (get_filename_main): Never pass NULL to
+	g_filename_to_utf8.
+
+2005-02-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-esound.c: The variable should be ESPEAKER, not
+	ESOUND_HOST.
+
+	* src/sound-sun.c (sunaud_select_format): Refuse to select format
+	with wrong endian-ness. 
+
+	* src/pipedialog.c (pipe_dialog_pipe_chunk_main): Forgot to remove
+	byteswap call causing mp3:s encoded with wrong endian-ness on
+	big-endian systems.
+
+	* src/filetypes.c (mp3_save): Fixed saving data in non-PCM or
+	non-wav PCM formats. 
+	(ogg_save): Fixed saving floating-point data.
+
+2005-02-06  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/player.c: Reworked to use the rateest code.
+
+	* src/rateest.c: New file with algorithm for guessing how much
+	data has been played.
+
+2005-01-27  Tom Kelly  <tom@ancilla.ca>
+
+	* src/sound-esound.c: Use ESOUND_HOST environment variable. 
+
+2005-01-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_convert_speed): Fixed bug which caused speed
+	  adjustment not to work. 
+
+	* src/filetypes.c (wav_save): Changed the 4GB warning into 2GB,
+	which is the real limit.
+
+	* src/ringbuf.c: Made the ring buffer lock-free. 
+
+2005-01-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+        * Released version 1.3.5.
+	
+2005-01-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/tempfile.c (tempfile_write_main): Handle partial frame
+	writes better so that you don't lose data if a partition
+	becomes full in mid-sample.
+
+	* src/sound-sun.c: Include stdlib.h to get getenv prototype.
+
+	* src/configdialog.c: Added option for using floating-point
+	temporary files.
+
+	* src/chunk.c (chunk_filter_tofmt): Added flag for using
+	floating-point temporary files (defaults to on).
+
+	* src/ladspacore.c (scan_directory): Check for errors after
+	opendir call.
+
+	* src/sound.c: Add a output format suggestion function for
+	suggesting endian-ness/sign conversions.
+
+	* src/configdialog.c (config_dialog_ok): Update the fallback format.
+
+2005-01-09  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (file_exit): Fix exit menu item not working
+	when no file is loaded.
+
+2005-01-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-oss.c (oss_try_format): Refuse to play floating-point.
+
+	* src/sound-portaudio.c: Same here
+
+	* src/sound-alsalib.c: Updated to support new Dataformat struct.
+
+2005-01-04  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/dataformat.c: Moved the Dataformat stuff into its own file. 
+
+2005-01-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/tempfile.c (get_wav_header): Support floating-point headers.
+
+2004-12-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/datasource.h: Also represent floating-point format in
+	Dataformat structure. Remove Datasource types
+	DATASOURCE_REAL_FLOAT and DATASOURCE_TEMPFILE_FLOAT as they are no
+	longer needed.
+
+	* src/chunk.h: Removed old macros that were no longer used.
+
+2004-12-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.3.4.
+
+2004-12-16  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Added "Quality" and "Bug reporting" sections to the docs.
+
+2004-12-15  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-alsalib.c (alsa_output_play): Handle underruns properly. 
+
+	* src/rateconv.c: Added libsamplerate support.
+
+2004-12-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.c: Added switch --no-ladspa because the ladspa code
+	confuses the debugger.
+
+	* src/soxdialog.c (sox_dialog_apply): Forgot to check some of the
+	intboxes, causing old values to be used. 
+
+	* src/pipedialog.c: Created some new functions for the rateconv system.
+
+2004-12-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/rateconv.c: New file.
+
+2004-12-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (create_menu): Cut'n'paste error..
+	(mainwindow_view_changed): Small bug with the hzoom slider
+	Thanks to Mark Tyler for spotting those. 
+
+2004-11-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindowlist.c (mainwindow_list_changed): Forgot to update
+	the format variable. 
+
+	* Changed widget from GtkCombo to Combo wherever possible. 
+
+2004-11-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectbrowser.c: Changed the prefix of effect names to [B]
+	for built-in effects, [S] for SoX effects and [L] for Ladspa
+	effects. 
+
+2004-11-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/combo.c: New file.
+
+	* src/sound-alsalib.c (alsa_set_format): More error checking.
+
+2004-11-18  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/configdialog.c (colors_click): Reordered two signal
+	connections, apparently they could produce a crash in certain
+	situations. 
+
+2004-10-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/player.c (player_set_buffer_pos): Get the start time after
+	flushing the buffers.
+
+2004-10-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound.h: Removed the format_supported functions and make the
+	select_format functions return an error instead.
+
+2004-10-25  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_view_changed): Disable the zoom menu
+	items and "fill" the horizontal zoom slider when editing very
+	small samples.
+
+	* src/chunkview.c (chunk_view_size_allocate): Handle enlarging
+	window properly when zoomed in to the max.
+	(chunk_view_update_image_main): Workaround for some waveform
+	drawing artefacts.
+
+2004-10-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.3.3.
+
+	* src/sound-esound.c: Also forgot unistd.h
+
+2004-10-03  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-esound.c: Forgot to include errno.h.
+
+2004-10-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectbrowser.c: Replaced the old mainwindow list widget with the
+	new MainwindowList.
+
+	* src/mainwindowlist.c: New file. 
+
+	* src/mainwindow.c: Replaced the all_windows GList with a ListObject.
+
+	* src/listobject.c: New file.
+
+2004-09-30  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/configdialog.c (config_dialog_ok): Stupid bug causing
+	warning message to be displayed too often. 
+
+	* src/inifile.c: Use hash table instead of linked list.
+
+	* src/effectbrowser.c: Remember pane sizes along with geometry.
+
+	* src/main.c (geometry_stack_push): Added an optional extra tag
+	argument for the stack items.
+
+2004-09-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/viewcache.c (view_cache_draw_part): Added a scaling factor
+	argument. 
+
+	* src/chunkview.c (chunk_view_changed): Harmless off-by-one bug fixed.
+
+2004-09-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-esound.c: Re-written from scratch. 
+
+2004-09-18  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/recorddialog.c: Support pausing and resuming of the recording. 
+
+2004-09-15  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/datasource.c (datasource_open_sndfile): Open the file
+	ourselves and then use sf_open_fd.
+
+2004-09-13  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_new_with_file): Make sure file
+	names are absolute in the recent file list.
+
+	* src/viewcache.c (view_cache_update): Handle errors without
+	spitting out too many message boxes. 
+
+	* src/chunk.c (chunk_open): Don't try to close the datasource that
+	we just failed to open.
+
+2004-09-12  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/soxdialog.c (sox_dialog_register_main): Call close_all_files.
+
+	* src/main.c (launch_mixer): Call close_all_files. This should fix
+	a problem with the mixer locking the sound card if it's launched
+	in the middle of recording. 
+
+	* src/filetypes.c (run_decoder): Call close_all_files.
+
+	* src/gtkfiles.h: Rewrote the file handling functions to use file
+	descriptors instead of streams. Added a call to close all file
+	handles from 3 up to the highest encountered file descriptor +
+	1. This can then be used before exec() is called to ensure the
+	child process doesn't get any file descriptors other than 0,1 & 2.
+
+2004-08-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/gtkfiles.c (get_filename): Ask when overwriting a file when
+	using the file chooser in save mode.
+
+	* Released version 1.3.2.
+
+2004-08-25  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectbrowser.c (apply_click): Added option to re-raise the
+	effect browser after applying effect.
+
+2004-08-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.c (geometry_stack_pop): Added sanity check.
+
+	* src/filetypes.c (setup_types): Changed to add ogg support if
+	either oggenc or oggdec is found instead of only if both are
+	found. Some people seem to just have one of those.
+
+	* src/chunkview.c (chunk_view_button_press): Made right click
+	"snap" to selection start/end if nearer than 3 pixels, same
+	distance as for the mouse cursor to become arrows.
+
+2004-08-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.c (geometry_stack_pop): Using
+	gtk_window_set_default_size instead of gtk_widget_set_usize.
+
+	* src/inifile.c (inifile_init): Changed default permission for
+	.mhwaveedit directory to 0755
+
+	* src/mainwindow.c: Double click selects area between the nearest marks
+
+	* src/viewcache.c (view_cache_update): Fixed a bug causing the
+	first pass to be skipped when scrolling.
+
+2004-08-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-jack.c (mhjack_setup_buffers): Forgot to multiply
+	sample rate by sizeof(float) when calculating buffer size.
+	(mhjack_clear_buffers): Set the is_playing flag to FALSE, so we
+	wait until there's data in the buffers.
+	(mhjack_output_play): Don't start playing unless the buffers are
+	nearly full. 
+	(mhjack_clear_buffers): Removed assertion that no longer must hold.
+
+2004-08-17  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_keypress): Added keyboard commands
+	'(' and ')' for playing the first/last 3 seconds of selection (or
+	file if nothing is selected)
+
+	* src/gtkfiles.c (file_exists): Re-written to use the stat function.
+
+2004-08-16  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.c: Made background colour configurable.
+
+	* src/viewcache.c (view_cache_update): Added a second "pass" that
+	reads the file with higher quality.
+
+2004-08-11  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-esound.c: Esound driver contributed by Erica 
+          Andrews.
+
+2004-08-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (list_widget_destroy): Fixed a segfault on exit
+	caused by modifying a GList that is used by a calling function. 
+
+	* src/effectbrowser.c (effect_browser_destroy): Forgot to call
+	inherited destroy function. 
+
+2004-08-06  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.3.1.
+
+2004-08-05  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/player.c: Fixed a bug causing the cursor to stop before end
+	of file. 
+
+	* src/filetypes.c (mp3_save): Changed to use putenv (more portable
+	than setenv). Ditto for ogg_save.
+
+2004-08-04  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (create_menu): Added Normalize and Effects
+	dialog to need_chunk_names, apparently their keyboard shortcuts
+	still fires otherwise on some systems. 
+
+	* src/configdialog.c (config_dialog_ok): Put a limit on the number
+	of recent files just to avoid absurd values. 
+
+	* src/filetypes.c (mp3_save): Put filename into environment
+	variable instead of substituting into command line. Better for
+	security reasons.
+
+2004-07-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/gotodialog.c: No longer a subclass of EffectDialog.
+
+	* src/effectbrowser.c: Added selection of which window we want to
+	apply the effect to. Interface updates to effectdialog and all its
+	subclasses. 
+
+	* Set the default button box layout once in main instead of every
+	time we create one.
+
+2004-07-25  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c: Modified the way untitled files are named, so
+	now they're shown as untitled, untitled #2, ... instead of (untitled).
+	Moved geometry stack stuff to main.c. 
+
+	* src/player.c (player_get_real_pos): Re-written to fix cursor
+	jumping problems.
+	(player_get_real_pos): Renamed to player_get_real_pos_main and
+	called from player_work to get the underrun check before any data
+	is sent. 
+
+2004-07-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/pipedialog.c (pipe_dialog_pipe_chunk_main): Don't modify the
+	sendwav parameter. 
+
+2004-07-17  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/gtkfiles.c (get_filename): Make sure no double-slashes are
+	returned.
+
+	* src/mainwindow.c: Show most recently opened files in the file menu. 
+
+2004-07-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectbrowser.c (effect_browser_init): Put the effect
+	settings widget inside a viewport, since some LADSPA plugins have
+	a lot of settings.
+
+2004-07-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/pipedialog.c (pipe_dialog_pipe_chunk_main): If sendwav ==
+	TRUE, always send the data as little-endian. 
+
+2004-06-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.3.0.
+
+2004-06-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound.h: Changed name of output_play_delay_time to
+	output_play_min_delay_time, and made the sound drivers return the
+	latency not counting the driver's ring buffers.
+
+	* src/player.c (player_get_real_pos): Avoid unneccesary while loop
+	that causes cpu usage to slowly increase while playing loops.
+
+2004-06-18  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/player.c (player_get_real_pos): Decided to only use clock
+	time to determine cursor position since the latency check caused
+	problems with jumping cursor and wasn't sample accurate
+	anyway. Also added check for underruns.
+
+	* src/pipedialog.c (pipe_dialog_send_chunk): Return TRUE if the
+	whole chunk didn't get sent. 
+
+	* src/filetypes.c (quote_escape): Forgot zero-termination.
+
+	* src/pipedialog.c (pipe_dialog_pipe_chunk_main): When not reading
+	process's stdout, stop sending data if stderr was closed.
+
+	* src/chunkview.c (chunk_view_set_cursor): Changed condition to
+	avoid unnecessary jumping. 
+
+	* src/sound-jack.c (mhjack_clear_buffers): Fixed a race condition. 
+
+2004-06-17  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/tempfile.c (tempfile_finished_bs): Moved assertion below
+	variable declarations to avoid compilation problems.
+
+2004-06-15  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/datasource.c (datasource_backup_unlink): Try to move the
+	file to each temporary directory before making a copy.
+
+	* Replaced the toolbar pixmaps with iconset contributed by Adam Pribyl.
+
+	* src/gtkfiles.c (get_directory): Implemented for both
+	GtkFileSelection and GtkFileChooser. Also made
+	GtkFileChooserDialog windows modal.
+
+	* src/mainwindow.c: Added auto-start when jumping to mark flag. 
+
+2004-06-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/tempfile.c: API changes to support multiple temp partitions.
+	Major rewrite to support multiple tempdirs.
+
+	* src/inifile.c (inifile_set): Remove the setting if the value is NULL.
+
+2004-06-13  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (file_saveselection): Forgot to free filename.
+	(file_open): Forgot to free filename.
+
+	* src/configdialog.c: Added temporary dir list config widgets.
+
+2004-06-12  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Removed the old chunk_create_temp macros throughout the code.
+
+	* src/tempfile.c: Separated temp file related stuff from datasource.c.
+
+	* src/mainwindow.c (mainwindow_keypress): Added space key shortcut
+	for play/stop.
+
+2004-06-09  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-oss.c (oss_preferences): Added option to avoid select
+	calls. Apparently selecting on input doesn't work on some
+	OSS-"compatible" kernel drivers.
+
+	* src/mainwindow.c (create_menu): Replaced Sox effects menu item
+	with a effects dialog menu item that opens the effect browser with
+	the last selected effect. 
+
+	* src/effectbrowser.c (effect_browser_new_with_effect): If effect
+	== NULL, get the last used effect from inifile. 
+
+2004-06-05  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/inifile.c: When reading a setting, don't create it if it
+	didn't exist.
+
+2004-06-04  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (create_menu): Added LADSPA menu item.
+
+	* src/effectbrowser.c (effect_browser_init): Changed to use a
+	slidable container.
+
+	* src/ladspadialog.c: New file.
+
+2004-06-03  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (scroll_wheel): Forgot to update an if-statement
+	when adding largefile support, this caused a segfault when zooming
+	out using the scroll wheel. 
+
+2004-06-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/ladspacore.c: New file.
+
+	* src/convert_inc.c: Moved the conversion routines here from
+	datasource.c because the Jack driver always needs the float
+	version even if we're compiling with sample_t == double and I
+	don't want to duplicate code.
+
+2004-05-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-jack.c: New file (Jack sound driver).
+
+2004-05-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/um.c: Added new call popup_error that doesn't block.
+
+2004-05-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/recorddialog.c (record_dialog_init): Remember the last used
+	record format and automatically set it when the record dialog is
+	re-opened.
+
+2004-05-17  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/um.c (showdlg): Added a flag to prevent use of GTK before
+	calling gtk_init.
+
+	* src/main.c (main): Check for -- option.
+
+2004-05-06  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/mainwindow.c (mainwindow_chunk_change): Reset the cursor so
+	it won't remain as arrows after cutting.
+	(mainwindow_show_effect_dialog): Hack that was made unnecessary by
+	change in effect browser was removed.
+	(create_menu): Added Ctrl-N keyboard shortcut for normalize.
+	(create_toolbar): Added inifile entries for loop mode and follow
+	mode toggle buttons.
+
+	* src/effectbrowser.c (effect_browser_init): Change the selection
+	mode to GTK_SELECTION_SINGLE to make keyboard shortcuts work
+	properly. 
+
+2004-05-03  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/recorddialog.c: Rearranged the dialog a bit. 
+
+2004-04-29  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/recorddialog.c: Added option to limit recording time. 
+
+2004-04-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-alsalib.c (alsa_output_want_data): We should have at
+	least 4 ms of data ready to write. (to avoid 100% CPU usage)
+
+	* src/soxdialog.c (sox_dialog_apply_proc): Bug causing the
+	"butterworth band-pass" effect to crash fixed.
+	
+2004-04-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (chunk_view_set_cursor): A new option to keep
+	the cursor in center all the time when following playback was
+	added. If it's not enabled, the view will flip one screenfull
+	whenever the cursor goes out of the view. 
+
+2004-04-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectbrowser.c (effect_browser_destroy): Refcount fix.
+
+	* src/filetypes.c (wav_save): Warn once when saving large wav files. 
+
+	* src/chunkview.c: Zero-length fix.
+
+2004-04-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (edit_selectall): Fixed to support off_t.
+
+	* src/filetypes.c (wav_load): Support loading wav files larger
+	than 4GB if LFS is installed.
+
+2004-04-25  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/datasource.c (get_wav_header_main): Avoid overflow on data
+	size. 
+
+	* For large file support, guint32/gint32 was replaced with off_t
+	in various places.
+
+	* src/gtkfiles.c (e_ftell): Use ftello instead of ftell. 
+	(e_fseek): Use fseeko instead of fseek. 
+
+2004-04-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/datasource.c (tempfile_finished_main): Set file format tag
+	to "unknown" on sample_t temporary files. 
+	(tempfile_write): Memory leak and tempfile numbering fix.
+
+	* src/filetypes.c (sndfile_load): Create fake pcm tempfile if
+	appropriate. 
+	(sndfile_load): Treat 24/32-bit PCM files as any floating-point file.
+
+	* src/chunk.c (_chunk_filter): Create a fake_pcm tempfile if any
+	of the processed datasources are floating point.  
+	(chunk_mix): If any of the processed datasources are floating
+	point, create a floating point tempfile.
+
+	* src/datasource.c: Added new datasource types
+	DATASOURCE_TEMPFILE_FLOAT and DATASOURCE_REAL_FLOAT.
+	(tempfile_finished_main): Take a fake_pcm argument. If it's TRUE,
+	assume data written was sample_t values.
+	(datasource_copy): Forgot a break inside the switch statement.
+
+	* src/gtkfiles.c (get_filename): Re-introduced the savemode
+	flag. Ask when overwriting in save mode, and refuse to load
+	nonexisting files in load mode.
+	(get_filename): Added support for the GTK+ 2.4 GtkFileChooser.
+
+2004-04-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_init): Set a default size. 
+
+	* src/chunkview.c (chunk_view_size_request): Make the requisition
+	height smaller so we can shrink the window without losing the
+	status bar. 
+
+	* src/configdialog.c (colors_click): Added Alt+P,Alt+O,Alt+C
+	keyboard shortcuts to colors dialog.
+
+	* src/sound-oss.c (oss_input_store): Changed the default input
+	read size if GETISPACE call fails to 1/50 seconds. This change has
+	been reported to increase performance on some systems for some
+	unknown reason.
+
+2004-04-23  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/sound-oss.c (oss_preferences): Make the OSS preferences
+	window modal. 
+
+	* src/mainwindow.c (help_about): Make the About window modal.
+
+	* src/configdialog.c (colors_click): Add Enter/Esc keyboard
+	shortcuts for OK/Cancel and make the window modal. Under GTK+ 2,
+	disable the opacity slider and show the default palette.
+	(color_select): Make the "previous color" block display the old
+	colour. 
+	(config_dialog_init): Make the preferences dialog modal.
+
+2004-04-22  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/recorddialog.c (process_input): Only update the window title
+	if the text has changed. 
+
+2004-04-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.9.
+
+2004-04-17  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/recorddialog.c (process_input): Forgot to change a loop
+	condition.
+
+2004-04-16  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/player.c (player_replace): Handle the same
+	special case as in do_play here.
+
+	* src/mainwindow.c (do_play): Set the new playstart to the cursor
+	position so the looping works properly.
+	(do_play): Handle a special case.
+
+	* src/chunkview.c (chunk_view_update_cache): Didn't always update the
+	view at the end. 
+
+	* src/mainwindow.c (help_readme): Avoid using page numbers in the
+	code.
+
+2004-04-15  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/mainwindow.c (get_save_filename): Take the window's title as
+	an argument and use different titles for Open, Save and Save as
+	selection. 	
+	(help_readme): Under GTK 2, use a fixed-width font for the
+	Keyboard shortcuts tab to make indentation work properly.
+
+	* src/gtkfiles.c (get_filename): Take the window title as an
+	argument. Also, use gtk_window_set_default_size instead of
+	gtk_widget_set_usize to avoid making the file selection dialog
+	un-shrinkable.
+
+	* src/effectbrowser.c (effect_browser_init): Use OK instead of
+	Apply when pressing Enter.
+
+	* docgen/D08_keyboard.doc: Added some keyboard shortcuts.
+
+2004-04-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (draw_timescale): Updated the bigsizes and
+	bigskip tables so we get even minutes on the time scale. 
+
+	* src/volumedialog.c (findtop): Updated to use maximum_float_value.
+
+	* src/recorddialog.c (process_input): Updated to use
+	maximum_float_value. 
+
+	* src/mainwindow.c (effects_normalize_proc): Updated to use
+	maximum_float_value.
+
+	* src/chunk.c (chunk_mix): Use maximum_float_value when checking
+	for clipping. 
+
+	* src/datasource.c: Decided to change the PCM->float conversion
+	code so that the max positive float value when converting from
+	signed becomes a little less than 1.0. Added a function to find
+	out maximum possible positive value for a certain format. The
+	float->PCM code was updated to do the reverse so all information
+	is preserved. 
+
+	* src/filetypes.c (sndfile_save): Tell libsndfile to use
+	normalisation for saving. 
+
+	* src/datasource.c (datasource_open_sndfile): Tell libsndfile to use
+	normalisation. 
+
+	* src/recorddialog.c: Added a "peak lock" button. 
+
+	* src/gtkfiles.c: Remember the file dialog's geometry.
+
+	* src/configdialog.c (config_dialog_init): Added option to
+	remember size/position of windows.  
+
+2004-04-13  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c: Remember window size/position and restore in
+	future sessions.
+
+	* src/chunkview.c (chunk_view_update_image): Selection should be
+	drawn also when selection start < view start. 
+
+	* src/inifile.h (INI_SETTING_REALMAX_DEFAULT): Decreased default
+	disk editing threshold down to 128K. 
+
+2004-04-12  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-oss.c (oss_preferences): Put window in center of screen.
+
+	* src/configdialog.c (config_dialog_init): Changed layout.
+
+	* src/player.c (player_replace): Fixed a bug in latency
+	calculation that could cause a segfault. 
+
+	* src/mainwindow.c (mainwindow_chunk_change): off-by-one bug fixed.
+	(edit_undo): Call fix_title. 
+
+	* src/chunkview.c: Various changes were made so that the image
+	pixmap doesn't have to be reallocated and only the relevant part
+	of the pixmap is updated. 
+
+2004-04-11  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.c (main): Set the default locale.
+
+	* src/soxdialog.c (sox_dialog_apply_proc): Use the C locale when
+	creating the command line for SoX. 
+
+	* src/inifile.c (inifile_get_gfloat): Always use the C locale when
+	reading floats from the inifile.
+	(inifile_set_gfloat): Always use the C locale when writing floats
+	to the inifile.
+
+2004-04-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/recorddialog.c (process_input): Don't freeze the rms values,
+	just the peaks. 
+
+	* src/mainwindow.c (file_saveselection): Use the same default
+	directory as the regular 'save as' function.
+
+	* src/recorddialog.c: Made peak_values into a member of RecordDialog.
+
+	* src/samplesizedialog.c (samplesize_apply_proc): Forgot to calculate
+	samplebytes.
+
+	* src/chunk.c (chunk_clone_df): Fix bug giving wrong chunk length.
+
+2004-04-09  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/gtkfiles.c: Removed the fake link stuff since it's no longer
+	needed. Changed xlink into xrename.
+
+	* src/filetypes.c (wav_save): Instead of creating a link, rename
+	the file and change the datasource type into virtual.
+
+	* src/datasource.c (datasource_clone_df): Code cleanup. Always
+	turn virtuals and sndfiles into clones. 
+	(datasource_read_array_main): Handle all fake_pcm sources the same way.
+	Added type DATASOURCE_REF
+	(datasource_backup_unlink): Chenged to rename the first file then
+	copy the rest.
+
+	* src/mainwindow.c (mainwindow_update_cursors): Add a check so we
+	don't update the cursors too often. This could cause a lot of CPU
+	usage, esp when using GTK 2.
+
+2004-04-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/gtkfiles.c (xlink): Modified to rename the file and
+	"remember" the old name in a fake_links table if hard links aren't
+	available.
+	(xunlink): Handles fake links.
+	(e_fopen): Lookup fake link names.
+	(is_same_file): Lookups fake link names.
+	(errdlg_filesize): Lookups fake link names.
+	(file_exists): Return TRUE if it's a fake link.
+
+2004-04-08  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/recorddialog.c: Display maximum peak values. Added a
+	'reset peaks' button.
+
+	* src/chunkview.c: cleaned up the mouse scroll wheel code so that
+	GTK 1 & 2 use the same procedure.
+
+2004-04-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c: Added "Silence selection" menu item.
+
+	* src/chunk.c (chunk_read_fp): Fixed a bug. 
+
+2004-04-06  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/statusbar.c (status_bar_set_info): Re-layout if max value is
+	more than older max values.
+
+	* src/mainwindow.c (mainwindow_save): Save the last saved
+	filename into inifile entry 'lastSaveFile' and use it to select
+	default directory for save dialog. 
+	(file_open): Save the last opened file name into inifile entry
+	'lastOpenFile' and use it to select default directory for open
+	dialog.
+
+	* src/chunk.c (chunk_mix): Fixed bug causing bad output and
+	cleaned up the code a bit. Also added a warning if clipping
+	occured. 
+
+	* src/statusbar.c: Made the new status bar work under GTK+ 2 as well..
+
+2004-04-05  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Moved the get_time function to main.c and modified it to take a
+	highest possible value to determine number of digits that should
+	be shown. 
+
+	* Re-wrote the Statusbar widget to be a subclass of GtkFixed
+	containing labels. This cleans up the code and improves the
+	formatting of the text. Also removed the ugly leftover
+	processdialog code.
+
+	* src/mainwindow.c (do_play): Fixed the previous fix so play
+	selection works properly again.
+
+2004-04-04  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/mainwindow.c (mainwindow_keypress): Use slash key as
+	shortcut to "play selection". 
+
+2004-04-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (do_play): Fixed wobbling sound while holding
+	down the ',' key.
+
+	* src/player.c (player_replace): Fixed cursor getting out of sync
+	with playback when cutting out parts before it.
+
+	* src/mainwindow.c (mainwindow_chunk_change): Fixed playback
+	ending too early when cutting out parts. 
+
+2004-04-01  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (chunk_view_update_marks_r): Fixed a bug causing
+	segfaults when trying to go to deleted marks.
+
+	* Created a new directory docgen/ containing the different
+	chapters for the on-line help and README file and a shell script
+	for generating README and help.c
+
+2004-03-31  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/chunkview.c (draw_time_bars): Draw time as ss, mm:ss or
+	hh'mm:ss instead of just seconds.
+	(chunk_view_class_init): Support scroll wheel events under GTK+ 2.x.
+
+	* src/mainwindow.c (mainwindow_keypress): Also support keypad +/-
+	for zooming in/out. Also use '=' as alternate shortcut to '+' since
+	the '+' key is shifted in some keyboard layouts.
+	(help_readme): New built-in docs available from the Help menu. 
+	(mainwindow_init): Put window in center of screen and support
+	Enter/Esc key presses as shortcuts for OK/Cancel.
+	(create_menu): Changed keyboard shortcuts for paste to Ctrl+V and
+	added a few other. 
+
+	* src/recorddialog.c (process_input): Show amount of time recorded
+	in window title.
+
+2004-03-30  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/chunk.c (get_time): Show hours separately.
+
+2004-03-29  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/gtkfiles.c (get_filename): Put window in center.
+
+2004-03-28  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/effectbrowser.c (effect_browser_init): Centre the window and
+	add support for Enter/Esc key presses. 
+
+	* src/gotodialog.c (goto_dialog_new): Same here. 
+	
+	* src/pipedialog.c (create_error_window): Same here.
+
+	* src/recorddialog.c (other_format_dialog): Same here.
+
+2004-03-27  Mark Tyler  <mark_tyler5@hotmail.com>
+
+	* src/configdialog.c (config_dialog_init): Put the window in
+	center.of screen. 
+	(config_dialog_init): Enter keypress made shortcut for clicking
+	OK, and Esc made shortcut for Cancel. 
+
+2004-03-25  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.8.
+
+	* src/chunk.c (volume_ramp_proc): Avoid rounding error causing
+	weird behaviour when fading large parts.
+
+	* src/recorddialog.c (record_dialog_set_format): Forgot to set
+	some members to NULL after freeing them.
+
+2004-03-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/filetypes.c (chunk_save): Try opening the file for append
+	once to make sure we don't save over write-protected files. 
+
+	* src/recorddialog.c (record_dialog_set_format): Handle
+	unsupported format properly.
+
+	* src/chunk.c (chunk_remove_part): Fixed bug causing segfaults.
+
+2004-03-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/filetypes.c (chunk_load): Try opening the file once to check
+	permissions etc.
+
+	* src/chunk.c (chunk_read_array): Another fix for large files.
+	(chunk_read_array_fp): Same here.
+
+	* src/viewcache.c (view_cache_update): Fix for segfaults when
+	editing large files (changed type from guint to guint32 on some
+	vars).
+
+	* src/filetypes.c (sndfile_save): Fix progress bar going half as
+	fast as it should when saving stereo files. 
+
+	* src/main.c: A better solution to the 100% cpu bugs. Removed the
+	old fixes. 
+
+2004-03-15  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/filetypes.c (chunk_save_main): Fixed a 100% cpu bug similar
+	to the one in raw_load below.
+
+	* src/sound.c (input_stop): Bug when using the "keep sound driver
+	opened" option, opening the record dialog, then closing it again
+
+2004-03-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (create_menu): Added fade in and fade out menu
+	items and changed the menu layout a little bit.
+
+	* src/filetypes.c (wav_save): Don't automatically create a link if
+	we're saving a regular wav file directly into a new wav file. 
+
+	* src/sound-oss.c (oss_output_flush): Added a workaround for what
+	seems to be an ALSA OSS emulation bug in some older ALSA versions
+	(0.9.6). 
+
+	* src/volumedialog.c (volume_dialog_init): Modified the layout
+	somewhat so the tab order of the widget makes more sense. 
+
+	* src/chunk.c (chunk_read_array): Update the buffer pointer
+	(chunk_read_array_fp): Same here.
+
+	* src/filetypes.c (raw_load): Make the progress bar inactive
+	before showing the dialog, this avoids a 100% cpu loop.
+
+	* src/recorddialog.c (check_format_change): Just wait until
+	buttons are released, not all modifier keys as some systems seem
+	to have some modifier keys pressed in at all times. 
+
+	* src/chunkview.c (chunk_view_motion_notify): Removed unneccesary
+	if condition that also caused problems on some systems. 
+
+2004-03-11  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/player.c: Added gtk_object_ref/unref calls to player.c
+
+2004-02-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.7.
+
+2004-02-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-portaudio.c: Added input overrun count call.
+
+	* src/vu_meter.c: Re-written to look more like real analog VU meters.
+
+	* src/main.c (launch_mixer): Run mixer command through
+	/bin/sh. This makes it possible to use any shell command as mixer
+	utility (for example "rxvt -e alsamixer")
+
+2004-02-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound.c: Added ALSAlib driver
+
+	* configure.in: Added checks for AlsaLib
+
+	* src/sound-alsalib.c: New file.
+
+	* src/sound-dummy.c (dummy_input_stop): Allow this call also when
+	the driver is in state 2. 
+
+2004-02-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/recorddialog.c: Rewrite finished.
+
+2004-02-15  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/recorddialog.c: Re-writing from scratch. 
+
+2004-02-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_init): Forgot to initialize the
+	'sensitive' member. This fixes a bug with disabled keyboard input
+	in some windows.  
+
+2004-02-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.6.
+
+	* src/um.c (user_message): When compiled under Gtk+ 2, use the
+	GtkMessageDialog functions. 
+
+	* Replaced lots of user_message calls with user_info/warning/error
+	calls. 
+
+	* src/chunkview.c: Scroll automatically when selecting. 
+
+	* src/mainwindow.c: Created zooming scrollbar
+
+2004-01-31  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c: Made selection endpoints draggable and added 
+	ability to select+play using button 2 and zoom in/out using
+	buttons 4 and 5 (scrolling wheel).
+
+2004-01-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/datasource.c (datasource_byteswap): Moved variable
+	declaration to top of function. This caused compilation of 1.2.5
+	to fail on some systems (RH 7.3). 
+
+2004-01-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/um.c (user_message): Put window in center of screen.
+
+2004-01-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.5.
+
+	* src/datasource.c (datasource_convert_samplesize): React to Esc
+	keypress. 
+
+2004-01-17  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sampleratedialog.c: Add support for SoX sample rate changing
+	methods. 
+
+2004-01-15  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/datasource.c (datasource_dump): Increased buffer size to 64K.
+
+2004-01-09  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (file_saveselection): NULL pointer error fixed.
+
+	* src/filetypes.c: Display progress while saving. 
+
+2004-01-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_effect_manual): Forgot a
+	gtk_object_sink call.
+
+2004-01-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* configure.in: Changed to generate config.h
+
+	* src/combinechannelsdialog.c: Use better channel names.
+
+	* src/pipedialog.c: Added option to send wav header. 
+
+	* src/chunk.c (chunk_parse): Forgot a call to processdialog_finished.
+
+	* src/soxdialog.c: New file. 
+
+2004-01-05  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/float_box.c (floatbox_set): Made the entry smaller and drop
+	trailing zeroes.
+
+	* src/int_box.c (intbox_init): Made the entry smaller.
+
+	* src/gotodialog.c (goto_dialog_apply): Update player position
+	properly if were playing at the same time. 
+
+2004-01-04  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/historybox.c (history_box_set_history): Fixed harmless
+	assertion error when history is empty.
+
+	* src/mainwindow.c (edit_undo): Update window title after undoing.
+
+	* src/chunk.c (chunk_convert_samplesize): Fixed an incorrect
+	assertion and a small memory leak. 
+	(chunk_convert_samplesize): Fixed bug.
+
+2004-01-03  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectbrowser.c: New file.
+
+	* src/effectdialog.c: Handle failed operations properly. 
+
+2004-01-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (file_close): Fix an assertion error when using
+	File/Close on a window while playing. 
+
+	* src/processdialog.c: Made progress display in status bar instead
+	of in separate window. 
+
+2003-12-30  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/statusbar.c: New file.
+
+2003-12-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/filetypes.c (find_nearest_sndfile_format): Fixed gcc3 warning.
+
+2003-12-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.4.
+
+	* src/configdialog.c: Added checkbox for byte-swapped output. 
+
+	* src/sound.c: Add option to byte-swap output.
+
+2003-12-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Redid the bigendian stuff to a better solution.. 
+
+2003-11-30  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Some bigendian fixes.
+
+2003-10-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound.c (sound_quit): Same here.
+	
+	* src/sound.c (input_supports_format): Need to stop output if
+	driver is "locked". 
+
+	* src/formatselector.c (format_selector_init): Wrong order of
+	endian dialog boxes.
+
+2003-09-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c: Play/Record menu item was not dimmed properly.
+
+	* Added normalize function. 
+
+2003-09-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (chunk_view_set_mark): Fixed to remove gcc warning.
+
+	* src/main.h (XOR): Fixed macro. 
+
+2003-09-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Lots of changes to support big-endian systems with automagic
+	byte-swapping  	
+
+2003-09-11  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/filetypes.c (wav_load): Now recognizes big-endian RIFX files.
+
+2003-09-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/datasource.c: PCM conversion routines now assumes that the
+	data has same endian-ness as the system instead of always
+	little-endian. 
+
+2003-09-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/datasource.c (datasource_read_array_fp): Fixed big memory leak.
+
+2003-09-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.h: Added macro for systems without 'ceill' call.
+
+2003-07-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_save): Remember which directory we
+	saved into and use it as default for future calls.
+
+2003-06-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.3.
+
+	* src/um.c: Changed to use mainloop.
+
+	* src/gtkfiles.c (get_filename): Changed to use mainloop.
+
+2003-06-09  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (create_menu): Menu reorganisation.
+
+	* src/main.c (main): Redone "scheduling" code so the program works
+	better under CPU load (hopefully). 
+
+	* src/samplesizedialog.c (samplesize_apply): Make sure the texts
+	are updated. 
+
+	* src/sampleratedialog.c (apply): Make sure the texts are updated.
+
+	* src/chunkview.c (chunk_view_set_view): Make sure the view cache
+	follows when scrolling
+
+	* src/configdialog.c (config_dialog_ok): Make the time display
+	mode configurable.
+
+	* src/chunk.c (get_time): Show in different formats depending on
+	the variable get_time_mode
+
+2003-06-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (draw_mark): Draw the lines even if they're near
+	the edge of the image.
+
+	* src/player.c (player_work): Removed while loop since it seems to
+	have caused lockups for some people and it's not necessary anymore
+	anyways.
+
+2003-05-30  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_read_array_fp): Bug causing failed assertion
+	was fixed. 
+	(chunk_read_array): Same bug here.
+
+2003-05-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/gtkfiles.c: Renamed errdlg_fread_bswap to e_fread_bswap.
+
+2003-05-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.2.
+
+	* src/vu_meter.c (vu_meter_expose): Added peak values
+
+	* Large code rewrite finished affecting a lot of files but mainly
+	chunk.c. Parts of chunk.c has been moved to datasource.c and
+	filetypes.c. These changes fixed a few bugs, and hopefully will
+	make the code easier to debug in the future.
+
+2003-05-11  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.1.
+
+	* src/chunk.c (chunk_copy_channel): Optimize for mono->stereo
+	conversion. 
+
+	* src/mainwindow.c (effects_splitchannel): Another one of those
+	segfault-on-cancel bugs. 
+
+2003-05-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (chunk_view_size_request): Request a nice size.
+
+	* Follow mode implemented. (mainwindow.c, chunkview.c).
+
+2003-05-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* "Line Mode" option was removed. "Line mode quality" replaced by 
+	"View quality". 
+	
+	* src/chunkview.c: Changed to use ViewCache. 
+
+	* src/viewcache.c: New file.
+
+2003-04-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/gtkfiles.c: Changed API.
+
+2003-04-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_read_array): Fixed offset bug causing data loss.
+
+2003-03-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (effects_mixchannels): Fixed segfault on Cancel.
+
+2003-01-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/historybox.h: New file.
+
+	* src/pipedialog.c: Implemented a 'Pipe through program' effect.
+
+2003-01-25  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/pipedialog.h: New file.
+
+	* src/effectdialog.h: Documented.
+
+2003-01-17  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.2.0.
+
+	* src/recorddialog.c (record_dialog_execute): Make sure we store
+	all available data.
+
+	* src/chunk.c (chunk_save_to_wav): If we're saving a whole tempfile (or
+	virtual) and that tempfile is in wav format, link or copy the
+	file. This should speed up things for example when saving to wav
+	directly after recording. 
+
+2003-01-16  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/configdialog.c: "Show time scale by default" setting added.
+
+	* src/chunk.c (chunk_create_temp_finished): Write tempfiles in
+	wav format instead of raw format.
+
+	* Updated copyright notices.
+
+	* src/chunk.c (_chunk_read_array): Multi-chunk bug fixed.
+
+	* src/chunkview.c: Time scale functions.
+
+2003-01-15  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectdialog.c (effect_dialog_set_mainwindow): Make sure we
+	close after all files have been closed.
+
+	* src/gotodialog.c: New file.
+
+2003-01-12  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Decided to throw away the multi-threaded player because the
+	single-threaded version was better. Rename playthread.c to
+	player.c. 
+
+2003-01-06  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (help_about): Add some info about compilation
+	settings. 
+
+2003-01-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.h: Redefined chunk_filter_proc to be able to use new
+	chunk_creat_temp... 
+
+	* src/chunk.c (chunk_create_temp_init): Made these functions
+	re-entrant and cleaned them up.
+
+	* src/sound.h: Added new calls output_wait and
+	output_flush_buffers. Also made output_stop output all remaining data.
+
+2003-01-01  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_new_from_wav): Avoid choking on very large files.
+
+2002-12-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.c (get_home_directory): Made it re-entrant.
+
+	* configure.in: Add checks for posix threads but also support
+	systems where glib is configured without thread support.
+
+2002-12-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (get_temp_filename): Use mutex to make it thread-safe.
+
+2002-12-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.h: API change to chunk_open/read/close to support threads.
+
+2002-12-25  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/playthread.c: New file.
+
+	* src/mainwindow.c: Rebuilt undo system to also restore selection,
+	cursor, view and marks. 
+
+	*  Removed src/menu.c and src/menu.h (no longer needed).
+
+2002-12-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (create_menu): Use GtkItemFactory. Added
+	keyboard shortcuts.
+
+2002-12-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.1.6.
+
+	* src/mainwindow.c (file_close): Don't ask twice if file should be
+	saved.
+
+2002-11-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-oss.c (oss_input_store): It seems SNDCTL_DSP_GETISPACE
+	ioctl always returns 0 on some systems. We must ignore it in that case.
+
+	* src/recorddialog.c (record_dialog_getformat): Crash in record dialog fixed.
+
+2002-11-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_new_from_file): Don't try to open directories
+	and other strange files...
+
+	* src/gtkfiles.c (file_is_normal): New function.
+
+2002-11-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Updated IFDEFs in the code to match the configure script.
+
+2002-11-25  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* configure.in: Changed most of the checking code. Output a
+	configuration summary at the end. Use pkg-config for libsndfile
+	check and allow manually specifying libsndfile prefix.
+
+2002-11-12  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.1.5.
+
+	* src/chunkview.c (draw_mark): GTK 2 compatibility fixed.
+
+	* src/chunk.c (chunk_new_from_sndfile): Fixed a problem with big-endian 
+	files.
+
+2002-11-11  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (backup_savefile): New nice saving algorithm.
+	(chunk_dump): Close file after dumping. 
+
+2002-11-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_save_to_file): Some major changes to the saving 
+	code. Now tries to move old file instead of copying. 
+
+	* src/mainwindow.c (mainwindow_goto_mark): Start playing at mark 
+	position
+
+2002-11-09  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c: Make marks move properly when cutting/pasting etc.
+
+2002-11-06  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_filter): Added convert argument.
+	(chunk_filter): Changed definition of chunk_filter_proc. All such 
+	functions must be updated.
+
+2002-11-04  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/combinechannelsdialog.c
+	(combine_channels_dialog_apply_proc): Ugly bug fixed.
+
+2002-09-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (chunk_view_set_chunk): Handle setting to same chunk properly.
+
+2002-09-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_sample_put_array): New function.
+	The file type system has been redesigned with the new libsndfile format
+	enumeration functions.
+
+2002-09-17  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Changed configure.in to detect libsndfile 1.x
+
+	* Released version 1.1.4.
+
+2002-08-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_filter): Handle if user presses Cancel properly.
+
+2002-07-30  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* configure.in: Added --disable-gtk2 option.
+
+2002-07-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/recorddialog.c: GTK2
+
+	* src/float_box.c: GTK 2.
+
+	* src/mainwindow.c: GTK 2 compatible.
+
+	* src/effectdialog.c: GTK 2 compatible
+
+	* src/um.c: GTK 2 compatible.
+
+	* src/processdialog.c: GTK 2 compatible.
+
+	* src/chunkview.c: GTK2 compatible.
+
+	* src/sound-oss.c: GTK2 compatible.
+
+	* src/int_box.c: GTK2 compatible.
+
+	* src/chunk.c: Changed shutdown handler into destroy handler (for
+	GTK 2.0) and made chunk_destroy support multiple invocations
+	without crashing.
+
+	* src/chunk.h: Cleaned up and heavily documented.
+
+2002-07-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.h: Added member samplebytes to Chunk struct.
+
+2002-05-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.h: Made chunk_samples_to_bytes/chunk_bytes_to_samples into macros.
+
+	* src/chunk.c (chunk_sample_get_array): New function (speed improvement).
+
+2002-04-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.1.3.
+
+2002-04-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (create_toolbar): Added "Launch mixer" button.
+
+	* src/button_mixer.xpm: New file.
+
+	* src/recorddialog.c (record_dialog_init): Added "Launch Mixer" button.
+
+	* src/configdialog.c (config_dialog_init): Added "mixer utility" option.
+
+	* src/mainwindow.c (play_callback): To support non-threaded sound
+	drivers, output_play is called with a NULL pointer if all data has
+	been sent. (The drivers have been updated to support this).
+
+	* src/sound.c: Added OSS driver.
+
+2002-04-09  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-oss.c: New file.
+
+2002-04-04  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/configdialog.c: Added button for sound driver preferences.
+
+	* src/sound.c: Add support for sound driver specific preferences
+	dialog.
+
+2002-04-03  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound.c: Added #include "main.h".
+
+2002-04-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.1.2
+
+	* src/chunk.c (chunk_save_to_file): Ask for file type if it isn't
+	possible to tell by the extension.
+
+	* src/mainwindow.c (mainwindow_save): Don't update the file name
+	if saving failed.
+
+	* src/chunkview.c (chunk_view_set_chunk): Set the cursor to 0 when
+	setting the chunk to NULL.
+
+2002-04-01  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/um.c (user_message): Use gtk_label_set_line_wrap instead of
+	doing it ourselves.
+
+2002-03-31  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c: libsndfile support finally in place!! Now supports
+	a lot of nice new file formats.  
+
+2002-03-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.h (chunk_new_from_file): New functions for loading files
+	(supports multiple formats and raw files).
+
+	* src/rawdialog.c: New file.
+
+2002-02-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.h (CHUNK_SNDFILE): New chunk type.
+
+	* configure.in: Check for libsndfile library.
+
+2002-02-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_filter): Reimplemented using 
+	chunk_read_block/chunk_create_temp.
+	(chunk_parse): Reimplemented using chunk_read_block
+	(chunk_filter): Changed interface.
+	(chunk_convert_samplerate_proc): Fixed speed change when
+	converting multichannel chunks.
+
+2002-02-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_read): Just use chunk_read_block instead of
+	doing everything ourselves.
+	(chunk_create_temp_*): Now has write-behind caching so it
+	buffers the data in memory and starts writing it to disk when the
+	amount of data exceeds MAX_REAL_SIZE. 
+	(chunk_dump): Reimplemented using chunk_read_block
+
+	* src/configdialog.c: Placed the OK button to the left of the
+	Cancel button and left-adjusted the 'Outbut buffer size' label.
+
+2002-02-20  Jens Askengren  <jensus@linux.nu>
+
+	* src/configdialog.c: Added accelerator keys and placed the
+	buttons inside a GtkBBox.
+
+2002-02-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.1.1
+
+	* configure.in: New option --without-check-casts.
+
+	* src/mainwindow.c (play_compensate_change): Position the cursor
+	properly.
+
+	* src/chunkview.c (chunk_view_update_image): The selection should
+	always be at least one pixel wide.
+
+2002-02-18  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/recorddialog.c: Save the selected format into the inifile
+	when ok is clicked, use that as default format next time.
+
+2002-02-17  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (create_menu): New menu item 'Edit/Insert silence'.
+	(create_menu): New menu item 'Edit/Clear undo buffer'.
+	(create_menu): New menu item 'Edit/Clear Clipboard'.
+
+	* src/chunk.c: New chunk type CHUNK_SILENCE.
+
+2002-02-12  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (file_close): If File/Close is selected on the
+	last window, don't close it, just set the chunk to NULL.
+
+	* src/mainwindow.c (update_desc): Handle w->view->chunk==NULL.
+	(mainwindow_shutdown): Small memory leak fixed.
+	(file_close): File/Close does not always close the window now.
+
+	* src/chunkview.c (chunk_view_set_chunk): Segfault fixed when
+	changing the chunk back to NULL.
+	(chunk_view_set_selection): Handle cv->chunk==NULL properly.
+
+	* src/mainwindow.c (mainwindow_delete_event): Only stop playback
+	when it's the same window that is playing and that is closing.
+
+2002-02-09  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_save_to_wav): Big-endian bugfix. (big-endian is 
+	untested).
+	(chunk_save_to_wav): Now uses chunk_dump instead of chunk_parse (should
+	give a _big_ speedup).
+
+2002-02-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.1
+
+	* src/chunkview.c (calc_x): Simple bug in if-statement that caused
+	the selection color to go to the right edge in small files.
+	(chunk_view_expose): Small cursor fix.
+
+	* src/mainwindow.c (play_callback): Repeat the output loop if we
+        reach play_end. This makes it possible to hear short looped sounds
+	(shorter than 100ms). Don't repeat more than 1000 times though...
+
+	* src/combinechannelsdialog.c: When the chunk changes, open a new
+	dialog and close the current if the number of channels have changed,
+	otherwise do nothing.
+
+2002-02-06  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (chunk_view_set_chunk): Make sure the cursor
+	position doesn't get out of range when changing to a smaller
+	chunk (caused segfault)..
+	(chunk_view_update_sample_cache): Don't read samples out of
+	range.
+
+	* src/mainwindow.c (view_zoomin,view_zoomout): Using chunk_view_zoom.
+	New menu item Edit/Mix paste!
+
+	* src/chunkview.c (chunk_view_zoom): New function with better zooming.
+
+2002-02-05  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (help_about): Cosmetic changes to About dialog.
+
+	* src/configdialog.c (config_dialog_init): Added "use line mode by
+	default" and "line mode quality" settings.
+
+	* src/chunkview.c (chunk_view_update_image): Line mode improvements.
+	(chunk_view_update_sample_cache): Made line mode quality an inifile 
+	entry.
+
+2002-02-04  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c: Line mode implemented!
+
+	* src/mainwindow.c (create_menu): New menu item View/Line mode
+
+	* src/chunk.c: Created new type sample_t and using that for 
+	reading/writing samples.
+
+	* configure.in: New option --with-double-samples.
+
+2002-02-03  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c: Menu reorganisation.
+
+	* src/effectdialog.c (effect_dialog_set_mainwindow): Now using
+	gtk_signal_connect_object_while_alive instead of doing its own cleanup.
+
+2002-02-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+        * src/chunk.c: Clicking cancel during 'Mix channels...' caused 
+          segfault. Fixed.
+      
+        * src/float_box.c (floatbox_init): Small fix.
+
+        * src/mainwindow.c: New menu item Effects/Combine channels...
+
+        * src/effectdialog.c: New signal mainwindow_set
+
+        * src/combinechannelsdialog.c: New file.
+
+        * src/combinechannelsdialog.h: New file.
+
+2002-02-01  Magnus Hjorth  <magnus.hjorth@home.se>
+
+        * src/mainwindow.c (create_menu): New menu item 'Edit/Preferences...'.
+
+	* src/configdialog.c: New file.
+
+	* src/configdialog.h: New file.
+
+	* src/chunk.c: Now uses configfile setting diskEditingThreshold
+	instead of compiled-in constant 512K.
+
+	* src/sound-sdl.c, src/sound_portaudio.c: Uses configfile setting
+	soundBufferSize for output buffer size instead of constant 64K.
+
+2002-01-30  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound.c: Supports startup-time (instead of compile-time)
+	selection of output driver now.
+
+	* src/chunkview.c (chunk_view_motion_notify): Stupid bug, clicking
+	in chunk view before loading anything into it caused crash.
+
+	* src/inifile.c: New file.
+
+	* src/inifile.h: New file.
+
+	* src/chunk.c (chunk_shutdown): Another zero-length/refcounting fix.
+
+2002-01-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (do_play): Zero-length fix.
+
+	* src/recorddialog.c: Vu-meters working.
+
+	* src/ringbuf.c: Thread safe (hopefully) using mutexes. 
+
+2002-01-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_sample_to_double): Changed type from float to double.
+
+	* Sound recording works now!!
+
+	* src/mainwindow.c (edit_cut): Fixed crash when cutting (or
+	deleting) the entire file.
+
+	* src/chunk.c (chunk_realize): Zero-length fix.
+
+	* src/chunkview.c (chunk_view_set_view): Zero-length chunks bug fix.
+	(calc_sample): Another zero-length fix.
+
+2002-01-25  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_set_chunk): Set changed flag when
+	filename != NULL
+
+	* src/recorddialog.c: New file.
+
+	* src/vu_meter.c: New file.
+
+	* src/vu_meter.h: New file.
+
+2002-01-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/formatselector.c: New file.
+
+	* src/formatselector.h: New file.
+
+	* src/recorddialog.h: New file.
+
+	* src/mainwindow.c (create_toolbar): Added record button.
+	(create_menu): Added record menuitem.
+
+	* src/button_record.xpm: New file.
+
+	* sound-portaudio.c: New file (portaudio sound driver).
+
+	* Renamed output-* to sound-*
+
+2002-01-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (help_about): Show the name of the sound 
+	driver.
+
+	* Autoconf/automake system (yes!). *.c and  *.h moved to src
+	subdirectory.
+ 
+	* Reorganized sound module.
+
+	* mainwindow.c (mainwindow_realize): Use icon.xpm.
+
+	* icon.xpm: New file.
+
+	* main.h: New file.
+
+2002-01-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* chunk.c (chunk_save_to_wav): Realize the saved chunk if it's
+	small enough.
+
+	* chunkview.c (chunk_view_redraw_samples): Redraw bug fixed.
+
+	* mainwindow.c (create_toolbar): Two new toolbar buttons for
+	setting selection start/end at cursor position.
+
+	* button_cursorend.xpm: New file.
+	
+	* button_cursorstart.xpm: New file.
+
+	* mainwindow.c (play_compensate_change): New internal
+	function. This fixes segfaults when file shrinks while playing.
+	(edit_paste): Call play_compensate_change.
+	(edit_cut): Call play_compensate_change.
+	(edit_pasteover): Call play_compensate_change.
+	(edit_delete): Call play_compensate_change.
+	(mainwindow_effect): Call do_stop or play_compensate_change.
+	(mainwindow_effect_manual): Call do_stop or play_compensate_change.
+	(edit_undo): Stop playing.
+	(create_menu): New menuitems: 'Edit/Selection start at cursor' and
+	'Edit/Selection end at cursor'.
+
+	* chunkview.c (do_chunk_view_set_cursor): Range-check the cursor argument.
+
+
+2002-01-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* mainwindow.c (mainwindow_chunk_change): If the format is being
+	changed on the currently playing file, playback must stop.	
+
+	* chunk.c (chunk_create_multichunk): Refcounting bug fixed.	
+	(chunk_create_multichunk): Forgot g_list_free(chunks);.
+
+	* output-sdl.c (output_supports_format): More than two channels
+	not supported.
+
+	* README: New file.
+
+	* chunk.c (chunk_new_from_wav): Better wav file format detection
+
+2002-01-20  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* chunkview.c (chunk_view_update_image): changed selection color	
+	(calc_x): over/underflow causing selection to sometimes not draw
+	correctly.
+	(do_chunk_view_set_cursor): code cleanup
+
+	* mainwindow.c (mainwindow_save): windows with changed==FALSE and
+	filename==NULL have not been saved, so don't display the "are you
+	sure?" dialog.
+
+2002-01-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.0
+

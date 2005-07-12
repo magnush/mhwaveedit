@@ -1,0 +1,15 @@
+Known bugs in mhWaveEdit:
+
+* When stopping, the cursor doesn't stop exactly where the playback stopped.
+ 
+* Not highly tested on big-endian systems. Feedback on this is welcome. 
+
+* The ALSA driver sometimes underrun shortly after playback started or 
+  cursor jump, causing a click in the playback. 
+
+* When using the EsounD driver and other programs are playing as well,
+  the cursor position can become delayed.
+
+* Doesn't work properly with Lame version 3.92 and older.
+
+Report bugs to magnus.hjorth@home.se.

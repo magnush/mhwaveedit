@@ -1,0 +1,244 @@
+New features in version 1.4.2:
+
+  * Triangular dithering support
+  * Added 'bounce mode' (auto-return cursor after playback)
+  * Minor bug fixes
+
+New features in version 1.4.1:
+
+  * Automatic samplerate conversion for Jack
+  * Jack port auto-connection bugfix
+  * Minor bug fixes
+
+New features in version 1.4.0:
+  
+  * Native Language Support
+  * New translations: Russian (ru), Swedish (sv)
+  * Jack driver can now auto-connect the ports
+  * Added --driver command-line option
+  * Changed the default colors
+  * Minor bug fixes
+
+New features in version 1.3.8:
+
+  * Variable speed playback
+  * Jack driver bugfixes
+  * Some other bugfixes
+
+New features in version 1.3.7:
+
+  * "Play selection" bug fixed.
+  * Esound and Sun driver improvements.
+  * Tries to use mplayer (if available) for decoding unknown files.
+  * Minor bug fixes.
+
+New features in version 1.3.6:
+
+  * Esound driver supports ESPEAKER variable.
+  * Bug fixes.
+
+New features in version 1.3.5:
+
+  * Added sliders to Ladspa input controls
+  * Automatic sample format conversion for paste operations
+  * Support recording in floating point without conversion to PCM (for JACK)
+  * Use floating-point for temporary files to avoid rounding errors
+
+New features in version 1.3.4:
+
+  * Libsamplerate support
+  * Sun audio driver (unfinished, needs testing)
+  * Now uses the new GtkComboBox in most dialogs when available
+  * Major ALSA driver bug fixed
+  * Minor interface improvements
+  * Documentation updates
+  * Bug fixes
+
+New features in version 1.3.3:
+
+  * Vertical zooming.
+  * Pause and resume while recording
+  * GTK2 file chooser now asks when overwriting an existing file
+  * Remember pane position in effect browser
+  * EsounD code rewrite
+  * Bug fixes
+
+New features in version 1.3.2:
+
+  * View draws a second time with higher quality when zoomed out
+  * Double click to select area between marks
+  * Right click snaps to selection start/end
+  * New keyboard shortcuts '(' and ')' for playing first/last 3
+    seconds of selection. 
+  * Max peaks shown separately in recording dialog
+  * Configurable background color
+  * EsounD support
+  * Jack driver bug fixes
+  * Two bugs causing errors when exiting were fixed
+
+New features in version 1.3.1:
+
+  * Most recently opened files in File menu
+  * Choose which window to apply effect to in Effects dialog
+  * Effects dialog now can remember last position/size
+  * Preferences dialog re-designed
+  * Problems exporting mp3 files on big-endian machines fixed
+  * Fixed cursor positioning bugs
+
+New features in version 1.3.0:
+
+  * Large file support.
+  * Supports multiple temp directories on different partitions.
+
+  * LADSPA effect plugins support.
+  * Jack sound driver (very basic, without samplerate conversion)
+  * Simple MP3/OGG import/export using lame and oggenc/oggdec.
+
+  * Option to limit recording time.
+  * Auto-play when jumping to mark option.
+  * Uses the new file chooser widget under GTK+ 2.4.
+  * Minor user interface improvements.
+
+New features in version 1.2.9:
+
+  * Built-in help text
+  * "Silence selection" function added.
+
+  * Time scale shows formatted time.
+  * Time recorded is displayed in window title while recording. 
+  * Better formatted status bar.
+  * Preferences dialog layout improved. 
+  * Customizable colors
+
+  * Remembers last save/load directory across sessions.
+  * Option to remember window sizes/positions across sessions.
+  * "Mix paste" function fixed. 
+  * Minor bug fixes.
+
+New features in version 1.2.8:
+
+  * Lots of major bugs fixed.
+  * Added 'fade in' and 'fade out' menu items.
+  * Workaround in OSS sound driver for "broken pipe" error in older ALSA 
+    OSS emulation.
+
+New features in version 1.2.7:
+
+  * Rewrote recording dialog, now shows more statistics and looks better.
+  * Added ALSA driver (requires alsa-lib)
+  * Fixed a bug causing lost keypresses in some windows.
+
+New features in version 1.2.6:
+ 
+  * Resizeable selections.
+  * Automatic scrolling while selecting.
+  * Zoom slider.
+  * A bug causing compilation to fail on some systems was fixed.
+  * Some other minor improvements.
+
+New features in version 1.2.5:
+
+  * All effects are displayed in one window instead of separate windows.
+  * Effect progress is now displayed in status bar instead of in 
+    separate window.
+  * Support for SoX effects and high-quality sample rate conversion.
+  * 'Position cursor' dialog now works properly while playing.
+  * Progress display while saving.
+  * Bug fixes.
+
+New features in version 1.2.4:
+
+  * A memory leak was fixed.
+  * Big-endian fixes.
+  * Recording crash fixed.
+  * A new 'normalize' function (amplify to top volume).
+  * Keybord shortcut for "Save selection as"
+  * 'Save as' now uses last save directory as default. 
+
+New features in version 1.2.3:
+
+  * Bug fixes.
+  * Some layout changes in the main window.
+  * Added some keyboard shortcuts.
+  * You can now select format for the time displays. 
+  * Option to keep sound driver open all the time. 
+
+New features in version 1.2.2:
+
+  * Bug fixes.
+  * The volume meters now shows "peak" values.
+
+New features in version 1.2.1:
+
+  * A bug that could cause incomplete saved files was fixed.
+  * You can now edit and play your files while they're loading. 
+  * Follow cursor while playing.
+  * A simple 'pipe through program' effect was implemented (useful for piping 
+    raw data through sox)
+
+New features in version 1.2.0:
+
+  * Time scale
+  * Completely rewritten sound player code:
+     * Keeps playing in background during redraws
+     * No longer locks up on very small loops
+     * Doesn't stop too early anymore
+  * Keyboard shortcuts (see README file).
+  * Undo now remembers marks, selection, cursor and zoom.
+  * Position cursor command.
+  * Saving directly after recording speedup.
+
+New features in version 1.1.6:
+
+  * Fixed crash in record dialog.
+  * Improved configure script.
+  * Minor bugfixes.
+
+New features in version 1.1.5:
+
+  * Now supports libsndfile 1.x instead of 0.x.
+  * Marks that can be set/recalled while playing.
+  * Much faster saving under some circumstances.
+  * Bug in 'combine channels' effect fixed.
+  * A bug causing files to be left opened was fixed.
+  * Internal changes.
+
+New features in version 1.1.4:
+
+  * Minor speed improvements and bug fixes.
+  * Now compiles under GTK+ 2.0
+
+New features in version 1.1.3:
+
+  * OSS sound driver.
+  * Support for launching mixer utility.
+  * Fixed the 100% CPU usage problem.
+  * Some other bug fixes.
+  * Updated automake/autoconf environment.
+
+New features in version 1.1.2:
+
+  * Supports some new formats through libsndfile (if available).
+  * Internal changes.
+  * Bug fixes.
+
+New features in version 1.1.1:
+
+  * Much faster saving.
+  * 'Insert silence' function
+  * 'Clear undo buffer' function
+  * 'Clear clipboard' function
+  * Minor bug fixes.
+
+New features in version 1.1:
+
+  * Recording support.
+  * PortAudio library support (input+output).
+  * All audio drivers can be compiled in at the same time.
+  * "Line mode" display.
+  * Configuration file ~/.mhwaveedit/config
+  * New effect 'Combine channels'
+  * "Mix paste" function (like paste over but mixing instead of overwriting).
+  * Compilation using configure script instead of home-made Makefile.
+  * Bug fixes.
+
