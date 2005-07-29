@@ -19,8 +19,8 @@ chmod 755 mkinstalldirs missing
 cd ..
 echo "Packaging version $VERSION ..."
 ln -s mhwaveedit mhwaveedit-$VERSION
-tar czf mhwaveedit-$VERSION.tar.gz mhwaveedit-$VERSION/*
-tar cjf mhwaveedit-$VERSION.tar.bz2 mhwaveedit-$VERSION/*
+tar cz --exclude '*CVS*' -f mhwaveedit-$VERSION.tar.gz mhwaveedit-$VERSION/*
+tar cj --exclude '*CVS*' -f mhwaveedit-$VERSION.tar.bz2 mhwaveedit-$VERSION/*
 
 if test -L mhwaveedit-$VERSION
 then
