@@ -43,15 +43,15 @@ static Chunk *samplesize_apply_proc(Chunk *chunk, StatusBar *bar,
 static gboolean samplesize_apply(EffectDialog *ed)
 {
      gboolean b;
-     b = mainwindow_effect_manual(EFFECT_BROWSER(ed->eb)->mwl->selected,
-				  samplesize_apply_proc,FALSE,ed);
+     b = document_apply_cb(EFFECT_BROWSER(ed->eb)->dl->selected,
+			   samplesize_apply_proc,FALSE,ed);
      mainwindow_update_texts();
      return b;
 }
 
 static void samplesize_setup(EffectDialog *ed)
 {
-     Dataformat *f = &(EFFECT_BROWSER(ed->eb)->mwl->format);
+     Dataformat *f = &(EFFECT_BROWSER(ed->eb)->dl->format);
      format_selector_set(SAMPLESIZE_DIALOG(ed)->fs, f);
 }
 

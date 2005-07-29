@@ -61,6 +61,9 @@ gboolean player_looping(void);
 
 void player_get_range(off_t *startpos, off_t *endpos);
 
+/* Changes the playback range without moving the playback position */
+void player_change_range(off_t start, off_t end);
+
 /* Stops playing (or does nothing if not playing). */
 
 void player_stop(void);
@@ -75,9 +78,10 @@ off_t player_get_buffer_pos(void);
 
 off_t player_get_real_pos(void);
 
-/* Use another chunk as sound source but keep all the buffered data intact. */
 
-void player_replace(Chunk *chunk, off_t start, off_t end, off_t pos);
+/* Use another chunk as sound source but keep all buffered data. 
+ * movestart and movedist work the same way as in document_update */
+void player_switch(Chunk *new_chunk, off_t movestart, off_t movedist);
 
 /* Changes the buffer position. */
 
@@ -90,5 +94,7 @@ void player_nudge(gfloat seconds);
 /* Set playback speed (1.0 = normal). Does nothing if varispeed is disabled  */
 
 void player_set_speed(gfloat speed);
+
+gfloat player_get_speed(void);
 
 #endif

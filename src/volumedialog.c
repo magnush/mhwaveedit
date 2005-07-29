@@ -48,8 +48,8 @@ static gboolean volume_dialog_apply(EffectDialog *ed)
      sv = v->start_percent->val / 100.0;
      ev = v->end_percent->val / 100.0;
      if (sv == ev && sv == 1.0) return FALSE;
-     return mainwindow_effect_manual(EFFECT_BROWSER(ed->eb)->mwl->selected,
-				     volume_dialog_apply_proc,TRUE,v);
+     return document_apply_cb(EFFECT_BROWSER(ed->eb)->dl->selected,
+			      volume_dialog_apply_proc,TRUE,v);
 }
 
 static sample_t peak;
@@ -65,12 +65,12 @@ static gboolean findtop_proc(void *sample, gint sample_size, Chunk *chunk)
 static void findtop(VolumeDialog *v)
 {
      gfloat f;
-     Mainwindow *w = EFFECT_BROWSER(EFFECT_DIALOG(v)->eb)->mwl->selected;
+     Document *d = EFFECT_BROWSER(EFFECT_DIALOG(v)->eb)->dl->selected;
      peak = 0.0;
-     if (w == NULL) return;
-     mainwindow_parse(w,findtop_proc,FALSE,TRUE,_("Calculating peak volume..."));
+     if (d == NULL) return;
+     document_parse(d,findtop_proc,FALSE,TRUE,_("Calculating peak volume..."));
      gdk_window_raise(GTK_WIDGET(EFFECT_DIALOG(v)->eb)->window);
-     f = 100.0 * maximum_float_value(&(w->view->chunk->format)) / peak;
+     f = 100.0 * maximum_float_value(&(d->chunk->format)) / peak;
      if (f < 100.0) f = 100.0;
      floatbox_set(v->start_percent,f);
      floatbox_set(v->end_percent,f);

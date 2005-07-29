@@ -78,7 +78,7 @@ void mainloop(gboolean force_sleep)
      }
      idle_work_flag = TRUE;
      if (status_bar_progress_count()>0 && !force_sleep) return;
-     mainwindow_update_cursors();
+     document_update_cursors();
      if (chunk_view_autoscroll() && !force_sleep) return;
      if (mainwindow_update_caches() && !force_sleep) return;
      if (player_count > 10)
@@ -167,7 +167,7 @@ int main(int argc, char **argv)
 
      /* Setup some global flags from inifile */
      status_bar_roll_cursor=inifile_get_gboolean("rollCursor",FALSE);
-     chunk_view_follow_strict_flag = inifile_get_gboolean("centerCursor",TRUE);
+     view_follow_strict_flag = inifile_get_gboolean("centerCursor",TRUE);
      autoplay_mark_flag = inifile_get_gboolean("autoPlayMark",FALSE);
      varispeed_reset_flag = inifile_get_gboolean("speedReset",FALSE);
      varispeed_smooth_flag = inifile_get_gboolean("speedSmooth",TRUE);
@@ -185,6 +185,7 @@ int main(int argc, char **argv)
      gtk_hbutton_box_set_layout_default(GTK_BUTTONBOX_END);
 
      mainwindow_objects = list_object_new(FALSE);
+     document_objects = list_object_new(FALSE);
 
      /* Some color related stuff */
      set_custom_colors(NULL);
@@ -219,6 +220,10 @@ int main(int argc, char **argv)
 
      /* Cleanup */
      player_stop();
+     if (playing_document != NULL) {
+	  gtk_object_unref(GTK_OBJECT(playing_document));
+	  playing_document = NULL;
+     }
      sound_quit();
      effect_browser_shutdown();
      inifile_quit();
@@ -226,6 +231,14 @@ int main(int argc, char **argv)
      return 0;
 }
 
+
+
+gchar *namepart(gchar *fullname)
+{
+     gchar *c;
+     c = strrchr ( fullname, '/' );
+     return c ? c+1 : fullname;
+}
 
 
 

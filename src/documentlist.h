@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -19,38 +19,37 @@
  */
 
 
-/* Main window selection widget for the effect browser */
+/* Document selection widget for the effect browser */
 
-#ifndef MAINWINDOWLIST_H_INCLUDED
-#define MAINWINDOWLIST_H_INCLUDED
+#ifndef DOCUMENTLIST_H_INCLUDED
+#define DOCUMENTLIST_H_INCLUDED
 
 #include "combo.h"
-#include "mainwindow.h"
+#include "document.h"
 #include "listobject.h"
 
-#define MAINWINDOW_LIST(obj) GTK_CHECK_CAST(obj,mainwindow_list_get_type(),MainwindowList)
-#define MAINWINDOW_LIST_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,mainwindow_list_get_type(),MainwindowListClass)
-#define IS_MAINWINDOW_LIST(obj) GTK_CHECK_TYPE(obj,mainwindow_list_get_type())
-
+#define DOCUMENT_LIST(obj) GTK_CHECK_CAST(obj,document_list_get_type(),DocumentList)
+#define DOCUMENT_LIST_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,document_list_get_type(),DocumentListClass)
+#define IS_DOCUMENT_LIST(obj) GTK_CHECK_TYPE(obj,document_list_get_type())
 typedef struct {
      Combo combo;
-     Mainwindow *selected;
-     /* Format of the selected window. The reason to keep track of this 
-      * separately is that it makes it easier to handle the special case
+     Document *selected;
+     /* Format of the selected document's chunk. The reason to keep track of 
+      * this separately is that it makes it easier to handle the special case
       * where there are no windows (selected==NULL) */
      Dataformat format; 
-} MainwindowList;
+} DocumentList;
 
 typedef struct {
      ComboClass comboclass;
      /* The current mainwindow has changed, either by the user or the 
       * selected mainwindow was closed, or the chunk in the current 
       * mainwindow has changed. . */
-     void (*window_changed)(MainwindowList *mwl);     
-} MainwindowListClass;
+     void (*document_changed)(DocumentList *dl);     
+} DocumentListClass;
 
-GtkType mainwindow_list_get_type(void);
-GtkWidget *mainwindow_list_new(Mainwindow *chosen);
-void mainwindow_list_setup(MainwindowList *mwl, Mainwindow *chosen);
+GtkType document_list_get_type(void);
+GtkWidget *document_list_new(Document *chosen);
+void document_list_setup(DocumentList *mwl, Document *chosen);
 
 #endif

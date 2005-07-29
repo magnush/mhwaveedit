@@ -53,8 +53,8 @@ gboolean ladspa_dialog_apply(EffectDialog *ed)
      gboolean output_mapped[8] = { 0 };
      gboolean res,is_tb;
      float f,l,u;
-     Mainwindow *wnd = EFFECT_BROWSER(ed->eb)->mwl->selected;
-     Chunk *chunk = wnd->view->chunk;
+     Document *doc = EFFECT_BROWSER(ed->eb)->dl->selected;
+     Chunk *chunk = doc->chunk;
      LADSPA_PortRangeHintDescriptor prhd;
 
      for (i=0; i<ld->effect->numports[0]; i++) {
@@ -143,9 +143,9 @@ gboolean ladspa_dialog_apply(EffectDialog *ed)
      inifile_set_gboolean(c,ld->effect->keep);
      g_free(c);
      
-     res = mainwindow_effect_manual(wnd,
-				    (mainwindow_effect_proc)ladspa_run_effect,
-				    TRUE,ld->effect);
+     res = document_apply_cb(doc,
+			     (document_apply_proc)ladspa_run_effect,
+			     TRUE,ld->effect);
      if (res) return TRUE;
 
      for (i=0; i<ld->effect->numports[1]; i++) {
@@ -162,7 +162,7 @@ static void ladspa_dialog_target_changed(EffectDialog *ed)
      LadspaDialog *ld = LADSPA_DIALOG(ed);
      EffectBrowser *eb = EFFECT_BROWSER(ed->eb);
      /* puts("ladspa_dialog_target_changed");      */
-     if (ld->channels != eb->mwl->format.channels)
+     if (ld->channels != eb->dl->format.channels)
 	  effect_browser_invalidate_effect(eb,ld->effect->id);     
 }
 
@@ -176,7 +176,7 @@ void ladspa_dialog_setup(EffectDialog *ed)
      GList *li;
      gchar *ch;
      gboolean bo,want_scale;
-     Dataformat *format = &(EFFECT_BROWSER(ed->eb)->mwl->format);
+     Dataformat *format = &(EFFECT_BROWSER(ed->eb)->dl->format);
      LADSPA_PortRangeHintDescriptor prhd;
 
      /* puts("ladspa_dialog_setup"); */

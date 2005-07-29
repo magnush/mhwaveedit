@@ -52,12 +52,12 @@ static Chunk *apply_proc(Chunk *chunk, StatusBar *bar, gpointer user_data)
 static gboolean apply(EffectDialog *ed)
 {
      gboolean b;
-     Mainwindow *w = EFFECT_BROWSER(ed->eb)->mwl->selected;
+     Document *d = EFFECT_BROWSER(ed->eb)->dl->selected;
      SamplerateDialog *s = SAMPLERATE_DIALOG(ed);
      if (intbox_check(s->rate) || s->rate->val==0) return TRUE;
 
      inifile_set_guint32("srate_method",s->method);
-     b = mainwindow_effect_manual(w,apply_proc,FALSE,ed);
+     b = document_apply_cb(d,apply_proc,FALSE,ed);
      mainwindow_update_texts();
      return b;
 }
@@ -65,7 +65,7 @@ static gboolean apply(EffectDialog *ed)
 static void samplerate_dialog_setup(EffectDialog *ed)
 {
      intbox_set(SAMPLERATE_DIALOG(ed)->rate,
-		EFFECT_BROWSER(ed->eb)->mwl->format.samplerate);
+		EFFECT_BROWSER(ed->eb)->dl->format.samplerate);
 }
 
 static void samplerate_dialog_class_init(EffectDialogClass *klass)

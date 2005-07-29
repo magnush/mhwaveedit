@@ -70,12 +70,6 @@
 
 /* #define SHOW_DEBUG_MENU */
 
-struct HistoryEntry {
-     Chunk *chunk;
-     off_t selstart,selend,viewstart,viewend,cursor;
-     GHashTable *marks;
-};
-
 ListObject *mainwindow_objects = NULL;
 
 static gboolean window_geometry_stack_inited = FALSE;
@@ -83,43 +77,16 @@ static GSList *window_geometry_stack = NULL;
 static GList *recent_filenames = NULL;
 static GtkObjectClass *parent_class;
 static Chunk *clipboard = NULL;
-static guint untitled_count = 0;
 gboolean autoplay_mark_flag = FALSE;
 gboolean varispeed_reset_flag = FALSE;
 
-static gchar *namepart(gchar *fullname)
-{
-     gchar *c;
-     c = strrchr ( fullname, '/' );
-     return c ? c+1 : fullname;
-}
+static void mainwindow_view_changed(Document *d, gpointer user_data);
+static void mainwindow_selection_changed(Document *d, gpointer user_data);
+static void mainwindow_cursor_changed(Document *d, gboolean rolling, 
+				      gpointer user_data);
+static void mainwindow_state_changed(Document *d, gpointer user_data);
 
-static void fix_title_name(Mainwindow *w, gboolean do_notify)
-{     
-     guint i=0;
-     GList *l;
-     Mainwindow *x;
-     g_free(w->titlename);
-     if (w->filename == NULL) {
-	  w->titlename = g_strdup_printf(_("untitled #%d"),++untitled_count);
-     } else {	  
-	  for (l=mainwindow_objects->list;l!=NULL;l=l->next) {
-	       x = MAINWINDOW(l->data);
-	       if (x == w) continue;
-	       if (x->filename == NULL || strcmp(namepart(w->filename),
-						 namepart(x->filename)))
-		    continue;
-	       if (x->title_serial > i) i=x->title_serial;
-	  }
-	  w->title_serial = i+1;
-	  if (w->title_serial > 1)
-	       w->titlename = g_strdup_printf("%s #%d",namepart(w->filename),
-					      w->title_serial);
-	  else
-	       w->titlename = g_strdup(namepart(w->filename));
-     }
-     if (do_notify) list_object_notify(mainwindow_objects,w);
-}
+
 
 static void load_recent(void)
 {
@@ -191,59 +158,6 @@ static void recent_file(gchar *filename)
 
 static void update_desc(Mainwindow *w);
 
-/* Some stuff for handling sound playing. */
-
-static Mainwindow *playing_window = NULL;
-
-static void do_stop(void)
-{
-     off_t o,e;
-     Mainwindow *w;
-     player_get_range(&o,&e);
-     player_stop();
-     w = playing_window;
-     playing_window = NULL;
-     if (w) {
-	  update_desc(w);
-	  if (!w->bouncemode)
-	       o = player_get_real_pos();
-	  /* printf("player_get_real_pos returned: %Ld\n",o); */
-	  chunk_view_set_cursor(w->view, o);
-     }
-}
-
-static void do_play(Mainwindow *w, off_t start, off_t end, gboolean loop)
-{     
-     off_t ps,pe,pc;
-     
-
-     /* This special if case was introduced to avoid a skipping sound
-      * caused by the cursor not matching the actual playing positon when
-      * pressing the "play" button and you're already playing. This
-      * becomes a "wobbling" sound when holding down the ',' key due
-      * to the keyboard auto-repeating. */
-     if (player_playing() && playing_window == w && 
-	 BOOLEQ(player_looping(),loop) && start == w->view->cursorpos 
-	 && w->view->cursorpos < player_get_buffer_pos()) {
-	  /* Keep everything intact except end */
-	  player_get_range(&ps,&pe);
-	  pc = player_get_buffer_pos();
-	  player_replace(w->view->chunk,pc,end,pc);	  
-     } else {
-
-	  /* General case */
-	  if (player_play(w->view->chunk,start,end,loop)) return;
-	  playing_window = w;
-	  update_desc(w);
-     }
-
-     /* This sets the speed to the proper value */
-     if (varispeed_reset_flag)
-	  gtk_adjustment_set_value(w->speed_adj,-1.0);
-     else
-	  gtk_adjustment_value_changed(w->speed_adj);
-}
-
 static void set_sensitive(GList *l, gboolean s)
 {
      while (l != NULL) {
@@ -253,8 +167,9 @@ static void set_sensitive(GList *l, gboolean s)
 }
 
 /* This function makes the window un-sensitive and brings it to front.*/
-static void procstart(Mainwindow *w)
+static void procstart(StatusBar *bar, gpointer user_data)
 {
+     Mainwindow *w = MAINWINDOW(user_data);
      mainwindow_set_sensitive(w,FALSE);
      w->esc_pressed_flag = FALSE;
      if (GTK_WIDGET(w)->window)
@@ -262,39 +177,38 @@ static void procstart(Mainwindow *w)
      gtk_grab_add(GTK_WIDGET(w));
 }
 
-static void procend(Mainwindow *w)
+static void procend(StatusBar *bar, gpointer user_data)
 {
+     Mainwindow *w = MAINWINDOW(user_data);
      mainwindow_set_sensitive(w,TRUE);
      mainwindow_update_texts();
      gtk_grab_remove(GTK_WIDGET(w));
 }
 
-
-
 static void fix_title(Mainwindow *wnd)
 {
      gchar *c;
-     if (wnd->view->chunk) {
-	  if (wnd->view->chunk->format.type == DATAFORMAT_FLOAT)
+     if (wnd->doc != NULL) {
+	  if (wnd->doc->chunk->format.type == DATAFORMAT_FLOAT)
 	       
 	       c = g_strdup_printf ( _("mhWaveEdit: %s (%s): %d Hz, "
 				     "%s"), 
-				     wnd->titlename, 
-				     chunk_get_time(wnd->view->chunk,
-						    wnd->view->chunk->length,
+				     wnd->doc->titlename, 
+				     chunk_get_time(wnd->doc->chunk,
+						    wnd->doc->chunk->length,
 						    NULL),
-				     wnd->view->chunk->format.samplerate,
-				     (wnd->view->chunk->format.samplesize >
+				     wnd->doc->chunk->format.samplerate,
+				     (wnd->doc->chunk->format.samplesize >
 				      sizeof(float))?_("double"):_("float"));
 	  else
 	       c = g_strdup_printf ( _("mhWaveEdit: %s (%s): %d Hz, "
 				     "%d bit"), 
-				     wnd->titlename, 
-				     chunk_get_time(wnd->view->chunk,
-						    wnd->view->chunk->length,
+				     wnd->doc->titlename, 
+				     chunk_get_time(wnd->doc->chunk,
+						    wnd->doc->chunk->length,
 						    NULL),
-				     wnd->view->chunk->format.samplerate,
-				     wnd->view->chunk->format.samplesize*8);
+				     wnd->doc->chunk->format.samplerate,
+				     wnd->doc->chunk->format.samplesize*8);
 
      } else 
 	  c = g_strdup(PROGRAM_VERSION_STRING);
@@ -304,13 +218,13 @@ static void fix_title(Mainwindow *wnd)
 
 static void update_desc(Mainwindow *w)
 {
-     if (w->view->chunk)
-	  status_bar_set_info(w->statusbar,w->view->cursorpos,
-			      (playing_window==w),w->view->viewstart,
-			      w->view->viewend,w->view->selstart,
-			      w->view->selend,
-			      w->view->chunk->format.samplerate,
-			      w->view->chunk->length);
+     if (w->doc != NULL)
+	  status_bar_set_info(w->statusbar,w->doc->cursorpos,
+			      (playing_document==w->doc),w->doc->viewstart,
+			      w->doc->viewend,w->doc->selstart,
+			      w->doc->selend,
+			      w->doc->chunk->format.samplerate,
+			      w->doc->chunk->length);
      else
 	  status_bar_reset(w->statusbar);
 			      
@@ -360,7 +274,7 @@ static gboolean mainwindow_save ( Mainwindow *w, gchar *filename )
      gboolean r;
      gboolean fmal = FALSE; /* TRUE if filename should be g_free:d */    
 
-     if (!w->changed && w->filename)
+     if (!document_can_undo(w->doc))
 	  if (user_message(_("The file has not changed since last save. Press OK"
 			   " if you want to save it anyway?"),UM_OKCANCEL) == 
 	      MR_CANCEL) 
@@ -369,27 +283,16 @@ static gboolean mainwindow_save ( Mainwindow *w, gchar *filename )
      /* If there is no filename provided, get a filename from a dialog
       * box. Also set the fmal flag so we remember to free the
       * filename later. */  
-     if (!filename) {
-	  filename = get_save_filename(w->filename,_("Save File"));
+     if (!w->doc->filename) {
+	  filename = get_save_filename(w->doc->filename,_("Save File"));
 	  if (!filename) return TRUE;
 	  fmal = TRUE;
      }
 
      /* Save the file */
-     procstart(w);
-     r = chunk_save ( w->view->chunk, filename, dither_editing, w->statusbar );
-     procend(w);
+     r = document_save(w->doc, filename);
      if (r) { if (fmal) g_free(filename); return TRUE; }
 
-     w->changed = FALSE;
-     w->changecount = 0;
-     if (w->filename != filename) {
-	  g_free(w->filename);
-	  w->filename = g_strdup(filename);
-	  update_desc(w);
-	  fix_title_name(w,TRUE);
-	  fix_title(w);
-     }
      inifile_set("lastSaveFile",filename);
      recent_file(filename);
      if (fmal) g_free(filename);
@@ -401,13 +304,15 @@ static gboolean change_check ( Mainwindow *w )
 {
      gint i;
      gchar *c;
-     if (!w->changed) return FALSE;
+     if (w->doc == NULL || 
+	 (w->doc->filename != NULL && !document_can_undo(w->doc))) 
+	  return FALSE;
      c = g_strdup_printf( _("Save changes to %s?"),
-			  w->titlename );
+			  w->doc->titlename );
      i = user_message ( c, UM_YESNOCANCEL );
      switch (i) {
      case MR_YES:
-	  return mainwindow_save ( w, w->filename );
+	  return mainwindow_save ( w, w->doc->filename );
      case MR_NO:
 	  return FALSE;
      case MR_CANCEL:
@@ -417,24 +322,16 @@ static gboolean change_check ( Mainwindow *w )
      return TRUE;
 }
 
-static void history_entry_destroy(struct HistoryEntry *h)
-{
-     gtk_object_unref(GTK_OBJECT(h->chunk));
-     g_hash_table_foreach_remove(h->marks, free2, NULL);
-     g_free(h);
-}
-
 static void mainwindow_destroy(GtkObject *obj)
 {
      Mainwindow *w = MAINWINDOW(obj);
 
      list_object_remove(mainwindow_objects, obj);
 
-     /* puts("mainwindow_shutdown!"); */
-     if (w->filename) g_free(w->filename);
-     w->filename = NULL;
-     if (w->titlename) g_free(w->titlename);
-     w->titlename = NULL;
+     if ( w->doc != NULL ) {
+	  gtk_object_unref(GTK_OBJECT(w->doc));
+	  w->doc = NULL;
+     }
 
      if (list_object_get_size(mainwindow_objects) == 0) {
 	  if (clipboard) gtk_object_unref ( GTK_OBJECT(clipboard) );
@@ -442,12 +339,6 @@ static void mainwindow_destroy(GtkObject *obj)
 	  quitflag = TRUE;
 	  geometry_stack_save_to_inifile("windowGeometry",
 					 window_geometry_stack);
-     }
-
-     if (w->history) {
-	  g_slist_foreach ( w->history, (GFunc) history_entry_destroy, NULL );
-	  g_slist_free ( w->history );
-	  w->history = NULL;
      }
 
      parent_class->destroy(obj);
@@ -458,7 +349,7 @@ static gint mainwindow_delete_event(GtkWidget *widget, GdkEventAny *event)
      Mainwindow *w = MAINWINDOW ( widget );
      GtkWidgetClass *pcw = GTK_WIDGET_CLASS(parent_class);
      if (change_check(w)) return TRUE;
-     if (playing_window == w) do_stop();
+     if (playing_document == w->doc) player_stop();
      geometry_stack_push(GTK_WINDOW(w),NULL,&window_geometry_stack);
      if (pcw->delete_event) return pcw->delete_event(widget,event);
      else return FALSE;
@@ -477,23 +368,34 @@ static void mainwindow_realize(GtkWidget *widget)
 static void mainwindow_toggle_mark(Mainwindow *w, gchar *label)
 {
      off_t u;
-     u = chunk_view_get_mark(w->view,label);
-     if (u == w->view->cursorpos) 
-	  chunk_view_set_mark(w->view,label,CHUNK_VIEW_BAD_MARK);
+     u = document_get_mark(w->doc,label);
+     if (u == w->doc->cursorpos) 
+	  document_set_mark(w->doc,label,DOCUMENT_BAD_MARK);
      else
-	  chunk_view_set_mark(w->view,label,w->view->cursorpos);
+	  document_set_mark(w->doc,label,w->doc->cursorpos);
 }
+
+static void do_play(Mainwindow *w, off_t start, off_t end, gboolean loop)
+{
+     gfloat s;
+     if (varispeed_reset_flag && 
+	 !(player_playing() && playing_document == w->doc))
+	  s = 1.0;
+     else
+	  s = player_get_speed();
+     document_play(w->doc, start, end, loop, s);
+}
+
 
 static void mainwindow_goto_mark(Mainwindow *w, gchar *label)
 {
      off_t u;
-     u = chunk_view_get_mark(w->view,label);
-     if (u != CHUNK_VIEW_BAD_MARK) {
-	  chunk_view_set_cursor(w->view, u);
-	  if (w == playing_window)
-	       player_set_buffer_pos(u);
-	  else if (autoplay_mark_flag)
-	       do_play(w,u,w->view->chunk->length,w->loopmode);
+     u = document_get_mark(w->doc,label);
+     if (u != DOCUMENT_BAD_MARK) {
+	  if (autoplay_mark_flag)
+	       do_play(w,u,w->doc->chunk->length,w->loopmode);
+	  else
+	       document_set_cursor(w->doc, u);
      }
 }
 
@@ -515,7 +417,7 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 	       status_bar_break_progress(w->statusbar);
 	  return TRUE;
      }
-     if (w->view->chunk == NULL) 
+     if (w->doc == NULL) 
           return GTK_WIDGET_CLASS(parent_class)->key_press_event(widget,event);
      if ((event->state & GDK_CONTROL_MASK))
 	  switch (event->keyval) {
@@ -531,10 +433,10 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 	  case GDK_9: mainwindow_toggle_mark(w,"9"); return TRUE;
 	  case GDK_Left:
 	  case GDK_KP_Left: 
-	       if (playing_window == w) player_nudge(-0.5); return TRUE;
+	       if (playing_document == w->doc) player_nudge(-0.5); return TRUE;
 	  case GDK_Right:
 	  case GDK_KP_Right:
-	       if (playing_window == w) player_nudge(0.5); return TRUE;
+	       if (playing_document == w->doc) player_nudge(0.5); return TRUE;
 	  }
      else 
 	  switch (event->keyval) {	       
@@ -559,45 +461,46 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 	  case GDK_period: edit_stop(NULL,widget); return TRUE;
 	  case GDK_slash: edit_playselection(NULL, widget); return TRUE;
 	  case GDK_space:
-	       if (playing_window == w) do_stop();
-	       else if (w->view->chunk != NULL)
-		    do_play(w,w->view->cursorpos,w->view->chunk->length,
+	       if (playing_document == w->doc) 
+		    document_stop(w->doc,w->bouncemode);
+	       else if (w->doc != NULL)
+		    do_play(w,w->doc->cursorpos,w->doc->chunk->length,
 			    w->loopmode);
 	       return TRUE;	       
 	  case GDK_Left:
 	  case GDK_KP_Left:
-	       chunk_view_scroll(w->view, 
-				 -(w->view->viewend - w->view->viewstart)/4);
+	       document_scroll(w->doc, 
+			       -(w->doc->viewend - w->doc->viewstart)/4);
 	       return TRUE;
 	  case GDK_Right:
 	  case GDK_KP_Right:
-	       chunk_view_scroll(w->view,
-				 (w->view->viewend - w->view->viewstart)/4);
+	       document_scroll(w->doc,
+			       (w->doc->viewend - w->doc->viewstart)/4);
 	       return TRUE;
 	  case GDK_parenleft:
-	       o = 3*w->view->chunk->format.samplerate;
-	       if (w->view->selstart == w->view->selend) {
-		    if (w->view->chunk->length < o)
-			 do_play(w,0,w->view->chunk->length,FALSE);
+	       o = 3*w->doc->chunk->format.samplerate;
+	       if (w->doc->selstart == w->doc->selend) {
+		    if (w->doc->chunk->length < o)
+			 do_play(w,0,w->doc->chunk->length,FALSE);
 		    else
 			 do_play(w,0,o,FALSE);
-	       } else if (w->view->selstart+o > w->view->selend)
-		    do_play(w,w->view->selstart,w->view->selend,FALSE);
+	       } else if (w->doc->selstart+o > w->doc->selend)
+		    do_play(w,w->doc->selstart,w->doc->selend,FALSE);
 	       else
-		    do_play(w,w->view->selstart,w->view->selstart+o,FALSE);
+		    do_play(w,w->doc->selstart,w->doc->selstart+o,FALSE);
 	       return TRUE;		    
 	  case GDK_parenright:
-	       o = 3*w->view->chunk->format.samplerate;
-	       if (w->view->selstart == w->view->selend) {
-		    if (w->view->chunk->length < o)
-			 do_play(w,0,w->view->chunk->length,FALSE);
+	       o = 3*w->doc->chunk->format.samplerate;
+	       if (w->doc->selstart == w->doc->selend) {
+		    if (w->doc->chunk->length < o)
+			 do_play(w,0,w->doc->chunk->length,FALSE);
 		    else
-			 do_play(w,w->view->chunk->length-o,
-				 w->view->chunk->length,FALSE);
-	       } else if (w->view->selstart+o > w->view->selend)
-		    do_play(w,w->view->selstart,w->view->selend,FALSE);
+			 do_play(w,w->doc->chunk->length-o,
+				 w->doc->chunk->length,FALSE);
+	       } else if (w->doc->selstart+o > w->doc->selend)
+		    do_play(w,w->doc->selstart,w->doc->selend,FALSE);
 	       else
-		    do_play(w,w->view->selend-o,w->view->selend,FALSE);
+		    do_play(w,w->doc->selend-o,w->doc->selend,FALSE);
 	       return TRUE;		    
 	  }
      return GTK_WIDGET_CLASS(parent_class)->key_press_event(widget,event);
@@ -615,14 +518,24 @@ static void mainwindow_class_init(GtkObjectClass *klass)
 
 static void mainwindow_set_chunk(Mainwindow *w, Chunk *c, gchar *filename)
 {
-     if (w->view->chunk) {
+     Document *d;
+     if (w->doc != NULL) {
 	  w = MAINWINDOW ( mainwindow_new() );
 	  gtk_widget_show ( GTK_WIDGET ( w ) );
      }
-     chunk_view_set_chunk ( w->view, c );
-     if ( filename ) w->filename = g_strdup(filename);
-     else w->changed = TRUE;
-     fix_title_name(w,FALSE);
+     d = document_new_with_chunk(c,filename,w->statusbar);
+     w->doc = d;
+     gtk_object_ref(GTK_OBJECT(w->doc));
+     gtk_object_sink(GTK_OBJECT(w->doc));
+     gtk_signal_connect(GTK_OBJECT(d),"view_changed",
+			GTK_SIGNAL_FUNC(mainwindow_view_changed),w);
+     gtk_signal_connect(GTK_OBJECT(d),"selection_changed",
+			GTK_SIGNAL_FUNC(mainwindow_selection_changed),w);
+     gtk_signal_connect(GTK_OBJECT(d),"cursor_changed",
+			GTK_SIGNAL_FUNC(mainwindow_cursor_changed),w);
+     gtk_signal_connect(GTK_OBJECT(d),"state_changed",
+			GTK_SIGNAL_FUNC(mainwindow_state_changed),w);
+     chunk_view_set_document ( w->view, d );
      fix_title(w);
      update_desc(w);
      set_sensitive(w->need_chunk_items,TRUE);
@@ -646,17 +559,15 @@ static void file_open(GtkMenuItem *menuitem, gpointer user_data)
      gchar *c;
      Chunk *chunk;
      Mainwindow *w = MAINWINDOW ( user_data );     
-     if (w->filename)
-	  c = get_filename(w->filename,"*.wav", _("Load File"), FALSE );
+     if (w->doc != NULL && w->doc->filename != NULL)
+	  c = get_filename(w->doc->filename,"*.wav", _("Load File"), FALSE );
      else {
 	  c = inifile_get("lastOpenFile",NULL);
 	  if (c == NULL) c = inifile_get("lastSaveFile",NULL);
 	  c = get_filename(c,"*.wav", _("Load File"), FALSE);
      }
      if (!c) return;
-     procstart(w);
      chunk = chunk_load ( c, dither_editing, w->statusbar );
-     procend(w);
      if (!chunk) {
 	  g_free(c);
 	  return;
@@ -670,7 +581,7 @@ static void file_open(GtkMenuItem *menuitem, gpointer user_data)
 static void file_save(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW ( user_data );
-     mainwindow_save ( w, w->filename );
+     mainwindow_save ( w, w->doc->filename );
 }
 
 static void file_saveas(GtkMenuItem *menuitem, gpointer user_data)
@@ -685,12 +596,10 @@ static void file_saveselection(GtkMenuItem *menuitem, gpointer user_data)
      Mainwindow *w = MAINWINDOW(user_data);
      fn = get_save_filename(NULL,_("Save selection as ..."));
      if (!fn) return;
-     c = chunk_get_part(w->view->chunk,w->view->selstart,
-			w->view->selend-w->view->selstart);
-     procstart(w);
+     c = chunk_get_part(w->doc->chunk,w->doc->selstart,
+			w->doc->selend-w->doc->selstart);
      if (!chunk_save(c,fn,dither_editing,w->statusbar))
 	  inifile_set("lastSaveFile",fn);
-     procend(w);
      gtk_object_sink(GTK_OBJECT(c));     
      g_free(fn);
 }
@@ -700,17 +609,12 @@ static void file_close(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
      if (change_check(w)) return;
-     if (playing_window == w) do_stop();
+     if (playing_document == w->doc) player_stop();
      if (list_object_get_size(mainwindow_objects)==1 &&
-	 w->view->chunk != NULL) {
-	  chunk_view_set_chunk(w->view, NULL);
-	  chunk_view_clear_marks(w->view);
-	  g_slist_foreach ( w->history, (GFunc) history_entry_destroy, NULL );
-	  g_slist_free ( w->history );
-	  w->history = NULL;
-	  g_free(w->filename);
-	  w->filename = NULL;
-	  w->changed = FALSE;
+	 w->doc != NULL) {
+	  chunk_view_set_document(w->view, NULL);
+	  gtk_object_unref(GTK_OBJECT(w->doc));
+	  w->doc = NULL;
 	  fix_title(w);
 	  set_sensitive(w->need_chunk_items,FALSE);
 	  set_sensitive(w->need_history_items,FALSE);
@@ -736,7 +640,7 @@ static void file_exit(GtkMenuItem *menuitem, gpointer user_data)
 	  file_close(menuitem,user_data);
      list_object_foreach(mainwindow_objects,(GFunc)try_close,&b);
      if (b) return;
-     do_stop();
+     player_stop();
      /* Reverse the list so we get the oldest windows on the top of the 
       * geometry stack */
      i = list_object_get_size(mainwindow_objects);
@@ -749,124 +653,8 @@ static void file_exit(GtkMenuItem *menuitem, gpointer user_data)
 
 static void edit_undo(GtkMenuItem *menuitem, gpointer user_data)
 {
-     GSList *l;
-     struct HistoryEntry *he;
-     GHashTable *ht;
      Mainwindow *w = MAINWINDOW (user_data);
-     g_assert ( w->history != NULL );
-     do_stop();
-     he = (struct HistoryEntry *)w->history->data;
-     chunk_view_set_chunk ( w->view, he->chunk );
-     chunk_view_set_cursor( w->view, he->cursor );
-     chunk_view_set_selection( w->view, he->selstart, he->selend );
-     chunk_view_set_view( w->view, he->viewstart, he->viewend );
-     ht = w->view->marks;
-     w->view->marks = he->marks;
-     he->marks = ht;
-     history_entry_destroy(he);
-     l = w->history->next;
-     g_slist_free_1(w->history);
-     w->history = l;
-     if (w->history==NULL)
-	  set_sensitive(w->need_history_items, FALSE);
-     w->changed = TRUE;
-     if (w->changecount > 0) w->changecount --;
-     fix_title(w);
-}
-
-static void dup_add(gpointer key, gpointer value, gpointer user_data)
-{
-     gchar *new_key;
-     off_t *new_value;
-     new_key = g_strdup(key);
-     new_value = g_memdup(value,sizeof(off_t));
-     g_hash_table_insert((GHashTable *)user_data, new_key, new_value);
-}
-
-static struct HistoryEntry *mainwindow_history_log(Mainwindow *wnd)
-{
-     struct HistoryEntry *he;
-     he = g_malloc(sizeof(struct HistoryEntry));
-     he->chunk = wnd->view->chunk;
-     gtk_object_ref(GTK_OBJECT(he->chunk));
-     he->cursor = wnd->view->cursorpos;
-     he->selstart = wnd->view->selstart;
-     he->selend = wnd->view->selend;
-     he->viewstart = wnd->view->viewstart;
-     he->viewend = wnd->view->viewend;
-     he->marks = g_hash_table_new(g_str_hash, g_str_equal);
-     g_hash_table_foreach(wnd->view->marks, dup_add, he->marks);
-     return he;
-}
-
-/* This function is called to change tha mainwindow's chunk. It also
- *  adds a history entry and moves/deletes marks and moves/stops
- *  playback
- *
- *  wnd - Mainwindow
- *  new_chunk - New chunk
- *  he - A HistoryEntry to add to the history or NULL
- *  changestart - The first sample that differs from the old chunk,
- *  changelen - Length of the part of the old chunk that has changed,
- *  increase - How many sample positions the unchanged part at the end
- *  has moved , negative if moved to the left.
- *
- *  changestart,changelen,increase can all be 0. In that case, the
- *  whole chunk is assumed to have changed.
- */
-static void mainwindow_chunk_change(Mainwindow *wnd, Chunk *new_chunk, 
-				    struct HistoryEntry *he, 
-				    off_t changestart, off_t changelen,
-				    off_t increase)
-{
-     off_t u,w,c;
-     if (!changestart && !changelen && !increase) {
-	  /* Vi låtsas som att det inte skett nån förändring på den första biten. */
-	  changestart = MIN(wnd->view->chunk->length,new_chunk->length);
-	  changelen = wnd->view->chunk->length - changestart;
-	  increase = new_chunk->length - wnd->view->chunk->length;
-     }
-     if (!new_chunk) return;
-     if (playing_window == wnd && 
-	 !chunk_format_equal(new_chunk,playing_window->view->chunk)) 
-	  do_stop();
-     
-     if (!he) he=mainwindow_history_log(wnd);
-     chunk_view_set_chunk_keep_view ( wnd->view, new_chunk );
-     wnd->history = g_slist_prepend ( wnd->history, he );
-     set_sensitive(wnd->need_history_items, TRUE);
-     wnd->changed = TRUE;
-     wnd->changecount ++;
-     if (increase>0) 
-	  chunk_view_update_marks(wnd->view,changestart+changelen,increase);
-     else if (increase<0)
-	  chunk_view_update_marks(wnd->view,changestart,increase);
-     if (playing_window == wnd && player_playing()) {
-	  player_get_range(&u,&w);
-	  c = player_get_buffer_pos();
-	  /* printf("mainwindow_chunk_change: före: u=%Ld,w=%Ld,c=%Ld\n",u,w,c);
-	  printf("mainwindow_chunk_change: changestart=%Ld, changelen=%Ld\n",
-		 changestart,changelen);
-		 printf("mainwindow_chunk_change: increase=%Ld\n",increase); */
-	  if (u >= changestart+changelen) u+=increase;
-	  else if (u >= changestart) u=changestart+changelen+increase;
-	  if (w > changestart+changelen) w+=increase;
-	  else if (w > changestart) w=changestart+increase;
-	  if (c >= changestart+changelen) c+=increase;
-	  else if (c >= changestart) c=changestart+changelen+increase;
-	  if (w > new_chunk->length) w = new_chunk->length;
-	  if (u < 0) u=0;
-	  if (w < 0) w=0;
-	  if (c < 0) c=0;
-	  if (c >= w) c=w-1;
-	  /* printf("mainwindow_chunk_change: efter: u=%Ld,w=%Ld,c=%Ld\n",u,w,c); */
-	  if (u == w) do_stop();
-	  else player_replace(new_chunk,u,w,c);
-     }
-     fix_title(wnd);
-     update_desc(wnd);
-     gdk_window_set_cursor(GTK_WIDGET(wnd->view)->window,NULL);
-     list_object_notify(mainwindow_objects,wnd);
+     document_undo(w->doc);
 }
 
 static void update_clipboard_items(Mainwindow *w, gpointer user_data)
@@ -878,18 +666,17 @@ static void edit_cut(GtkMenuItem *menuitem, gpointer user_data)
 {
      Chunk *chunk, *part;
      Mainwindow *w = MAINWINDOW(user_data);
-     g_assert (w->view->selend != w->view->selstart);
+     g_assert (w->doc->selend != w->doc->selstart);
      if (clipboard) gtk_object_unref(GTK_OBJECT(clipboard));
-     part = chunk_get_part( w->view->chunk, w->view->selstart,
-			    w->view->selend - w->view->selstart);
-     chunk = chunk_remove_part( w->view->chunk, w->view->selstart,
-				w->view->selend - w->view->selstart);
+     part = chunk_get_part( w->doc->chunk, w->doc->selstart,
+			    w->doc->selend - w->doc->selstart);
+     chunk = chunk_remove_part( w->doc->chunk, w->doc->selstart,
+				w->doc->selend - w->doc->selstart);
      clipboard = part;
      gtk_object_ref(GTK_OBJECT(clipboard));
      gtk_object_sink(GTK_OBJECT(clipboard));
 
-     mainwindow_chunk_change ( w, chunk, NULL, w->view->selstart, 
-			       clipboard->length, -(clipboard->length) );
+     document_update(w->doc, chunk, w->doc->selstart, -(clipboard->length));
      list_object_foreach(mainwindow_objects, (GFunc)update_clipboard_items, 
 			 (gpointer)1);
 }
@@ -898,21 +685,18 @@ static void edit_crop(GtkMenuItem *menu_item, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
      Chunk *c;
-     c = chunk_get_part( w->view->chunk, w->view->selstart,
-			 w->view->selend - w->view->selstart);
-     if (player_get_buffer_pos() < w->view->selstart)
-	  do_stop();
-     mainwindow_chunk_change(w, c, NULL, 0, 0, -(w->view->selstart));
-     chunk_view_set_selection(w->view,0,c->length);
+     c = chunk_get_part( w->doc->chunk, w->doc->selstart,
+			 w->doc->selend - w->doc->selstart);
+     document_update(w->doc, c, 0, -(w->doc->selstart));
 }
 
 static void edit_copy(GtkMenuItem *menu_item, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     g_assert (w->view->selend != w->view->selstart);
+     g_assert (w->doc->selend != w->doc->selstart);
      if (clipboard) gtk_object_unref(GTK_OBJECT(clipboard));
-     clipboard = chunk_get_part(w->view->chunk, w->view->selstart, 
-				w->view->selend - w->view->selstart);
+     clipboard = chunk_get_part(w->doc->chunk, w->doc->selstart, 
+				w->doc->selend - w->doc->selstart);
      gtk_object_ref(GTK_OBJECT(clipboard));
      gtk_object_sink(GTK_OBJECT(clipboard));
 
@@ -922,25 +706,25 @@ static void edit_copy(GtkMenuItem *menu_item, gpointer user_data)
 
 static void edit_paste(GtkMenuItem *menu_item, gpointer user_data)
 {
-     Chunk *c = clipboard;
+     Chunk *c = clipboard, *nc;
      Mainwindow *w = MAINWINDOW(user_data);
-     if (!w->view->chunk) {
+     if (w->doc == NULL) {
 	  mainwindow_set_chunk(w,clipboard,NULL);
 	  return;
      }
-
-     if (!dataformat_equal(&(w->view->chunk->format),&(c->format))) {
-	  c = chunk_convert(c,&(w->view->chunk->format),dither_editing,
+     
+     if (!dataformat_equal(&(w->doc->chunk->format),&(c->format))) {
+	  c = chunk_convert(c,&(w->doc->chunk->format),dither_editing,
 			    w->statusbar);
 	  if (c == NULL) return;
      }
-     mainwindow_chunk_change(w,chunk_insert(w->view->chunk,c,
-					    w->view->cursorpos), NULL,
-			     w->view->cursorpos,clipboard->length,
-			     +clipboard->length);
-     chunk_view_set_selection( w->view, w->view->cursorpos,
-			       w->view->cursorpos + clipboard->length );
+
+     nc = chunk_insert(w->doc->chunk,c,w->doc->cursorpos);
      gtk_object_sink(GTK_OBJECT(c));
+
+     document_update(w->doc, nc, w->doc->cursorpos, clipboard->length);
+     document_set_selection( w->doc, w->doc->cursorpos,
+			     w->doc->cursorpos + clipboard->length );
 }
 
 static void edit_pasteover(GtkMenuItem *menuitem, gpointer user_data)
@@ -948,26 +732,25 @@ static void edit_pasteover(GtkMenuItem *menuitem, gpointer user_data)
      Mainwindow *w = MAINWINDOW(user_data);
      Chunk *c,*d=clipboard;
      off_t orig_len;
-     if (!w->view->chunk) {
+     if (w->doc == NULL) {
 	  mainwindow_set_chunk(w,clipboard,NULL);
 	  return;
      }
 
-     if (!dataformat_equal(&(w->view->chunk->format),&(d->format))) {
-	  d = chunk_convert(d,&(w->view->chunk->format),dither_editing,
+     if (!dataformat_equal(&(w->doc->chunk->format),&(d->format))) {
+	  d = chunk_convert(d,&(w->doc->chunk->format),dither_editing,
 			    w->statusbar);
 	  if (d == NULL) return;
      }
 
-     orig_len = MIN(w->view->chunk->length-w->view->cursorpos,
-		    d->length);
-     c = chunk_replace_part(w->view->chunk, w->view->cursorpos, 
+     orig_len = MIN(w->doc->chunk->length-w->doc->cursorpos, d->length);
+     c = chunk_replace_part(w->doc->chunk, w->doc->cursorpos, 
 			    orig_len, d);
-     mainwindow_chunk_change(w,c,NULL,w->view->cursorpos,orig_len,
-				  clipboard->length-orig_len);
-     chunk_view_set_selection( w->view, w->view->cursorpos,
-			       w->view->cursorpos + clipboard->length );
      gtk_object_sink(GTK_OBJECT(d));
+
+     document_update(w->doc, c, 0, 0);
+     document_set_selection( w->doc, w->doc->cursorpos,
+			     w->doc->cursorpos + clipboard->length );
 }
 
 static void edit_mixpaste(GtkMenuItem *menuitem, gpointer user_data)
@@ -975,30 +758,27 @@ static void edit_mixpaste(GtkMenuItem *menuitem, gpointer user_data)
      Mainwindow *w = MAINWINDOW(user_data);
      Chunk *c,*p,*y,*d=clipboard;
      off_t partlen;
-     if (!w->view->chunk) {
+     if (w->doc == NULL) {
 	  mainwindow_set_chunk(w,clipboard,NULL);
 	  return;
      }
 
-     if (!dataformat_equal(&(w->view->chunk->format),&(d->format))) {
-	  d = chunk_convert(d,&(w->view->chunk->format),dither_editing,
+     if (!dataformat_equal(&(w->doc->chunk->format),&(d->format))) {
+	  d = chunk_convert(d,&(w->doc->chunk->format),dither_editing,
 			    w->statusbar);
 	  if (d == NULL) return;
      }
 
-     p = chunk_get_part(w->view->chunk,w->view->cursorpos,d->length);
+     p = chunk_get_part(w->doc->chunk,w->doc->cursorpos,d->length);
      partlen = p->length;
-     procstart(w);
      y = chunk_mix(p,d,dither_editing,w->statusbar);
-     procend(w);
      gtk_object_sink(GTK_OBJECT(p));
      if (!y) return;
-     c = chunk_replace_part(w->view->chunk,w->view->cursorpos,partlen,y);
+     c = chunk_replace_part(w->doc->chunk,w->doc->cursorpos,partlen,y);
      gtk_object_sink(GTK_OBJECT(y));
-     mainwindow_chunk_change(w,c,NULL,w->view->cursorpos,
-			     partlen,d->length-partlen);
-     chunk_view_set_selection( w->view, w->view->cursorpos,
-			       w->view->cursorpos + d->length );
+     document_update(w->doc, c, 0, 0);
+     document_set_selection( w->doc, w->doc->cursorpos,
+			     w->doc->cursorpos + d->length );
      gtk_object_sink(GTK_OBJECT(d));
 }
 
@@ -1013,9 +793,9 @@ static void edit_delete(GtkMenuItem *menuitem, gpointer user_data)
      Mainwindow *w = MAINWINDOW(user_data);
      Chunk *chunk;
      gint32 slen;
-     slen = w->view->selend - w->view->selstart;
-     chunk = chunk_remove_part(w->view->chunk, w->view->selstart, slen);
-     mainwindow_chunk_change ( w, chunk, NULL , w->view->selstart, slen, -slen);
+     slen = w->doc->selend - w->doc->selstart;
+     chunk = chunk_remove_part(w->doc->chunk, w->doc->selstart, slen);
+     document_update( w->doc, chunk, w->doc->selstart, -slen);
 }
 
 static Chunk *interp(Chunk *chunk, StatusBar *bar, gpointer user_data)
@@ -1026,39 +806,39 @@ static Chunk *interp(Chunk *chunk, StatusBar *bar, gpointer user_data)
 static void edit_silence(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     mainwindow_effect_manual(w,interp,TRUE,NULL);
+     document_apply_cb(w->doc,interp,TRUE,NULL);
 }
 
 static void edit_selectall(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     chunk_view_set_selection(w->view,0,w->view->chunk->length);
+     document_set_selection(w->doc,0,w->doc->chunk->length);
 }
 
 static void view_zoomin(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW ( user_data );
-     chunk_view_zoom(w->view,2.0,TRUE);
+     document_zoom(w->doc,2.0,TRUE);
 }
 
 static void view_zoomout(GtkMenuItem *item, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW ( user_data );
-     chunk_view_zoom(w->view,0.5,TRUE);
+     document_zoom(w->doc,0.5,TRUE);
 }
 
 static void view_zoomtoselection(GtkMenuItem *menuitem, gpointer user_data)
 {
-     ChunkView *cv;
-     cv = MAINWINDOW(user_data)->view;
-     chunk_view_set_view(cv,cv->selstart,cv->selend);
+     Document *d;
+     d = MAINWINDOW(user_data)->doc;
+     document_set_view(d,d->selstart,d->selend);
 }
 
 static void view_zoomall(GtkMenuItem *menuitem, gpointer user_data)
-{
-     ChunkView *cv;
-     cv = MAINWINDOW(user_data)->view;
-     chunk_view_set_view(cv,0,cv->chunk->length);
+{     
+     Document *d;
+     d = MAINWINDOW(user_data)->doc;
+     document_set_view(d,0,d->chunk->length);
 }
 
 #ifdef SHOW_DEBUG_MENU
@@ -1171,7 +951,7 @@ static void debug_chunkinfo(GtkMenuItem *menuitem, gpointer user_data)
 static void mainwindow_show_effect_dialog(Mainwindow *mw, gchar *effect_name)
 {
      EffectBrowser *eb;
-     eb = EFFECT_BROWSER(effect_browser_new_with_effect(mw,effect_name));
+     eb = EFFECT_BROWSER(effect_browser_new_with_effect(mw->doc,effect_name));
      gtk_widget_show(GTK_WIDGET(eb));
 }
 
@@ -1199,14 +979,12 @@ static void effects_mixchannels(GtkMenuItem *menuitem, gpointer user_data)
 {
      Chunk *c;
      Mainwindow *w = MAINWINDOW(user_data);
-     do_stop();
-     if (w->view->chunk->format.channels == 1)
+     player_stop();
+     if (w->doc->chunk->format.channels == 1)
 	  user_info(_("There already is only one channel!"));
      else {
-	  procstart(w);
-	  c = chunk_onechannel(w->view->chunk,dither_editing,w->statusbar);
-	  procend(w);
-	  if (c) mainwindow_chunk_change(w,c,NULL,0,0,0);
+	  c = chunk_onechannel(w->doc->chunk,dither_editing,w->statusbar);
+	  if (c) document_update(w->doc,c,0,0);
      }
 }
 
@@ -1214,59 +992,24 @@ static void effects_splitchannel(GtkMenuItem *menuitem, gboolean user_data)
 {
      Mainwindow *w = MAINWINDOW (user_data);
      Chunk *c;
-     procstart(w);
-     c = chunk_copy_channel(w->view->chunk,0,dither_editing,w->statusbar);
-     procend(w);
+     c = chunk_copy_channel(w->doc->chunk,0,dither_editing,w->statusbar);
      if (c == NULL) return;
-     do_stop();
-     mainwindow_chunk_change(w,c,NULL,0,0,0);
+     player_stop();
+     document_update(w->doc, c, 0, 0);
 }
 
 static void edit_stop(GtkMenuItem *menu_item, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     if (!playing_window) {
-	  if (w->view->cursorpos != 0 || w->view->chunk->length == 0)
-	       chunk_view_set_cursor(w->view,0);
+     if (playing_document == NULL) {
+	  if (w->doc->cursorpos != 0 || w->doc->chunk->length == 0)
+	       document_set_cursor(w->doc,0);
 	  else
-	       chunk_view_set_cursor(w->view,w->view->chunk->length-1);
+	       document_set_cursor(w->doc,w->doc->chunk->length);
      } else
-	  do_stop();
+	  document_stop(w->doc, w->bouncemode);
 }
 
-
-gboolean mainwindow_update_cursors(void)
-{
-     off_t ui=0;
-     off_t s,e;
-     Mainwindow *w;
-     static GTimeVal last_time = { 0,0 };
-     GTimeVal tv,tv2;
-
-     if (!playing_window) return FALSE;
-
-     if (!player_playing()) {
-	  player_get_range(&s,&e);
-	  chunk_view_set_cursor(playing_window->view, s);
-	  w = playing_window;
-	  playing_window = NULL;
-	  update_desc(w);
-	  return FALSE;
-     }
-
-     /* Make sure we don't do this to often.. more than 20
-      * times/second seems unneccesary waste of CPU.. */
-     g_get_current_time(&tv);
-     timeval_subtract(&tv2,&tv,&last_time);
-     if (tv2.tv_sec == 0 && tv2.tv_usec < 50000) return FALSE;
-     memcpy(&last_time,&tv,sizeof(last_time));
-
-     ui = player_get_real_pos();
-     if (ui != playing_window->view->cursorpos)
-	  chunk_view_set_cursor(playing_window->view, ui);
-
-     return TRUE;
-}
 
 gboolean mainwindow_update_caches(void)
 {
@@ -1290,16 +1033,14 @@ gboolean mainwindow_update_caches(void)
 static void edit_playselection(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW (user_data);
-     if (w->view->selstart != w->view->selend)
-	  do_play(w,w->view->selstart,w->view->selend,w->loopmode);
-     else
-	  do_play(w,0,w->view->chunk->length,w->loopmode);
+     document_play_selection(w->doc,w->loopmode,
+			     varispeed_reset_flag ? 1.0 : player_get_speed());
 }
 
 static void edit_playall(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW (user_data);
-     do_play(w,0,w->view->chunk->length,w->loopmode);
+     do_play(w,0,w->doc->chunk->length,w->loopmode);
 }
 
 static void help_readme(void)
@@ -1474,34 +1215,33 @@ gtk_window_set_modal(GTK_WINDOW(a),TRUE);
 static void edit_play(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW (user_data);
-     do_play(w,w->view->cursorpos,w->view->chunk->length,w->loopmode);
+     do_play(w,w->doc->cursorpos,w->doc->chunk->length,w->loopmode);
 }
 
 static void edit_selstartcursor(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     if (w->view->selstart == w->view->selend) 
-	  chunk_view_set_selection(w->view,w->view->cursorpos,
-				   w->view->chunk->length);
+     if (w->doc->selstart == w->doc->selend) 
+	  document_set_selection(w->doc,w->doc->cursorpos,
+				 w->doc->chunk->length);
      else 
-	  chunk_view_set_selection(w->view,w->view->cursorpos,w->view->selend);
+	  document_set_selection(w->doc,w->doc->cursorpos,w->doc->selend);
 }
 
 static void edit_selendcursor(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     if (w->view->selstart == w->view->selend)
-	  chunk_view_set_selection(w->view,0,w->view->cursorpos+1);
+     if (w->doc->selstart == w->doc->selend)
+	  document_set_selection(w->doc,0,w->doc->cursorpos+1);
      else
-	  chunk_view_set_selection(w->view,w->view->selstart,
-				   w->view->cursorpos+1);
+	  document_set_selection(w->doc,w->doc->selstart,w->doc->cursorpos);
 }
 
 static void edit_record(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *wnd = MAINWINDOW (user_data);
      Chunk *c;
-     do_stop();
+     player_stop();
      c = record_dialog_execute();
      if (c) mainwindow_set_chunk(wnd,c,NULL);
 }
@@ -1567,45 +1307,16 @@ static void edit_insertsilence(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW ( user_data );
      gfloat f;
-     Chunk *c;
+     Chunk *c,*nc;
      if (user_input_float(_("Seconds of silence: "),_("Insert Silence"),0.0,&f)) 
 	  return;
      if (f<=0.0) return;
-     c = chunk_new_silent(&(w->view->chunk->format),f);
-     mainwindow_chunk_change(w,chunk_insert(w->view->chunk,c,
-					    w->view->cursorpos),NULL,
-			     w->view->cursorpos,0,c->length);
-     chunk_view_set_selection( w->view, w->view->cursorpos,
-			       w->view->cursorpos + c->length );
+     c = chunk_new_silent(&(w->doc->chunk->format),f);
+     nc = chunk_insert(w->doc->chunk, c, w->doc->cursorpos);
+     document_update(w->doc,nc,w->doc->cursorpos,c->length);
+     document_set_selection( w->doc, w->doc->cursorpos,
+			     w->doc->cursorpos + c->length );
      gtk_object_sink(GTK_OBJECT(c));
-}
-
-static void edit_clearundobuffer(GtkMenuItem *menuitem, gpointer user_data)
-{
-     Mainwindow *w = MAINWINDOW ( user_data );
-     guint l;
-     GSList *sl,*pr=NULL;
-     l = g_slist_length(w->history);
-     g_assert(l >= w->changecount);
-     if (l == w->changecount || w->changecount == 0) {
-	  if (user_message(_("This will clear the entire undo buffer!"),
-			   UM_OKCANCEL) == MR_CANCEL)
-	       return;
-	  sl = w->history;
-	  g_slist_foreach(sl,(GFunc)history_entry_destroy,NULL);
-	  w->history = NULL;
-	  set_sensitive(w->need_history_items,FALSE);
-     } else {
-	  if (user_message(_("This will clear the undo buffer up to the last "
-			   "save"),UM_OKCANCEL) == MR_CANCEL)
-	       return;
-	  pr = g_slist_nth(w->history, w->changecount-1);
-	  sl = pr->next;
-	  g_slist_foreach(sl,(GFunc)history_entry_destroy,NULL);
-	  pr->next = NULL;
-     }
-     g_slist_free(sl);     
-     w->changecount = 0;
 }
 
 static void edit_clearclipboard(GtkMenuItem *menuitem, gpointer user_data)
@@ -1635,8 +1346,8 @@ static Chunk *effects_normalize_proc(Chunk *chunk, StatusBar *bar,
 
 static void effects_normalize(GtkMenuItem *menuitem, gpointer user_data)
 {     
-     mainwindow_effect_manual(MAINWINDOW(user_data),effects_normalize_proc,
-			      TRUE,NULL);
+     document_apply_cb(MAINWINDOW(user_data)->doc,effects_normalize_proc,
+		       TRUE,NULL);
 }
 
 static void effects_pipe(GtkMenuItem *menuitem, gpointer user_data)
@@ -1646,25 +1357,25 @@ static void effects_pipe(GtkMenuItem *menuitem, gpointer user_data)
 
 static void cursor_tobeginning(GtkMenuItem *menuitem, gpointer user_data)
 {
-     chunk_view_set_cursor(MAINWINDOW(user_data)->view,0);
+     document_set_cursor(MAINWINDOW(user_data)->doc,0);
 }
 
 static void cursor_toend(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     chunk_view_set_cursor(w->view,w->view->chunk->length-1);
+     document_set_cursor(w->doc,w->doc->chunk->length);
 }
 
 static void cursor_toselstart(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     chunk_view_set_cursor(w->view,w->view->selstart);
+     document_set_cursor(w->doc,w->doc->selstart);
 }
 
 static void cursor_toselend(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     chunk_view_set_cursor(w->view,w->view->selend-1);
+     document_set_cursor(w->doc,w->doc->selend);
 }
 
 static Chunk *byteswap_proc(Chunk *chunk, StatusBar *bar, 
@@ -1675,7 +1386,7 @@ static Chunk *byteswap_proc(Chunk *chunk, StatusBar *bar,
 
 static void effects_byteswap(GtkMenuItem *menuitem, gpointer user_data)
 {
-     mainwindow_effect_manual(MAINWINDOW(user_data),byteswap_proc,TRUE,NULL);
+     document_apply_cb(MAINWINDOW(user_data)->doc,byteswap_proc,TRUE,NULL);
 }
 
 static Chunk *fadein_proc(Chunk *chunk, StatusBar *bar, gpointer user_data)
@@ -1690,12 +1401,12 @@ static Chunk *fadeout_proc(Chunk *chunk, StatusBar *bar, gpointer user_data)
 
 static void effects_fadein(GtkMenuItem *menuitem, gpointer user_data)
 {
-     mainwindow_effect_manual(MAINWINDOW(user_data),fadein_proc,TRUE,NULL);
+     document_apply_cb(MAINWINDOW(user_data)->doc,fadein_proc,TRUE,NULL);
 }
 
 static void effects_fadeout(GtkMenuItem *menuitem, gpointer user_data)
 {
-     mainwindow_effect_manual(MAINWINDOW(user_data),fadeout_proc,TRUE,NULL);
+     document_apply_cb(MAINWINDOW(user_data)->doc,fadeout_proc,TRUE,NULL);
 }
 
 static void effects_dialog(GtkMenuItem *menuitem, gpointer user_data)
@@ -1712,9 +1423,7 @@ static void file_recent(GtkMenuItem *menuitem, gpointer user_data)
      GList *m = recent_filenames;
      while (l->data != menuitem) { l=l->next; m=m->next; }
      fn = g_strdup((gchar *)m->data);
-     procstart(w);
      chunk = chunk_load(fn, dither_editing, w->statusbar);
-     procend(w);
      if (!chunk) { g_free(fn); return; }
      mainwindow_set_chunk(w, chunk, fn);
      inifile_set("lastOpenFile",fn);
@@ -1756,7 +1465,6 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/Edit/Select _all"),"<control>A",edit_selectall,0, NULL          },
 	  { N_("/Edit/sep3"),     NULL,         NULL,           0, "<Separator>" },
 	  { N_("/Edit/Clear clipboard"),NULL,   edit_clearclipboard,0,NULL       },
-	  { N_("/Edit/Clear undo buffer"),NULL, edit_clearundobuffer,0,NULL      },
 	  { N_("/Edit/sep4"),     NULL,         NULL,           0, "<Separator>" },
 	  { N_("/Edit/P_references"),"<control>P",      edit_preferences,0,NULL          },
 	  { N_("/_View"),         NULL,         NULL,           0, "<Branch>"    },
@@ -1854,7 +1562,7 @@ static GtkWidget *create_menu(Mainwindow *w)
      };
 
      gchar *need_history_names[] = {
-	  "/Edit/Undo", "/Edit/Clear undo buffer"
+	  "/Edit/Undo"
      };
   
      GtkAccelGroup *accel_group;
@@ -1958,8 +1666,10 @@ static void loopmode_toggle(GtkToggleButton *button, gboolean *user_data)
 static void followmode_toggle(GtkToggleButton *button, gboolean *user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     chunk_view_set_followmode(w->view, gtk_toggle_button_get_active(button));
-     inifile_set_gboolean("followMode", gtk_toggle_button_get_active(button));
+     w->followmode = gtk_toggle_button_get_active(button);
+     if (w->doc != NULL)
+	  document_set_followmode(w->doc, w->followmode);
+     inifile_set_gboolean("followMode", w->followmode);
 }
 
 static void bouncemode_toggle(GtkToggleButton *button, gboolean *user_data)
@@ -2113,9 +1823,10 @@ static GtkWidget *create_toolbar(Mainwindow *w)
 	  _("Follow cursor while playing"),"X",b,
 	  GTK_SIGNAL_FUNC(followmode_toggle),w);
      if ( inifile_get_gboolean("followMode",FALSE) ) {
-       gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(r), TRUE);
-       chunk_view_set_followmode(w->view, TRUE);
-     }
+	  gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(r), TRUE);
+	  w->followmode = TRUE;
+     } else
+	  w->followmode = FALSE;
      p = gdk_pixmap_colormap_create_from_xpm_d(
 	  NULL, gtk_widget_get_colormap(GTK_WIDGET(w)), &bmp, NULL,
 	  button_bounce_xpm);
@@ -2151,24 +1862,33 @@ static GtkWidget *create_toolbar(Mainwindow *w)
 
 static gboolean setting_zoom_flag = FALSE;
 
-static void mainwindow_view_changed(ChunkView *cv, gpointer user_data)
+static void mainwindow_view_changed(Document *d, gpointer user_data)
 {
      float max_samp,min_samp,current_samp;
      Mainwindow *w = MAINWINDOW(user_data);
-     w->view_adj->page_size = (cv->viewend - cv->viewstart);
-     w->view_adj->upper = cv->chunk->length;
-     w->view_adj->value = cv->viewstart;
+     w->view_adj->page_size = (d->viewend - d->viewstart);
+     w->view_adj->upper = d->chunk->length;
+     w->view_adj->value = d->viewstart;
      w->view_adj->step_increment = 16;
      w->view_adj->page_increment = w->view_adj->page_size / 2;     
      gtk_adjustment_changed ( w->view_adj );
      setting_zoom_flag = TRUE;
-     max_samp = w->view->chunk->length;
+     max_samp = w->doc->chunk->length;
      min_samp = GTK_WIDGET(w->view)->allocation.width;
-     current_samp = w->view->viewend - w->view->viewstart;
+     current_samp = w->doc->viewend - w->doc->viewstart;
      if (current_samp < min_samp) {
-	  w->zoom_adj->value = 0.0;
-	  w->zoom_adj->page_size = 1.2;
-	  set_sensitive(w->zoom_items,FALSE);
+	  if (current_samp < w->doc->chunk->length) {
+	       /* We are zoomed in longer than the slider allows, so set it 
+		* to max */
+	       w->zoom_adj->value = 1.0;
+	       w->zoom_adj->page_size = 0.2;
+	       set_sensitive(w->zoom_items,TRUE);
+	  } else {
+	       /* We're viewing the whole chunk and can't zoom in or out */
+	       w->zoom_adj->value = 0.0;
+	       w->zoom_adj->page_size = 1.2;
+	       set_sensitive(w->zoom_items,FALSE);
+	  }
      } else {
 	  w->zoom_adj->value = 
 	       log(current_samp/max_samp)/log(min_samp/max_samp);
@@ -2180,33 +1900,35 @@ static void mainwindow_view_changed(ChunkView *cv, gpointer user_data)
      update_desc(w);
 }
 
-static void mainwindow_selection_changed(ChunkView *cv, gpointer user_data)
+static void mainwindow_selection_changed(Document *d, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW ( user_data );
      update_desc ( w );
-     set_sensitive(w->need_selection_items,
-		   (w->view->selstart != w->view->selend));
+     set_sensitive(w->need_selection_items, (d->selstart != d->selend));
 }
 
-static void mainwindow_cursor_changed(ChunkView *cv, gint mode, 
+static void mainwindow_cursor_changed(Document *d, gboolean rolling, 
 				      gpointer user_data)
 {
      Mainwindow *w;
      w = MAINWINDOW ( user_data );
-     if (w!=playing_window || status_bar_roll_cursor) update_desc(w);
-     if (mode == 0) return;
-     else if (mode == 2) {
-	  do_stop();
-	  do_play(w,cv->selstart,cv->selend,w->loopmode);
-     } else 
-	  if (w == playing_window && player_playing()) 
-	       player_set_buffer_pos(cv->cursorpos);
+     if (!rolling || status_bar_roll_cursor) update_desc(w);
 }
 
-static void mainwindow_value_changed(GtkAdjustment *adjustment, gpointer user_data)
+static void mainwindow_state_changed(Document *d, gpointer user_data)
 {
-     chunk_view_set_view( MAINWINDOW(user_data)->view, adjustment->value, 
-			  adjustment->value + adjustment->page_size );
+     Mainwindow *w = MAINWINDOW(user_data);
+     fix_title(w);
+     update_desc(w);
+     set_sensitive(w->need_history_items,document_can_undo(d));
+     set_sensitive(w->need_selection_items,(d->selstart != d->selend));
+}
+
+static void mainwindow_value_changed(GtkAdjustment *adjustment, 
+				     gpointer user_data)
+{
+     document_set_view( MAINWINDOW(user_data)->doc, adjustment->value, 
+			adjustment->value + adjustment->page_size );
 }
 
 static void mainwindow_zoom_changed(GtkAdjustment *adjustment, 
@@ -2214,13 +1936,13 @@ static void mainwindow_zoom_changed(GtkAdjustment *adjustment,
 {
      float max_samp,min_samp,target_samp,current_samp;
      Mainwindow *w = MAINWINDOW(user_data);
+
      if (setting_zoom_flag) return;
-     current_samp = w->view->viewend - w->view->viewstart;
+     current_samp = w->doc->viewend - w->doc->viewstart;
      min_samp = GTK_WIDGET(w->view)->allocation.width;
-     max_samp = w->view->chunk->length;
+     max_samp = w->doc->chunk->length;
      target_samp = max_samp * pow(min_samp/max_samp,adjustment->value);
-     chunk_view_zoom(w->view,current_samp/target_samp,
-		     (target_samp<current_samp));
+     document_zoom(w->doc,current_samp/target_samp,(target_samp<current_samp));
 }
 
 static void mainwindow_vertical_zoom_changed(GtkAdjustment *adjustment,
@@ -2237,7 +1959,7 @@ static void mainwindow_speed_changed(GtkAdjustment *adjustment,
 {
      Mainwindow *w = MAINWINDOW(user_data);
      gchar c[32];
-     if (w == playing_window)
+     if (w->doc == playing_document)
 	  player_set_speed(-adjustment->value);
      g_snprintf(c,sizeof(c),"%d%%",(int)(-adjustment->value*100.0+0.5));
      gtk_label_set_text(w->speed_label,c);
@@ -2253,9 +1975,9 @@ static void dc_func(gchar *label, off_t pos, gpointer fud)
 static void mainwindow_view_double_click(ChunkView *view, 
 					 off_t *sample, Mainwindow *wnd)
 {
-     off_t o[3] = { *sample, 0, view->chunk->length };               
-     chunk_view_foreach_mark(view,dc_func,o);
-     chunk_view_set_selection(view,o[1],o[2]);
+     off_t o[3] = { *sample, 0, wnd->doc->chunk->length };               
+     document_foreach_mark(wnd->doc,dc_func,o);
+     document_set_selection(wnd->doc,o[1],o[2]);
 }
 
 static void mainwindow_init(Mainwindow *obj)
@@ -2279,12 +2001,6 @@ static void mainwindow_init(Mainwindow *obj)
      chunk_view_set_timescale(
 	  obj->view, inifile_get_gboolean(INI_SETTING_TIMESCALE,
 					  INI_SETTING_TIMESCALE_DEFAULT));
-     gtk_signal_connect( GTK_OBJECT(obj->view), "view-changed",
-			 GTK_SIGNAL_FUNC(mainwindow_view_changed), obj );
-     gtk_signal_connect( GTK_OBJECT(obj->view), "selection-changed",
-			 GTK_SIGNAL_FUNC(mainwindow_selection_changed), obj );
-     gtk_signal_connect( GTK_OBJECT(obj->view), "cursor-changed",
-			 GTK_SIGNAL_FUNC(mainwindow_cursor_changed), obj );
      gtk_signal_connect( GTK_OBJECT(obj->view), "double-click",
 			 GTK_SIGNAL_FUNC(mainwindow_view_double_click), obj);
      obj->view_adj = GTK_ADJUSTMENT( gtk_adjustment_new ( 0,0,0,0,0,0 ));
@@ -2306,12 +2022,10 @@ static void mainwindow_init(Mainwindow *obj)
 			obj);
 
      obj->statusbar = STATUSBAR(status_bar_new());
-     obj->filename = NULL;
-     obj->titlename = NULL;
-     obj->title_serial = 0;
-     obj->changed = FALSE;
-     obj->changecount = 0;
-     obj->history = NULL;
+     gtk_signal_connect(GTK_OBJECT(obj->statusbar),"progress_begin",
+			GTK_SIGNAL_FUNC(procstart),obj);
+     gtk_signal_connect(GTK_OBJECT(obj->statusbar),"progress_end",
+			GTK_SIGNAL_FUNC(procend),obj);
      obj->loopmode = inifile_get_gboolean("loopMode",FALSE);
      obj->bouncemode = FALSE; /* Set to true by create_toolbar */
      obj->sensitive = TRUE;
@@ -2458,10 +2172,8 @@ GtkWidget *mainwindow_new_with_file(char *filename)
      Chunk *c;
      gchar *d;
      w = MAINWINDOW ( mainwindow_new() );
-     procstart(w);
      d = make_filename_rooted(filename);
      c = chunk_load(d, dither_editing, w->statusbar);
-     procend(w);
      if (c) {
           mainwindow_set_chunk(w, c, d);
           inifile_set("lastOpenFile",d);
@@ -2469,115 +2181,6 @@ GtkWidget *mainwindow_new_with_file(char *filename)
      }
      g_free(d);
      return GTK_WIDGET(w);
-}
-
-gboolean mainwindow_effect(Mainwindow *w, chunk_filter_proc proc, 
-			   chunk_filter_proc eof_proc, gboolean allchannels,
-			   gboolean convert, gchar *title)
-{
-     Chunk *c,*p,*r;
-     off_t u,plen,rlen;
-     if ((w->view->selstart == w->view->selend) ||
-	 (w->view->selstart==0 && w->view->selend >= w->view->chunk->length)) {
-	  procstart(w);
-	  r = chunk_filter( w->view->chunk, proc, eof_proc,
-			    allchannels?CHUNK_FILTER_FULL:CHUNK_FILTER_ONE,
-			    convert, dither_editing, w->statusbar, title);
-	  procend(w);
-	  if (r) { 
-	       mainwindow_chunk_change ( w, r, NULL, 0, 0, 0 ); 
-	       return FALSE;
-	  } else
-	       return TRUE;
-     } else {
-	  u = w->view->selstart;
-	  p = chunk_get_part(w->view->chunk, u, 
-			     w->view->selend - u);
-	  plen = p->length;
-	  procstart(w);
-	  r = chunk_filter( p, proc, eof_proc, 
-			    allchannels?CHUNK_FILTER_FULL:CHUNK_FILTER_ONE, 
-			    convert, dither_editing, w->statusbar, title);
-	  procend(w);
-	  gtk_object_sink(GTK_OBJECT(p));
-	  if (r) {
-	       rlen = r->length;
-	       c = chunk_replace_part(w->view->chunk,u,plen,r);
-	       gtk_object_sink(GTK_OBJECT(r));
-	       mainwindow_chunk_change( w, c, NULL, u, plen, rlen - plen);
-	       chunk_view_set_selection(w->view,u,u+rlen);
-	       return FALSE;
-	  } else
-	       return TRUE;
-     }
-}
-
-
-gboolean mainwindow_effect_manual(Mainwindow *w, mainwindow_effect_proc proc, 
-			      gboolean selection_only, gpointer user_data)
-{
-     Chunk *c,*p,*r;
-     off_t u,plen,rlen;
-     if ((w->view->selstart == w->view->selend) ||
-	 (w->view->selstart==0 && w->view->selend >= w->view->chunk->length) ||
-	  !selection_only) {
-	  procstart(w);
-	  r = proc( w->view->chunk, w->statusbar, user_data );
-	  procend(w);
-	  if (r) { 
-	       do_stop(); 
-	       mainwindow_chunk_change ( w, r, NULL, 0, 0, 0 ); 
-	       return FALSE;
-	  } else
-	       return TRUE;
-     } else {
-	  u = w->view->selstart;
-	  p = chunk_get_part(w->view->chunk, u, 
-			     w->view->selend - u);
-	  plen = p->length;
-	  procstart(w);
-	  r = proc( p, w->statusbar, user_data );
-	  procend(w);
-	  gtk_object_sink(GTK_OBJECT(p));
-	  if (r) {
-	       rlen = r->length;
-	       c = chunk_replace_part(w->view->chunk,u,plen,r);
-	       gtk_object_sink(GTK_OBJECT(r));
-	       mainwindow_chunk_change( w, c, NULL, u, plen, rlen - plen);
-	       chunk_view_set_selection(w->view,u,u+rlen);
-	       return FALSE;
-	  } else
-	       return TRUE;
-     }     
-}
-
-void mainwindow_parse(Mainwindow *w, chunk_parse_proc proc, 
-		      gboolean allchannels, gboolean convert, gchar *title)
-{
-     Chunk *c;
-     if ((w->view->selstart == w->view->selend) ||
-	 (w->view->selstart==0 && w->view->selend >= w->view->chunk->length)) {
-	  procstart(w);
-	  chunk_parse(w->view->chunk,proc,allchannels,convert,dither_editing,
-		      w->statusbar,title);
-	  procend(w);
-     } else {
-	  c = chunk_get_part(w->view->chunk,w->view->selstart,
-			     w->view->selend - w->view->selstart);
-	  procstart(w);
-	  chunk_parse(c,proc,allchannels,convert,dither_editing,
-		      w->statusbar,title);
-	  procend(w);
-	  gtk_object_sink(GTK_OBJECT(c));
-     }
-}
-
-off_t mainwindow_parse_length(Mainwindow *w)
-{
-     if (w->view->selstart != w->view->selend)
-	  return w->view->selend - w->view->selstart;
-     else
-	  return w->view->chunk->length;
 }
 
 static void reset_statusbar(Mainwindow *w)
@@ -2604,19 +2207,6 @@ void mainwindow_set_all_sensitive(gboolean sensitive)
 {
      list_object_foreach(mainwindow_objects,(GFunc)mainwindow_set_sensitive,
 			 GINT_TO_POINTER(sensitive));
-}
-
-void mainwindow_position_cursor(Mainwindow *mw, off_t pos)
-{    
-     if (playing_window == mw && player_playing()) 
-	  player_set_buffer_pos(pos);
-     else
-	  chunk_view_set_cursor(mw->view,pos);
-}
-
-Mainwindow *mainwindow_playing_window(void)
-{
-     return playing_window;
 }
 
 void mainwindow_repaint_views(void)

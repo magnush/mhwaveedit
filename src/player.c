@@ -326,6 +326,30 @@ void player_get_range(off_t *startpos, off_t *endpos)
      *endpos = loopend;
 }
 
+void player_change_range(off_t start, off_t end)
+{
+     off_t rp;
+
+     /* Special case - we're playing a loop and the sound has looped, but 
+      * because of the output delay the cursor and the audible sound hasn't 
+      * come there yet. In that case, we're forced to flush buffers etc 
+      * to avoid sending out the old loop to the listener. */
+     if (loop) {
+	  rp = player_get_real_pos();
+	  if (rp > curpos) {
+	       /* Fixme: Should handle error return (although unlikely) */
+	       player_play(ch,rp,end,TRUE);
+	       loopstart = start;
+	       return;
+	  }
+     }
+     
+     loopstart = start;
+     loopend = end;
+     check_small_loop();
+     
+}
+
 void player_set_buffer_pos(off_t pos)
 {
      if (pos != curpos) {
@@ -341,21 +365,36 @@ void player_set_buffer_pos(off_t pos)
      }
 }
 
-void player_replace(Chunk *chunk, off_t start, off_t end, off_t pos)
+void player_switch(Chunk *chunk, off_t movestart, off_t movedist)
 {
      ChunkHandle *c;
-     off_t rp = player_get_real_pos();
      off_t oldpos = curpos;
-
-     /* Special case - we're playing a loop and the sound has looped, but 
-      * because of the output delay the cursor and the audible sound hasn't 
-      * come there yet. In that case, we're forced to flush buffers etc 
-      * to avoid sending out the old loop to the listener. */
-     if (loop && rp > oldpos) {
-	  player_play(chunk,rp,end,TRUE);
-	  loopstart = start;
-	  return;
+     off_t newpos, newstart, newend;
+     
+     newpos = curpos;
+     if (newpos >= movestart) {
+	  newpos += movedist;
+	  if (newpos < movestart) {
+	       player_stop();
+	       curpos = movestart;
+	       return;
+	  }
+	  if (newpos > chunk->length) newpos = chunk->length;
      }
+     
+     newstart = loopstart;
+     if (newstart >= movestart) {
+	  newstart += movedist;
+	  if (newstart < movestart) newstart = movestart;
+	  if (newstart >= chunk->length) newstart = chunk->length;
+     }
+     newend = loopend;
+     if (newend >= movestart) {
+	  newend += movedist;
+	  if (newend < movestart) newend = movestart;
+	  if (newend >= chunk->length) newend = chunk->length;
+     }
+     
 
      c = chunk_open(chunk);
      if (c == NULL) return;
@@ -364,16 +403,15 @@ void player_replace(Chunk *chunk, off_t start, off_t end, off_t pos)
      ch = c;
      gtk_object_ref(GTK_OBJECT(ch));
 
-     loopstart = start;
-     loopend = end;
-     curpos = pos;
+     loopstart = newstart;
+     loopend = newend;
+     curpos = newpos;
+     if (newstart == newend) loop = FALSE;
      
      check_small_loop();
 
-     /* Update timerel */
-     realpos_offset += pos - oldpos;
+     realpos_offset += newpos - oldpos;
 }
-
 
 gboolean player_playing(void)
 {
@@ -468,4 +506,9 @@ void player_set_speed(gfloat s)
 	  player_work();
      }
      
+}
+
+gfloat player_get_speed(void)
+{
+     return file_speed;
 }

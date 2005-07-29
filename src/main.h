@@ -133,6 +133,8 @@ gchar channel_char(guint chan);
 gchar *channel_format_name(guint chans);
 
 
+gchar *namepart(gchar *filename);
+
 /* Determines how long time a certain number of samples represents, and returns
    it as a text string.
 

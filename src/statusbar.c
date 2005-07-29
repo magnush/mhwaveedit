@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, Magnus Hjorth
+ * Copyright (C) 2004 2005, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -33,6 +33,9 @@ gboolean status_bar_roll_cursor;
 
 static GtkWidgetClass *parent_class;
 static int progress_count = 0;
+
+enum { PROGRESS_BEGIN_SIGNAL, PROGRESS_END_SIGNAL, LAST_SIGNAL };
+static gint status_bar_signals[LAST_SIGNAL] = { 0 };
 
 static void status_bar_expose(GtkWidget *widget, GdkEventExpose *event, 
 			    gpointer user_data)
@@ -102,6 +105,17 @@ static void status_bar_class_init(GtkObjectClass *klass)
      parent_class = GTK_WIDGET_CLASS(gtk_type_class(gtk_fixed_get_type()));
      GTK_WIDGET_CLASS(klass)->size_allocate = status_bar_size_allocate;
      GTK_WIDGET_CLASS(klass)->size_request = status_bar_size_request;
+     STATUSBAR_CLASS(klass)->progress_begin = NULL;
+     STATUSBAR_CLASS(klass)->progress_end = NULL;
+     status_bar_signals[PROGRESS_BEGIN_SIGNAL] = 
+	  gtk_signal_new("progress-begin", GTK_RUN_FIRST,GTK_CLASS_TYPE(klass),
+			 GTK_SIGNAL_OFFSET(StatusBarClass,progress_begin),
+			 gtk_marshal_NONE__NONE, GTK_TYPE_NONE, 0);
+     status_bar_signals[PROGRESS_END_SIGNAL] = 
+	  gtk_signal_new("progress-end", GTK_RUN_FIRST, GTK_CLASS_TYPE(klass),
+			 GTK_SIGNAL_OFFSET(StatusBarClass,progress_end),
+			 gtk_marshal_NONE__NONE, GTK_TYPE_NONE, 0);
+     gtk_object_class_add_signals(klass,status_bar_signals,LAST_SIGNAL);
 }
 
 GtkType status_bar_get_type(void)
@@ -127,7 +141,9 @@ GtkWidget *status_bar_new(void)
 
 static void status_bar_set_mode(StatusBar *sb, gint mode)
 {
+     gint old_mode;
      if (mode == sb->mode) return;
+     old_mode = sb->mode;
      switch (sb->mode) {
      case 0:
 	  gtk_widget_hide(GTK_WIDGET(sb->cursor));
@@ -161,6 +177,12 @@ static void status_bar_set_mode(StatusBar *sb, gint mode)
 	  break;
      }
      sb->mode = mode;
+     if (old_mode == 1) 
+	  gtk_signal_emit(GTK_OBJECT(sb),
+			  status_bar_signals[PROGRESS_END_SIGNAL]);
+     if (mode == 1) 
+	  gtk_signal_emit(GTK_OBJECT(sb),
+			  status_bar_signals[PROGRESS_BEGIN_SIGNAL]);
      gtk_widget_queue_draw(GTK_WIDGET(sb));
 }
 

@@ -1,20 +1,33 @@
-2005-07-13  Magnus Hjorth  <magnus@manges.d>
+2005-07-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/viewcache.c (view_cache_update): Removed special case for
+	small chunks, and handle errors more gracefully. 
+
+2005-07-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Large code rewrite. Stuff from chunkview.c and mainwindow.c was
+	moved to the new document.c file. MainwindowList changed to
+	DocumentList. Redo support added. 
+
+	* src/document.c: New file.
+
+2005-07-13  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* Released version 1.4.2.
 
-2005-07-11  Magnus Hjorth  <magnus@manges.d>
+2005-07-11  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/chunkview.c (chunk_view_expose): Off-by-one error detected
 	by Valgrind.
 
-2005-06-28  Magnus Hjorth  <magnus@manges.d>
+2005-06-28  Magnus Hjorth  <magnus.hjorgh@home.se>
 
 	* src/mainwindow.c (do_stop): Support auto return mode. 
 
 	* src/chunk.c (chunk_interpolate_endpoints): Forgot to sink the
 	original chunk after converting.
 
-2005-06-26  Magnus Hjorth  <magnus@manges.d>
+2005-06-26  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/mainwindow.c (edit_silence): Fixed to work with dithering
 	support.

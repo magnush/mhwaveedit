@@ -23,7 +23,7 @@
 #define EFFECTBROWSER_H_INCLUDED
 
 
-#include "mainwindowlist.h"
+#include "documentlist.h"
 #include "effectdialog.h"
 
 
@@ -37,7 +37,7 @@
 typedef struct {    
      GtkWindow window;
 
-     MainwindowList *mwl;
+     DocumentList *dl;
 
      GtkBox *mw_list_box;
      GtkList *effect_list;
@@ -57,8 +57,8 @@ typedef struct {
 void effect_browser_register_default_effects(void);
 
 GtkType effect_browser_get_type(void);
-GtkWidget *effect_browser_new(Mainwindow *w);
-GtkWidget *effect_browser_new_with_effect(Mainwindow *w, gchar *effect_name);
+GtkWidget *effect_browser_new(Document *doc);
+GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect_name);
 
 void effect_browser_set_effect(EffectBrowser *eb, gchar *effect_name);
 

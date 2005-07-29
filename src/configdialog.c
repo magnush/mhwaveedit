@@ -103,9 +103,9 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
     output_byteswap_flag = gtk_toggle_button_get_active(cd->output_bswap);
     inifile_set_gboolean("outputByteswap",output_byteswap_flag);
 
-    chunk_view_follow_strict_flag = 
+    view_follow_strict_flag = 
 	 gtk_toggle_button_get_active(cd->center_cursor);
-    inifile_set_gboolean("centerCursor",chunk_view_follow_strict_flag);
+    inifile_set_gboolean("centerCursor",view_follow_strict_flag);
 
     autoplay_mark_flag = gtk_toggle_button_get_active(cd->mark_autoplay);
     inifile_set_gboolean("autoPlayMark",autoplay_mark_flag);
@@ -575,7 +575,7 @@ static void config_dialog_init(ConfigDialog *cd)
 				(GtkAccelFlags) 0);
     cd->center_cursor = GTK_TOGGLE_BUTTON(w);
     gtk_toggle_button_set_active(cd->center_cursor,
-				 chunk_view_follow_strict_flag);
+				 view_follow_strict_flag);
 
     w = gtk_check_button_new_with_label("");
     key = gtk_label_parse_uline(GTK_LABEL(GTK_BIN(w)->child),

@@ -91,7 +91,7 @@ GtkType effect_dialog_get_type(void)
      return id;
 }
 
-static void effect_dialog_eb_target_changed(MainwindowList *mwl, 
+static void effect_dialog_eb_target_changed(DocumentList *dl, 
 					    gpointer user_data)
 {
      /* puts("effect_dialog_eb_target_changed"); */
@@ -105,7 +105,7 @@ void effect_dialog_setup(EffectDialog *ed, gchar *effect_name, gpointer eb)
      ed->eb = eb;
      ed->effect_name = effect_name;
      gtk_signal_connect_while_alive
-	  (GTK_OBJECT(EFFECT_BROWSER(eb)->mwl),"window_changed",
+	  (GTK_OBJECT(EFFECT_BROWSER(eb)->dl),"document_changed",
 	   GTK_SIGNAL_FUNC(effect_dialog_eb_target_changed),ed,GTK_OBJECT(ed));
      gtk_signal_emit(GTK_OBJECT(ed),
                      effect_dialog_signals[SETUP_SIGNAL]);     

@@ -10,8 +10,8 @@ mhwaveedit_SOURCES = chunk.c int_box.c sound.c speeddialog.c              \
 		     gotodialog.c pipedialog.c historybox.c viewcache.c   \
 		     filetypes.c datasource.c statusbar.c effectbrowser.c \
 		     soxdialog.c help.c ladspacore.c ladspadialog.c       \
-		     tempfile.c listobject.c mainwindowlist.c combo.c     \
-		     rateconv.c dataformat.c rateest.c
+		     tempfile.c listobject.c documentlist.c combo.c       \
+		     rateconv.c dataformat.c rateest.c document.c
 
 INCLUDES = @GTK_CFLAGS@ @SDL_CFLAGS@ @SNDFILE_CFLAGS@ @JACK_CFLAGS@ \
 	   @ESOUND_CFLAGS@ @LIBSAMPLERATE_CFLAGS@

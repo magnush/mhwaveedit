@@ -52,16 +52,16 @@ static gboolean combine_channels_dialog_apply(EffectDialog *ed)
 {
      guint i;
      gboolean b;
-     Mainwindow *w = EFFECT_BROWSER(ed->eb)->mwl->selected;
+     Document *d = EFFECT_BROWSER(ed->eb)->dl->selected;
      CombineChannelsDialog *ccd = COMBINE_CHANNELS_DIALOG(ed);
-     g_assert(ccd->channels == w->view->chunk->format.channels);
+     g_assert(ccd->channels == d->chunk->format.channels);
      for (i=0; i<ccd->channels*ccd->channels; i++)
 	  if (floatbox_check(ccd->combination_matrix[i])) return TRUE;
      combination_matrix =g_malloc(ccd->channels*ccd->channels*sizeof(sample_t));
      for (i=0; i<ccd->channels*ccd->channels; i++)
 	  combination_matrix[i] = ccd->combination_matrix[i]->val / 100.0;
-     b = mainwindow_effect(w,combine_channels_dialog_apply_proc,NULL,TRUE,
-			   TRUE,NULL);
+     b = document_apply(d,combine_channels_dialog_apply_proc,NULL,
+			CHUNK_FILTER_FULL,TRUE,NULL);
      g_free(samples);
      samples = NULL;
      g_free(combination_matrix);
@@ -71,7 +71,7 @@ static gboolean combine_channels_dialog_apply(EffectDialog *ed)
 static void combine_channels_dialog_target_changed(EffectDialog *ed) 
 {
      CombineChannelsDialog *ccd = COMBINE_CHANNELS_DIALOG(ed);
-     if (ccd->channels != EFFECT_BROWSER(ed->eb)->mwl->format.channels)
+     if (ccd->channels != EFFECT_BROWSER(ed->eb)->dl->format.channels)
 	  effect_browser_invalidate_effect(EFFECT_BROWSER(ed->eb),"combine");
 }
 
@@ -79,7 +79,7 @@ static void combine_channels_setup(EffectDialog *ed)
 {
     int i,j;
     GtkWidget *a,*b,*c;
-    guint channels = EFFECT_BROWSER(ed->eb)->mwl->format.channels;
+    guint channels = EFFECT_BROWSER(ed->eb)->dl->format.channels;
     CombineChannelsDialog *ccd = COMBINE_CHANNELS_DIALOG(ed);
     ccd->channels = channels;
     ccd->combination_matrix = g_malloc(channels*channels*sizeof(Floatbox *));

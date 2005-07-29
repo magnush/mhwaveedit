@@ -31,28 +31,28 @@ static gboolean goto_dialog_apply(GotoDialog *gd)
 {
      off_t p=0,q;
      off_t o;
-     ChunkView *v = gd->mw->view;
+     Document *d = gd->mw->doc;
      int i;
-     if (gd->mw->view->chunk == NULL) return FALSE;
+     if (d == NULL) return FALSE;
      if (floatbox_check(gd->offset)) return TRUE;
      for (i=0; i<5; i++)
 	  if (gtk_toggle_button_get_active(gd->relbuttons[i]))
 	       break;
      switch (i) {
      case 0: p = 0; break;
-     case 1: p = v->chunk->length-1; break;
-     case 2: p = v->cursorpos; break;
-     case 3: p = (v->selstart==v->selend)?0:v->selstart; break;
+     case 1: p = d->chunk->length; break;
+     case 2: p = d->cursorpos; break;
+     case 3: p = (d->selstart==d->selend)?0:d->selstart; break;
      case 4: 
-	  p = (v->selstart==v->selend)?v->chunk->length-1:v->selend-1; 
+	  p = (d->selstart==d->selend)?d->chunk->length:d->selend; 
 	  break;
      default: g_assert_not_reached();
      }
-     o = ((float)(v->chunk->format.samplerate))*gd->offset->val;
+     o = ((float)(d->chunk->format.samplerate))*gd->offset->val;
      q = p+o;
-     if (q>=v->chunk->length) q=(o<0)?0:v->chunk->length-1;
+     if (q>d->chunk->length || q<0) q=(o<0)?0:d->chunk->length;
      
-     mainwindow_position_cursor(gd->mw,q);
+     document_set_cursor(d,q);
 
      inifile_set_gfloat("gotoOffset",gd->offset->val);
      inifile_set_guint32("gotoRel",i);

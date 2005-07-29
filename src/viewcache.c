@@ -78,6 +78,7 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 {
      static sample_t *sbuf=NULL;
      static guint sbufsize=0;
+     static gboolean readflag = FALSE;
           
      sample_t *new_values;
      off_t *new_offsets, o;
@@ -98,7 +99,8 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
      sample_t x;
      guint impr = 0;
 
-     if (xres > end_samp-start_samp) xres=end_samp-start_samp;
+     /* if (xres > end_samp-start_samp) xres=end_samp-start_samp; */
+     if (readflag) return FALSE;
 
      chunk_change = (cache->chunk != chunk);
      range_change = (chunk != NULL) && (chunk_change ||
@@ -346,9 +348,18 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 	       sbuf = g_malloc(sbufsize);
 	  }
 	  /* Ignore errors, the user will get error message anyway */
+	  readflag = TRUE;
 	  m=chunk_read_array_fp(cache->handle,cache->offsets[i],k,sbuf,
 				DITHER_NONE);
+	  readflag = FALSE;
 	  g_assert(m==0 || m==k);
+
+	  if (m == 0) {
+	       /* Fill in all data as read so we don't get flooded with error
+		* messages */
+	       memset(cache->calced, CALC_DONE, xres);
+	       return TRUE;
+	  }
 	  
 	  /* Calculate max/min */
 	  m = 0; /* Current full sample in sbuf */
@@ -388,8 +399,15 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 		    sbufsize = l;
 		    sbuf = g_malloc(sbufsize);
 	       }
-	       chunk_read_array_fp(cache->handle, cache->offsets[i]+impr,
-				   k, sbuf,DITHER_NONE);
+	       readflag = TRUE;
+	       m = chunk_read_array_fp(cache->handle, cache->offsets[i]+impr,
+				       k, sbuf,DITHER_NONE);
+	       readflag = FALSE;
+	       if (m == 0) {
+		    memset(cache->calced, CALC_DONE, xres);
+		    return TRUE;
+	       }
+	       
 	       for (m=0; m<channels; m++) {
 		    g = cache->values[(i*channels + m)*2];
 		    h = cache->values[(i*channels + m)*2 + 1];
@@ -415,9 +433,15 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 		    sbufsize = k;
 		    sbuf = g_malloc(sbufsize);
 	       }
+	       readflag = TRUE;
 	       l=chunk_read_array_fp(cache->handle, cache->offsets[i]+impr, 
 				     new_spp-impr, sbuf, DITHER_NONE);
+	       readflag = FALSE;
 	       g_assert(l==new_spp-impr || l==0);
+	       if (l == 0) {
+		    memset(cache->calced, CALC_DONE, xres);
+		    return TRUE;
+	       }
 	       
 	       
 	       for (k=0; k<channels; k++) {

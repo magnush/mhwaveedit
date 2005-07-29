@@ -61,6 +61,10 @@ typedef struct {
 
 typedef struct {
      GtkFixedClass fixed_class;
+     
+     void (*progress_begin)(StatusBar *bar);
+     void (*progress_end)(StatusBar *bar);
+
 } StatusBarClass;
 
 /* Global variable that decides whether the cursor position text

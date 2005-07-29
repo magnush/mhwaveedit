@@ -42,8 +42,8 @@ static gboolean apply(EffectDialog *ed)
      SpeedDialog *s = SPEED_DIALOG(ed);
      if (floatbox_check(s->speed) || s->speed->val<=0.0) return TRUE; 
      if (s->speed->val==100.0) return FALSE;
-     return mainwindow_effect_manual(EFFECT_BROWSER(EFFECT_DIALOG(s)->eb)->
-				     mwl->selected, apply_proc,TRUE,s);
+     return document_apply_cb(EFFECT_BROWSER(EFFECT_DIALOG(s)->eb)->
+			      dl->selected, apply_proc,TRUE,s);
 }
 
 static void speed_dialog_class_init(EffectDialogClass *klass)

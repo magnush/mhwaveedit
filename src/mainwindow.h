@@ -54,17 +54,10 @@ typedef struct _Mainwindow {
      GList *need_history_items;
      GList *zoom_items;
 
-     gchar *filename;
-     gchar *titlename; /* Unique for each window, 
-			* set whenever view->chunk!=NULL */
-     guint title_serial; 
-
-     gboolean changed;
-     guint changecount; /* Number of items added to history since last save */
-     GSList *history;
+     Document *doc;
 
      gboolean loopmode,bouncemode;     
-
+     gboolean followmode;
      GtkWidget *recent_sep; /* Separator that should be hidden if there 
 			     * aren't any recent files */
      GList *recent; /* List of menu items with recent files */
@@ -74,31 +67,14 @@ typedef struct _MainwindowClass {
      GtkWindowClass parent;
 } MainwindowClass;
 
-typedef Chunk *(*mainwindow_effect_proc)(Chunk *chunk, StatusBar *bar, 
-					 gpointer user_data);
+extern ListObject *mainwindow_objects;
 
 extern gboolean autoplay_mark_flag, varispeed_reset_flag;
-extern ListObject *mainwindow_objects;
 
 guint mainwindow_get_type(void);
 GtkWidget *mainwindow_new();
 GtkWidget *mainwindow_new_with_file(char *filename);
 
-void mainwindow_position_cursor(Mainwindow *w, off_t pos);
-
-gboolean mainwindow_effect(Mainwindow *w, chunk_filter_proc proc, 
-			   chunk_filter_proc eof_proc, gboolean allchannels,
-			   gboolean convert, gchar *title);
-void mainwindow_parse(Mainwindow *w, chunk_parse_proc proc, 
-		      gboolean allchannels, gboolean convert, gchar *title);
-gboolean mainwindow_effect_manual(Mainwindow *w, mainwindow_effect_proc proc, 
-				  gboolean selection_only, gpointer user_data);
-
-off_t mainwindow_parse_length(Mainwindow *w);
-
-gboolean mainwindow_idle_work(void);
-
-gboolean mainwindow_update_cursors(void);
 gboolean mainwindow_update_caches(void);
 
 void mainwindow_update_texts(void);

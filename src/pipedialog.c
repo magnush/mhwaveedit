@@ -66,8 +66,8 @@ static gboolean pipe_dialog_apply(EffectDialog *ed)
 {
      gboolean b;
      PipeDialog *pd = PIPE_DIALOG(ed);
-     b = mainwindow_effect_manual(EFFECT_BROWSER(ed->eb)->mwl->selected,
-				  pipe_dialog_apply_proc,TRUE,pd);
+     b = document_apply_cb(EFFECT_BROWSER(ed->eb)->dl->selected,
+			   pipe_dialog_apply_proc,TRUE,pd);
      history_box_rotate_history(pd->cmd);
      return b;
 }

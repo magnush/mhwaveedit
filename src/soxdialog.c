@@ -238,8 +238,8 @@ static Chunk *sox_dialog_apply_proc(Chunk *chunk, StatusBar *bar,
 static gboolean sox_dialog_apply(EffectDialog *ed)
 {
      SoxDialog *sd = SOX_DIALOG(ed);
-     Mainwindow *w = EFFECT_BROWSER(ed->eb)->mwl->selected;
-     Chunk *chunk = w->view->chunk;
+     Document *d = EFFECT_BROWSER(ed->eb)->dl->selected;
+     Chunk *chunk = d->chunk;
      guint i,j;
      if (chunk->format.samplesize != 1 &&
 	 chunk->format.samplesize != 2 &&
@@ -260,7 +260,7 @@ static gboolean sox_dialog_apply(EffectDialog *ed)
 	  if (sd->fba[i] != NULL)	       
 	       for (j=0; j<sd->i1; j++)
 		    if (floatbox_check(sd->fba[i][j])) return TRUE;
-     return mainwindow_effect_manual(w,sox_dialog_apply_proc,TRUE,ed);
+     return document_apply_cb(d,sox_dialog_apply_proc,TRUE,ed);
 }
 
 static void setup_filter(EffectDialog *ed, gchar *bw_name, gboolean nm)

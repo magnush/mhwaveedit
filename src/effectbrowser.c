@@ -31,7 +31,7 @@
 #include "combinechannelsdialog.h"
 #include "pipedialog.h"
 #include "inifile.h"
-#include "mainwindowlist.h"
+#include "documentlist.h"
 #include "um.h"
 #include "gettext.h"
 
@@ -124,7 +124,7 @@ static void effect_browser_class_init(GtkObjectClass *klass)
 
 static void apply_click(GtkWidget *widget, EffectBrowser *eb)
 {
-     if (eb->mwl->selected == NULL) {
+     if (eb->dl->selected == NULL) {
 	  user_error(_("You have no open file to apply the effect to!"));
 	  return;
      }
@@ -141,7 +141,7 @@ static void effect_browser_close(EffectBrowser *eb)
 
 static void ok_click(GtkWidget *widget, EffectBrowser *eb)
 {
-     if (eb->mwl->selected == NULL) {
+     if (eb->dl->selected == NULL) {
 	  user_error(_("You have no open file to apply the effect to!"));
 	  return;
      }
@@ -336,12 +336,12 @@ GtkType effect_browser_get_type(void)
      return id;
 }
 
-GtkWidget *effect_browser_new(Mainwindow *mw)
+GtkWidget *effect_browser_new(Document *doc)
 {
-     return effect_browser_new_with_effect(mw,"volume");
+     return effect_browser_new_with_effect(doc,"volume");
 }
 
-GtkWidget *effect_browser_new_with_effect(Mainwindow *mw, gchar *effect)
+GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect)
 {
      GtkWidget *w;
      EffectBrowser *eb = 
@@ -349,10 +349,10 @@ GtkWidget *effect_browser_new_with_effect(Mainwindow *mw, gchar *effect)
      gtk_signal_connect(GTK_OBJECT(eb->effect_list),"select_child",
 			(GtkSignalFunc)effect_browser_select_child,eb);
 
-     w = mainwindow_list_new(mw);
+     w = document_list_new(doc);
      gtk_box_pack_end(GTK_BOX(eb->mw_list_box),w,TRUE,TRUE,0);
      gtk_widget_show(w);
-     eb->mwl = MAINWINDOW_LIST(w);
+     eb->dl = DOCUMENT_LIST(w);
      w = gtk_label_new(_("Apply to: "));
      gtk_box_pack_end(GTK_BOX(eb->mw_list_box),w,FALSE,FALSE,0);
      gtk_widget_show(w);     
