@@ -1,3 +1,7 @@
+2005-07-31  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c: Added redo function.
+
 2005-07-29  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/viewcache.c (view_cache_update): Removed special case for

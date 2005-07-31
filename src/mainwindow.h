@@ -51,7 +51,7 @@ typedef struct _Mainwindow {
      GList *need_chunk_items;
      GList *need_selection_items;
      GList *need_clipboard_items;
-     GList *need_history_items;
+     GList *need_undo_items, *need_redo_items;
      GList *zoom_items;
 
      Document *doc;

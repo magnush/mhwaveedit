@@ -48,6 +48,7 @@
 #include "button_open.xpm"
 #include "button_save.xpm"
 #include "button_undo.xpm"
+#include "button_redo.xpm"
 #include "button_cut.xpm"
 #include "button_copy.xpm"
 #include "button_paste.xpm"
@@ -617,7 +618,7 @@ static void file_close(GtkMenuItem *menuitem, gpointer user_data)
 	  w->doc = NULL;
 	  fix_title(w);
 	  set_sensitive(w->need_chunk_items,FALSE);
-	  set_sensitive(w->need_history_items,FALSE);
+	  set_sensitive(w->need_undo_items,FALSE);
 	  list_object_remove(mainwindow_objects,w);
      } else {
 	  geometry_stack_push(GTK_WINDOW(w),NULL,&window_geometry_stack);
@@ -655,6 +656,12 @@ static void edit_undo(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW (user_data);
      document_undo(w->doc);
+}
+
+static void edit_redo(GtkMenuItem *menuitem, gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW (user_data);
+     document_redo(w->doc);
 }
 
 static void update_clipboard_items(Mainwindow *w, gpointer user_data)
@@ -1450,6 +1457,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  {N_("/File/Save selection as..."),"<control>U",file_saveselection,0,NULL},
 	  { N_("/_Edit"),         NULL,         NULL,           0, "<Branch>"    },
 	  { N_("/Edit/_Undo"),    "<control>Z", edit_undo,      0, NULL          },
+	  { N_("/Edit/_Redo"),    NULL,         edit_redo,      0, NULL },
 	  { N_("/Edit/sep1"),     NULL,         NULL,           0, "<Separator>" },
 	  { N_("/Edit/Cu_t"),     "<control>X", edit_cut,       0, NULL          },
 	  { N_("/Edit/_Copy"),    "<control>C", edit_copy,      0, NULL          },
@@ -1466,7 +1474,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/Edit/sep3"),     NULL,         NULL,           0, "<Separator>" },
 	  { N_("/Edit/Clear clipboard"),NULL,   edit_clearclipboard,0,NULL       },
 	  { N_("/Edit/sep4"),     NULL,         NULL,           0, "<Separator>" },
-	  { N_("/Edit/P_references"),"<control>P",      edit_preferences,0,NULL          },
+	  { N_("/Edit/Preferences"),"<control>P",      edit_preferences,0,NULL          },
 	  { N_("/_View"),         NULL,         NULL,           0, "<Branch>"    },
 	  { N_("/View/Zoom _in"), NULL,         view_zoomin,    0, NULL          },
 	  { N_("/View/Zoom _out"),NULL,         view_zoomout,   0, NULL          },
@@ -1561,10 +1569,6 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  "/Edit/Paste to new", "/Edit/Clear clipboard"
      };
 
-     gchar *need_history_names[] = {
-	  "/Edit/Undo"
-     };
-  
      GtkAccelGroup *accel_group;
      GtkItemFactory *item_factory;
      
@@ -1618,10 +1622,12 @@ static GtkWidget *create_menu(Mainwindow *w)
 	       g_list_append(w->need_clipboard_items,gtk_item_factory_get_item(
 				  item_factory,need_clipboard_names[i]));
      
-     for (i=0; i<ARRAY_LENGTH(need_history_names); i++)
-	  w->need_history_items = 
-	       g_list_append(w->need_history_items,gtk_item_factory_get_item(
-				  item_factory,need_history_names[i]));
+     w->need_undo_items = 
+	  g_list_append(w->need_undo_items,gtk_item_factory_get_item
+			(item_factory,"/Edit/Undo") );
+     w->need_redo_items = 
+	  g_list_append(w->need_redo_items,gtk_item_factory_get_item
+			(item_factory,"/Edit/Redo"));
 
      update_file_recent(w);
 
@@ -1712,7 +1718,16 @@ static GtkWidget *create_toolbar(Mainwindow *w)
      r = gtk_toolbar_append_element(
 	  GTK_TOOLBAR(t),GTK_TOOLBAR_CHILD_BUTTON,NULL,NULL,
 	  _("Undo the last change"),"X",b,GTK_SIGNAL_FUNC(edit_undo),w);
-     w->need_history_items = g_list_append(w->need_history_items, r);
+     w->need_undo_items = g_list_append(w->need_undo_items, r);
+     p = gdk_pixmap_colormap_create_from_xpm_d(
+	  NULL, gtk_widget_get_colormap(GTK_WIDGET(w)), &bmp, NULL,
+	  button_redo_xpm);
+     b = gtk_pixmap_new(p, bmp);
+     r = gtk_toolbar_append_element(
+	  GTK_TOOLBAR(t),GTK_TOOLBAR_CHILD_BUTTON,NULL,NULL,
+	  _("Redo the last undo operation"),"X",b,GTK_SIGNAL_FUNC(edit_redo),
+	  w);
+     w->need_redo_items = g_list_append(w->need_redo_items, r);
      gtk_toolbar_append_space(GTK_TOOLBAR(t));
      p = gdk_pixmap_colormap_create_from_xpm_d(
 	  NULL, gtk_widget_get_colormap(GTK_WIDGET(w)), &bmp, NULL,
@@ -1920,7 +1935,8 @@ static void mainwindow_state_changed(Document *d, gpointer user_data)
      Mainwindow *w = MAINWINDOW(user_data);
      fix_title(w);
      update_desc(w);
-     set_sensitive(w->need_history_items,document_can_undo(d));
+     set_sensitive(w->need_undo_items,document_can_undo(d));
+     set_sensitive(w->need_redo_items,document_can_redo(d));
      set_sensitive(w->need_selection_items,(d->selstart != d->selend));
 }
 
@@ -2040,7 +2056,7 @@ static void mainwindow_init(Mainwindow *obj)
      obj->need_chunk_items = NULL;
      obj->need_selection_items = NULL;
      obj->need_clipboard_items = NULL;
-     obj->need_history_items = NULL;
+     obj->need_undo_items = NULL;
      obj->zoom_items = NULL;
      
      fix_title ( obj );
@@ -2139,7 +2155,8 @@ static void mainwindow_init(Mainwindow *obj)
      set_sensitive(obj->need_chunk_items, FALSE);
      set_sensitive(obj->need_selection_items, FALSE);
      set_sensitive(obj->need_clipboard_items, clipboard != NULL);
-     set_sensitive(obj->need_history_items, FALSE);
+     set_sensitive(obj->need_undo_items, FALSE);
+     set_sensitive(obj->need_redo_items, FALSE);
 
      if (!geometry_stack_pop(&window_geometry_stack,NULL,GTK_WINDOW(obj)))
 	  gtk_window_set_default_size(GTK_WINDOW(obj),540,230);
