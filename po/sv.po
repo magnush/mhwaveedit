@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mhWaveEdit 1.3.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-28 21:51+0200\n"
-"PO-Revision-Date: 2005-07-01 18:29+0100\n"
+"POT-Creation-Date: 2005-08-04 22:39+0200\n"
+"PO-Revision-Date: 2005-08-04 22:43+0100\n"
 "Last-Translator: Magnus Hjorth <magnus.hjorth@home.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -27,29 +27,29 @@ msgstr "ƒndrar hastighet"
 msgid "Removing channel"
 msgstr "Tar bort kanal"
 
-#: src/chunk.c:629
+#: src/chunk.c:633
 msgid "Mixing"
 msgstr "Mixar"
 
-#: src/chunk.c:678
+#: src/chunk.c:682
 #, c-format
 msgid "The mixed result was clipped %d times."
 msgstr "Mixningen bottnade %d gÂnger."
 
-#: src/chunk.c:1067
+#: src/chunk.c:1071
 msgid "Calculating peak level"
 msgstr "BerÅ‰knar toppnivÂ"
 
-#: src/chunk.c:1089
-#: src/chunk.c:1124
+#: src/chunk.c:1093
+#: src/chunk.c:1128
 msgid "Amplifying"
 msgstr "Fˆrst‰rker"
 
-#: src/chunk.c:1241
+#: src/chunk.c:1245
 msgid "Removing channels"
 msgstr "Tar bort kanaler"
 
-#: src/chunk.c:1247
+#: src/chunk.c:1251
 msgid "Adding channels"
 msgstr "L‰gger till kanaler"
 
@@ -469,7 +469,7 @@ msgstr "Det finns ingen ˆppen fil att verkst‰lla effekten pÂ!"
 
 #: src/effectbrowser.c:268
 #: src/gotodialog.c:114
-#: src/mainwindow.c:1461
+#: src/mainwindow.c:1209
 #: src/rawdialog.c:88
 #: src/recorddialog.c:369
 #: src/sound-alsalib.c:75
@@ -490,7 +490,7 @@ msgstr "Verkst‰ll"
 
 #: src/effectbrowser.c:277
 #: src/gotodialog.c:127
-#: src/mainwindow.c:1390
+#: src/mainwindow.c:1138
 #: src/pipedialog.c:146
 #: src/recorddialog.c:803
 #: src/sound-esound.c:285
@@ -826,13 +826,13 @@ msgid ""
 "mhWaveEdit is a graphical program for editing sound files. It is completely free (GPL).\n"
 "\n"
 "You can find the latest release of mhWaveEdit at:\n"
-"http://www.mtek.chalmers.se/~hjormagn/mhwaveedit.html\n"
+"http://gna.org/projects/mhwaveedit/\n"
 msgstr ""
 "\n"
 "mhWaveEdit ‰r ett grafiskt program fˆr att redigera ljudfiler. Det ‰r fri programvara (GPL).\n"
 "\n"
 "Den senaste versionen av mhWaveEdit finns pÂ:\n"
-"http://www.mtek.chalmers.se/~hjormagn/mhwaveedit.html\n"
+"http://gna.org/projects/mhwaveedit/\n"
 
 #: src/help.c:52
 #, no-c-format
@@ -1341,139 +1341,134 @@ msgstr "Man mÂste skriva namnet pÂ drivrutinen efter --driver-flaggan"
 msgid "Unknown option '%s'"
 msgstr "Ok‰nd flagga '%s'"
 
-#: src/main.c:275
+#: src/main.c:288
 msgid "Could not find home directory. Using current directory as home directory."
 msgstr "Kunde inte hitta hemkatalog. Anv‰nder aktuell katalog som hemkatalog."
 
-#: src/main.c:303
+#: src/main.c:316
 msgid "Black"
 msgstr "Svart"
 
-#: src/main.c:304
+#: src/main.c:317
 msgid "White"
 msgstr "Vit"
 
-#: src/main.c:305
+#: src/main.c:318
 msgid "Background"
 msgstr "Bakgrund"
 
-#: src/main.c:306
+#: src/main.c:319
 msgid "L Waveform"
 msgstr "V ljudvÂg"
 
-#: src/main.c:307
+#: src/main.c:320
 msgid "R Waveform"
 msgstr "H ljudvÂg"
 
-#: src/main.c:308
+#: src/main.c:321
 msgid "Cursor"
 msgstr "Markˆr"
 
-#: src/main.c:309
+#: src/main.c:322
 msgid "Marks"
 msgstr "M‰rken"
 
-#: src/main.c:310
+#: src/main.c:323
 msgid "Selection"
 msgstr "Markering"
 
-#: src/main.c:311
+#: src/main.c:324
 msgid "Progress bar"
 msgstr "Arbetsvisare"
 
-#: src/main.c:312
+#: src/main.c:325
 msgid "Zero-level"
 msgstr "NollnivÂ"
 
-#: src/main.c:435
+#: src/main.c:448
 #, c-format
 msgid "Error launching mixer: fork: %s"
 msgstr "Fel vid start av mixerprogram: fork: %s"
 
-#: src/main.c:486
-#: src/main.c:505
+#: src/main.c:499
+#: src/main.c:518
 msgid "Mono"
 msgstr "Mono"
 
-#: src/main.c:487
+#: src/main.c:500
 msgid "Left"
 msgstr "V‰nster"
 
-#: src/main.c:488
+#: src/main.c:501
 msgid "Right"
 msgstr "Hˆger"
 
-#: src/main.c:490
+#: src/main.c:503
 #, c-format
 msgid "Channel %d"
 msgstr "Kanal %d"
 
-#: src/main.c:506
+#: src/main.c:519
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/main.c:508
+#: src/main.c:521
 #, c-format
 msgid "%d channels"
 msgstr "%d kanaler"
 
-#: src/main.c:774
+#: src/main.c:787
 msgid "Ignoring extreme old window size/position values\n"
 msgstr "Ignorerar extrema sparade v‰rden fˆr l‰ge/storlek pÂ fˆnster\n"
 
-#: src/mainwindow.c:104
-#, c-format
-msgid "untitled #%d"
-msgstr "namnlˆs #%d"
-
-#: src/mainwindow.c:280
+#: src/mainwindow.c:195
 #, c-format
 msgid "mhWaveEdit: %s (%s): %d Hz, %s"
 msgstr "mhWaveEdit: %s (%s): %d Hz, %s"
 
-#: src/mainwindow.c:288
+#: src/mainwindow.c:203
 #: src/recorddialog.c:65
 msgid "double"
 msgstr "dubbel"
 
-#: src/mainwindow.c:288
+#: src/mainwindow.c:203
 #: src/recorddialog.c:63
 msgid "float"
 msgstr "flyttal"
 
-#: src/mainwindow.c:290
+#: src/mainwindow.c:205
 #, c-format
 msgid "mhWaveEdit: %s (%s): %d Hz, %d bit"
 msgstr "mhWaveEdit: %s (%s): %d Hz, %d bitar"
 
-#: src/mainwindow.c:364
+#: src/mainwindow.c:279
 msgid "The file has not changed since last save. Press OK if you want to save it anyway?"
 msgstr "Filen har inte ‰ndrats sedan den sparades sist. Tryck OK om du vill spara den ‰ndÂ."
 
-#: src/mainwindow.c:373
+#: src/mainwindow.c:288
 msgid "Save File"
 msgstr "Spara fil"
 
-#: src/mainwindow.c:405
+#: src/mainwindow.c:311
 #, c-format
 msgid "Save changes to %s?"
 msgstr "Spara ‰ndrad fil %s?"
 
-#: src/mainwindow.c:650
-#: src/mainwindow.c:654
+#: src/mainwindow.c:564
+#: src/mainwindow.c:568
 msgid "Load File"
 msgstr "Ladda fil"
 
-#: src/mainwindow.c:686
+#: src/mainwindow.c:598
 msgid "Save selection as ..."
 msgstr "Spara markering som ..."
 
-#: src/mainwindow.c:1086
+#: src/mainwindow.c:873
 #, c-format
 msgid "Chunk %p has opencount=%d\n"
 msgstr "Chunk %p har opencount=%d\n"
 
-#: src/mainwindow.c:1157
+#: src/mainwindow.c:944
 #, c-format
 msgid ""
 "\n"
@@ -1482,27 +1477,27 @@ msgstr ""
 "\n"
 "Fˆnster '%s'\n"
 
-#: src/mainwindow.c:1158
+#: src/mainwindow.c:945
 msgid "  Current chunk:"
 msgstr "  Aktuell chunk:"
 
-#: src/mainwindow.c:1160
+#: src/mainwindow.c:947
 msgid "  History:"
 msgstr "  Historia:"
 
-#: src/mainwindow.c:1204
+#: src/mainwindow.c:991
 msgid "There already is only one channel!"
 msgstr "Det finns redan bara en kanal!"
 
-#: src/mainwindow.c:1321
+#: src/mainwindow.c:1069
 msgid "mhWaveEdit Help"
 msgstr "mhWaveEdit-hj‰lp"
 
-#: src/mainwindow.c:1417
+#: src/mainwindow.c:1165
 msgid "About mhWaveEdit"
 msgstr "Om mhWaveEdit"
 
-#: src/mainwindow.c:1429
+#: src/mainwindow.c:1177
 msgid ""
 "Created by Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2005, Magnus Hjorth"
@@ -1510,21 +1505,21 @@ msgstr ""
 "Skapad av Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2005, Magnus Hjorth"
 
-#: src/mainwindow.c:1436
+#: src/mainwindow.c:1184
 #, c-format
 msgid "Current sound driver: %s"
 msgstr "Aktuell ljuddrivrutin: %s"
 
-#: src/mainwindow.c:1444
+#: src/mainwindow.c:1192
 #, c-format
 msgid "Compiled %s %s"
 msgstr "Kompilerad %s %s"
 
-#: src/mainwindow.c:1450
+#: src/mainwindow.c:1198
 msgid "Uses double-precision math"
 msgstr "Anv‰nder dubbelprecision vid ber‰kningar"
 
-#: src/mainwindow.c:1457
+#: src/mainwindow.c:1205
 msgid ""
 "Distributed under GNU General Public License.\n"
 "For information, see the file COPYING"
@@ -1532,424 +1527,420 @@ msgstr ""
 "Distribuerad under GNU General Public License.\n"
 "Fˆr mer information, se filen COPYING"
 
-#: src/mainwindow.c:1571
+#: src/mainwindow.c:1318
 msgid "Seconds of silence: "
 msgstr "Sekunder med tystnad: "
 
-#: src/mainwindow.c:1571
+#: src/mainwindow.c:1318
 msgid "Insert Silence"
 msgstr "Infoga tystnad"
 
-#: src/mainwindow.c:1591
-msgid "This will clear the entire undo buffer!"
-msgstr "Detta kommer att tˆmma hela Ângra-bufferten!"
-
-#: src/mainwindow.c:1599
-msgid "This will clear the undo buffer up to the last save"
-msgstr "Detta kommer att tˆmma Ângra-bufferten bort till senaste sparningen"
-
-#: src/mainwindow.c:1737
+#: src/mainwindow.c:1453
 msgid "/_File"
 msgstr "/_Arkiv"
 
-#: src/mainwindow.c:1738
+#: src/mainwindow.c:1454
 msgid "/File/_Open..."
 msgstr "/Arkiv/_÷ppna..."
 
-#: src/mainwindow.c:1739
+#: src/mainwindow.c:1455
 msgid "/File/_Save"
 msgstr "/Arkiv/_Spara"
 
-#: src/mainwindow.c:1740
+#: src/mainwindow.c:1456
 msgid "/File/Save _as..."
 msgstr "/Arkiv/S_para som..."
 
-#: src/mainwindow.c:1741
+#: src/mainwindow.c:1457
 msgid "/File/Save selection as..."
 msgstr "/Arkiv/Spara _markering som..."
 
-#: src/mainwindow.c:1742
+#: src/mainwindow.c:1458
 msgid "/_Edit"
 msgstr "/_Redigera"
 
-#: src/mainwindow.c:1743
+#: src/mainwindow.c:1459
 msgid "/Edit/_Undo"
 msgstr "/Redigera/_≈ngra"
 
-#: src/mainwindow.c:1744
+#: src/mainwindow.c:1460
+msgid "/Edit/_Redo"
+msgstr "/Redigera/_Gˆr om"
+
+#: src/mainwindow.c:1461
 msgid "/Edit/sep1"
 msgstr "/Redigera/sep1"
 
-#: src/mainwindow.c:1745
+#: src/mainwindow.c:1462
 msgid "/Edit/Cu_t"
 msgstr "/Redigera/Klipp u_t"
 
-#: src/mainwindow.c:1746
+#: src/mainwindow.c:1463
 msgid "/Edit/_Copy"
 msgstr "/Redigera/_Kopiera"
 
-#: src/mainwindow.c:1747
+#: src/mainwindow.c:1464
 msgid "/Edit/_Paste"
 msgstr "/Redigera/Klistra _in"
 
-#: src/mainwindow.c:1748
+#: src/mainwindow.c:1465
 msgid "/Edit/Paste _over"
 msgstr "/Redigera/Klistra _ˆver"
 
-#: src/mainwindow.c:1749
+#: src/mainwindow.c:1466
 msgid "/Edit/_Mix paste"
 msgstr "/Redigera/_Mixa in"
 
-#: src/mainwindow.c:1750
+#: src/mainwindow.c:1467
 msgid "/Edit/Insert _silence"
 msgstr "/Redigera/Infoga _tystnad"
 
-#: src/mainwindow.c:1751
+#: src/mainwindow.c:1468
 msgid "/Edit/Paste to _new"
 msgstr "/Redigera/Klistra in till _ny"
 
-#: src/mainwindow.c:1752
+#: src/mainwindow.c:1469
 msgid "/Edit/Cr_op"
 msgstr "/Redigera/Sk‰r ut"
 
-#: src/mainwindow.c:1753
+#: src/mainwindow.c:1470
 msgid "/Edit/_Delete"
 msgstr "/Redigera/Ta bort"
 
-#: src/mainwindow.c:1754
+#: src/mainwindow.c:1471
 msgid "/Edit/Silence selection"
 msgstr "/Redigera/Tysta markering"
 
-#: src/mainwindow.c:1755
+#: src/mainwindow.c:1472
 msgid "/Edit/sep2"
 msgstr "/Redigera/sep2"
 
-#: src/mainwindow.c:1756
+#: src/mainwindow.c:1473
 msgid "/Edit/Select _all"
 msgstr "/Redigera/Markera _allt"
 
-#: src/mainwindow.c:1757
+#: src/mainwindow.c:1474
 msgid "/Edit/sep3"
 msgstr "/Redigera/sep3"
 
-#: src/mainwindow.c:1758
+#: src/mainwindow.c:1475
 msgid "/Edit/Clear clipboard"
 msgstr "/Redigera/Rensa urklipp"
 
-#: src/mainwindow.c:1759
-msgid "/Edit/Clear undo buffer"
-msgstr "/Redigera/Rensa Ângra-buffert"
-
-#: src/mainwindow.c:1760
+#: src/mainwindow.c:1476
 msgid "/Edit/sep4"
 msgstr "/Redigera/sep4"
 
-#: src/mainwindow.c:1761
-msgid "/Edit/P_references"
+#: src/mainwindow.c:1477
+msgid "/Edit/Preferences"
 msgstr "/Redigera/_Inst‰llningar"
 
-#: src/mainwindow.c:1762
+#: src/mainwindow.c:1478
 msgid "/_View"
 msgstr "/_Visa"
 
-#: src/mainwindow.c:1763
+#: src/mainwindow.c:1479
 msgid "/View/Zoom _in"
 msgstr "/Visa/Zooma _in"
 
-#: src/mainwindow.c:1764
+#: src/mainwindow.c:1480
 msgid "/View/Zoom _out"
 msgstr "/Visa/Zooma _ut"
 
-#: src/mainwindow.c:1765
+#: src/mainwindow.c:1481
 msgid "/View/Zoom to _selection"
 msgstr "/Visa/Zooma till markering"
 
-#: src/mainwindow.c:1766
+#: src/mainwindow.c:1482
 msgid "/View/sep1"
 msgstr "/Visa/sep1"
 
-#: src/mainwindow.c:1767
+#: src/mainwindow.c:1483
 msgid "/View/Zoom _all"
 msgstr "/Visa/Zooma ut helt"
 
-#: src/mainwindow.c:1768
+#: src/mainwindow.c:1484
 msgid "/View/sep2"
 msgstr "/View/sep2"
 
-#: src/mainwindow.c:1769
+#: src/mainwindow.c:1485
 msgid "/View/_Time scale"
 msgstr "/Visa/_Tidsskala"
 
-#: src/mainwindow.c:1770
+#: src/mainwindow.c:1486
 msgid "/View/_Horizontal zoom"
 msgstr "/Visa/_Horisontell zoom"
 
-#: src/mainwindow.c:1771
+#: src/mainwindow.c:1487
 msgid "/View/_Vertical zoom"
 msgstr "/Visa/_Vertikal zoom"
 
-#: src/mainwindow.c:1772
+#: src/mainwindow.c:1488
 msgid "/View/Sp_eed slider"
 msgstr "/Visa/Hastighetsv‰ljare"
 
-#: src/mainwindow.c:1773
+#: src/mainwindow.c:1489
 msgid "/_Cursor"
 msgstr "/_Markˆr"
 
-#: src/mainwindow.c:1774
+#: src/mainwindow.c:1490
 msgid "/Cursor/Set selection start"
 msgstr "/Markˆr/S‰tt start pÂ markering"
 
-#: src/mainwindow.c:1776
+#: src/mainwindow.c:1492
 msgid "/Cursor/Set selection end"
 msgstr "/Markˆr/S‰tt slut pÂ markering"
 
-#: src/mainwindow.c:1777
+#: src/mainwindow.c:1493
 msgid "/Cursor/sep1"
 msgstr "/Markˆr/sep1"
 
-#: src/mainwindow.c:1778
+#: src/mainwindow.c:1494
 msgid "/Cursor/Move to beginning"
 msgstr "/Markˆr/Flytta till bˆrjan"
 
-#: src/mainwindow.c:1780
+#: src/mainwindow.c:1496
 msgid "/Cursor/Move to end"
 msgstr "/Markˆr/Flytta till slutet"
 
-#: src/mainwindow.c:1781
+#: src/mainwindow.c:1497
 msgid "/Cursor/Move to selection start"
 msgstr "/Markˆr/Flytta till markeringens bˆrjan"
 
-#: src/mainwindow.c:1783
+#: src/mainwindow.c:1499
 msgid "/Cursor/Move to selection end"
 msgstr "/Markˆr/Flytta till markeringens slut"
 
-#: src/mainwindow.c:1785
+#: src/mainwindow.c:1501
 msgid "/Cursor/sep2"
 msgstr "/Markˆr/sep2"
 
-#: src/mainwindow.c:1786
+#: src/mainwindow.c:1502
 msgid "/Cursor/Position cursor..."
 msgstr "/Markˆr/Placera markˆr..."
 
-#: src/mainwindow.c:1788
+#: src/mainwindow.c:1504
 msgid "/_Play"
 msgstr "/S_pela"
 
-#: src/mainwindow.c:1789
+#: src/mainwindow.c:1505
 msgid "/Play/_Play from cursor"
 msgstr "/Spela/S_pela frÂn markˆr"
 
-#: src/mainwindow.c:1790
+#: src/mainwindow.c:1506
 msgid "/Play/Play _all"
 msgstr "/Spela/Spela allt"
 
-#: src/mainwindow.c:1791
+#: src/mainwindow.c:1507
 msgid "/Play/Play se_lection"
 msgstr "/Spela/Spela _markering"
 
-#: src/mainwindow.c:1792
+#: src/mainwindow.c:1508
 msgid "/Play/_Stop"
 msgstr "/Spela/_Stopp"
 
-#: src/mainwindow.c:1793
+#: src/mainwindow.c:1509
 msgid "/Play/sep1"
 msgstr "/Spela/sep1"
 
-#: src/mainwindow.c:1794
+#: src/mainwindow.c:1510
 msgid "/Play/_Record..."
 msgstr "/Spela/Spela in"
 
-#: src/mainwindow.c:1795
+#: src/mainwindow.c:1511
 msgid "/Effec_ts"
 msgstr "/Effekter"
 
-#: src/mainwindow.c:1796
+#: src/mainwindow.c:1512
 msgid "/Effects/Fade _in"
 msgstr "/Effekter/Fade-in"
 
-#: src/mainwindow.c:1797
+#: src/mainwindow.c:1513
 msgid "/Effects/Fade o_ut"
 msgstr "/Effekter/Fade-ut"
 
-#: src/mainwindow.c:1798
+#: src/mainwindow.c:1514
 msgid "/Effects/_Normalize"
 msgstr "/Effekter/Normalisera volym"
 
-#: src/mainwindow.c:1799
+#: src/mainwindow.c:1515
 msgid "/Effects/_Volume adjust (fade)..."
 msgstr "/Effekter/Volymjustering..."
 
-#: src/mainwindow.c:1800
+#: src/mainwindow.c:1516
 msgid "/Effects/sep1"
 msgstr "/Effekter/sep1"
 
-#: src/mainwindow.c:1801
+#: src/mainwindow.c:1517
 msgid "/Effects/Convert sample_rate..."
 msgstr "/Effekter/Omvandla samplingsfrekvens..."
 
-#: src/mainwindow.c:1802
+#: src/mainwindow.c:1518
 msgid "/Effects/Convert sample _format..."
 msgstr "/Effekter/Omvandla sampelformat..."
 
-#: src/mainwindow.c:1804
+#: src/mainwindow.c:1520
 msgid "/Effects/B_yte swap"
 msgstr "/Effekter/V‰xla byteordning"
 
-#: src/mainwindow.c:1805
+#: src/mainwindow.c:1521
 msgid "/Effects/sep2"
 msgstr "/Effekter/sep2"
 
-#: src/mainwindow.c:1806
+#: src/mainwindow.c:1522
 msgid "/Effects/_Mix channels..."
 msgstr "/Effekter/_Mixa kanaler..."
 
-#: src/mainwindow.c:1807
+#: src/mainwindow.c:1523
 msgid "/Effects/Sp_lit channel..."
 msgstr "/Effekter/De_la kanal..."
 
-#: src/mainwindow.c:1808
+#: src/mainwindow.c:1524
 msgid "/Effects/_Combine channels..."
 msgstr "/Effekter/_Kombinera kanaler..."
 
-#: src/mainwindow.c:1809
+#: src/mainwindow.c:1525
 msgid "/Effects/sep3"
 msgstr "/Effekter/sep3"
 
-#: src/mainwindow.c:1810
+#: src/mainwindow.c:1526
 msgid "/Effects/_Speed adjustment..."
 msgstr "/Effekter/ƒndra hastighet..."
 
-#: src/mainwindow.c:1811
+#: src/mainwindow.c:1527
 msgid "/Effects/Pipe through program..."
 msgstr "/Effekter/Filtrera genom program..."
 
-#: src/mainwindow.c:1812
+#: src/mainwindow.c:1528
 msgid "/Effects/sep4"
 msgstr "/Effekter/sep4"
 
-#: src/mainwindow.c:1813
+#: src/mainwindow.c:1529
 msgid "/Effects/Effects dialog..."
 msgstr "/Effekter/Effektfˆnster..."
 
-#: src/mainwindow.c:1815
+#: src/mainwindow.c:1531
 msgid "/Debug"
 msgstr "/Debug"
 
-#: src/mainwindow.c:1816
+#: src/mainwindow.c:1532
 msgid "/Debug/Mark as modified"
 msgstr "/Debug/M‰rk som ‰ndrad"
 
-#: src/mainwindow.c:1817
+#: src/mainwindow.c:1533
 msgid "/Debug/Dummy effect"
 msgstr "/Debug/Gˆr ingenting-effekt"
 
-#: src/mainwindow.c:1818
+#: src/mainwindow.c:1534
 msgid "/Debug/Check opencount"
 msgstr "/Debug/Kolla opencount"
 
-#: src/mainwindow.c:1819
+#: src/mainwindow.c:1535
 msgid "/Debug/Dump chunk info"
 msgstr "/Debug/Dumpa chunkinformation"
 
-#: src/mainwindow.c:1821
+#: src/mainwindow.c:1537
 msgid "/_Help"
 msgstr "/_Hj‰lp"
 
-#: src/mainwindow.c:1822
+#: src/mainwindow.c:1538
 msgid "/Help/_Documentation"
 msgstr "/Hj‰lp/_Dokumentation"
 
-#: src/mainwindow.c:1823
+#: src/mainwindow.c:1539
 msgid "/Help/_About"
 msgstr "/Hj‰lp/_Om"
 
-#: src/mainwindow.c:1827
+#: src/mainwindow.c:1543
 msgid "/File/sep1"
 msgstr "/Arkiv/sep1"
 
-#: src/mainwindow.c:1828
+#: src/mainwindow.c:1544
 msgid "/File/_Close"
 msgstr "/Arkiv/St‰ng"
 
-#: src/mainwindow.c:1829
+#: src/mainwindow.c:1545
 msgid "/File/sep2"
 msgstr "/Arkiv/sep2"
 
-#: src/mainwindow.c:1830
+#: src/mainwindow.c:1546
 msgid "/File/_Exit"
 msgstr "/Arkiv/A_vsluta"
 
-#: src/mainwindow.c:1988
+#: src/mainwindow.c:1704
 msgid "Load a file from disk"
 msgstr "Ladda in en fil frÂn disk"
 
-#: src/mainwindow.c:1995
+#: src/mainwindow.c:1711
 msgid "Save the current file to disk"
 msgstr "Spara aktuell fil till disk"
 
-#: src/mainwindow.c:2004
+#: src/mainwindow.c:1720
 msgid "Undo the last change"
 msgstr "≈ngra den senaste ‰ndringen"
 
-#: src/mainwindow.c:2013
+#: src/mainwindow.c:1728
+msgid "Redo the last undo operation"
+msgstr "Gˆr om den senast Ângrade Âtg‰rden"
+
+#: src/mainwindow.c:1738
 msgid "Cut out the current selection"
 msgstr "Klipp ut markerat omrÂde"
 
-#: src/mainwindow.c:2021
+#: src/mainwindow.c:1746
 msgid "Copy the current selection"
 msgstr "Kopiera markerat omrÂde"
 
-#: src/mainwindow.c:2029
+#: src/mainwindow.c:1754
 msgid "Paste at cursor position"
 msgstr "Klistra in vid markˆren"
 
-#: src/mainwindow.c:2037
+#: src/mainwindow.c:1762
 msgid "Paste, overwriting the data after the cursor position"
 msgstr "Klistra in, skriv ˆver vid markˆren"
 
-#: src/mainwindow.c:2047
+#: src/mainwindow.c:1772
 msgid "Delete the selection"
 msgstr "Ta bort markeringen"
 
-#: src/mainwindow.c:2056
+#: src/mainwindow.c:1781
 msgid "Set selection start to cursor position"
 msgstr "S‰tt start pÂ markeringen till markˆrpositionen"
 
-#: src/mainwindow.c:2065
+#: src/mainwindow.c:1790
 msgid "Set selection end to cursor position"
 msgstr "S‰tt slut pÂ markeringen till markˆrpositionen"
 
-#: src/mainwindow.c:2075
+#: src/mainwindow.c:1800
 msgid "Play from cursor position"
 msgstr "Spela frÂn markˆrposition"
 
-#: src/mainwindow.c:2084
+#: src/mainwindow.c:1809
 msgid "Play selected area"
 msgstr "Spela markerat omrÂde"
 
-#: src/mainwindow.c:2093
+#: src/mainwindow.c:1818
 msgid "Stop playing"
 msgstr "Stoppa uppspelning"
 
-#: src/mainwindow.c:2103
+#: src/mainwindow.c:1828
 msgid "Loop mode (play over and over)"
 msgstr "Loopa (spela om och om igen)"
 
-#: src/mainwindow.c:2113
+#: src/mainwindow.c:1838
 msgid "Follow cursor while playing"
 msgstr "Fˆlj markˆren under spelning"
 
-#: src/mainwindow.c:2125
+#: src/mainwindow.c:1851
 msgid "Auto return to playback start"
 msgstr "Hoppa automatiskt tillbaka till uppspelningens bˆrjan"
 
-#: src/mainwindow.c:2139
+#: src/mainwindow.c:1865
 #: src/recorddialog.c:630
 msgid "Record"
 msgstr "Spela in"
 
-#: src/mainwindow.c:2148
+#: src/mainwindow.c:1874
 #: src/recorddialog.c:799
 msgid "Launch mixer"
 msgstr "÷ppna mixer"
@@ -1989,11 +1980,11 @@ msgstr "Fel: fork: %s"
 msgid "Should not reach this point!"
 msgstr "Borde inte nÂ denna punkt!"
 
-#: src/pipedialog.c:444
+#: src/pipedialog.c:445
 msgid "Command failed without returning any data"
 msgstr "Kommandot misslyckades utan att returnera nÂgot data"
 
-#: src/pipedialog.c:455
+#: src/pipedialog.c:456
 #, c-format
 msgid "Error: %s"
 msgstr "Fel: %s"
@@ -2881,33 +2872,33 @@ msgstr "Sox-stˆd kunde inte initieras"
 msgid "Speed:"
 msgstr "Hastighet:"
 
-#: src/statusbar.c:68
+#: src/statusbar.c:71
 msgid "(no file loaded)"
 msgstr "(ingen fil inladdad)"
 
-#: src/statusbar.c:208
+#: src/statusbar.c:232
 msgid "Cursor: running"
 msgstr "Markˆr: spelar"
 
-#: src/statusbar.c:210
+#: src/statusbar.c:234
 msgid "Cursor: "
 msgstr "Markˆr: "
 
-#: src/statusbar.c:232
+#: src/statusbar.c:256
 #, c-format
 msgid "View: [ %s - %s ]"
 msgstr "Vy: [ %s - %s ]"
 
-#: src/statusbar.c:251
+#: src/statusbar.c:275
 #, c-format
 msgid "Selection: %s+%s"
 msgstr "Markering: %s+%s"
 
-#: src/statusbar.c:273
+#: src/statusbar.c:297
 msgid "Processing data"
 msgstr "Bearbetar data"
 
-#: src/statusbar.c:275
+#: src/statusbar.c:299
 #, c-format
 msgid "%s... (Press ESC to cancel)"
 msgstr "%s... (Tryck ESC fˆr att avbryta)"
@@ -2957,6 +2948,17 @@ msgstr "Slut:"
 msgid "Find top volume"
 msgstr "Ber‰kna toppvolym"
 
+#: src/document.c:216
+#, c-format
+msgid "untitled #%d"
+msgstr "namnlˆs #%d"
+
+#~ msgid "This will clear the entire undo buffer!"
+#~ msgstr "Detta kommer att tˆmma hela Ângra-bufferten!"
+#~ msgid "This will clear the undo buffer up to the last save"
+#~ msgstr "Detta kommer att tˆmma Ângra-bufferten bort till senaste sparningen"
+#~ msgid "/Edit/Clear undo buffer"
+#~ msgstr "/Redigera/Rensa Ângra-buffert"
 #~ msgid "Conversion method: "
 #~ msgstr "Omvandlingsmetod: "
 #~ msgid "mhWaveEdit: Couldn't open %s: %s\n"
