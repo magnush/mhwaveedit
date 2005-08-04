@@ -24,7 +24,7 @@ src/ladspadialog.c
 src/listobject.c
 src/main.c
 src/mainwindow.c
-src/mainwindowlist.c
+src/documentlist.c
 src/pipedialog.c
 src/player.c
 src/rateconv.c
@@ -51,3 +51,4 @@ src/um.c
 src/viewcache.c
 src/volumedialog.c
 src/vu_meter.c
+src/document.c
