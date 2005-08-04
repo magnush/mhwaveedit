@@ -491,7 +491,7 @@ static gint scroll_wheel(GtkWidget *widget, gdouble mouse_x, int direction)
      ui1 = dragstart-(off_t)((gfloat)(dragstart-d->viewstart))*zf;
      ui2 = dragstart+(off_t)((gfloat)(d->viewend-dragstart))*zf;
      if (ui1 < 0) ui1 = 0;
-     if (ui2 < dragstart) ui2 = d->chunk->length;
+     if (ui2 < dragstart || ui2 > d->chunk->length) ui2 = d->chunk->length;
      document_set_view(d,ui1,ui2);
      return FALSE;
 }
