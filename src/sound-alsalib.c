@@ -163,7 +163,7 @@ static snd_pcm_format_t alsa_get_format(Dataformat *format)
 
 static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
 				snd_pcm_t **handp,gboolean playback)
-{
+{     
      snd_pcm_hw_params_t *par;
      int i;
      snd_pcm_uframes_t uf;

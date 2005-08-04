@@ -1,5 +1,8 @@
 2005-08-04  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/statusbar.c (status_bar_end_progress): New function that
+	must be called in some places to go back into normal info mode.
+
 	* src/chunkview.c (scroll_wheel): Check for too large view
 	endpoint when zooming out.
 

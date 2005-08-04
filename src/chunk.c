@@ -491,6 +491,7 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc,
 	  if (!u) {
 	       chunk_close(ch);
 	       g_free(c);
+	       status_bar_end_progress(bar);
 	       return TRUE;
 	  }
 	  d = buf;
@@ -498,6 +499,7 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc,
 	       if (proc(d+x,proc_size,chunk)) {
 		    chunk_close(ch);
 		    g_free(c);
+		    status_bar_end_progress(bar);
 		    return TRUE;
 	       }
 	  }
@@ -506,11 +508,13 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc,
 	  if (status_bar_progress(bar, u / full_size)) {
 	       chunk_close(ch);
 	       g_free(c);
+	       status_bar_end_progress(bar);
 	       return TRUE;
 	  }
      }
      chunk_close(ch);
      g_free(c);
+     status_bar_end_progress(bar);
      return FALSE;
 }
 

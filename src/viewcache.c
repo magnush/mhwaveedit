@@ -340,6 +340,7 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
      if (new_spp == 0 && impr == 0) {
 	  /* CONSECUTIVE MODE */	  
 	  k = cache->offsets[j]-cache->offsets[i]; /* # of samples to read */
+	  if (k < 1) k = 1;
 	  /* Read data */
 	  m = k * channels * sizeof(sample_t); /* # of converted bytes */
 	  if (m>sbufsize) {
@@ -347,7 +348,6 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 	       sbufsize = m;
 	       sbuf = g_malloc(sbufsize);
 	  }
-	  /* Ignore errors, the user will get error message anyway */
 	  readflag = TRUE;
 	  m=chunk_read_array_fp(cache->handle,cache->offsets[i],k,sbuf,
 				DITHER_NONE);

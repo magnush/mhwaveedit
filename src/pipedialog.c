@@ -439,6 +439,7 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
      g_free(c);
      chunk_close(ch);
      pipe_dialog_close(pipehandle);
+     status_bar_end_progress(bar);
 
      if (do_read && !read_bytes) {
 	  user_error(_("Command failed without returning any data"));
@@ -459,6 +460,7 @@ error_exit:
      chunk_close(ch);
      if (do_read) tempfile_abort(ct);
      pipe_dialog_close(pipehandle);
+     status_bar_end_progress(bar);
      return NULL;
 }
 

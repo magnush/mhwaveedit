@@ -200,6 +200,8 @@ void status_bar_set_info(StatusBar *sb, off_t cursorpos, gboolean is_rolling,
      guint p;
      GtkRequisition req;
 
+     sb->rate = samplerate;
+
      /* What needs to be updated? */
      if (sb->mode != 0) {	  
 	  mdif = TRUE;
@@ -301,6 +303,12 @@ void status_bar_begin_progress(StatusBar *sb, off_t progress_length,
      status_bar_set_mode(sb,1);
      sb->progress_max = progress_length;
      sb->progress_cur = 0;
+}
+
+void status_bar_end_progress(StatusBar *sb)
+{
+     status_bar_set_info(sb,sb->cur,sb->rolling,sb->vs,sb->ve,sb->ss,sb->se,
+			 sb->rate,sb->max);
 }
 
 gboolean status_bar_progress(StatusBar *sb, off_t progress)

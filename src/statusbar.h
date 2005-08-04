@@ -55,7 +55,7 @@ typedef struct {
 
      /* These are used in regular mode: */
      GtkLabel *cursor,*view,*sel;
-     off_t cur,vs,ve,ss,se,max;
+     off_t cur,vs,ve,ss,se,rate,max;
      gboolean rolling;
 } StatusBar;
 
@@ -87,6 +87,10 @@ void status_bar_set_info(StatusBar *sb, off_t cursorpos, gboolean is_rolling,
    description may be NULL. In that case, the old description is kept. */
 void status_bar_begin_progress(StatusBar *sb, off_t progress_length,
 			       gchar *description);
+
+/* When in progress mode, switches the status bar back into regular mode.
+ * Otherwise, does nothing. */
+void status_bar_end_progress(StatusBar *sb);
 
 /* Update progress indicator. The status bar must be in progress mode
  * when this is called. Returns TRUE if someone called 
