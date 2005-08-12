@@ -2,6 +2,8 @@
 
 	* Released version 1.4.3.
 
+	* src/filetypes.c (try_mplayer): Use new mplayer -ao pcm:file syntax.
+
 	* src/statusbar.c (status_bar_end_progress): Handle statusbar==NULL.
 
 	* src/filetypes.c (chunk_load): Add call to status_bar_end_progress.

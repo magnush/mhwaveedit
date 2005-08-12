@@ -994,10 +994,32 @@ static gboolean mp3_save(Chunk *chunk, gchar *filename, struct file_type *type,
 
 static Chunk *try_mplayer(gchar *filename, int dither_mode, StatusBar *bar)
 {
-     char *tempname = get_temp_filename(0);
-     char *argv[] = { "mplayer", "-quiet", "-noconsolecontrols","-ao","pcm",
-		      "-aofile",tempname,"-vc","dummy","-vo","null",
-		      filename,NULL };
+     gchar *c,*d;
+     char *tempname;
+     Chunk *x;
      if (!program_exists("mplayer")) return NULL;
-     return run_decoder(filename,tempname,"mplayer",argv,dither_mode,bar);
+     tempname = get_temp_filename(0);
+     c = g_strdup_printf("OUTFILE=%s",tempname);
+     d = g_strdup_printf("INFILE=%s",filename);
+     if (xputenv(c)) { g_free(d); g_free(c); g_free(tempname); return NULL; }
+     if (xputenv(d)) { 
+	  g_free(d); 
+	  if (!xunsetenv("OUTFILE"))
+	       g_free(c);
+	  g_free(tempname);
+	  return NULL; 
+     }
+     char *argv[] = { "sh", "-c", 
+		      "mplayer -quiet -noconsolecontrols "
+		      "-ao \"pcm:file=$OUTFILE\" -vc dummy -vo null "
+		      "\"$INFILE\"", NULL };
+
+     x = run_decoder(filename,tempname,"sh",argv,dither_mode,bar);
+
+     if (!xunsetenv("OUTFILE")) g_free(c);
+     if (!xunsetenv("INFILE")) g_free(d);
+     g_free(tempname);
+     
+     return x;
+     
 }
