@@ -326,6 +326,7 @@ gboolean chunk_save(Chunk *chunk, gchar *filename, int dither_mode,
 	  user_warning(d);
 	  g_free(d);
      }
+     status_bar_end_progress(bar);
 
      return res;
 }
@@ -681,12 +682,14 @@ static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar)
 	       gtk_object_sink(GTK_OBJECT(ds));
 	       tempfile_abort(tmp);
 	       g_free(rawbuf);
+	       status_bar_end_progress(bar);
 	       return NULL;
 	  }	  
      }
      g_free(rawbuf);
      datasource_close(ds);
      gtk_object_sink(GTK_OBJECT(ds));
+     status_bar_end_progress(bar);
      return tempfile_finished(tmp);
 }
 
@@ -883,6 +886,7 @@ static Chunk *run_decoder(gchar *filename, gchar *tempname, gchar *progname,
 	            ds->type = DATASOURCE_TEMPFILE;
 	  }
      }
+     status_bar_end_progress(bar);
      return r;
 }
 

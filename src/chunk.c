@@ -410,6 +410,7 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
 	       chunk_close(ch);
 	       tempfile_abort(tmp);
 	       if (cbp != NULL) g_free(cbp);
+	       status_bar_end_progress(bar);
 	       return NULL;
 	  }
 	  if (amount == CHUNK_FILTER_MANY) proc_size = u;
@@ -420,6 +421,7 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
 		    chunk_close(ch);
 		    tempfile_abort(tmp);
 		    if (cbp != NULL) g_free(cbp);
+		    status_bar_end_progress(bar);
 		    return NULL;
 	       }
 	  }
@@ -429,6 +431,7 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
 	       chunk_close(ch);
 	       tempfile_abort(tmp);
 	       if (cbp != NULL) g_free(cbp);
+	       status_bar_end_progress(bar);
 	       return NULL;
 	  }
      }
@@ -438,10 +441,12 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
 	  chunk_close(ch);
 	  tempfile_abort(tmp);
 	  if (cbp != NULL) g_free(cbp);
+	  status_bar_end_progress(bar);
 	  return NULL;
      }
      chunk_close(ch);
      ds = tempfile_finished(tmp);
+     status_bar_end_progress(bar);
 
      /* Check if the datasources format is the same as the user expects. If 
       * not, convert. */
@@ -640,6 +645,7 @@ Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
 	       tempfile_abort(tmp);
 	       chunk_close(ch1);
 	       chunk_close(ch2);
+	       status_bar_end_progress(bar);
 	       return NULL;
 	  }
 
@@ -659,6 +665,7 @@ Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
 	       tempfile_abort(tmp);
 	       chunk_close(ch1);
 	       chunk_close(ch2);
+	       status_bar_end_progress(bar);
 	       return NULL;
 	  }
      }
@@ -667,6 +674,7 @@ Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
      chunk_close(ch1);
      chunk_close(ch2);
      m = tempfile_finished(tmp);
+     status_bar_end_progress(bar);
      if (!m) return NULL;
 
      /* Fake the original pcm format */
@@ -1177,12 +1185,14 @@ Chunk *chunk_interpolate_endpoints(Chunk *chunk, int dither_mode,
 	      status_bar_progress(bar,bufctr)) {
 	       g_free(sbuf);
 	       tempfile_abort(tf);	       
+	       status_bar_end_progress(bar);
 	       return NULL;
 	  }
      }
      /* Finish */
      g_free(sbuf);
      r = tempfile_finished(tf);
+     status_bar_end_progress(bar);
      if (r!=NULL && !dataformat_equal(&(r->format),&(chunk->format))) {
        q = chunk_convert_sampletype(r,&(chunk->format));
        gtk_object_sink(GTK_OBJECT(r));
