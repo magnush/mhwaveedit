@@ -158,7 +158,7 @@ static void chunk_view_update_image_main(ChunkView *cv, GdkDrawable *image,
      gdk_draw_rectangle( image, get_gc(BACKGROUND,wid), TRUE, xs, 0, 
 			 1+xe-xs,h);
      /* Om det inte finns någon sampling laddad, stanna här. */
-     if (d == NULL) return;
+     if (d == NULL || d->chunk->length == 0) return;
      /* Rita ut markeringen med speciell färg */
      if (d->selstart != d->selend && d->selstart < d->viewend &&
 	 d->selend > d->viewstart) {
@@ -217,9 +217,6 @@ static void chunk_view_update_image(ChunkView *cv, guint xs, guint xe)
 	  cv->image_height = h;
 	  xs = 0;
 	  xe = w-1;
-	  /* Make the view cache aware of the new size */
-	  view_cache_update(cv->cache,cv->chunk,cv->viewstart,cv->viewend,w,
-			    NULL,NULL);
      }
      chunk_view_update_image_main(cv,cv->image,xs,xe);
 #endif
@@ -487,11 +484,14 @@ static gint scroll_wheel(GtkWidget *widget, gdouble mouse_x, int direction)
 	    return FALSE;
        zf = 1.0/1.4;
      }
+     else if (d->viewend - d->viewstart < 2)
+	  zf = 4.0;             // Special case to avoid locking in maximum zoom
      else zf = 1.4;		// Scroll wheel up
      ui1 = dragstart-(off_t)((gfloat)(dragstart-d->viewstart))*zf;
      ui2 = dragstart+(off_t)((gfloat)(d->viewend-dragstart))*zf;
      if (ui1 < 0) ui1 = 0;
      if (ui2 < dragstart || ui2 > d->chunk->length) ui2 = d->chunk->length;
+     if (ui2 == ui1) ui2++;
      document_set_view(d,ui1,ui2);
      return FALSE;
 }

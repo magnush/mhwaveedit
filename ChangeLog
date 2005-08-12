@@ -2,6 +2,20 @@
 
 	* Released version 1.4.3.
 
+	* src/statusbar.c (status_bar_end_progress): Handle statusbar==NULL.
+
+	* src/filetypes.c (chunk_load): Add call to status_bar_end_progress.
+
+	* src/mainwindow.c (edit_paste): We must read the cursor position before updating. 
+
+	* src/viewcache.c (view_cache_update): Handle empty chunk.
+
+	* src/chunkview.c (scroll_wheel): Handle far zoomed in view properly. 
+
+	* src/viewcache.c (view_cache_update): Fix for far zoomed in view. 
+
+	* src/chunkview.c (chunk_view_update_image): Remove now unneccesary function call.
+
 2005-08-04  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/statusbar.c (status_bar_end_progress): New function that

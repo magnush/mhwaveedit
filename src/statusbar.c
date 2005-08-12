@@ -68,6 +68,7 @@ static void status_bar_init(GtkObject *obj)
      gtk_fixed_put(fix,da,0,0);
 
      sb->mode = 2;
+     sb->rate = 0;
      sb->fresh_label = GTK_LABEL(gtk_label_new(_("(no file loaded)")));
      sb->progress_label = GTK_LABEL(gtk_label_new(""));
      sb->cursor = GTK_LABEL(gtk_label_new(""));
@@ -78,7 +79,7 @@ static void status_bar_init(GtkObject *obj)
      gtk_fixed_put(fix,GTK_WIDGET(sb->cursor),LEFT_MARGIN,2);
      gtk_container_add(cont,GTK_WIDGET(sb->view));
      gtk_container_add(cont,GTK_WIDGET(sb->sel));
-     gtk_widget_show(GTK_WIDGET(sb->fresh_label));
+     gtk_widget_show(GTK_WIDGET(sb->fresh_label));     
 }
 
 static void status_bar_size_allocate(GtkWidget *widget, 
@@ -307,8 +308,13 @@ void status_bar_begin_progress(StatusBar *sb, off_t progress_length,
 
 void status_bar_end_progress(StatusBar *sb)
 {
-     status_bar_set_info(sb,sb->cur,sb->rolling,sb->vs,sb->ve,sb->ss,sb->se,
-			 sb->rate,sb->max);
+     if (sb != NULL) {
+	  if (sb->rate != 0) 
+	       status_bar_set_info(sb,sb->cur,sb->rolling,sb->vs,sb->ve,sb->ss,sb->se,
+				   sb->rate,sb->max);
+	  else
+	       status_bar_reset(sb);
+     }
 }
 
 gboolean status_bar_progress(StatusBar *sb, off_t progress)

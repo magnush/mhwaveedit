@@ -102,6 +102,15 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
      /* if (xres > end_samp-start_samp) xres=end_samp-start_samp; */
      if (readflag) return FALSE;
 
+     if (end_samp == start_samp) {
+	  memset(cache->calced, CALC_UNKNOWN, xres);
+	  if (low_updated) {
+	       *low_updated = 0;
+	       *high_updated = xres-1;
+	  }
+	  return FALSE;
+     }
+
      chunk_change = (cache->chunk != chunk);
      range_change = (chunk != NULL) && (chunk_change ||
 					cache->start != start_samp || 
@@ -300,6 +309,39 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
      if (chunk==NULL || cache->handle==NULL || cache->chunk_error) 
 	  return FALSE;
 
+     /* Special case - zoomed in very far */
+     if (real_spp < 1.0) {
+	  k = end_samp - start_samp;
+	  m = k * channels * sizeof(sample_t);
+	  if (m > sbufsize) {
+	       g_free(sbuf);
+	       sbufsize = m;
+	       sbuf = g_malloc(m);
+	  }
+	  readflag = TRUE;
+	  m = chunk_read_array_fp(cache->handle, start_samp, k, sbuf, DITHER_NONE);
+	  readflag = FALSE;
+	  
+	  for (n=0; n<xres; n++) {
+	       for (l=0; l<channels; l++) {
+		    cache->values[(n*channels+l)*2] = cache->values[(n*channels+l)*2+1] = 
+			 sbuf[(cache->offsets[n] - start_samp)*channels + l];
+	       }
+	  }
+
+	  memset(cache->calced, CALC_DONE, xres);
+
+	  chunk_close(cache->handle);
+	  cache->handle = NULL;
+
+	  if (low_updated) {
+	       *low_updated = 0;
+	       *high_updated = xres-1;
+	  }
+
+	  return TRUE;
+     }
+     
      /* Scan for uncalculated data */
      c = memchr(cache->calced, CALC_UNKNOWN, xres);
      if (c == NULL) c = memchr(cache->calced, CALC_DIRTY, xres);
@@ -316,7 +358,7 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
      }
  
      i = c - cache->calced;     
-     
+
      /* Scan for end of uncalculated data */
      j = i+1;
      if (impr == 0) 
@@ -365,7 +407,7 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 	  m = 0; /* Current full sample in sbuf */
 	  n = i; /* Current pos in calced */
 
-	  while (n<j) {
+	  while (n<j) {	       
 	       /* Set "impossible" values */
 	       for (l=0; l<channels; l++) {
 		    cache->values[(n*channels+l)*2] = 1.0; /* Min */

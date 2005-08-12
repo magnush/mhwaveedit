@@ -246,6 +246,7 @@ Chunk *chunk_load(gchar *filename, int dither_mode, StatusBar *bar )
 
      status_bar_begin_progress(bar,1,_("Loading"));
      chunk = chunk_load_main(filename,dither_mode,bar);
+     status_bar_end_progress(bar);
 
      return chunk;
 }

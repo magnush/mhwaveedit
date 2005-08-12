@@ -652,6 +652,7 @@ void document_set_selection(Document *d, off_t selstart, off_t selend)
 	  selstart = selend;
 	  selend = o;
      }
+     if (d->chunk->length == 0 && d->selstart == 0 && d->selend == 0) return;
 
      g_assert(selstart >= 0 && selstart < d->chunk->length &&
 	      selend >= 0 && selend <= d->chunk->length);
@@ -675,7 +676,7 @@ void document_zoom(Document *d, gfloat zoom, gboolean followcursor)
 	  document_set_view(d,0,d->chunk->length);
 	  return;
      }
-     if (newdist < 0) newdist = 1;
+     if (newdist < 1) newdist = 1;
      if (followcursor && d->cursorpos >= d->viewstart && 
 	 d->cursorpos < d->viewend)
 	  newstart = d->cursorpos - dist/2;

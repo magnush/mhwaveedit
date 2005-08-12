@@ -715,6 +715,7 @@ static void edit_paste(GtkMenuItem *menu_item, gpointer user_data)
 {
      Chunk *c = clipboard, *nc;
      Mainwindow *w = MAINWINDOW(user_data);
+     off_t cp;
      if (w->doc == NULL) {
 	  mainwindow_set_chunk(w,clipboard,NULL);
 	  return;
@@ -729,9 +730,9 @@ static void edit_paste(GtkMenuItem *menu_item, gpointer user_data)
      nc = chunk_insert(w->doc->chunk,c,w->doc->cursorpos);
      gtk_object_sink(GTK_OBJECT(c));
 
-     document_update(w->doc, nc, w->doc->cursorpos, clipboard->length);
-     document_set_selection( w->doc, w->doc->cursorpos,
-			     w->doc->cursorpos + clipboard->length );
+     cp = w->doc->cursorpos;
+     document_update(w->doc, nc, cp, clipboard->length);
+     document_set_selection( w->doc, cp, cp + clipboard->length );
 }
 
 static void edit_pasteover(GtkMenuItem *menuitem, gpointer user_data)
@@ -1314,15 +1315,16 @@ static void edit_insertsilence(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW ( user_data );
      gfloat f;
+     off_t cp;
      Chunk *c,*nc;
      if (user_input_float(_("Seconds of silence: "),_("Insert Silence"),0.0,&f)) 
 	  return;
      if (f<=0.0) return;
      c = chunk_new_silent(&(w->doc->chunk->format),f);
      nc = chunk_insert(w->doc->chunk, c, w->doc->cursorpos);
-     document_update(w->doc,nc,w->doc->cursorpos,c->length);
-     document_set_selection( w->doc, w->doc->cursorpos,
-			     w->doc->cursorpos + c->length );
+     cp = w->doc->cursorpos;
+     document_update(w->doc,nc,cp,c->length);
+     document_set_selection( w->doc, cp, cp + c->length );
      gtk_object_sink(GTK_OBJECT(c));
 }
 
