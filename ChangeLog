@@ -2,6 +2,8 @@
 
 	* Released version 1.4.3.
 
+	* src/mainwindow.c (mainwindow_save): Looked at wrong filename.
+
 	* src/filetypes.c (chunk_save): Call status_bar_end_progress.
 
 	* src/filetypes.c (try_mplayer): Use new mplayer -ao pcm:file syntax.
