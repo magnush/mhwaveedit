@@ -1,3 +1,7 @@
+2005-08-12  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.4.3.
+
 2005-08-04  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/statusbar.c (status_bar_end_progress): New function that
