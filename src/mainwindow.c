@@ -284,12 +284,13 @@ static gboolean mainwindow_save ( Mainwindow *w, gchar *filename )
      /* If there is no filename provided, get a filename from a dialog
       * box. Also set the fmal flag so we remember to free the
       * filename later. */  
-     if (!filename) {
+     if (filename == NULL) {
 	  filename = get_save_filename(w->doc->filename,_("Save File"));
-	  if (!filename) return TRUE;
+	  if (filename == NULL) return TRUE;
 	  fmal = TRUE;
      }
 
+     g_assert(filename != NULL);
      /* Save the file */
      r = document_save(w->doc, filename);
      if (r) { if (fmal) g_free(filename); return TRUE; }
