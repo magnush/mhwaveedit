@@ -1,3 +1,8 @@
+2005-08-18  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/document.c (document_set_filename): Return directly if we're
+	setting the same filename as we already have.
+
 2005-08-12  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* Released version 1.4.3.

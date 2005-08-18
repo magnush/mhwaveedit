@@ -209,6 +209,10 @@ static void document_set_filename(Document *d, gchar *filename,
      guint i=0;
      GList *l;
      Document *x;
+     if (filename == d->filename || 
+	 (d->filename != NULL && filename != NULL && 
+	  !strcmp(d->filename,filename)))
+	  return;
      g_free(d->titlename);
      g_free(d->filename);
      d->filename = g_strdup(filename);
