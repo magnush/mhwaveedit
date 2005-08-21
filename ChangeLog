@@ -1,3 +1,8 @@
+2005-08-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_state_changed): Add call to
+	view_changed so we update the horizontal scrollbar.
+
 2005-08-18  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/document.c (document_set_filename): Return directly if we're

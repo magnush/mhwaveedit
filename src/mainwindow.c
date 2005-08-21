@@ -544,6 +544,7 @@ static void mainwindow_set_chunk(Mainwindow *w, Chunk *c, gchar *filename)
      if (!inifile_get_gboolean("varispeed",TRUE))
 	  gtk_widget_set_sensitive(w->speed_slider,FALSE);
      list_object_add(mainwindow_objects,w);
+     mainwindow_view_changed(w->doc,w);
 }
 
 void mainwindow_set_speed_sensitive(gboolean sensitive)
@@ -1937,10 +1938,11 @@ static void mainwindow_state_changed(Document *d, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
      fix_title(w);
-     update_desc(w);
+     update_desc(w);     
      set_sensitive(w->need_undo_items,document_can_undo(d));
      set_sensitive(w->need_redo_items,document_can_redo(d));
      set_sensitive(w->need_selection_items,(d->selstart != d->selend));
+     mainwindow_view_changed(d,user_data);
 }
 
 static void mainwindow_value_changed(GtkAdjustment *adjustment, 
