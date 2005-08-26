@@ -308,7 +308,10 @@ void document_play_from_cursor(Document *d, gboolean loopmode, gfloat speed)
 
 void document_play_selection(Document *d, gboolean loopmode, gfloat speed)
 {
-     document_play(d,d->selstart,d->selend,loopmode,speed);
+     if (d->selstart != d->selend)
+	  document_play(d,d->selstart,d->selend,loopmode,speed);
+     else
+	  document_play(d,0,d->chunk->length,loopmode,speed);
 }
 
 void document_stop(Document *d, gboolean do_return)

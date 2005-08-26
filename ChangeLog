@@ -1,5 +1,8 @@
 2005-08-26  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/document.c (document_play_selection): Handle case when
+	nothing is selected as if whole file was selected.
+
 	* src/chunkview.c (chunk_view_destroy): Also disconnect here. 
 
 	* src/mainwindow.c (mainwindow_destroy): Remember to disconnect
