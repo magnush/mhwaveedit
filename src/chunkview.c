@@ -121,7 +121,10 @@ static void chunk_view_destroy (GtkObject *object)
 	  gdk_pixmap_unref(cv->image);
 	  cv->image = NULL;
      }
-     if (cv->doc) gtk_object_unref(GTK_OBJECT(cv->doc));
+     if (cv->doc != NULL) {
+	  gtk_signal_disconnect_by_data(GTK_OBJECT(cv->doc),cv);
+	  gtk_object_unref(GTK_OBJECT(cv->doc));
+     }
      cv->doc = NULL;
      parent_class->destroy(object);
      if (cv->cache) view_cache_free(cv->cache);
@@ -728,7 +731,7 @@ GtkWidget *chunk_view_new(void)
 void chunk_view_set_document(ChunkView *cv, Document *doc)
 {
      if (cv->doc == doc) return;
-     if (cv->doc) {
+     if (cv->doc != NULL) {
 	  gtk_signal_disconnect_by_data(GTK_OBJECT(cv->doc),cv);
 	  gtk_object_unref(GTK_OBJECT(cv->doc));
      }

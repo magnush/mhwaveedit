@@ -1,7 +1,17 @@
+2005-08-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (chunk_view_destroy): Also disconnect here. 
+
+	* src/mainwindow.c (mainwindow_destroy): Remember to disconnect
+	document signals.
+	(file_close): Also need to disconnect here. 
+
 2005-08-21  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/mainwindow.c (mainwindow_state_changed): Add call to
 	view_changed so we update the horizontal scrollbar.
+	(mainwindow_set_chunk): Set the proper follow mode when we create
+	the document.
 
 2005-08-18  Magnus Hjorth  <magnus.hjorth@home.se>
 

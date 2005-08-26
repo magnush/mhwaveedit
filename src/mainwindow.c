@@ -331,6 +331,7 @@ static void mainwindow_destroy(GtkObject *obj)
      list_object_remove(mainwindow_objects, obj);
 
      if ( w->doc != NULL ) {
+	  gtk_signal_disconnect_by_data(GTK_OBJECT(w->doc),obj);
 	  gtk_object_unref(GTK_OBJECT(w->doc));
 	  w->doc = NULL;
      }
@@ -527,6 +528,7 @@ static void mainwindow_set_chunk(Mainwindow *w, Chunk *c, gchar *filename)
      }
      d = document_new_with_chunk(c,filename,w->statusbar);
      w->doc = d;
+     document_set_followmode(d,w->followmode);
      gtk_object_ref(GTK_OBJECT(w->doc));
      gtk_object_sink(GTK_OBJECT(w->doc));
      gtk_signal_connect(GTK_OBJECT(d),"view_changed",
@@ -616,6 +618,7 @@ static void file_close(GtkMenuItem *menuitem, gpointer user_data)
      if (list_object_get_size(mainwindow_objects)==1 &&
 	 w->doc != NULL) {
 	  chunk_view_set_document(w->view, NULL);
+	  gtk_signal_disconnect_by_data(GTK_OBJECT(w->doc),w);
 	  gtk_object_unref(GTK_OBJECT(w->doc));
 	  w->doc = NULL;
 	  fix_title(w);
