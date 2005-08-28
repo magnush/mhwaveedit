@@ -21,6 +21,8 @@
 
 #include <config.h>
 
+
+
 #include <math.h>
 #include "chunkview.h"
 #include "main.h"
@@ -463,7 +465,7 @@ static off_t calc_sample(ChunkView *cv, gfloat x, gfloat xmax)
 	  (cv->doc->viewend-cv->doc->viewstart);
 }
 
-static gint dragmode; /* 0 = dragging sel. start, 1 = dragging sel. end, */
+static gboolean dragmode = FALSE;
 static off_t dragstart;
 static off_t dragend;
 static gboolean autoscroll = FALSE;
@@ -531,18 +533,39 @@ static gint chunk_view_button_press(GtkWidget *widget, GdkEventButton *event)
      else if (fabs(event->x - ep) < 3.0)
 	  dragstart = dragend = d->selend;
 
-     if (event->button == 1 || event->button == 2) {
-	  dragmode = 1;
+     if ((event->state & GDK_SHIFT_MASK) != 0 && d->selend != d->selstart) {
+
+	  dragmode = TRUE;
+	  
+	  /* The right selection endpoint is nearest to dragstart
+	   * <=> dragstart > (selstart+selend)/2
+	   * <=> 2*dragstart > selstart+selend
+	   * <=> dragstart+dragstart > selstart+selend
+	   * <=> dragstart-selend > selstart-dragstart
+	   * This should be overflow-safe for large values 
+	   */
+	  if ((event->button == 1 && 
+	       dragstart-d->selend > d->selstart-dragstart) ||
+	      (event->button != 1 &&
+	       dragstart-d->selend < d->selstart-dragstart) ) {
+	       /* Drag right endpoint */
+	       dragstart = d->selstart;
+	  } else {
+	       /* Drag left endpoint */
+	       dragstart = d->selend;
+	  }
+	  document_set_selection( d, dragstart, dragend );
+
+     } else if (event->button == 1 || event->button == 2) {
+	  dragmode = TRUE;
 	  if (d->selend != d->selstart) {
 	       if (d->selstart >= d->viewstart && 
 		   dragstart == d->selstart){
-		    dragmode = 0;
 		    dragstart = d->selend;
 		    dragend = d->selstart;
 		    return FALSE;
 	       } else if (d->selend <= d->viewend &&
 			  dragstart == d->selend) {
-		    dragmode = 1;
 		    dragstart = d->selstart;
 		    dragend = d->selend;
 		    return FALSE;
@@ -565,16 +588,13 @@ static gint chunk_view_motion_notify(GtkWidget *widget, GdkEventMotion *event)
      ChunkView *cv = CHUNKVIEW(widget);
      Document *d = cv->doc;
      if (d == NULL) return FALSE;
-     if ((event->state & (GDK_BUTTON1_MASK | GDK_BUTTON2_MASK)) != 0) {
+     if (dragmode) {
 	  if (event->x < widget->allocation.width)
 	       dragend = calc_sample ( cv, (event->x > 0.0) ? event->x : 0.0, 
 				       (gfloat)widget->allocation.width );
 	  else
 	       dragend = d->viewend;
-       	  if (dragmode == 1) 
-	       document_set_selection ( d, dragstart, dragend );
-	  else
-	       document_set_selection ( d, dragend, dragstart);
+	  document_set_selection ( d, dragstart, dragend );
 	  if (event->x < 0.0 || event->x > widget->allocation.width) {
 	       if (!autoscroll) {
 		    autoscroll = TRUE;
@@ -652,6 +672,7 @@ static gint chunk_view_button_release(GtkWidget *widget, GdkEventButton *event)
 	  document_play_selection(cv->doc,FALSE,1.0);
      }
      autoscroll = FALSE;
+     dragmode = FALSE;
      return FALSE;
 }
 
