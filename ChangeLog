@@ -1,5 +1,7 @@
 2005-08-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* Released version 1.4.4.
+
 	* src/document.c (document_set_selection): Handle special case
 	with no selection differently.
 
