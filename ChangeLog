@@ -1,5 +1,8 @@
 2005-08-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/document.c (document_set_selection): Handle special case
+	with no selection differently.
+
 	* src/chunkview.c: Shift+Drag now moves the nearest selection
 	endpoint (left mouse button) or the other selection endpoint
 	(right mouse button).

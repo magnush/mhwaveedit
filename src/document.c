@@ -654,11 +654,15 @@ void document_set_selection(Document *d, off_t selstart, off_t selend)
 {
      off_t o;
      
+     /* Adjust the input arguments so they're properly ordered etc. */
      if (selstart > selend) {
 	  o = selstart;
 	  selstart = selend;
 	  selend = o;
      }
+     if (selstart == selend) 
+	  selstart = selend = 0;
+     
      if (d->chunk->length == 0 && d->selstart == 0 && d->selend == 0) return;
 
      g_assert(selstart >= 0 && selstart < d->chunk->length &&
