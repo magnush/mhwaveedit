@@ -1,3 +1,13 @@
+2005-09-12  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/player.c (player_switch): Handle auto-conversion properly.
+
+	* src/document.c (document_update): Check for sample rate/format
+	conversion and stop in that case. 
+
+	* src/sound-jack.c (mhjack_output_suggest_format): Handle if we're
+	not connected.
+
 2005-08-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* Released version 1.4.4.

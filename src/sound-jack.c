@@ -61,6 +61,8 @@ struct mhjack_prefdlg {
      } ports[2];
 };
 
+/* static int dumpfile; */
+
 static void mhjack_register_ports(void);
 
 static void mhjack_read_config(void)
@@ -465,6 +467,7 @@ static void mhjack_init(void)
 {
      mhjack_read_config();
      mhjack_connect(FALSE);
+     /* dumpfile = open("jackdump.dat",O_WRONLY|O_CREAT); */
 }
 
 static void mhjack_quit(void)
@@ -501,6 +504,9 @@ static gint mhjack_output_select_format(Dataformat *format, gboolean silent)
 static gboolean mhjack_output_suggest_format(Dataformat *format, 
 					     Dataformat *result)
 {
+     mhjack_connect(TRUE);
+     if (!mhjack.is_activated) return FALSE; 
+
      memcpy(result,format,sizeof(Dataformat));
      result->type = DATAFORMAT_FLOAT;
      result->samplesize = sizeof(float);
@@ -523,6 +529,8 @@ static guint mhjack_output_play(gchar *buffer, guint bufsize)
 	  mhjack.is_playing = TRUE;
 	  return mhjack_ringbuffer_space(FALSE,TRUE);
      }
+
+     /* write(dumpfile, buffer, bufsize); */
 
      /* Calculate room in the ring buffers */
      writable = mhjack_ringbuffer_space(FALSE,FALSE) / sizeof(float); 

@@ -381,6 +381,12 @@ void document_update(Document *d, Chunk *new_chunk,
 	  d->history_pos->next = NULL;	  
      }
 
+     /* If we've converted sample rate or channel, we must stop playback */
+     if ((d->chunk->format.channels != new_chunk->format.channels || 
+	  d->chunk->format.samplerate != new_chunk->format.samplerate) &&
+	 playing_document == d)
+	  player_stop();
+
      /* Set the new chunk */
      gtk_object_unref(GTK_OBJECT(d->chunk));
      d->chunk = new_chunk;

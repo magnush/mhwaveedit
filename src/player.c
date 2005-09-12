@@ -370,7 +370,19 @@ void player_switch(Chunk *chunk, off_t movestart, off_t movedist)
      ChunkHandle *c;
      off_t oldpos = curpos;
      off_t newpos, newstart, newend;
-     
+     Chunk *x;
+
+     if (ch == NULL) return;
+
+     g_assert(chunk->format.samplerate == ch->format.samplerate && 
+	      chunk->format.channels == ch->format.channels);
+     if (!dataformat_samples_equal(&(chunk->format),&(ch->format))) {
+	  x = chunk_convert_sampletype(chunk, &(ch->format));
+	  player_switch(x,movestart,movedist);
+	  gtk_object_sink(GTK_OBJECT(x));
+	  return;
+     } 
+
      newpos = curpos;
      if (newpos >= movestart) {
 	  newpos += movedist;
@@ -395,7 +407,6 @@ void player_switch(Chunk *chunk, off_t movestart, off_t movedist)
 	  if (newend >= chunk->length) newend = chunk->length;
      }
      
-
      c = chunk_open(chunk);
      if (c == NULL) return;
      chunk_close(ch);
