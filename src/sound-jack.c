@@ -609,11 +609,6 @@ static gboolean mhjack_output_want_data(void)
 
 /* Input */
 
-static gboolean mhjack_input_supported(void)
-{
-     return TRUE;
-}
-
 static void mhjack_input_store(Ringbuf *buffer)
 {
      guint readable,frames,i,j;

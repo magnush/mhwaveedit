@@ -168,11 +168,6 @@ static gint oss_output_select_format(Dataformat *format, gboolean silent)
      return 0;
 }
 
-static gboolean oss_input_supported(void)
-{
-     return TRUE;
-}
-
 static gint oss_input_select_format(Dataformat *format, gboolean silent)
 {     
      return oss_try_format(format,TRUE) ? -1 : 0;

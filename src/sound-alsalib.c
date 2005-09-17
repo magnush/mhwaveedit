@@ -328,11 +328,6 @@ static void alsa_output_clear_buffers(void)
      snd_pcm_prepare(alsa_data.whand);
 }
 
-static gboolean alsa_input_supported(void)
-{
-     return TRUE;
-}
-
 static void alsa_input_store(Ringbuf *buffer)
 {
      gchar buf[4096];

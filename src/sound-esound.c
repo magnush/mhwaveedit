@@ -188,11 +188,6 @@ static void esound_input_stop(void)
      esound_record_fd = -1;
 }
 
-static gboolean esound_input_supported(void)
-{
-     return TRUE;
-}
-
 static void esound_input_store(Ringbuf *buffer)
 {
      gchar buf[4096];
