@@ -57,11 +57,6 @@ static void sunaud_quit(void)
      ringbuf_free(sunaud_output_buffer);
 }
 
-static gboolean sunaud_input_supported(void)
-{
-     return TRUE;
-}
-
 static gboolean sunaud_select_format(gboolean rec, Dataformat *format, 
 				     gboolean silent)
 {

@@ -62,7 +62,16 @@ static Dataformat playing_format;
 #include "sound-esound.c"
 #endif
 
+#ifdef HAVE_ARTSC
+#include "sound-artsc.c"
+#endif
+
 #include "sound-dummy.c"
+
+static gboolean input_supported_true(void)
+{
+     return TRUE;
+}
 
 struct sound_driver {
      gchar *name, *id;
@@ -94,7 +103,7 @@ static struct sound_driver drivers[] = {
        oss_output_select_format,
        oss_output_want_data, oss_output_play, oss_output_stop, 
        oss_output_clear_buffers,NULL,
-       oss_input_supported, oss_input_select_format,
+       input_supported_true, oss_input_select_format,
        oss_input_store, oss_input_stop },
 #endif
 
@@ -103,7 +112,7 @@ static struct sound_driver drivers[] = {
        alsa_output_select_format,
        alsa_output_want_data, alsa_output_play, alsa_output_stop, 
        alsa_output_clear_buffers,NULL,
-       alsa_input_supported,  
+       input_supported_true,  
        alsa_input_select_format, alsa_input_store, alsa_input_stop,
        alsa_input_stop_hint,alsa_input_overrun_count },     
 #endif
@@ -113,7 +122,7 @@ static struct sound_driver drivers[] = {
        mhjack_output_select_format,
        mhjack_output_want_data, mhjack_output_play, mhjack_output_stop, 
        mhjack_clear_buffers, mhjack_output_suggest_format,
-       mhjack_input_supported,  
+       input_supported_true,  
        mhjack_input_select_format, mhjack_input_store, mhjack_input_stop,
        mhjack_input_stop, mhjack_get_xrun_count },
 #endif
@@ -124,7 +133,7 @@ static struct sound_driver drivers[] = {
        sunaud_output_play, sunaud_output_stop,
        sunaud_output_clear_buffers,
        sunaud_output_suggest_format,
-       sunaud_input_supported,sunaud_input_select_format,sunaud_input_store,
+       input_supported_true,sunaud_input_select_format,sunaud_input_store,
        sunaud_input_stop,NULL,sunaud_input_overrun_count },
 #endif
 
@@ -154,11 +163,21 @@ static struct sound_driver drivers[] = {
        esound_output_select_format, 
        esound_output_want_data, esound_output_play, esound_output_stop,
        esound_output_clear_buffers, NULL, 
-       esound_input_supported,  
+       input_supported_true,  
        esound_input_select_format, esound_input_store, esound_input_stop },
 
 #endif
 
+#ifdef HAVE_ARTSC
+
+     { "aRts", "arts", NULL, mharts_init, mharts_quit,
+       mharts_output_select_format, 
+       mharts_output_want_data, mharts_output_play, mharts_output_stop,
+       mharts_output_clear_buffers, mharts_output_suggest_format, 
+       input_supported_true,  
+       mharts_input_select_format, mharts_input_store, mharts_input_stop },
+
+#endif
 
      { N_("Dummy (no sound)"), "dummy", NULL, dummy_init, dummy_quit,
        dummy_output_select_format, 

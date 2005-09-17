@@ -14,9 +14,9 @@ mhwaveedit_SOURCES = chunk.c int_box.c sound.c speeddialog.c              \
 		     rateconv.c dataformat.c rateest.c document.c
 
 INCLUDES = @GTK_CFLAGS@ @SDL_CFLAGS@ @SNDFILE_CFLAGS@ @JACK_CFLAGS@ \
-	   @ESOUND_CFLAGS@ @LIBSAMPLERATE_CFLAGS@
+	   @ESOUND_CFLAGS@ @LIBSAMPLERATE_CFLAGS@ @ARTSC_CFLAGS@
 LDADD = @GTK_LIBS@ @SDL_LIBS@ @PORTAUDIO_LIBS@ @SNDFILE_LIBS@ @ALSALIB_LIBS@ \
-        @JACK_LIBS@ @ESOUND_LIBS@ @LIBSAMPLERATE_LIBS@
+        @JACK_LIBS@ @ESOUND_LIBS@ @LIBSAMPLERATE_LIBS@ @ARTSC_LIBS@
 
 localedir = $(datadir)/locale
 AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"

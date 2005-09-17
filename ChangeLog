@@ -1,3 +1,13 @@
+2005-09-17  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound.c: Integrated arts driver. 
+	Common input_supported function for the sound drivers that always
+	return TRUE.
+
+	* configure.in: Added checks for aRts C library.
+
+	* src/sound-artsc.c: New file. 
+
 2005-09-12  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/player.c (player_switch): Handle auto-conversion properly.

@@ -257,7 +257,7 @@ fi
 dnl Check for Esound
 
 MHW_HAVE_ESOUND=yes
-AC_ARG_WITH(esound,[  --without-esound      Don't compile EsounD driver],
+AC_ARG_WITH(esound,[  --without-esound        Don't compile EsounD driver],
 	if test "x$withval" = "xno"; then
 	   MHW_HAVE_ESOUND=no
 	fi
@@ -291,6 +291,36 @@ fi
 if test "x$MHW_HAVE_SUNAUDIO" = "xyes"; then
 	AC_DEFINE(HAVE_SUN,[],[Enable Sun audio sound driver])
 fi
+
+dnl Check for aRts C interface
+
+MHW_HAVE_ARTSC=yes
+ARTSC_LIBS=""
+ARTSC_CFLAGS=""
+
+AC_DEFUN(AC_WITHOUT_ARTSC,
+	if test "x$withval" = "xno"; then
+	        MHW_HAVE_ARTSC=no
+	fi
+)
+
+AC_ARG_WITH(arts, [  --without-arts          Don't compile aRts driver],AC_WITHOUT_ARTSC)
+
+ARTSC_CONFIG_PATH=nope
+if test "x$MHW_HAVE_ARTSC" = "xyes"; then
+        AC_PATH_PROG(ARTSC_CONFIG, artsc-config)
+fi
+
+if test "x$ARTSC_CONFIG" = "xnope"; then
+    MHW_HAVE_ARTSC=no
+else
+	ARTSC_CFLAGS=`$ARTSC_CONFIG --cflags`
+	ARTSC_LIBS=`$ARTSC_CONFIG --libs`
+	AC_DEFINE(HAVE_ARTSC,[],[Enable aRts driver])
+fi
+
+AC_SUBST(ARTSC_CFLAGS)
+AC_SUBST(ARTSC_LIBS)
 
 dnl Check for GTK+
 
@@ -378,6 +408,7 @@ echo    "  Sun:                    $MHW_HAVE_SUNAUDIO"
 echo    "  PortAudio:              $MHW_HAVE_PORTAUDIO"
 echo    "  SDL:                    $MHW_HAVE_SDL"
 echo    "  EsounD:                 $MHW_HAVE_ESOUND"
+echo    "  aRts:                   $MHW_HAVE_ARTSC"
 echo
 echo    "Other settings:"
 echo    "  LADSPA Support:         $HAVE_LADSPA"
