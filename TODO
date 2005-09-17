@@ -34,7 +34,6 @@ Playback/recording:
 * Show remaining possible recording time while recording.
 * Do recording in completely separate thread/process
 * FFT display while playing
-* aRTs support.
 * Place cursor exactly where we stopped on low-latency sound drivers.
 * Record a few seconds "ahead" so you can start recording a bit too
   late without missing anything.
