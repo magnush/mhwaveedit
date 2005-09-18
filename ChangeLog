@@ -1,3 +1,7 @@
+2005-09-18  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound.c: Support silent auto-detection in drivers. 
+
 2005-09-17  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/sound.c: Integrated arts driver. 

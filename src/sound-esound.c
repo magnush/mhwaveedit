@@ -44,21 +44,27 @@ static void esound_prefs_init(void)
 					     ESOUND_CLEARDELAY_DEFAULT);
 }
 
-static void esound_init(void)
+static gboolean esound_init(gboolean silent)
 {
      /* Just try once here so the user gets a clear error message if ESD
       * isn't available */
      int fd;
      gchar *c;
      esound_prefs_init();
+     if (getenv("ESD_NO_SPAWN") == NULL) 
+	  putenv("ESD_NO_SPAWN=y");
      fd = esd_open_sound(NULL);
      if (fd < 0) {
-	  c = g_strdup_printf(_("Couldn't connect to ESD daemon: %s"),
-			      strerror(errno));
-	  user_error(c);
-	  g_free(c);
+	  if (!silent) {
+	       c = g_strdup_printf(_("Couldn't connect to ESD daemon: %s"),
+				   strerror(errno));
+	       user_error(c);
+	       g_free(c);
+	  }
+	  return FALSE;
      }
      esd_close(fd);
+     return TRUE;
 }
 
 static void esound_quit(void)

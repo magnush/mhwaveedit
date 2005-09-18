@@ -48,7 +48,7 @@ static struct {
 } portaudio_data = { 0 };
 
 // Anropas innan några andra output_-anrop och före gtk_init. 
-static void portaudio_init(void)
+static gboolean portaudio_init(gboolean silent)
 {
      Pa_Initialize();
      portaudio_data.output_buffer = ringbuf_new( 
@@ -61,6 +61,7 @@ static void portaudio_init(void)
 	  g_warning ( _("sound-portaudio: No output devices available!") );
      if (portaudio_data.in == paNoDevice)
 	  g_warning ( _("sound-portaudio: No input devices available!") );
+     return TRUE;
 }
 
 // Anropas till sist

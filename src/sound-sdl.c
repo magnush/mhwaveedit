@@ -31,7 +31,7 @@ static struct {
      Ringbuf *output_buffer;
 } sdl_data;
 
-static void sdl_init(void)
+static gboolean sdl_init(gboolean silent)
 {
      gchar *c;
      if (SDL_Init(SDL_INIT_AUDIO) == -1) {
@@ -44,6 +44,7 @@ static void sdl_init(void)
      sdl_data.output_buffer = ringbuf_new ( 
 	  inifile_get_guint32(INI_SETTING_SOUNDBUFSIZE,
                               INI_SETTING_SOUNDBUFSIZE_DEFAULT) );
+     return TRUE;
 }
 
 static void sdl_quit(void)

@@ -78,7 +78,7 @@ struct sound_driver {
      
      void (*preferences)(void);
 
-     void (*init)(void);
+     gboolean (*init)(gboolean silent);
      void (*quit)(void);
 
      gint (*output_select_format)(Dataformat *format, gboolean silent);
@@ -287,7 +287,7 @@ void sound_init(void)
 	  current_driver = 0;
      }
 
-     drivers[current_driver].init();
+     drivers[current_driver].init(FALSE);
 }
 
 static void delayed_output_stop(void)

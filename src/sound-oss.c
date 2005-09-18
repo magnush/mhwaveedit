@@ -57,12 +57,15 @@ static int oss_samplerate;
 static int oss_channels;
 static gboolean oss_noselect = FALSE;
 
-static void oss_init(void)
+static gboolean oss_init(gboolean silent)
 {
      oss_output_buffer = ringbuf_new(
 	  inifile_get_guint32(INI_SETTING_SOUNDBUFSIZE,
 			      INI_SETTING_SOUNDBUFSIZE_DEFAULT));
      oss_noselect = inifile_get_gboolean(OSS_NOSELECT,OSS_NOSELECT_DEFAULT);
+     /* When autodetecting, this is the last tested driver before the dummy,
+      * so we might as well return TRUE */
+     return TRUE;
 }
 
 static void oss_quit(void)

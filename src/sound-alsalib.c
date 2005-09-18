@@ -28,8 +28,11 @@ static struct {
      int overrun_count;
 } alsa_data = { 0 };
 
-static void alsa_init(void)
+static gboolean alsa_init(gboolean silent)
 {     
+     /* We assume that if you have alsa-lib, you're using the ALSA kernel 
+      * drivers. */
+     return TRUE;
 }
 
 static void alsa_quit(void)

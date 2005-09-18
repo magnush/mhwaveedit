@@ -44,10 +44,11 @@ static struct {
 } dummy_data = {1};
 
 
-static void dummy_init(void)
+static gboolean dummy_init(gboolean silent)
 {
      g_assert(dummy_data.state == 1);
      dummy_data.state = 2;
+     return TRUE;
 }
 
 static void dummy_quit(void)

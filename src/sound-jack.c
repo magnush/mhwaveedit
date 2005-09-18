@@ -463,11 +463,12 @@ static guint mhjack_ringbuffer_space(gboolean input, gboolean readspace)
      return w;
 }
 
-static void mhjack_init(void)
+static gboolean mhjack_init(gboolean silent)
 {
      mhjack_read_config();
-     mhjack_connect(FALSE);
+     mhjack_connect(silent);
      /* dumpfile = open("jackdump.dat",O_WRONLY|O_CREAT); */
+     return (mhjack.myself != NULL);
 }
 
 static void mhjack_quit(void)

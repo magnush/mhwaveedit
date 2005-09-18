@@ -43,13 +43,14 @@ static int sunaud_input_overruns;
 
 static void sunaud_output_flush(void);
 
-static void sunaud_init(void)
+static gboolean sunaud_init(gboolean silent)
 {
      sunaud_dev = getenv("AUDIODEV");
      if (!sunaud_dev) sunaud_dev = "/dev/audio";     
      sunaud_output_buffer = ringbuf_new(
 	  inifile_get_guint32(INI_SETTING_SOUNDBUFSIZE,
-			      INI_SETTING_SOUNDBUFSIZE_DEFAULT));     
+			      INI_SETTING_SOUNDBUFSIZE_DEFAULT));
+     return TRUE;
 }
 
 static void sunaud_quit(void)

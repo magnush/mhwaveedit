@@ -41,10 +41,12 @@ static gboolean mharts_check_init_status(void)
      return FALSE;
 }
 
-static void mharts_init(void)
+static gboolean mharts_init(gboolean silent)
 {
      mharts_init_status = arts_init();
-     mharts_check_init_status();
+     if (!silent)
+	  mharts_check_init_status();
+     return (mharts_init_status == 0);
 }
 
 static void mharts_quit(void)
