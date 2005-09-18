@@ -1,5 +1,8 @@
 2005-09-18  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/sound-esound.c (esound_output_select_format): Report message
+	shown to avoid generic error message box.
+
 	* src/sound.c: Support silent auto-detection in drivers. 
 
 2005-09-17  Magnus Hjorth  <magnus.hjorth@home.se>

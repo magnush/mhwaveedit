@@ -109,9 +109,10 @@ static gint esound_output_select_format(Dataformat *format, gboolean silent)
      }
      esound_select_format(format,&esound_play_fd,FALSE);
      if (esound_play_fd < 0) { 
-	  if (!silent)
+	  if (!silent) {
 	       user_perror(_("EsounD: Unable to open playback stream"));
-	  return -1;
+	       return 1;
+	  } return -1;
      }
      memcpy(&esound_play_format,format,sizeof(Dataformat));
      return 0;
