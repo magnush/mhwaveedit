@@ -1,6 +1,6 @@
 Bug reporting
 
-If you find a bug or flaw in the program, first check the mhWaveEdit web page's list of bugs found after the release. If it isn't there, mail a bug report describing the bug to: magnus.hjorth@home.se
+If you find a bug or flaw in the program that's not mentioned in the BUGS file, report the bug in the bug tracker (see contact info) or mail a bug report describing the bug to: magnus.hjorth@home.se
 
 In case of a crash, please do not send me any core dumps. They are huge and completely useless to me. Instead, create a backtrace. Backtraces tell you exactly where the program crashed.
 
