@@ -1,0 +1,17 @@
+Helping out
+
+There are plenty of things you can do if you want to help the development of mhWaveEdit. 
+
+First of all, look for bugs and report all bugs you find into the bug tracker. Sometimes a bug can get overlooked for a long time because nobody reports it, so don't be afraid to report bugs that have been there for a few releases. You don't have to provide fixes or very detailed information, although it helps of course.
+
+Feature requests are also welcome, report them to the mailing list or to the bug tracker.
+
+If you speak a language other than English and mhWaveEdit isn't translated to your language, you can contribute a translation. To do that, copy the template mhwaveedit.pot in the po directory into a new file ll.po, where ll is your language code (see http://www.gnu.org/software/gettext/manual/html_node/gettext_221.html for a list of language codes). 
+
+It's possible to edit po-files by hand, but I recommend a program such as poEdit (http://www.poedit.org) for editing translations. 
+
+After you've filled in all the translations you want (you don't have to translate all the strings), mail in the po file to me (see contact info) and I'll add it to the next release. 
+
+If a translation is incomplete, you're very welcome to translate the remaining untranslated messages and mail them in. Corrections to translations are also appreciated, but they may need to be checked with the previous translator before including them. 
+
+Money donations through PayPal are also gratefully accepted. For the address, see the contact information. Donors of $10 or more will be credited with the donor's name ($25 for a company name) and web site as a sponsor in the AUTHORS file of future releases and also in other places in the future. Note that any donations are gifts to me (Magnus Hjorth) personally, not payment for a service of any kind. If you want some other arrangement, send me an email. 
