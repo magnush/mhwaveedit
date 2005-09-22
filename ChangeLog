@@ -1,5 +1,7 @@
 2005-09-22  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* Released version 1.4.5.
+
 	* src/configdialog.c: Added auto-detection toggle button. 
 
 2005-09-18  Magnus Hjorth  <magnus.hjorth@home.se>
