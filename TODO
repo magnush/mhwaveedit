@@ -30,7 +30,6 @@ Playback/recording:
   * Recording in sync with playback.
   * Recording anytime without stopping playback.
 * Separating input and output driver where possible.
-* Auto-detect which sound driver to use. 
 * Show remaining possible recording time while recording.
 * Do recording in completely separate thread/process
 * FFT display while playing
