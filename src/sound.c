@@ -190,6 +190,21 @@ static struct sound_driver drivers[] = {
 
 static guint current_driver = 0;
 
+/* Auto-detection order. */
+
+static gchar *autodetect_order[] = { 
+     /* Sound servers. These must auto-detect properly */
+     "jack", "esound", "arts", 
+     /* "Direct" API:s that don't auto-detect properly. 
+      * If compiled in they probably work. */
+     "alsa", "sun", 
+     /* "Direct" API:s that may or may not work and doesn't autodetect 
+      * properly */
+     "oss", 
+     /* Drivers that shouldn't be used unless everything else fails */
+     "pa", "sdl", "dummy", 
+};
+
 gchar *sound_driver_name(void)
 {
      return _(drivers[current_driver].name);
@@ -264,7 +279,7 @@ void sound_driver_show_preferences(gchar *id)
 
 void sound_init(void)
 {
-     gchar *c,*d;
+     gchar *c,*d,**p;
      int i;
      sound_lock_driver = inifile_get_gboolean("soundLock",FALSE);
      output_byteswap_flag = inifile_get_gboolean("outputByteswap",FALSE);
@@ -274,6 +289,22 @@ void sound_init(void)
 	  c = inifile_get(INI_SETTING_SOUNDDRIVER, DEFAULT_DRIVER);
 	  if (!strcmp(c,"default")) c = drivers[0].id;
      }
+
+     /* Handle auto-detection */
+     if (!strcmp(c,"auto")) {
+	  for (p=autodetect_order; ; p++) {
+	       for (i=0; i<ARRAY_LENGTH(drivers) && 
+			 strcmp(drivers[i].id,*p); i++) { }
+	       if (i == ARRAY_LENGTH(drivers)) continue;
+	       if (drivers[i].init(TRUE)) {
+		    current_driver = i;
+		    return;
+	       }
+	  }
+	  g_assert_not_reached();
+     }
+
+     /* Set current_driver */
      for (i=0; i<ARRAY_LENGTH(drivers); i++) {
 	  if (!strcmp(drivers[i].id,c)) {
 	       current_driver = i;
