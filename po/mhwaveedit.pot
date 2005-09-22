@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-22 05:33+0200\n"
+"POT-Creation-Date: 2005-09-22 07:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -803,7 +803,15 @@ msgstr ""
 msgid "Bug reporting"
 msgstr ""
 
-#: src/help.c:45
+#: src/help.c:41
+msgid "Helping out"
+msgstr ""
+
+#: src/help.c:42
+msgid "Contact"
+msgstr ""
+
+#: src/help.c:47
 #, no-c-format
 msgid ""
 "\n"
@@ -814,7 +822,7 @@ msgid ""
 "http://gna.org/projects/mhwaveedit/\n"
 msgstr ""
 
-#: src/help.c:52
+#: src/help.c:54
 #, no-c-format
 msgid ""
 "\n"
@@ -836,7 +844,7 @@ msgid ""
 "it again.\n"
 msgstr ""
 
-#: src/help.c:60
+#: src/help.c:62
 #, no-c-format
 msgid ""
 "\n"
@@ -850,7 +858,7 @@ msgid ""
 "You can do normal editing while the file is playing.\n"
 msgstr ""
 
-#: src/help.c:68
+#: src/help.c:70
 #, no-c-format
 msgid ""
 "\n"
@@ -868,7 +876,7 @@ msgid ""
 "playback will stop when you record.\n"
 msgstr ""
 
-#: src/help.c:76
+#: src/help.c:78
 #, no-c-format
 msgid ""
 "\n"
@@ -906,7 +914,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/help.c:97
+#: src/help.c:99
 #, no-c-format
 msgid ""
 "\n"
@@ -984,7 +992,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/help.c:150
+#: src/help.c:152
 #, no-c-format
 msgid ""
 "\n"
@@ -1017,7 +1025,7 @@ msgid ""
 "processed results to avoid rounding until the file is saved.\n"
 msgstr ""
 
-#: src/help.c:166
+#: src/help.c:168
 #, no-c-format
 msgid ""
 "\n"
@@ -1037,7 +1045,7 @@ msgid ""
 "just like any other file format.\n"
 msgstr ""
 
-#: src/help.c:174
+#: src/help.c:176
 #, no-c-format
 msgid ""
 "\n"
@@ -1056,7 +1064,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/help.c:183
+#: src/help.c:185
 #, no-c-format
 msgid ""
 "\n"
@@ -1104,12 +1112,12 @@ msgid ""
 ")             Play last 3 seconds of selection\n"
 msgstr ""
 
-#: src/help.c:228
+#: src/help.c:230
 #, no-c-format
 msgid ""
 "\n"
-"If you find a bug or flaw in the program, first check the mhWaveEdit web "
-"page's list of bugs found after the release. If it isn't there, mail a bug "
+"If you find a bug or flaw in the program that's not mentioned in the BUGS "
+"file, report the bug in the bug tracker (see contact info) or mail a bug "
 "report describing the bug to: magnus.hjorth@home.se\n"
 "\n"
 "In case of a crash, please do not send me any core dumps. They are huge and "
@@ -1126,6 +1134,64 @@ msgid ""
 "5. After gdb has loaded, use the command: bt\n"
 "6. Quit gdb with the command: quit\n"
 "7. Now you should have a back trace in the file backtrace.txt\n"
+msgstr ""
+
+#: src/help.c:246
+#, no-c-format
+msgid ""
+"\n"
+"There are plenty of things you can do if you want to help the development of "
+"mhWaveEdit. \n"
+"\n"
+"First of all, look for bugs and report all bugs you find into the bug "
+"tracker. Sometimes a bug can get overlooked for a long time because nobody "
+"reports it, so don't be afraid to report bugs that have been there for a few "
+"releases. You don't have to provide fixes or very detailed information, "
+"although it helps of course.\n"
+"\n"
+"Feature requests are also welcome, report them to the mailing list or to the "
+"bug tracker.\n"
+"\n"
+"If you speak a language other than English and mhWaveEdit isn't translated "
+"to your language, you can contribute a translation. To do that, copy the "
+"template mhwaveedit.pot in the po directory into a new file ll.po, where ll "
+"is your language code (see http://www.gnu.org/software/gettext/manual/"
+"html_node/gettext_221.html for a list of language codes). \n"
+"\n"
+"It's possible to edit po-files by hand, but I recommend a program such as "
+"poEdit (http://www.poedit.org) for editing translations. \n"
+"\n"
+"After you've filled in all the translations you want (you don't have to "
+"translate all the strings), mail in the po file to me (see contact info) and "
+"I'll add it to the next release. \n"
+"\n"
+"If a translation is incomplete, you're very welcome to translate the "
+"remaining untranslated messages and mail them in. Corrections to "
+"translations are also appreciated, but they may need to be checked with the "
+"previous translator before including them. \n"
+"\n"
+"Money donations through PayPal are also gratefully accepted. For the "
+"address, see the contact information. Donors of $10 or more will be credited "
+"with the donor's name ($25 for a company name) and web site as a sponsor in "
+"the AUTHORS file of future releases and also in other places in the future. "
+"Note that any donations are gifts to me (Magnus Hjorth) personally, not "
+"payment for a service of any kind. If you want some other arrangement, send "
+"me an email. \n"
+msgstr ""
+
+#: src/help.c:264
+#, no-c-format
+msgid ""
+"\n"
+"For bug reports, translation updates, patches and PayPal donations:\n"
+"magnus.hjorth@home.se\n"
+"\n"
+"Project page with bug tracker, mailing list membership:\n"
+"http://gna.org/projects/mhwaveedit\n"
+"\n"
+"Mailing list (you must be a subscriber before you can post messages):\n"
+"mhwaveedit-discuss@gna.org\n"
+"\n"
 msgstr ""
 
 #: src/inifile.c:84 src/inifile.c:91
