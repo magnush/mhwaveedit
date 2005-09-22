@@ -6,7 +6,7 @@ AC_CONFIG_SRCDIR([src/chunk.c])
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-MHW_VERSION=1.4.5pre
+MHW_VERSION=1.4.5
 
 AM_INIT_AUTOMAKE(mhWaveEdit,$MHW_VERSION)
 
@@ -58,10 +58,10 @@ AC_ARG_ENABLE(werror,
 [  --enable-werror         Treat warnings as errors during compilation],
 AC_ENABLE_WERROR)
 
-DEFAULT_DRIVER=default
+DEFAULT_DRIVER=auto
 AC_ARG_WITH(default-driver,
 [  --with-default-driver=driver Choose default sound driver (one of oss,alsa,
-                                jack,sun,pa,sdl,esound)],
+                                jack,sun,pa,sdl,esound,arts,auto)],
   DEFAULT_DRIVER=$withval)
 AC_DEFINE_UNQUOTED(DEFAULT_DRIVER,"${DEFAULT_DRIVER}",[Default sound driver])
                                 
