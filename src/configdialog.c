@@ -65,7 +65,11 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
     c = sound_driver_id_from_index(combo_selected_index(cd->sound_driver));
     g_assert(c != NULL);
 
-    b = inifile_set(INI_SETTING_SOUNDDRIVER,c) || b;
+    if (gtk_toggle_button_get_active(cd->driver_autodetect))
+	 inifile_set(INI_SETTING_SOUNDDRIVER,"auto");
+    else
+	 b = inifile_set(INI_SETTING_SOUNDDRIVER,c) || b;
+
     b = inifile_set_guint32(INI_SETTING_SOUNDBUFSIZE,
 			    cd->sound_buffer_size->val) || b;
     if (b) user_info(_("Some of the settings you have changed will not be "
@@ -425,6 +429,16 @@ static void tempdir_unselect(GtkList *list, GtkWidget *widget,
      }
 }
 
+static void driver_autodetect_toggled(GtkToggleButton *button, 
+				      gpointer user_data)
+{
+     ConfigDialog *cd = CONFIG_DIALOG(user_data);
+     gboolean b;
+     b = gtk_toggle_button_get_active(button);
+     if (b) combo_set_selection(cd->sound_driver,sound_driver_index());
+     gtk_widget_set_sensitive(GTK_WIDGET(cd->sound_driver), !b);
+}
+
 static void config_dialog_init(ConfigDialog *cd)
 {
     GtkWidget *w,*a,*b,*c,*d,*e,*f,*g,*h;
@@ -456,7 +470,7 @@ static void config_dialog_init(ConfigDialog *cd)
     l = sound_driver_valid_names();
     combo_set_items(cd->sound_driver,l,sound_driver_index());
     gtk_signal_connect(GTK_OBJECT(cd->sound_driver),"selection_changed",
-		       GTK_SIGNAL_FUNC(sound_driver_changed),cd);
+		       GTK_SIGNAL_FUNC(sound_driver_changed),cd);    
 
     i = rateconv_driver_count(TRUE);
     for (l=NULL,j=0; j<i; j++)
@@ -739,9 +753,20 @@ static void config_dialog_init(ConfigDialog *cd)
 			       (GtkAccelFlags)0);
     cd->dither_playback = GTK_TOGGLE_BUTTON(w);
     gtk_toggle_button_set_active(cd->dither_playback,dither_playback);
-					  
 
-    
+    w = gtk_check_button_new_with_label("");
+    key = gtk_label_parse_uline(GTK_LABEL(GTK_BIN(w)->child),
+				_("Auto dete_ct driver on each start-up"));
+    gtk_widget_add_accelerator(w,"clicked",ag,key,GDK_MOD1_MASK,
+			       (GtkAccelFlags)0);
+    cd->driver_autodetect = GTK_TOGGLE_BUTTON(w);
+    if (!strcmp(inifile_get(INI_SETTING_SOUNDDRIVER,DEFAULT_DRIVER),"auto")) {
+	 gtk_widget_set_sensitive(GTK_WIDGET(cd->sound_driver),FALSE);
+	 gtk_toggle_button_set_active(cd->driver_autodetect,TRUE);
+    }
+    gtk_signal_connect(GTK_OBJECT(w),"toggled",
+		       GTK_SIGNAL_FUNC(driver_autodetect_toggled),cd);
+
     /* Layout the window */
     
     a = gtk_vbox_new(FALSE,5);
@@ -823,6 +848,8 @@ static void config_dialog_init(ConfigDialog *cd)
     gtk_box_pack_start(GTK_BOX(f),g,FALSE,FALSE,8);
     g = GTK_WIDGET(cd->sound_driver_prefs);
     gtk_box_pack_start(GTK_BOX(f),g,FALSE,FALSE,3);
+    f = GTK_WIDGET(cd->driver_autodetect);
+    gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
     f = GTK_WIDGET(cd->output_bswap);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
     f = GTK_WIDGET(cd->sound_lock);

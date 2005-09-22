@@ -1,4 +1,10 @@
+2005-09-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/configdialog.c: Added auto-detection toggle button. 
+
 2005-09-18  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound.c (sound_init): Support auto-detection. 
 
 	* src/sound-esound.c (esound_output_select_format): Report message
 	shown to avoid generic error message box.
