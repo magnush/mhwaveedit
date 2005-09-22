@@ -1,5 +1,6 @@
 New features in version 1.4.5:
 
+  * Auto detection of sound driver on start-up
   * aRts driver
   * Bug fixes
 
