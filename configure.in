@@ -306,7 +306,7 @@ AC_DEFUN(AC_WITHOUT_ARTSC,
 
 AC_ARG_WITH(arts, [  --without-arts          Don't compile aRts driver],AC_WITHOUT_ARTSC)
 
-ARTSC_CONFIG_PATH=nope
+ARTSC_CONFIG=nope
 if test "x$MHW_HAVE_ARTSC" = "xyes"; then
         AC_PATH_PROG(ARTSC_CONFIG, artsc-config)
 fi
