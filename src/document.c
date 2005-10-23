@@ -209,7 +209,7 @@ static void document_set_filename(Document *d, gchar *filename,
      guint i=0;
      GList *l;
      Document *x;
-     if (filename == d->filename || 
+     if ((filename == d->filename && filename != NULL) || 
 	 (d->filename != NULL && filename != NULL && 
 	  !strcmp(d->filename,filename)))
 	  return;
