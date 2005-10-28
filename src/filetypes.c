@@ -45,6 +45,7 @@ struct file_type;
 struct file_type {
      gchar *name;
      gchar *extension;
+     gboolean lossy;
      gboolean (*typecheck)(gchar *filename);
      Chunk *(*load)(gchar *filename, int dither_mode, StatusBar *bar);
      gboolean (*save)(Chunk *chunk, gchar *filename, 
@@ -107,6 +108,7 @@ static gboolean xunsetenv(char *varname)
 }
 
 static void register_file_type(gchar *name, gchar *ext, 
+			       gboolean lossy,
 			       gboolean (*typecheck)(gchar *filename),
 			       Chunk *(*load)(gchar *filename, 
 					      int dither_mode, StatusBar *bar),
@@ -121,6 +123,7 @@ static void register_file_type(gchar *name, gchar *ext,
      t = g_malloc(sizeof(*t));
      t->name = g_strdup(name);
      t->extension = g_strdup(ext);
+     t->lossy = lossy;
      t->typecheck = typecheck;
      t->load = load;
      t->save = save;
@@ -136,7 +139,7 @@ static void setup_types(void)
      gchar buf[32];
 #endif
      if (file_types) return;
-     register_file_type(_("Microsoft WAV format"), ".wav", wav_check, 
+     register_file_type(_("Microsoft WAV format"), ".wav", FALSE, wav_check, 
 			wav_load, wav_save, 0);
 #if defined(HAVE_LIBSNDFILE)
      sf_command(NULL, SFC_GET_FORMAT_MAJOR_COUNT, &major_count, sizeof(int));
@@ -149,17 +152,17 @@ static void setup_types(void)
 	  if ((info.format&SF_FORMAT_TYPEMASK) == SF_FORMAT_RAW ||
 	      (info.format&SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV) continue;
 	  snprintf(buf,sizeof(buf),".%s",info.extension);
-	  register_file_type((gchar *)info.name, buf, sndfile_check, 
+	  register_file_type((gchar *)info.name, buf, FALSE, sndfile_check, 
 			     sndfile_load, sndfile_save, 
 			     info.format&SF_FORMAT_TYPEMASK);
      }
 #endif
      if (program_exists("oggenc") || program_exists("oggdec"))
-	  register_file_type(_("Ogg Vorbis"),".ogg", NULL, ogg_load, 
+	  register_file_type(_("Ogg Vorbis"),".ogg", TRUE, NULL, ogg_load, 
 			     ogg_save, 0);
      if (program_exists("lame"))
-	    register_file_type("MP3",".mp3",NULL,mp3_load,mp3_save,0);
-     register_file_type(_("Raw PCM data"), ".raw", NULL, raw_load, 
+	    register_file_type("MP3",".mp3",TRUE,NULL,mp3_load,mp3_save,0);
+     register_file_type(_("Raw PCM data"), ".raw", FALSE,NULL, raw_load, 
 			raw_save, 0);
 }
 
