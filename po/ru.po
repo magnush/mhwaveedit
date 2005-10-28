@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mhWaveEdit 1.3.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-11 22:46+0300\n"
+"POT-Creation-Date: 2005-09-22 21:47+0200\n"
 "PO-Revision-Date: 2005-08-11 22:50+0300\n"
 "Last-Translator: Konstantin Korikov <lostclus@ua.fm>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -27,28 +27,28 @@ msgstr "Подстройка скорости"
 msgid "Removing channel"
 msgstr "Удаление канала"
 
-#: src/chunk.c:629
+#: src/chunk.c:638
 msgid "Mixing"
 msgstr "Микширование"
 
-#: src/chunk.c:678
+#: src/chunk.c:690
 #, c-format
 msgid "The mixed result was clipped %d times."
 msgstr "Результат микширования был обрезан %d раз."
 
-#: src/chunk.c:1067
+#: src/chunk.c:1079
 msgid "Calculating peak level"
 msgstr "Подсчет пикового уровня"
 
-#: src/chunk.c:1089 src/chunk.c:1124
+#: src/chunk.c:1101 src/chunk.c:1136
 msgid "Amplifying"
 msgstr "Усиление"
 
-#: src/chunk.c:1241
+#: src/chunk.c:1255
 msgid "Removing channels"
 msgstr "Удаление каналов"
 
-#: src/chunk.c:1247
+#: src/chunk.c:1261
 msgid "Adding channels"
 msgstr "Добавление каналов"
 
@@ -56,7 +56,7 @@ msgstr "Добавление каналов"
 msgid "number of recent files"
 msgstr "количество недавно использованных файлов"
 
-#: src/configdialog.c:71
+#: src/configdialog.c:75
 msgid ""
 "Some of the settings you have changed will not be activated until you "
 "restart the program"
@@ -64,210 +64,214 @@ msgstr ""
 "Некоторые установки, которые вы изменили, не будут активизированыпока вы не "
 "перезапустите программу"
 
-#: src/configdialog.c:259
+#: src/configdialog.c:263
 msgid "Colors"
 msgstr "Цвета"
 
-#: src/configdialog.c:296
+#: src/configdialog.c:300
 msgid "_Preview"
 msgstr "_Предпросмотр"
 
-#: src/configdialog.c:303 src/configdialog.c:1037
+#: src/configdialog.c:307 src/configdialog.c:1064
 msgid "_OK"
 msgstr "_ОК"
 
-#: src/configdialog.c:321
+#: src/configdialog.c:325
 msgid "_Cancel"
 msgstr "О_тменить"
 
-#: src/configdialog.c:398
+#: src/configdialog.c:402
 msgid "Browse directory"
 msgstr "Выбрать каталог"
 
-#: src/configdialog.c:438
+#: src/configdialog.c:452
 msgid "Preferences"
 msgstr "Настройки"
 
-#: src/configdialog.c:497
+#: src/configdialog.c:511
 msgid "Show _time scale by default"
 msgstr "По умолчанию отображать _временные отметки"
 
-#: src/configdialog.c:507
+#: src/configdialog.c:521
 msgid "Show _horizontal zoom slider by default"
 msgstr "По умолчанию отображать управление _горизонтальным масштабом"
 
-#: src/configdialog.c:517
+#: src/configdialog.c:531
 msgid "Show _vertical zoom slider by default"
 msgstr "По умолчанию отображать управление _вертикальным масштабом"
 
-#: src/configdialog.c:527
+#: src/configdialog.c:541
 msgid "Show _speed slider by default"
 msgstr "По умолчанию отображать управление _скоростью"
 
-#: src/configdialog.c:536
+#: src/configdialog.c:550
 msgid "_Settings"
 msgstr "_Установки"
 
-#: src/configdialog.c:546
+#: src/configdialog.c:560
 msgid "_Keep sound driver opened (to avoid start/stop clicks)"
 msgstr ""
 "У_держивать звуковой драйвер открытым (чтобы избежать щелчков на границах)"
 
-#: src/configdialog.c:555
+#: src/configdialog.c:569
 msgid "_Byte-swap output (try this if playback sounds horrible)"
 msgstr "Вывод с перестановкой байт (попробуйте это если звук противный)"
 
-#: src/configdialog.c:564
+#: src/configdialog.c:578
 msgid "_Update cursor information while playing"
 msgstr "_Обновлять информацию о курсоре при воспроизведении"
 
-#: src/configdialog.c:572
+#: src/configdialog.c:586
 msgid "_Keep cursor in center of view when following playback"
 msgstr "_Удерживать курсор по центру когда он следует воспроизведению"
 
-#: src/configdialog.c:582
+#: src/configdialog.c:596
 msgid "_Auto-start playback when jumping to mark"
 msgstr "_Автоматически начинать воспроизведение при переходе на метку"
 
-#: src/configdialog.c:590
+#: src/configdialog.c:604
 msgid "Enable _variable speed playback"
 msgstr "Разрешить воспроизведение с _переменной скоростью"
 
-#: src/configdialog.c:599
+#: src/configdialog.c:613
 msgid "Auto-_reset speed"
 msgstr "Автоматически сбрасывать скорость"
 
-#: src/configdialog.c:606
+#: src/configdialog.c:620
 msgid "Use fast and noisy method"
 msgstr "Использовать быстрый и шумящий метод"
 
-#: src/configdialog.c:614
+#: src/configdialog.c:628
 msgid "(H')MM:SS.t"
 msgstr "(Ч')ММ:СС.д"
 
-#: src/configdialog.c:615
+#: src/configdialog.c:629
 msgid "(H')MM:SS.mmmm"
 msgstr "(Ч')ММ:СС.мммм"
 
-#: src/configdialog.c:616
+#: src/configdialog.c:630
 msgid "TimeDisplay|Samples"
 msgstr "Сэмплы"
 
-#: src/configdialog.c:622
+#: src/configdialog.c:636
 msgid "_Remember window sizes/positions"
 msgstr "_Запоминать размер/позицию окна"
 
-#: src/configdialog.c:631
+#: src/configdialog.c:645
 msgid "_Draw waveform a second time with improved quality"
 msgstr "_Отображать волновую форму второй раз с улучшенным качеством"
 
-#: src/configdialog.c:661
+#: src/configdialog.c:675
 msgid "_Remove"
 msgstr "_Удалить"
 
-#: src/configdialog.c:669
+#: src/configdialog.c:683
 msgid "_Add"
 msgstr "_Добавить"
 
-#: src/configdialog.c:676
+#: src/configdialog.c:690
 msgid "_Browse..."
 msgstr "_Обзор..."
 
-#: src/configdialog.c:683
+#: src/configdialog.c:697
 msgid "_Up"
 msgstr "_Вверх"
 
-#: src/configdialog.c:691
+#: src/configdialog.c:705
 msgid "_Down"
 msgstr "В_низ"
 
-#: src/configdialog.c:704
+#: src/configdialog.c:718
 msgid "Keep main _window in front after applying effect"
 msgstr "Оставить _главное окно впереди после применения эффекта"
 
-#: src/configdialog.c:720
+#: src/configdialog.c:734
 msgid "_Use floating-point temporary files"
 msgstr "_Для временных файлов использовать формат с плавающей точкой"
 
-#: src/configdialog.c:729
+#: src/configdialog.c:743
 msgid "Enable _dithering for editing"
 msgstr "Сглаживание при _редактировании"
 
-#: src/configdialog.c:737
+#: src/configdialog.c:751
 msgid "Enable dithering for _playback"
 msgstr "Сглаживание при _воспроизведении"
 
-#: src/configdialog.c:757
+#: src/configdialog.c:759
+msgid "Auto dete_ct driver on each start-up"
+msgstr ""
+
+#: src/configdialog.c:782
 msgid "Interface"
 msgstr "Интерфейс"
 
-#: src/configdialog.c:758
+#: src/configdialog.c:783
 msgid " Main window "
 msgstr " Главное окно "
 
-#: src/configdialog.c:769
+#: src/configdialog.c:794
 msgid "Number of recent files in File menu: "
 msgstr "Количество недавно использованных файлов в меню \"Файл\": "
 
-#: src/configdialog.c:774
+#: src/configdialog.c:799
 msgid " View "
 msgstr " Вид "
 
-#: src/configdialog.c:785
+#: src/configdialog.c:810
 msgid "Customize co_lors..."
 msgstr "Настройка _цветов..."
 
-#: src/configdialog.c:792
+#: src/configdialog.c:817
 msgid " Window contents "
 msgstr " Содержание окна "
 
-#: src/configdialog.c:809
+#: src/configdialog.c:834
 msgid "Sound"
 msgstr "Звук"
 
-#: src/configdialog.c:810
+#: src/configdialog.c:835
 msgid " Driver options "
 msgstr " Опции драйвера "
 
-#: src/configdialog.c:818
+#: src/configdialog.c:843
 msgid "_Driver:"
 msgstr "_Драйвер:"
 
-#: src/configdialog.c:831
+#: src/configdialog.c:858
 msgid " Fallback format "
 msgstr ""
 
-#: src/configdialog.c:836
+#: src/configdialog.c:863
 msgid "Sample format to try when the sound file's format isn't supported."
 msgstr ""
 "Попытаться использовать данный формат сэмплов если формат звукового файла не "
 "поддерживается."
 
-#: src/configdialog.c:848
+#: src/configdialog.c:875
 msgid "Playback"
 msgstr "Воспроизведение"
 
-#: src/configdialog.c:850
+#: src/configdialog.c:877
 msgid " Playback settings "
 msgstr " Установки воспроизведения "
 
-#: src/configdialog.c:862
+#: src/configdialog.c:889
 msgid " Variable speed "
 msgstr " Переменная скорость "
 
-#: src/configdialog.c:877 src/help.c:38
+#: src/configdialog.c:904 src/help.c:38
 msgid "Files"
 msgstr "Файлы"
 
-#: src/configdialog.c:879
+#: src/configdialog.c:906
 msgid " Temporary file directories "
 msgstr " Каталоги для временных файлов "
 
-#: src/configdialog.c:905
+#: src/configdialog.c:932
 msgid " Temporary file settings "
 msgstr " Установки временных файлов "
 
-#: src/configdialog.c:910
+#: src/configdialog.c:937
 msgid ""
 "To avoid rounding errors when applying more than one effect on the same "
 "data, floating-point temporary files can be used. However, this will "
@@ -278,75 +282,75 @@ msgstr ""
 "плавающей точкой. Однако, это потребует больше дискового пространства и "
 "времени центрального процессора."
 
-#: src/configdialog.c:923 src/help.c:36
+#: src/configdialog.c:950 src/help.c:36
 msgid "Quality"
 msgstr "Качество"
 
-#: src/configdialog.c:925
+#: src/configdialog.c:952
 msgid " Rate conversions "
 msgstr " Преобразование частоты сэмплов "
 
-#: src/configdialog.c:932
+#: src/configdialog.c:959
 msgid "Varispeed: "
 msgstr "Изменение скорости: "
 
-#: src/configdialog.c:933
+#: src/configdialog.c:960
 msgid "Speed effect: "
 msgstr "Эффект подстройки скорости: "
 
-#: src/configdialog.c:940
+#: src/configdialog.c:967
 msgid " Dithering "
 msgstr " Сглаживание "
 
-#: src/configdialog.c:954
+#: src/configdialog.c:981
 msgid "Other"
 msgstr "Другое"
 
-#: src/configdialog.c:956
+#: src/configdialog.c:983
 msgid " Time format "
 msgstr " Формат времени "
 
-#: src/configdialog.c:962
+#: src/configdialog.c:989
 msgid "Display t_imes as: "
 msgstr "Отображать _время как: "
 
-#: src/configdialog.c:970
+#: src/configdialog.c:997
 msgid " External applications "
 msgstr " Внешние приложения "
 
-#: src/configdialog.c:978
+#: src/configdialog.c:1005
 msgid "Mi_xer utility: "
 msgstr "Утилита _микшера: "
 
-#: src/configdialog.c:988
+#: src/configdialog.c:1015
 msgid "Advanced"
 msgstr "Продвинутые"
 
-#: src/configdialog.c:989
+#: src/configdialog.c:1016
 msgid " Advanced settings "
 msgstr " Продвинутые установки "
 
-#: src/configdialog.c:997
+#: src/configdialog.c:1024
 msgid "Disk editing _threshold: "
 msgstr "Порог редактирования на _диске: "
 
-#: src/configdialog.c:1008
+#: src/configdialog.c:1035
 msgid "View _quality:"
 msgstr "_Качество отображения:"
 
-#: src/configdialog.c:1014
+#: src/configdialog.c:1041
 msgid "samples/pixel"
 msgstr "сэмплы/пиксел"
 
-#: src/configdialog.c:1020
+#: src/configdialog.c:1047
 msgid "Output _buffer size:"
 msgstr "Размер выходного _буфера:"
 
-#: src/configdialog.c:1026
+#: src/configdialog.c:1053
 msgid "bytes"
 msgstr "байт"
 
-#: src/configdialog.c:1051
+#: src/configdialog.c:1078
 msgid "_Close"
 msgstr "_Закрыть"
 
@@ -473,9 +477,9 @@ msgstr "[B] Пропустить через программу (pipe)"
 msgid "You have no open file to apply the effect to!"
 msgstr "Нет открытого файла, к которому можно было бы применить эффект!"
 
-#: src/effectbrowser.c:268 src/gotodialog.c:114 src/mainwindow.c:1461
-#: src/rawdialog.c:88 src/recorddialog.c:369 src/sound-alsalib.c:75
-#: src/sound-esound.c:281 src/sound-jack.c:254 src/sound-oss.c:412
+#: src/effectbrowser.c:268 src/gotodialog.c:114 src/mainwindow.c:1215
+#: src/rawdialog.c:88 src/recorddialog.c:369 src/sound-alsalib.c:78
+#: src/sound-esound.c:284 src/sound-jack.c:256 src/sound-oss.c:410
 #: src/um.c:107 src/um.c:140 src/um.c:337 src/um.c:437
 msgid "OK"
 msgstr "ОК"
@@ -484,9 +488,9 @@ msgstr "ОК"
 msgid "Apply"
 msgstr "Применить"
 
-#: src/effectbrowser.c:277 src/gotodialog.c:127 src/mainwindow.c:1390
-#: src/pipedialog.c:146 src/recorddialog.c:803 src/sound-esound.c:285
-#: src/sound-jack.c:258 src/sound-oss.c:416
+#: src/effectbrowser.c:277 src/gotodialog.c:127 src/mainwindow.c:1144
+#: src/pipedialog.c:146 src/recorddialog.c:803 src/sound-esound.c:288
+#: src/sound-jack.c:260 src/sound-oss.c:414
 msgid "Close"
 msgstr "Закрыть"
 
@@ -532,7 +536,7 @@ msgstr "Файл %s не является обычным файлом!"
 msgid "Loading"
 msgstr "Загрузка"
 
-#: src/filetypes.c:278
+#: src/filetypes.c:279
 #, c-format
 msgid ""
 "The file name '%s' has an extension unknown to the program. Please specify "
@@ -541,15 +545,15 @@ msgstr ""
 "Имя файла '%s' имеет неизвестное для программы расширение. Пожалуйста "
 "укажите в каком формате он должен быть сохранен."
 
-#: src/filetypes.c:283
+#: src/filetypes.c:284
 msgid "Unknown file type"
 msgstr "Неизвестный тип файла"
 
-#: src/filetypes.c:316
+#: src/filetypes.c:317
 msgid "Saving"
 msgstr "Сохранение"
 
-#: src/filetypes.c:320
+#: src/filetypes.c:321
 #, c-format
 msgid ""
 "The file %s may be destroyed since the saving failed. Try to free up some "
@@ -560,12 +564,12 @@ msgstr ""
 "Попытайтесь освободить на диске место и сохранить еще раз. Если вы выйдете "
 "сейчас, содержимое файлов будет в плохом состоянии. "
 
-#: src/filetypes.c:393
+#: src/filetypes.c:395
 #, c-format
 msgid "%s is not a valid wav file"
 msgstr "%s не является правильным wav-файлом"
 
-#: src/filetypes.c:408
+#: src/filetypes.c:410
 #, c-format
 msgid ""
 "The file %s is a compressed wav file. This program can only work with "
@@ -574,25 +578,25 @@ msgstr ""
 "Файл %s является сжатым wav-файлом. Эта программа может работать только с "
 "несжатыми wav-файлами."
 
-#: src/filetypes.c:491
+#: src/filetypes.c:493
 msgid ""
 "On this system, libsndfile is required to save floating-point wav files."
 msgstr ""
 "В этой системе, libsndfile требует сохранять wav-файлы с плавающей точкой."
 
-#: src/filetypes.c:498
+#: src/filetypes.c:500
 msgid "8-bit wav-files must be in unsigned format!"
 msgstr "8-битные wav-файлы должны быть в формате без знака!"
 
-#: src/filetypes.c:502
+#: src/filetypes.c:504
 msgid "16/24/32-bit wav-files must be in signed format!"
 msgstr "16/24/32-битные wav-файлы должны быть в формате со знаком!"
 
-#: src/filetypes.c:506
+#: src/filetypes.c:508
 msgid "wav files must be in little endian format!"
 msgstr ""
 
-#: src/filetypes.c:513
+#: src/filetypes.c:515
 msgid ""
 "You are saving a wav file larger than 2048MB. Such large files are non-"
 "standard and may not be readable by all programs.\n"
@@ -604,22 +608,22 @@ msgstr ""
 "\n"
 " (это предупреждение не будет больше появляться)"
 
-#: src/filetypes.c:630 src/filetypes.c:760
+#: src/filetypes.c:632 src/filetypes.c:764
 #, c-format
 msgid "Failed to open '%s'!"
 msgstr "Ошибка при открытии '%s'!"
 
-#: src/filetypes.c:736
+#: src/filetypes.c:740
 msgid "Invalid sample format or number of channels for this file format"
 msgstr ""
 "Неправильный формат сэмплов или количество каналов для данного формата файлов"
 
-#: src/filetypes.c:789
+#: src/filetypes.c:793
 #, c-format
 msgid "Failed to write to '%s'!"
 msgstr "Ошибка записи в '%s'!"
 
-#: src/filetypes.c:856
+#: src/filetypes.c:860
 msgid "Decoding"
 msgstr "Декодирование"
 
@@ -825,7 +829,16 @@ msgstr "Привязки клавиш"
 msgid "Bug reporting"
 msgstr "Сообщать об ошибках"
 
-#: src/help.c:45
+#: src/help.c:41
+#, fuzzy
+msgid "Helping out"
+msgstr "/Справка/_О программе"
+
+#: src/help.c:42
+msgid "Contact"
+msgstr ""
+
+#: src/help.c:47
 #, no-c-format
 msgid ""
 "\n"
@@ -842,7 +855,7 @@ msgstr ""
 "Вы можете найти последний релиз mhWaveEdit на:\n"
 "http://gna.org/projects/mhwaveedit/\n"
 
-#: src/help.c:52
+#: src/help.c:54
 #, no-c-format
 msgid ""
 "\n"
@@ -883,7 +896,7 @@ msgstr ""
 "метки можно также и при воспроизведении. Чтобы удалить метку, перейдите на "
 "нее и установите ее снова.\n"
 
-#: src/help.c:60
+#: src/help.c:62
 #, no-c-format
 msgid ""
 "\n"
@@ -910,7 +923,7 @@ msgstr ""
 "\n"
 "Вы можете редактировать файл во время его воспроизведения.\n"
 
-#: src/help.c:68
+#: src/help.c:70
 #, no-c-format
 msgid ""
 "\n"
@@ -941,7 +954,7 @@ msgstr ""
 "На данный момент невозможно одновременно воспроизводить и записывать звук, "
 "так что когда вы записываете, воспроизведение останавливается.\n"
 
-#: src/help.c:76
+#: src/help.c:78
 #, no-c-format
 msgid ""
 "\n"
@@ -1017,7 +1030,7 @@ msgstr ""
 "(эффекты работают аналогично).\n"
 "\n"
 
-#: src/help.c:97
+#: src/help.c:99
 #, no-c-format
 msgid ""
 "\n"
@@ -1173,7 +1186,7 @@ msgstr ""
 "\"Диалог эффектов...\" из меню \"Эффекты\". \n"
 "\n"
 
-#: src/help.c:150
+#: src/help.c:152
 #, no-c-format
 msgid ""
 "\n"
@@ -1237,7 +1250,7 @@ msgstr ""
 "сохранения результатов обработки, это позволяет избежать округления до "
 "сохранения файла.\n"
 
-#: src/help.c:166
+#: src/help.c:168
 #, no-c-format
 msgid ""
 "\n"
@@ -1274,7 +1287,7 @@ msgstr ""
 "открывать и сохранять mp3- и ogg-файлы точно также как и файлы в других "
 "форматах.\n"
 
-#: src/help.c:174
+#: src/help.c:176
 #, no-c-format
 msgid ""
 "\n"
@@ -1309,7 +1322,7 @@ msgstr ""
 "процесса) что и запущенный mhWaveEdit.\n"
 "\n"
 
-#: src/help.c:183
+#: src/help.c:185
 #, no-c-format
 msgid ""
 "\n"
@@ -1409,12 +1422,12 @@ msgstr ""
 ")             Играть последние 3 секунды\n"
 "              выделения\n"
 
-#: src/help.c:228
+#: src/help.c:230
 #, no-c-format
 msgid ""
 "\n"
-"If you find a bug or flaw in the program, first check the mhWaveEdit web "
-"page's list of bugs found after the release. If it isn't there, mail a bug "
+"If you find a bug or flaw in the program that's not mentioned in the BUGS "
+"file, report the bug in the bug tracker (see contact info) or mail a bug "
 "report describing the bug to: magnus.hjorth@home.se\n"
 "\n"
 "In case of a crash, please do not send me any core dumps. They are huge and "
@@ -1431,6 +1444,70 @@ msgid ""
 "5. After gdb has loaded, use the command: bt\n"
 "6. Quit gdb with the command: quit\n"
 "7. Now you should have a back trace in the file backtrace.txt\n"
+msgstr ""
+
+#: src/help.c:246
+#, no-c-format
+msgid ""
+"\n"
+"There are plenty of things you can do if you want to help the development of "
+"mhWaveEdit. \n"
+"\n"
+"First of all, look for bugs and report all bugs you find into the bug "
+"tracker or through e-mail. Sometimes a bug can get overlooked for a long "
+"time because nobody reports it, so don't be afraid to report bugs that have "
+"been there for a few releases. You don't have to provide fixes or very "
+"detailed information, although it helps of course.\n"
+"\n"
+"Feature requests are also welcome, report them to the mailing list or to the "
+"bug tracker.\n"
+"\n"
+"If you speak a language other than English and mhWaveEdit isn't translated "
+"to your language, you can contribute a translation. To do that, copy the "
+"template mhwaveedit.pot in the po directory into a new file ll.po, where ll "
+"is your language code (see http://www.gnu.org/software/gettext/manual/"
+"html_node/gettext_221.html for a list of language codes). \n"
+"\n"
+"It's possible to edit po-files by hand, but I recommend a program such as "
+"poEdit (http://www.poedit.org) for editing translations. \n"
+"\n"
+"Note that for those translatable strings that look like \"RecordStatus|Paused"
+"\", you should ignore what's to the left and only translate the string to "
+"the right (\"Paused\" in this example). This convention is there to make it "
+"possible to translate the same string to different things depending on "
+"context. \n"
+"\n"
+"After you've filled in all the translations you want (you don't have to "
+"translate all the strings), mail in the po file to me (see contact info) and "
+"I'll add it to the next release. \n"
+"\n"
+"If a translation is incomplete, you're very welcome to translate the "
+"remaining untranslated messages and mail them in. Corrections to "
+"translations are also appreciated, but they may need to be checked with the "
+"previous translator before including them. \n"
+"\n"
+"Money donations through PayPal are also gratefully accepted. For the "
+"address, see the contact information. Donors of $10 or more will be credited "
+"with the donor's name ($25 for a company name), email and web site as a "
+"sponsor in the AUTHORS file of future releases and also in other places in "
+"the future. Note that any donations are gifts to me (Magnus Hjorth) "
+"personally, not payment for a service of any kind. If you want some other "
+"arrangement, send me an email. \n"
+msgstr ""
+
+#: src/help.c:266
+#, no-c-format
+msgid ""
+"\n"
+"For bug reports, translation updates, patches and PayPal donations:\n"
+"magnus.hjorth@home.se\n"
+"\n"
+"Project page with bug tracker, mailing list membership:\n"
+"http://gna.org/projects/mhwaveedit\n"
+"\n"
+"Mailing list (you must be a subscriber before you can post messages):\n"
+"mhwaveedit-discuss@gna.org\n"
+"\n"
 msgstr ""
 
 #: src/inifile.c:84 src/inifile.c:91
@@ -1546,111 +1623,106 @@ msgstr "После опции --driver ожидается имя драйвера"
 msgid "Unknown option '%s'"
 msgstr "Неизвестная опция '%s'"
 
-#: src/main.c:275
+#: src/main.c:288
 msgid ""
 "Could not find home directory. Using current directory as home directory."
 msgstr ""
 "Невозможно найти домашний каталог. Вместо него используется текущий каталог."
 
-#: src/main.c:303
+#: src/main.c:316
 msgid "Black"
 msgstr "Черный"
 
-#: src/main.c:304
+#: src/main.c:317
 msgid "White"
 msgstr "Белый"
 
-#: src/main.c:305
+#: src/main.c:318
 msgid "Background"
 msgstr "Фон"
 
-#: src/main.c:306
+#: src/main.c:319
 msgid "L Waveform"
 msgstr "Левая волновая форма"
 
-#: src/main.c:307
+#: src/main.c:320
 msgid "R Waveform"
 msgstr "Правая волновая форма"
 
-#: src/main.c:308
+#: src/main.c:321
 msgid "Cursor"
 msgstr "Курсор"
 
-#: src/main.c:309
+#: src/main.c:322
 msgid "Marks"
 msgstr "Метки"
 
-#: src/main.c:310
+#: src/main.c:323
 msgid "Selection"
 msgstr "Выделение"
 
-#: src/main.c:311
+#: src/main.c:324
 msgid "Progress bar"
 msgstr "Линия прогресса"
 
-#: src/main.c:312
+#: src/main.c:325
 msgid "Zero-level"
 msgstr "Нулевой уровень"
 
-#: src/main.c:435
+#: src/main.c:448
 #, c-format
 msgid "Error launching mixer: fork: %s"
 msgstr "Ошибка запуска микшера: fork: %s"
 
-#: src/main.c:486 src/main.c:505
+#: src/main.c:499 src/main.c:518
 msgid "Mono"
 msgstr "Моно"
 
-#: src/main.c:487
+#: src/main.c:500
 msgid "Left"
 msgstr "Левый"
 
-#: src/main.c:488
+#: src/main.c:501
 msgid "Right"
 msgstr "Правый"
 
-#: src/main.c:490
+#: src/main.c:503
 #, c-format
 msgid "Channel %d"
 msgstr "Канал %d"
 
-#: src/main.c:506
+#: src/main.c:519
 msgid "Stereo"
 msgstr "Стерео"
 
-#: src/main.c:508
+#: src/main.c:521
 #, c-format
 msgid "%d channels"
 msgstr "%d каналов"
 
-#: src/main.c:774
+#: src/main.c:787
 msgid "Ignoring extreme old window size/position values\n"
 msgstr "Игнорируем экстремальные старые значения размера/позиции окна\n"
 
-#: src/mainwindow.c:104
-#, c-format
-msgid "untitled #%d"
-msgstr "без имени #%d"
-
-#: src/mainwindow.c:280
+#: src/mainwindow.c:195
 #, c-format
 msgid "mhWaveEdit: %s (%s): %d Hz, %s"
 msgstr "mhWaveEdit: %s (%s): %d Гц, %s"
 
-#: src/mainwindow.c:288 src/recorddialog.c:65
+#: src/mainwindow.c:203 src/recorddialog.c:65
 msgid "double"
 msgstr "двойной"
 
-#: src/mainwindow.c:288 src/recorddialog.c:63
+#: src/mainwindow.c:203 src/recorddialog.c:63
 msgid "float"
 msgstr "плавающий"
 
-#: src/mainwindow.c:290
+#: src/mainwindow.c:205
 #, c-format
 msgid "mhWaveEdit: %s (%s): %d Hz, %d bit"
 msgstr "mhWaveEdit: %s (%s): %d Гц, %d бит"
 
-#: src/mainwindow.c:364
+#: src/mainwindow.c:279
 msgid ""
 "The file has not changed since last save. Press OK if you want to save it "
 "anyway?"
@@ -1658,29 +1730,29 @@ msgstr ""
 "Файл не был изменен со времен последнего сохранения. Если вы все равно "
 "хотите сохранить его, нажмите ОК."
 
-#: src/mainwindow.c:373
+#: src/mainwindow.c:288
 msgid "Save File"
 msgstr "Сохранить файл"
 
-#: src/mainwindow.c:405
+#: src/mainwindow.c:312
 #, c-format
 msgid "Save changes to %s?"
 msgstr "Сохранить изменения в %s?"
 
-#: src/mainwindow.c:650 src/mainwindow.c:654
+#: src/mainwindow.c:568 src/mainwindow.c:572
 msgid "Load File"
 msgstr "Загрузить файл"
 
-#: src/mainwindow.c:686
+#: src/mainwindow.c:602
 msgid "Save selection as ..."
 msgstr "Сохранить выделение как..."
 
-#: src/mainwindow.c:1086
+#: src/mainwindow.c:879
 #, c-format
 msgid "Chunk %p has opencount=%d\n"
 msgstr ""
 
-#: src/mainwindow.c:1157
+#: src/mainwindow.c:950
 #, c-format
 msgid ""
 "\n"
@@ -1689,27 +1761,27 @@ msgstr ""
 "\n"
 "Окно '%s'\n"
 
-#: src/mainwindow.c:1158
+#: src/mainwindow.c:951
 msgid "  Current chunk:"
 msgstr "  Текущий кусок:"
 
-#: src/mainwindow.c:1160
+#: src/mainwindow.c:953
 msgid "  History:"
 msgstr "  История:"
 
-#: src/mainwindow.c:1204
+#: src/mainwindow.c:997
 msgid "There already is only one channel!"
 msgstr "Уже и так только один канал!"
 
-#: src/mainwindow.c:1321
+#: src/mainwindow.c:1075
 msgid "mhWaveEdit Help"
 msgstr "Справка mhWaveEdit"
 
-#: src/mainwindow.c:1417
+#: src/mainwindow.c:1171
 msgid "About mhWaveEdit"
 msgstr "О mhWaveEdit"
 
-#: src/mainwindow.c:1429
+#: src/mainwindow.c:1183
 msgid ""
 "Created by Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2005, Magnus Hjorth"
@@ -1717,21 +1789,21 @@ msgstr ""
 "Создал Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2005, Magnus Hjorth"
 
-#: src/mainwindow.c:1436
+#: src/mainwindow.c:1190
 #, c-format
 msgid "Current sound driver: %s"
 msgstr "Текущий звуковой драйвер: %s"
 
-#: src/mainwindow.c:1444
+#: src/mainwindow.c:1198
 #, c-format
 msgid "Compiled %s %s"
 msgstr "Скомпилировано %s %s"
 
-#: src/mainwindow.c:1450
+#: src/mainwindow.c:1204
 msgid "Uses double-precision math"
 msgstr "Используются вычисления с двойной точностью"
 
-#: src/mainwindow.c:1457
+#: src/mainwindow.c:1211
 msgid ""
 "Distributed under GNU General Public License.\n"
 "For information, see the file COPYING"
@@ -1739,423 +1811,421 @@ msgstr ""
 "Распространяется под Стандартной Общественной Лицензии GNU.\n"
 "Подробности смотрите в файле COPYING"
 
-#: src/mainwindow.c:1571
+#: src/mainwindow.c:1325
 msgid "Seconds of silence: "
 msgstr "Секунд тишины: "
 
-#: src/mainwindow.c:1571
+#: src/mainwindow.c:1325
 msgid "Insert Silence"
 msgstr "Вставить тишину"
 
-#: src/mainwindow.c:1591
-msgid "This will clear the entire undo buffer!"
-msgstr "Это очистит весь буфер отката!"
-
-#: src/mainwindow.c:1599
-msgid "This will clear the undo buffer up to the last save"
-msgstr "Это очистит буфер отката до последнего сохранения"
-
-#: src/mainwindow.c:1737
+#: src/mainwindow.c:1460
 msgid "/_File"
 msgstr "/_Файл"
 
-#: src/mainwindow.c:1738
+#: src/mainwindow.c:1461
 msgid "/File/_Open..."
 msgstr "/Файл/_Открыть..."
 
-#: src/mainwindow.c:1739
+#: src/mainwindow.c:1462
 msgid "/File/_Save"
 msgstr "/Файл/_Сохранить"
 
-#: src/mainwindow.c:1740
+#: src/mainwindow.c:1463
 msgid "/File/Save _as..."
 msgstr "/Файл/Сохранить _как..."
 
-#: src/mainwindow.c:1741
+#: src/mainwindow.c:1464
 msgid "/File/Save selection as..."
 msgstr "/Файл/Сохранить выделение как..."
 
-#: src/mainwindow.c:1742
+#: src/mainwindow.c:1465
 msgid "/_Edit"
 msgstr "/_Правка"
 
-#: src/mainwindow.c:1743
+#: src/mainwindow.c:1466
 msgid "/Edit/_Undo"
 msgstr "/Правка/_Отменить"
 
-#: src/mainwindow.c:1744
+#: src/mainwindow.c:1467
+#, fuzzy
+msgid "/Edit/_Redo"
+msgstr "/Правка/_Отменить"
+
+#: src/mainwindow.c:1468
 msgid "/Edit/sep1"
 msgstr "/Правка/sep1"
 
-#: src/mainwindow.c:1745
+#: src/mainwindow.c:1469
 msgid "/Edit/Cu_t"
 msgstr "/Правка/В_ырезать"
 
-#: src/mainwindow.c:1746
+#: src/mainwindow.c:1470
 msgid "/Edit/_Copy"
 msgstr "/Правка/_Копировать"
 
-#: src/mainwindow.c:1747
+#: src/mainwindow.c:1471
 msgid "/Edit/_Paste"
 msgstr "/Правка/_Вставить"
 
-#: src/mainwindow.c:1748
+#: src/mainwindow.c:1472
 msgid "/Edit/Paste _over"
 msgstr "/Правка/Вставить _поверх"
 
-#: src/mainwindow.c:1749
+#: src/mainwindow.c:1473
 msgid "/Edit/_Mix paste"
 msgstr "/Правка/Вставить _смикшировав"
 
-#: src/mainwindow.c:1750
+#: src/mainwindow.c:1474
 msgid "/Edit/Insert _silence"
 msgstr "/Правка/Вставить _тишину"
 
-#: src/mainwindow.c:1751
+#: src/mainwindow.c:1475
 msgid "/Edit/Paste to _new"
 msgstr "/Правка/Вставить в н_овый"
 
-#: src/mainwindow.c:1752
+#: src/mainwindow.c:1476
 msgid "/Edit/Cr_op"
 msgstr "/Правка/О_брезать"
 
-#: src/mainwindow.c:1753
+#: src/mainwindow.c:1477
 msgid "/Edit/_Delete"
 msgstr "/Правка/_Удалить"
 
-#: src/mainwindow.c:1754
+#: src/mainwindow.c:1478
 msgid "/Edit/Silence selection"
 msgstr "/Правка/Заглушить выделение"
 
-#: src/mainwindow.c:1755
+#: src/mainwindow.c:1479
 msgid "/Edit/sep2"
 msgstr "/Правка/sep2"
 
-#: src/mainwindow.c:1756
+#: src/mainwindow.c:1480
 msgid "/Edit/Select _all"
 msgstr "/Правка/Выделить вс_е"
 
-#: src/mainwindow.c:1757
+#: src/mainwindow.c:1481
 msgid "/Edit/sep3"
 msgstr "/Правка/sep3"
 
-#: src/mainwindow.c:1758
+#: src/mainwindow.c:1482
 msgid "/Edit/Clear clipboard"
 msgstr "/Правка/Очистить буфер обмена"
 
-#: src/mainwindow.c:1759
-msgid "/Edit/Clear undo buffer"
-msgstr "/Правка/Очистить буфер отката"
-
-#: src/mainwindow.c:1760
+#: src/mainwindow.c:1483
 msgid "/Edit/sep4"
 msgstr "/Правка/sep4"
 
-#: src/mainwindow.c:1761
-msgid "/Edit/P_references"
+#: src/mainwindow.c:1484
+#, fuzzy
+msgid "/Edit/Preferences"
 msgstr "/Правка/_Настройки"
 
-#: src/mainwindow.c:1762
+#: src/mainwindow.c:1485
 msgid "/_View"
 msgstr "/_Вид"
 
-#: src/mainwindow.c:1763
+#: src/mainwindow.c:1486
 msgid "/View/Zoom _in"
 msgstr "/Вид/У_величить масштаб"
 
-#: src/mainwindow.c:1764
+#: src/mainwindow.c:1487
 msgid "/View/Zoom _out"
 msgstr "/Вид/У_меньшить масштаб"
 
-#: src/mainwindow.c:1765
+#: src/mainwindow.c:1488
 msgid "/View/Zoom to _selection"
 msgstr "/Вид/Подогнать масштаб по в_ыделению"
 
-#: src/mainwindow.c:1766
+#: src/mainwindow.c:1489
 msgid "/View/sep1"
 msgstr "/Вид/sep1"
 
-#: src/mainwindow.c:1767
+#: src/mainwindow.c:1490
 msgid "/View/Zoom _all"
 msgstr "/Вид/Показать вс_е"
 
-#: src/mainwindow.c:1768
+#: src/mainwindow.c:1491
 msgid "/View/sep2"
 msgstr "/Вид/sep2"
 
-#: src/mainwindow.c:1769
+#: src/mainwindow.c:1492
 msgid "/View/_Time scale"
 msgstr "/Вид/В_ременные отметки"
 
-#: src/mainwindow.c:1770
+#: src/mainwindow.c:1493
 msgid "/View/_Horizontal zoom"
 msgstr "/Вид/Управление _горизонтальным масштабом"
 
-#: src/mainwindow.c:1771
+#: src/mainwindow.c:1494
 msgid "/View/_Vertical zoom"
 msgstr "/Вид/Управление вер_тикальным масштабом"
 
-#: src/mainwindow.c:1772
+#: src/mainwindow.c:1495
 msgid "/View/Sp_eed slider"
 msgstr "/Вид/Управление _скоростью"
 
-#: src/mainwindow.c:1773
+#: src/mainwindow.c:1496
 msgid "/_Cursor"
 msgstr "/_Курсор"
 
-#: src/mainwindow.c:1774
+#: src/mainwindow.c:1497
 msgid "/Cursor/Set selection start"
 msgstr "/Курсор/Установить начало выделения"
 
-#: src/mainwindow.c:1776
+#: src/mainwindow.c:1499
 msgid "/Cursor/Set selection end"
 msgstr "/Курсор/Установить конец выделения"
 
-#: src/mainwindow.c:1777
+#: src/mainwindow.c:1500
 msgid "/Cursor/sep1"
 msgstr "/Курсор/sep1"
 
-#: src/mainwindow.c:1778
+#: src/mainwindow.c:1501
 msgid "/Cursor/Move to beginning"
 msgstr "/Курсор/Переместить в начало"
 
-#: src/mainwindow.c:1780
+#: src/mainwindow.c:1503
 msgid "/Cursor/Move to end"
 msgstr "/Курсор/Переместить в конец"
 
-#: src/mainwindow.c:1781
+#: src/mainwindow.c:1504
 msgid "/Cursor/Move to selection start"
 msgstr "/Курсор/Переместить в начало выделения"
 
-#: src/mainwindow.c:1783
+#: src/mainwindow.c:1506
 msgid "/Cursor/Move to selection end"
 msgstr "/Курсор/Переместить в конец выделения"
 
-#: src/mainwindow.c:1785
+#: src/mainwindow.c:1508
 msgid "/Cursor/sep2"
 msgstr "Курсор/sep2"
 
-#: src/mainwindow.c:1786
+#: src/mainwindow.c:1509
 msgid "/Cursor/Position cursor..."
 msgstr "/Курсор/Позиция курсора..."
 
-#: src/mainwindow.c:1788
+#: src/mainwindow.c:1511
 msgid "/_Play"
 msgstr "/В_оспроизведение"
 
-#: src/mainwindow.c:1789
+#: src/mainwindow.c:1512
 msgid "/Play/_Play from cursor"
 msgstr "/Воспроизведение/_Играть с позиции курсора"
 
-#: src/mainwindow.c:1790
+#: src/mainwindow.c:1513
 msgid "/Play/Play _all"
 msgstr "/Воспроизведение/Играть вс_е"
 
-#: src/mainwindow.c:1791
+#: src/mainwindow.c:1514
 msgid "/Play/Play se_lection"
 msgstr "/Воспроизведение/Играть в_ыделение"
 
-#: src/mainwindow.c:1792
+#: src/mainwindow.c:1515
 msgid "/Play/_Stop"
 msgstr "/Воспроизведение/_Стоп"
 
-#: src/mainwindow.c:1793
+#: src/mainwindow.c:1516
 msgid "/Play/sep1"
 msgstr "/Воспроизведение/sep1"
 
-#: src/mainwindow.c:1794
+#: src/mainwindow.c:1517
 msgid "/Play/_Record..."
 msgstr "/Воспроизведение/_Запись..."
 
-#: src/mainwindow.c:1795
+#: src/mainwindow.c:1518
 msgid "/Effec_ts"
 msgstr "/_Эффекты"
 
-#: src/mainwindow.c:1796
+#: src/mainwindow.c:1519
 msgid "/Effects/Fade _in"
 msgstr "/Эффекты/Плавное _нарастание"
 
-#: src/mainwindow.c:1797
+#: src/mainwindow.c:1520
 msgid "/Effects/Fade o_ut"
 msgstr "/Эффекты/Плавное _затухание"
 
-#: src/mainwindow.c:1798
+#: src/mainwindow.c:1521
 msgid "/Effects/_Normalize"
 msgstr "/Эффекты/Н_ормализация"
 
-#: src/mainwindow.c:1799
+#: src/mainwindow.c:1522
 msgid "/Effects/_Volume adjust (fade)..."
 msgstr "/Эффекты/Подстройка _громкости (fade)..."
 
-#: src/mainwindow.c:1800
+#: src/mainwindow.c:1523
 msgid "/Effects/sep1"
 msgstr "/Эффекты/sep1"
 
-#: src/mainwindow.c:1801
+#: src/mainwindow.c:1524
 msgid "/Effects/Convert sample_rate..."
 msgstr "/Эффекты/Преобразование _частоты сэмплов..."
 
-#: src/mainwindow.c:1802
+#: src/mainwindow.c:1525
 msgid "/Effects/Convert sample _format..."
 msgstr "/Эффекты/Преобразование _формата сэмплов..."
 
-#: src/mainwindow.c:1804
+#: src/mainwindow.c:1527
 msgid "/Effects/B_yte swap"
 msgstr "/Эффекты/Перестановка _байт"
 
-#: src/mainwindow.c:1805
+#: src/mainwindow.c:1528
 msgid "/Effects/sep2"
 msgstr "/Эффекты/sep2"
 
-#: src/mainwindow.c:1806
+#: src/mainwindow.c:1529
 msgid "/Effects/_Mix channels..."
 msgstr "/Эффекты/_Микшировать каналы..."
 
-#: src/mainwindow.c:1807
+#: src/mainwindow.c:1530
 msgid "/Effects/Sp_lit channel..."
 msgstr "/Эффекты/_Разбить канал..."
 
-#: src/mainwindow.c:1808
+#: src/mainwindow.c:1531
 msgid "/Effects/_Combine channels..."
 msgstr "/Эффекты/_Скомбинировать каналы..."
 
-#: src/mainwindow.c:1809
+#: src/mainwindow.c:1532
 msgid "/Effects/sep3"
 msgstr "/Эффекты/sep3"
 
-#: src/mainwindow.c:1810
+#: src/mainwindow.c:1533
 msgid "/Effects/_Speed adjustment..."
 msgstr "/Эффекты/Подстройка с_корости..."
 
-#: src/mainwindow.c:1811
+#: src/mainwindow.c:1534
 msgid "/Effects/Pipe through program..."
 msgstr "/Эффекты/Пропустить через внешнюю программу (pipe)..."
 
-#: src/mainwindow.c:1812
+#: src/mainwindow.c:1535
 msgid "/Effects/sep4"
 msgstr "/Эффекты/sep4"
 
-#: src/mainwindow.c:1813
+#: src/mainwindow.c:1536
 msgid "/Effects/Effects dialog..."
 msgstr "/Эффекты/Диалог эффектов..."
 
-#: src/mainwindow.c:1815
+#: src/mainwindow.c:1538
 msgid "/Debug"
 msgstr ""
 
-#: src/mainwindow.c:1816
+#: src/mainwindow.c:1539
 msgid "/Debug/Mark as modified"
 msgstr ""
 
-#: src/mainwindow.c:1817
+#: src/mainwindow.c:1540
 msgid "/Debug/Dummy effect"
 msgstr ""
 
-#: src/mainwindow.c:1818
+#: src/mainwindow.c:1541
 msgid "/Debug/Check opencount"
 msgstr ""
 
-#: src/mainwindow.c:1819
+#: src/mainwindow.c:1542
 msgid "/Debug/Dump chunk info"
 msgstr ""
 
-#: src/mainwindow.c:1821
+#: src/mainwindow.c:1544
 msgid "/_Help"
 msgstr "/_Справка"
 
-#: src/mainwindow.c:1822
+#: src/mainwindow.c:1545
 msgid "/Help/_Documentation"
 msgstr "/Справка/_Документация"
 
-#: src/mainwindow.c:1823
+#: src/mainwindow.c:1546
 msgid "/Help/_About"
 msgstr "/Справка/_О программе"
 
-#: src/mainwindow.c:1827
+#: src/mainwindow.c:1550
 msgid "/File/sep1"
 msgstr "/Файл/sep1"
 
-#: src/mainwindow.c:1828
+#: src/mainwindow.c:1551
 msgid "/File/_Close"
 msgstr "/Файл/_Закрыть"
 
-#: src/mainwindow.c:1829
+#: src/mainwindow.c:1552
 msgid "/File/sep2"
 msgstr "/Файл/sep2"
 
-#: src/mainwindow.c:1830
+#: src/mainwindow.c:1553
 msgid "/File/_Exit"
 msgstr "/Файл/_Выход"
 
-#: src/mainwindow.c:1988
+#: src/mainwindow.c:1711
 msgid "Load a file from disk"
 msgstr "Загрузить файл с диска"
 
-#: src/mainwindow.c:1995
+#: src/mainwindow.c:1718
 msgid "Save the current file to disk"
 msgstr "Сохранить текущий файл на диск"
 
-#: src/mainwindow.c:2004
+#: src/mainwindow.c:1727
 msgid "Undo the last change"
 msgstr "Отменить последнее изменение"
 
-#: src/mainwindow.c:2013
+#: src/mainwindow.c:1735
+msgid "Redo the last undo operation"
+msgstr ""
+
+#: src/mainwindow.c:1745
 msgid "Cut out the current selection"
 msgstr "Вырезать текущее выделение"
 
-#: src/mainwindow.c:2021
+#: src/mainwindow.c:1753
 msgid "Copy the current selection"
 msgstr "Копировать текущее выделение"
 
-#: src/mainwindow.c:2029
+#: src/mainwindow.c:1761
 msgid "Paste at cursor position"
 msgstr "Вставить в позицию курсора"
 
-#: src/mainwindow.c:2037
+#: src/mainwindow.c:1769
 msgid "Paste, overwriting the data after the cursor position"
 msgstr "Вставить, перезаписав данные после позиции курсора"
 
-#: src/mainwindow.c:2047
+#: src/mainwindow.c:1779
 msgid "Delete the selection"
 msgstr "Удалить выделение"
 
-#: src/mainwindow.c:2056
+#: src/mainwindow.c:1788
 msgid "Set selection start to cursor position"
 msgstr "Установить начало выделения в позицию курсора"
 
-#: src/mainwindow.c:2065
+#: src/mainwindow.c:1797
 msgid "Set selection end to cursor position"
 msgstr "Установить конец выделения в позицию курсора"
 
-#: src/mainwindow.c:2075
+#: src/mainwindow.c:1807
 msgid "Play from cursor position"
 msgstr "Играть начиная с позиции курсора"
 
-#: src/mainwindow.c:2084
+#: src/mainwindow.c:1816
 msgid "Play selected area"
 msgstr "Играть выделенную область"
 
-#: src/mainwindow.c:2093
+#: src/mainwindow.c:1825
 msgid "Stop playing"
 msgstr "Остановить воспроизведение"
 
-#: src/mainwindow.c:2103
+#: src/mainwindow.c:1835
 msgid "Loop mode (play over and over)"
 msgstr "Режим петли (играть еще и еще)"
 
-#: src/mainwindow.c:2113
+#: src/mainwindow.c:1845
 msgid "Follow cursor while playing"
 msgstr "Следовать курсору при воспроизведении"
 
-#: src/mainwindow.c:2125
+#: src/mainwindow.c:1858
 msgid "Auto return to playback start"
 msgstr ""
 
-#: src/mainwindow.c:2139 src/recorddialog.c:630
+#: src/mainwindow.c:1872 src/recorddialog.c:630
 msgid "Record"
 msgstr "Запись"
 
-#: src/mainwindow.c:2148 src/recorddialog.c:799
+#: src/mainwindow.c:1881 src/recorddialog.c:799
 msgid "Launch mixer"
 msgstr "Запустить микшер"
 
@@ -2194,11 +2264,11 @@ msgstr "Ошибка: fork: %s"
 msgid "Should not reach this point!"
 msgstr "Не должен доходить до этой точки!"
 
-#: src/pipedialog.c:444
+#: src/pipedialog.c:445
 msgid "Command failed without returning any data"
 msgstr "Команда выполнилась не успешно, и не возвратила каких либо данных"
 
-#: src/pipedialog.c:455
+#: src/pipedialog.c:456
 #, c-format
 msgid "Error: %s"
 msgstr "Ошибка: %s"
@@ -2267,7 +2337,7 @@ msgstr ""
 "\n"
 "Пожалуйста укажите формат сэмплов ниже."
 
-#: src/rawdialog.c:94 src/recorddialog.c:377 src/sound-alsalib.c:79
+#: src/rawdialog.c:94 src/recorddialog.c:377 src/sound-alsalib.c:82
 #: src/um.c:131 src/um.c:148 src/um.c:342 src/um.c:446
 msgid "Cancel"
 msgstr "Отменить"
@@ -2468,61 +2538,61 @@ msgid "Don't actually change the data (for repairing bad files etc)"
 msgstr ""
 "Фактически не изменять данные (для восстановления плохих файлов, и т.д.)"
 
-#: src/sound-alsalib.c:54
+#: src/sound-alsalib.c:57
 msgid "ALSA Preferences"
 msgstr "Настройки ALSA"
 
-#: src/sound-alsalib.c:62
+#: src/sound-alsalib.c:65
 msgid "Playback device: "
 msgstr "Устройство воспроизведения: "
 
-#: src/sound-alsalib.c:66
+#: src/sound-alsalib.c:69
 msgid "Recording device: "
 msgstr "Устройство записи: "
 
-#: src/sound-alsalib.c:98
+#: src/sound-alsalib.c:101
 #, c-format
 msgid "Error opening ALSA device '%s' for recording: %s"
 msgstr "Ошибка при открытии устройства ALSA '%s' для записи: %s"
 
-#: src/sound-alsalib.c:100
+#: src/sound-alsalib.c:103
 #, c-format
 msgid "Error opening ALSA device '%s' for playback: %s"
 msgstr "Ошибка при открытии устройства ALSA '%s' для воспроизведения: %s"
 
-#: src/sound-alsalib.c:176
+#: src/sound-alsalib.c:179
 msgid "snd_pcm_hw_params_set_access failed"
 msgstr ""
 
-#: src/sound-alsalib.c:181
+#: src/sound-alsalib.c:184
 msgid "snd_pcm_hw_params_set_format failed"
 msgstr ""
 
-#: src/sound-alsalib.c:186
+#: src/sound-alsalib.c:189
 msgid "snd_pcm_hw_params_set_channels failed"
 msgstr ""
 
-#: src/sound-alsalib.c:191
+#: src/sound-alsalib.c:194
 msgid "snd_pcm_hw_params_set_rate failed"
 msgstr ""
 
-#: src/sound-alsalib.c:289 src/sound-alsalib.c:310
+#: src/sound-alsalib.c:292 src/sound-alsalib.c:313
 msgid "<ALSA playback buffer underrun>"
 msgstr ""
 
-#: src/sound-alsalib.c:353
+#: src/sound-alsalib.c:351
 msgid "<ALSA recording buffer overrun>"
 msgstr ""
 
-#: src/sound.c:144
+#: src/sound.c:153
 msgid "SDL (output only)"
 msgstr "SDL (только вывод)"
 
-#: src/sound.c:163
+#: src/sound.c:182
 msgid "Dummy (no sound)"
 msgstr "Фальшивый (без звука)"
 
-#: src/sound.c:265
+#: src/sound.c:315
 #, c-format
 msgid ""
 "Invalid driver name: %s\n"
@@ -2531,44 +2601,44 @@ msgstr ""
 "Неправильное имя драйвера: %s\n"
 "Вместо него использую '%s'"
 
-#: src/sound-esound.c:56
+#: src/sound-esound.c:59
 #, c-format
 msgid "Couldn't connect to ESD daemon: %s"
 msgstr "Не могу подключится к демону ESD: %s"
 
-#: src/sound-esound.c:107
+#: src/sound-esound.c:113
 msgid "EsounD: Unable to open playback stream"
 msgstr "EsounD: Невозможно открыть поток воспроизведения"
 
-#: src/sound-esound.c:120
+#: src/sound-esound.c:128
 msgid "EsounD: Unable to open recording stream"
 msgstr "EsounD: Невозможно открыть поток записи"
 
-#: src/sound-esound.c:135 src/sound-esound.c:212
+#: src/sound-esound.c:143 src/sound-esound.c:215
 msgid "EsounD driver: select"
 msgstr ""
 
-#: src/sound-esound.c:147
+#: src/sound-esound.c:155
 msgid "EsounD driver: write"
 msgstr ""
 
-#: src/sound-esound.c:216
+#: src/sound-esound.c:219
 msgid "Esound connection closed by server"
 msgstr "Соединение с Esound закрыто сервером"
 
-#: src/sound-esound.c:222
+#: src/sound-esound.c:225
 msgid "EsounD driver: read"
 msgstr ""
 
-#: src/sound-esound.c:236
+#: src/sound-esound.c:239
 msgid "jump delay"
 msgstr "задержка прыжка"
 
-#: src/sound-esound.c:250
+#: src/sound-esound.c:253
 msgid "ESD preferences"
 msgstr "Настройки ESD"
 
-#: src/sound-esound.c:258
+#: src/sound-esound.c:261
 msgid ""
 "If the cursor starts running too early when jumping, this delay should be "
 "increased."
@@ -2576,88 +2646,88 @@ msgstr ""
 "Если при прыжке курсор начинает бежать слишком рано, это значение должно "
 "быть увеличено."
 
-#: src/sound-esound.c:264
+#: src/sound-esound.c:267
 msgid "Jump delay:"
 msgstr "Задержка прыжка:"
 
-#: src/sound-esound.c:269
+#: src/sound-esound.c:272
 msgid "seconds"
 msgstr "секунд"
 
-#: src/sound-esound.c:273
+#: src/sound-esound.c:276
 msgid ""
 "Selecting the ESD host to connect to is done through the ESPEAKER "
 "environment variable."
 msgstr ""
 "Адрес ESD-сервера можно указать при помощи переменной окружения ESPEAKER."
 
-#: src/sound-jack.c:111
+#: src/sound-jack.c:113
 msgid "Invalid number of input ports."
 msgstr "Неправильное количество портов ввода."
 
-#: src/sound-jack.c:115
+#: src/sound-jack.c:117
 msgid "Invalid number of output ports."
 msgstr "Неправильное количество портов вывода."
 
-#: src/sound-jack.c:124
+#: src/sound-jack.c:126
 msgid "The client name change won't take effect until you restart the program."
 msgstr "Изменение имени клиента вступит в силу после перезапуска программы."
 
-#: src/sound-jack.c:181
+#: src/sound-jack.c:183
 msgid " Input ports "
 msgstr " Порты ввода "
 
-#: src/sound-jack.c:182
+#: src/sound-jack.c:184
 msgid " Output ports "
 msgstr " Порты вывода "
 
-#: src/sound-jack.c:191
+#: src/sound-jack.c:193
 msgid "Jack Preferences"
 msgstr "Настройки Jack"
 
-#: src/sound-jack.c:200
+#: src/sound-jack.c:202
 msgid "Client name: "
 msgstr "Имя клиента: "
 
-#: src/sound-jack.c:217
+#: src/sound-jack.c:219
 msgid "Number of ports (0-8): "
 msgstr "Количество портов (0-8): "
 
-#: src/sound-jack.c:225
+#: src/sound-jack.c:227
 #, c-format
 msgid "Port #%d"
 msgstr "Порт #%d"
 
-#: src/sound-jack.c:238
+#: src/sound-jack.c:240
 msgid "Automatically connect input ports on startup"
 msgstr "Автоматически подключать порты ввода при запуске"
 
-#: src/sound-jack.c:244
+#: src/sound-jack.c:246
 msgid "Automatically connect output ports on startup"
 msgstr "Автоматически подключать порты вывода при запуске"
 
-#: src/sound-jack.c:373
+#: src/sound-jack.c:375
 msgid "Over/underrun in JACK driver"
 msgstr ""
 
-#: src/sound-jack.c:388
+#: src/sound-jack.c:390
 msgid "jack_get_ports returned NULL"
 msgstr ""
 
-#: src/sound-jack.c:404
+#: src/sound-jack.c:406
 #, c-format
 msgid "Connection from %s to %s failed: %s"
 msgstr "Ошибка при подключении %s к %s: %s"
 
-#: src/sound-jack.c:420
+#: src/sound-jack.c:422
 msgid "Could not connect to the JACK server."
 msgstr "Не могу подключится к JACK-серверу."
 
-#: src/sound-jack.c:434
+#: src/sound-jack.c:436
 msgid "Activation failed!"
 msgstr "Активизация не удалась!"
 
-#: src/sound-jack.c:672
+#: src/sound-jack.c:676
 #, c-format
 msgid ""
 "With JACK, the only supported recording format is Floating-point, single "
@@ -2666,40 +2736,40 @@ msgstr ""
 "При использовании JACK поддерживается только один формат записи - Плавающая "
 "точка, одинарная точность, %d Гц"
 
-#: src/sound-oss.c:79
+#: src/sound-oss.c:82
 #, c-format
 msgid "Could not open '%s': %s"
 msgstr "Не могу открыть '%s': %s"
 
-#: src/sound-oss.c:92
+#: src/sound-oss.c:95
 #, c-format
 msgid "Error in sound driver: ioctl failed: %s"
 msgstr "Ошибка в звуковом драйвере: ioctl не удался: %s"
 
-#: src/sound-oss.c:187
+#: src/sound-oss.c:185
 #, c-format
 msgid "Error in sound driver: write failed: %s"
 msgstr "Ошибка в звуковом драйвере: write не удался: %s"
 
-#: src/sound-oss.c:200
+#: src/sound-oss.c:198
 #, c-format
 msgid "Error in sound driver: read failed: %s"
 msgstr "Ошибка в звуковом драйвере: read не удался: %s"
 
-#: src/sound-oss.c:224 src/sound-oss.c:336
+#: src/sound-oss.c:222 src/sound-oss.c:334
 #, c-format
 msgid "Error in sound driver: select failed: %s"
 msgstr "Ошибка в звуковом драйвере: select не удался: %s"
 
-#: src/sound-oss.c:386
+#: src/sound-oss.c:384
 msgid "OSS preferences"
 msgstr "Настройки OSS"
 
-#: src/sound-oss.c:396
+#: src/sound-oss.c:394
 msgid "Sound device file:"
 msgstr "Файл звукового устройства:"
 
-#: src/sound-oss.c:402
+#: src/sound-oss.c:400
 msgid "Avoid select calls (try this if recording locks up)"
 msgstr "Избегать вызовов select (попробуйте это если запись блокируется)"
 
@@ -2711,12 +2781,12 @@ msgstr "sound-portaudio: Устройства вывода не доступны!"
 msgid "sound-portaudio: No input devices available!"
 msgstr "sound-portaudio: Устройства ввода не доступны!"
 
-#: src/sound-portaudio.c:185 src/sound-portaudio.c:271
+#: src/sound-portaudio.c:186 src/sound-portaudio.c:272
 #, c-format
 msgid "Pa_OpenStream failed: %s\n"
 msgstr ""
 
-#: src/sound-portaudio.c:245
+#: src/sound-portaudio.c:246
 msgid "Buffer overrun!"
 msgstr ""
 
@@ -2725,21 +2795,21 @@ msgstr ""
 msgid "Could not initialize SDL: %s"
 msgstr "Ошибка инициализации SDL: %s"
 
-#: src/sound-sdl.c:87
+#: src/sound-sdl.c:88
 #, c-format
 msgid "SDL: Couldn't open audio: %s"
 msgstr "SDL: Не могу открыть аудио: %s"
 
-#: src/sound-sun.c:76
+#: src/sound-sun.c:72
 #, c-format
 msgid "SunAudio: Couldn't open %s"
 msgstr "SunAudio: Не могу открыть %s"
 
-#: src/sound-sun.c:163
+#: src/sound-sun.c:159
 msgid "SunAudio: Error writing to sound device"
 msgstr "SunAudio: Ошибка записи в звуковое устройство"
 
-#: src/sound-sun.c:245
+#: src/sound-sun.c:241
 msgid "SunAudio: Error reading from sound device"
 msgstr "SunAudio: Ошибка чтения из звукового устройства"
 
@@ -3090,33 +3160,33 @@ msgstr "Поддержка Sox не инициализирована"
 msgid "Speed:"
 msgstr "Скорость:"
 
-#: src/statusbar.c:68
+#: src/statusbar.c:72
 msgid "(no file loaded)"
 msgstr "(файл не загружен)"
 
-#: src/statusbar.c:208
+#: src/statusbar.c:233
 msgid "Cursor: running"
 msgstr "Курсор: бежит"
 
-#: src/statusbar.c:210
+#: src/statusbar.c:235
 msgid "Cursor: "
 msgstr "Курсор: "
 
-#: src/statusbar.c:232
+#: src/statusbar.c:257
 #, c-format
 msgid "View: [ %s - %s ]"
 msgstr "Вид: [ %s - %s ]"
 
-#: src/statusbar.c:251
+#: src/statusbar.c:276
 #, c-format
 msgid "Selection: %s+%s"
 msgstr "Выделение: %s+%s"
 
-#: src/statusbar.c:273
+#: src/statusbar.c:298
 msgid "Processing data"
 msgstr "Обработка данных"
 
-#: src/statusbar.c:275
+#: src/statusbar.c:300
 #, c-format
 msgid "%s... (Press ESC to cancel)"
 msgstr "%s... (Нажмите ESC для отмены)"
@@ -3165,6 +3235,20 @@ msgstr "Конец:"
 #: src/volumedialog.c:109
 msgid "Find top volume"
 msgstr "Найти лучшую громкость"
+
+#: src/document.c:220
+#, c-format
+msgid "untitled #%d"
+msgstr "без имени #%d"
+
+#~ msgid "This will clear the entire undo buffer!"
+#~ msgstr "Это очистит весь буфер отката!"
+
+#~ msgid "This will clear the undo buffer up to the last save"
+#~ msgstr "Это очистит буфер отката до последнего сохранения"
+
+#~ msgid "/Edit/Clear undo buffer"
+#~ msgstr "/Правка/Очистить буфер отката"
 
 #~ msgid "Conversion method: "
 #~ msgstr "Метод преобразования: "

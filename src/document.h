@@ -51,6 +51,10 @@ typedef struct {
 
      /* The filename associated with the document (or NULL if none). */ 
      gchar *filename;
+     /* TRUE if the file referred to by filename has a lossy format. */
+     gboolean lossy;
+
+
      /* A unique name for each document, either:
       * the file's name part without the path
       * the file's name part + a number (if >1 document with the same filename)

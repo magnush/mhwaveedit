@@ -519,14 +519,13 @@ static void mainwindow_class_init(GtkObjectClass *klass)
 
 }
 
-static void mainwindow_set_chunk(Mainwindow *w, Chunk *c, gchar *filename)
+static void mainwindow_set_document(Mainwindow *w, Document *d, 
+				    gchar *filename)
 {
-     Document *d;
      if (w->doc != NULL) {
 	  w = MAINWINDOW ( mainwindow_new() );
 	  gtk_widget_show ( GTK_WIDGET ( w ) );
      }
-     d = document_new_with_chunk(c,filename,w->statusbar);
      w->doc = d;
      document_set_followmode(d,w->followmode);
      gtk_object_ref(GTK_OBJECT(w->doc));
@@ -549,6 +548,13 @@ static void mainwindow_set_chunk(Mainwindow *w, Chunk *c, gchar *filename)
      mainwindow_view_changed(w->doc,w);
 }
 
+static void mainwindow_set_chunk(Mainwindow *w, Chunk *c, gchar *filename)
+{
+     Document *d;
+     d = document_new_with_chunk(c,filename,w->statusbar);
+     mainwindow_set_document(w,d,filename);
+}
+
 void mainwindow_set_speed_sensitive(gboolean sensitive)
 {
      GList *l;
@@ -562,7 +568,7 @@ void mainwindow_set_speed_sensitive(gboolean sensitive)
 static void file_open(GtkMenuItem *menuitem, gpointer user_data)
 {
      gchar *c;
-     Chunk *chunk;
+     Document *doc;
      Mainwindow *w = MAINWINDOW ( user_data );     
      if (w->doc != NULL && w->doc->filename != NULL)
 	  c = get_filename(w->doc->filename,"*.wav", _("Load File"), FALSE );
@@ -572,12 +578,12 @@ static void file_open(GtkMenuItem *menuitem, gpointer user_data)
 	  c = get_filename(c,"*.wav", _("Load File"), FALSE);
      }
      if (!c) return;
-     chunk = chunk_load ( c, dither_editing, w->statusbar );
-     if (!chunk) {
+     doc = document_new_with_file ( c, w->statusbar );
+     if (doc == NULL) {
 	  g_free(c);
 	  return;
      }
-     mainwindow_set_chunk ( w, chunk, c );
+     mainwindow_set_document ( w, doc, c );
      inifile_set("lastOpenFile",c);
      recent_file(c);
      g_free(c);
@@ -1431,15 +1437,15 @@ static void effects_dialog(GtkMenuItem *menuitem, gpointer user_data)
 static void file_recent(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     Chunk *chunk;
+     Document *doc;
      gchar *fn;
      GList *l = w->recent;
      GList *m = recent_filenames;
      while (l->data != menuitem) { l=l->next; m=m->next; }
      fn = g_strdup((gchar *)m->data);
-     chunk = chunk_load(fn, dither_editing, w->statusbar);
-     if (!chunk) { g_free(fn); return; }
-     mainwindow_set_chunk(w, chunk, fn);
+     doc = document_new_with_file(fn, w->statusbar);
+     if (doc == NULL) { g_free(fn); return; }
+     mainwindow_set_document(w, doc, fn);
      inifile_set("lastOpenFile",fn);
      recent_file(fn);
      g_free(fn);
@@ -2194,13 +2200,13 @@ GtkWidget *mainwindow_new(void)
 GtkWidget *mainwindow_new_with_file(char *filename)
 {
      Mainwindow *w;
-     Chunk *c;
+     Document *doc;
      gchar *d;
      w = MAINWINDOW ( mainwindow_new() );
      d = make_filename_rooted(filename);
-     c = chunk_load(d, dither_editing, w->statusbar);
-     if (c) {
-          mainwindow_set_chunk(w, c, d);
+     doc = document_new_with_file(d, w->statusbar);
+     if (doc != NULL) {
+          mainwindow_set_document(w, doc, d);
           inifile_set("lastOpenFile",d);
 	  recent_file(d);
      }

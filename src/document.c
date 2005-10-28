@@ -21,6 +21,7 @@
 #include <config.h>
 
 
+#include "um.h"
 #include "document.h"
 #include "filetypes.h"
 #include "player.h"
@@ -89,6 +90,7 @@ static void document_init(GtkObject *obj)
 {
      Document *d = DOCUMENT(obj);
      d->filename = NULL;
+     d->lossy = FALSE;
      d->titlename = NULL;
      d->title_serial = 0;
      d->history_pos = NULL;
@@ -198,9 +200,13 @@ GtkType document_get_type(void)
 Document *document_new_with_file(gchar *filename, StatusBar *bar)
 {
      Chunk *c;
-     c = chunk_load(filename,dither_editing,bar);
+     gboolean b;
+     Document *d;
+     c = chunk_load_x(filename,dither_editing,bar,&b);
      if (c == NULL) return NULL;
-     return document_new_with_chunk(c,filename,bar);
+     d = document_new_with_chunk(c,filename,bar);
+     d->lossy = b;
+     return d;
 }
 
 static void document_set_filename(Document *d, gchar *filename, 
@@ -258,7 +264,17 @@ Document *document_new_with_chunk(Chunk *chunk, gchar *sourcename,
 
 gboolean document_save(Document *d, gchar *filename)
 {
-     gboolean b = chunk_save(d->chunk,filename,dither_editing,d->bar);
+     gboolean b;
+     int i;
+     if (d->filename != NULL && !strcmp(filename,d->filename) &&
+	 d->lossy) {
+	  i = user_message(_("Loading and then saving files with 'lossy' "
+			     "formats (like mp3 and ogg) leads to a quality "
+			     "loss, also for the unmodified parts of the "
+			     "file."), UM_OKCANCEL);
+	  if (i == MR_CANCEL) return TRUE;
+     }
+     b = chunk_save(d->chunk,filename,dither_editing,d->bar);
      if (!b) {
 	  clear_history(d->history_pos);
 	  d->history_pos = NULL;

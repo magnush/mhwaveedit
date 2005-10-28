@@ -1,3 +1,13 @@
+2005-10-29  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* If an mp3 or ogg file is loaded and then saved, display a
+	warning about quality loss.
+
+2005-10-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/document.c (document_set_filename): Fixed bug that caused
+	titlename to become null when it should be "untitled".
+
 2005-09-22  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* Released version 1.4.5.

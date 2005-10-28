@@ -41,10 +41,12 @@ gchar *fileformat_name(guint fileformat);
 gchar *fileformat_extension(guint fileformat);
 
 
-/* Loads a chunk from a specified file. */
+/* Loads a document from a specified file. */
 
 Chunk *chunk_load(gchar *filename, int dither_mode, StatusBar *bar);
 
+Chunk *chunk_load_x(gchar *filename, int dither_mode, StatusBar *bar, 
+		    gboolean *lossy);
 
 /* Saves the contents of a chunk into a new file. The file format is determined
  * from the extension or asked at run time. 

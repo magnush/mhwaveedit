@@ -188,7 +188,8 @@ gchar *fileformat_extension(guint fileformat)
      return NULL;
 }
 
-static Chunk *chunk_load_main(gchar *filename, int dither_mode, StatusBar *bar)
+static Chunk *chunk_load_main(gchar *filename, int dither_mode, StatusBar *bar,
+			      struct file_type **format)
 {
      GList *l;
      struct file_type *ft;
@@ -203,15 +204,19 @@ static Chunk *chunk_load_main(gchar *filename, int dither_mode, StatusBar *bar)
 	  if (!ft->extension) continue;
 	  c = strchr(filename,0) - strlen(ft->extension);
 	  if (c<filename || strcmp(c,ft->extension)!=0) continue;
-	  if (ft->typecheck==NULL || ft->typecheck(filename)) 
+	  if (ft->typecheck==NULL || ft->typecheck(filename)) {
+	       *format = ft;
 	       return ft->load(filename,dither_mode,bar);
+	  }
      }
      /* Use the file checking functions */
      for (l=file_types; l!=NULL; l=l->next) {
 	  ft = (struct file_type *)l->data;
 	  if (ft->typecheck == NULL) continue;
-	  if (ft->typecheck(filename))
+	  if (ft->typecheck(filename)) {
+	       *format = ft;
 	       return ft->load(filename,dither_mode,bar);
+	  }
      }
      /* Try mplayer if available */
      chunk = try_mplayer(filename,dither_mode,bar);
@@ -220,11 +225,13 @@ static Chunk *chunk_load_main(gchar *filename, int dither_mode, StatusBar *bar)
      return raw_load(filename,dither_mode,bar);
 }
 
-Chunk *chunk_load(gchar *filename, int dither_mode, StatusBar *bar )
+Chunk *chunk_load_x(gchar *filename, int dither_mode, StatusBar *bar,
+		    gboolean *lossy)
 {
      Chunk *chunk;
      gchar *c;
      EFILE *f;
+     struct file_type *ft;
 
      /* First, see if the file exists */
      if (!file_exists(filename)) {
@@ -248,10 +255,17 @@ Chunk *chunk_load(gchar *filename, int dither_mode, StatusBar *bar )
      e_fclose(f);
 
      status_bar_begin_progress(bar,1,_("Loading"));
-     chunk = chunk_load_main(filename,dither_mode,bar);
+     chunk = chunk_load_main(filename,dither_mode,bar,&ft);
      status_bar_end_progress(bar);
 
+     if (chunk != NULL) *lossy = ft->lossy;
      return chunk;
+}
+
+Chunk *chunk_load(gchar *filename, int dither_mode, StatusBar *bar)
+{
+     gboolean b;
+     return chunk_load_x(filename,dither_mode,bar,&b);
 }
 
 
@@ -344,7 +358,6 @@ gboolean chunk_save_ff(Chunk *chunk, gchar *filename,
      g_assert (ft != NULL);
      return ft->save(chunk, filename, ft, dither_mode, bar, &b);
 }
-
 
 /* WAV */
 
