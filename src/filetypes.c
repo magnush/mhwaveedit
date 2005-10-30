@@ -48,9 +48,11 @@ struct file_type {
      gboolean lossy;
      gboolean (*typecheck)(gchar *filename);
      Chunk *(*load)(gchar *filename, int dither_mode, StatusBar *bar);
-     gboolean (*save)(Chunk *chunk, gchar *filename, 
+     gboolean (*save)(Chunk *chunk, gchar *filename, gpointer settings,
 		      struct file_type *type, int dither_mode, StatusBar *bar,
 		      gboolean *fatal);
+     gpointer (*get_settings)(void);
+     void (*free_settings)(gpointer settings);
      gint extra_data;
 };
 
@@ -58,14 +60,14 @@ static GList *file_types = NULL;
 
 static gboolean wav_check(gchar *filename);
 static Chunk *wav_load(gchar *filename, int dither_mode, StatusBar *bar);
-static gboolean wav_save(Chunk *chunk, gchar *filename, 
+static gboolean wav_save(Chunk *chunk, gchar *filename, gpointer settings,
 			 struct file_type *type, int dither_mode, 
 			 StatusBar *bar,gboolean *fatal);
 
 #ifdef HAVE_LIBSNDFILE
 static gboolean sndfile_check(gchar *filename);
 static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar);
-static gboolean sndfile_save(Chunk *chunk, gchar *filename, 
+static gboolean sndfile_save(Chunk *chunk, gchar *filename, gpointer settings,
 			     struct file_type *type, int dither_mode, 
 			     StatusBar *bar, gboolean *fatal);
 static gboolean sndfile_save_main(Chunk *chunk, gchar *filename, 
@@ -74,17 +76,19 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
 #endif
 
 static Chunk *raw_load(gchar *filename, int dither_mode, StatusBar *bar);
-static gboolean raw_save(Chunk *chunk, gchar *filename, 
+static gboolean raw_save(Chunk *chunk, gchar *filename, gpointer settings,
 			 struct file_type *type, int dither_mode,
 			 StatusBar *bar, gboolean *fatal);
 
 static Chunk *ogg_load(gchar *filename, int dither_mode, StatusBar *bar);
-static gboolean ogg_save(Chunk *chunk, gchar *filename, struct file_type *type,
+static gboolean ogg_save(Chunk *chunk, gchar *filename, gpointer settings,
+			 struct file_type *type,
 			 int dither_mode, StatusBar *bar, gboolean *fatal);
 
 
 static Chunk *mp3_load(gchar *filename, int dither_mode, StatusBar *bar);
-static gboolean mp3_save(Chunk *chunk, gchar *filename, struct file_type *type,
+static gboolean mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
+			 struct file_type *type,
 			 int dither_mode, StatusBar *bar, gboolean *fatal);
 
 static Chunk *try_mplayer(gchar *filename, int dither_mode, StatusBar *bar);
@@ -107,17 +111,14 @@ static gboolean xunsetenv(char *varname)
      return FALSE;
 }
 
-static void register_file_type(gchar *name, gchar *ext, 
-			       gboolean lossy,
-			       gboolean (*typecheck)(gchar *filename),
-			       Chunk *(*load)(gchar *filename, 
-					      int dither_mode, StatusBar *bar),
-			       gboolean (*save)(Chunk *chunk, gchar *filename, 
-						struct file_type *type,
-						int dither_mode,
-						StatusBar *bar,
-						gboolean *fatal),
-			       int extra_data)
+static struct file_type *register_file_type
+(gchar *name, gchar *ext, gboolean lossy,
+ gboolean (*typecheck)(gchar *filename), 
+ Chunk *(*load)(gchar *filename, int dither_mode, StatusBar *bar),
+ gboolean (*save)(Chunk *chunk, gchar *filename,gpointer settings,
+		  struct file_type *type,int dither_mode,
+		  StatusBar *bar,gboolean *fatal),
+ int extra_data)
 {
      struct file_type *t;
      t = g_malloc(sizeof(*t));
@@ -128,7 +129,10 @@ static void register_file_type(gchar *name, gchar *ext,
      t->load = load;
      t->save = save;
      t->extra_data = extra_data;
+     t->get_settings = NULL;
+     t->free_settings = NULL;
      file_types = g_list_append(file_types,t);
+     return t;
 }
 
 static void setup_types(void)
@@ -307,19 +311,36 @@ static struct file_type *choose_format(gchar *filename)
      return ft;
 }
 
-gboolean chunk_save(Chunk *chunk, gchar *filename, int dither_mode, 
+gboolean chunk_save(Chunk *chunk, gchar *filename, int filetype, 
+		    gboolean use_default_settings, int dither_mode, 
 		    StatusBar *bar)
 {
      gchar *d;
      gboolean b=FALSE,res;
      EFILE *f;
+     gpointer settings = NULL;
      struct file_type *ft;
+     gint i;
      
      /* Let the user choose a format first, so that if the user presses cancel,
       * we haven't done any of the backup/unlink stuff.. */	
-     ft = choose_format(filename);
+     if (filetype < 0) 
+	  ft = choose_format(filename);
+     else
+	  ft = g_list_nth_data(file_types, filetype);
      if (ft == NULL) return TRUE;
 
+     if (!use_default_settings) {
+	  if (ft->get_settings == NULL) {
+	       i = user_message("There are no settings for this file format.",
+				UM_OKCANCEL);
+	       if (i == MR_CANCEL) return TRUE;
+	  } else {
+	       settings = ft->get_settings();
+	       if (settings == NULL) return TRUE;
+	  }
+     }
+     
      if (file_exists(filename)) {
 
           /* Check that the file is writeable by us. */
@@ -332,7 +353,7 @@ gboolean chunk_save(Chunk *chunk, gchar *filename, int dither_mode,
      }
 
      status_bar_begin_progress(bar,chunk->size,_("Saving"));
-     res = ft->save(chunk,filename,ft,dither_mode,bar,&b);
+     res = ft->save(chunk,filename,settings,ft,dither_mode,bar,&b);
 
      if (res && b && !status_bar_progress(bar,0)) {
 	  d = g_strdup_printf(_("The file %s may be destroyed since the"
@@ -345,18 +366,9 @@ gboolean chunk_save(Chunk *chunk, gchar *filename, int dither_mode,
      }
      status_bar_end_progress(bar);
 
-     return res;
-}
+     if (settings != NULL) ft->free_settings(settings);
 
-gboolean chunk_save_ff(Chunk *chunk, gchar *filename,
-		       guint fileformat, int dither_mode, StatusBar *bar)
-{
-     struct file_type *ft;
-     gboolean b;
-     setup_types();
-     ft = g_list_nth_data( file_types, fileformat );
-     g_assert (ft != NULL);
-     return ft->save(chunk, filename, ft, dither_mode, bar, &b);
+     return res;
 }
 
 /* WAV */
@@ -491,7 +503,7 @@ static Chunk *wav_load(char *filename, int dither_mode, StatusBar *bar)
      return chunk_new_from_datasource(ds);
 }
 
-static gboolean wav_save(Chunk *chunk, char *filename, 
+static gboolean wav_save(Chunk *chunk, char *filename, gpointer settings,
 			 struct file_type *type, int dither_mode, 
 			 StatusBar *bar, gboolean *fatal)
 {
@@ -602,7 +614,7 @@ static Chunk *raw_load(gchar *filename, int dither_mode, StatusBar *bar)
      return chunk_new_from_datasource(ds);
 }
 
-static gboolean raw_save(Chunk *chunk, gchar *filename, 
+static gboolean raw_save(Chunk *chunk, gchar *filename, gpointer settings,
 			 struct file_type *type, int dither_mode, 
 			 StatusBar *bar, gboolean *fatal)
 {
@@ -831,7 +843,7 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
 
 }
 
-static gboolean sndfile_save(Chunk *chunk, gchar *filename, 
+static gboolean sndfile_save(Chunk *chunk, gchar *filename, gpointer settings,
 			     struct file_type *type, int dither_mode, 
 			     StatusBar *bar, gboolean *fatal)
 {
@@ -916,7 +928,8 @@ static Chunk *ogg_load(gchar *filename, int dither_mode, StatusBar *bar)
      return c;
 }
 
-static gboolean ogg_save(Chunk *chunk, gchar *filename, struct file_type *type,
+static gboolean ogg_save(Chunk *chunk, gchar *filename, gpointer settings,
+			 struct file_type *type,
 			 int dither_mode, StatusBar *bar, gboolean *fatal)
 {
      Chunk *x=NULL,*y;
@@ -969,7 +982,8 @@ static gboolean wav_regular_format(Dataformat *fmt)
      return (XOR(fmt->samplesize == 1, fmt->sign));
 }
 
-static gboolean mp3_save(Chunk *chunk, gchar *filename, struct file_type *type,
+static gboolean mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
+			 struct file_type *type,
 			 int dither_mode, StatusBar *bar, gboolean *fatal)
 {
      Chunk *x;

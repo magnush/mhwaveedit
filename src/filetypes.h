@@ -53,14 +53,8 @@ Chunk *chunk_load_x(gchar *filename, int dither_mode, StatusBar *bar,
  * Returns TRUE on failure
  */
 
-gboolean chunk_save(Chunk *chunk, gchar *filename, int dither_mode, 
+gboolean chunk_save(Chunk *chunk, gchar *filename, int filetype, 
+		    gboolean user_default_settings, int dither_mode, 
 		    StatusBar *bar);
-
-/* Saves the contents of a chunk into a new file. The file format is determined
- * by the fileformat parameter.
- */
-
-gboolean chunk_save_ff(Chunk *chunk, gchar *filename, guint fileformat, 
-		       int dither_mode, StatusBar *bar);
 
 #endif

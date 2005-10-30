@@ -232,10 +232,15 @@ static void update_desc(Mainwindow *w)
 }
 
 
-static gchar *get_save_filename(gchar *old_filename, gchar *title_text)
+static gchar *get_save_filename(gchar *old_filename, gchar *title_text, 
+				gint *type_id, gboolean *use_defaults)
 {
      gchar *lsf,*lsd,*filename;
-     gchar *c,*d;
+     gchar *c,*d,*e;
+     GtkBox *b1,*b2;
+     GtkWidget *w,*usedef,*typesel;
+     GList *l;
+     gint i;
 
      /* Get the lastSaveFile entry */
      lsf = inifile_get("lastSaveFile",NULL);
@@ -252,26 +257,67 @@ static gchar *get_save_filename(gchar *old_filename, gchar *title_text)
 	       lsd = NULL;
 	  }
      } else lsd = NULL;
+
+     /* Create the custom widget */
+     usedef = gtk_check_button_new_with_label(_("Use default settings"));
+     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(usedef),TRUE);
+     typesel = combo_new();
      
+     l = g_list_append(NULL,g_strdup(_("Auto-detect from extension")));
+     for (i=0; ; i++) {
+	  c = fileformat_name(i);
+	  if (c == NULL) break;
+	  d = fileformat_extension(i);
+	  e = g_strdup_printf("%s (%s)",c,d);
+	  l = g_list_append(l,e);
+     }
+     combo_set_items(COMBO(typesel),l,0);
+     g_list_foreach(l,(GFunc)g_free,NULL);
+     g_list_free(l);
+
+     b1 = GTK_BOX(gtk_hbox_new(FALSE,0));
+     w = gtk_label_new(_("File type: "));
+     gtk_box_pack_start(b1,w,FALSE,FALSE,0);
+     gtk_box_pack_start(b1,typesel,TRUE,TRUE,0);
+     gtk_box_pack_start(b1,usedef,FALSE,FALSE,6);
+     b2 = GTK_BOX(gtk_vbox_new(FALSE,8));
+     gtk_box_pack_start(b2,GTK_WIDGET(b1),FALSE,FALSE,0);
+
+     gtk_object_ref(GTK_OBJECT(usedef));
+     gtk_object_ref(GTK_OBJECT(typesel));
+
+     gtk_widget_show_all(GTK_WIDGET(b2));
+
      if (lsd == NULL)
-	  filename = get_filename ( old_filename, "*.wav", title_text, TRUE );
+	  filename = get_filename ( old_filename, "*.wav", title_text, 
+				    TRUE, GTK_WIDGET(b2));
      else if (old_filename == NULL)
-	  filename = get_filename ( lsd, "*.wav", title_text, TRUE );
+	  filename = get_filename (lsd, "*.wav", title_text, TRUE, 
+				   GTK_WIDGET(b2));
      else { 
 	  c = strrchr(old_filename, '/');
 	  if (!c) c=old_filename;
 	  else c = c+1;
 	  d = g_strjoin("/",lsd,c,NULL);
-	  filename = get_filename( d, "*.wav", title_text, TRUE);
+	  filename = get_filename(d, "*.wav", title_text, TRUE, 
+				  GTK_WIDGET(b2));
 	  g_free(d);
      }
+
+     *use_defaults = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(usedef));
+     *type_id = combo_selected_index(COMBO(typesel));
+
      g_free(lsd);
+     gtk_object_unref(GTK_OBJECT(typesel));
+     gtk_object_unref(GTK_OBJECT(usedef));
      return filename;
      
 }
 
 static gboolean mainwindow_save ( Mainwindow *w, gchar *filename )
 {
+     int type_id = -1;
+     gboolean use_defs = TRUE;
      gboolean r;
      gboolean fmal = FALSE; /* TRUE if filename should be g_free:d */    
 
@@ -285,14 +331,15 @@ static gboolean mainwindow_save ( Mainwindow *w, gchar *filename )
       * box. Also set the fmal flag so we remember to free the
       * filename later. */  
      if (filename == NULL) {
-	  filename = get_save_filename(w->doc->filename,_("Save File"));
+	  filename = get_save_filename(w->doc->filename,_("Save File"),
+				       &type_id,&use_defs);
 	  if (filename == NULL) return TRUE;
 	  fmal = TRUE;
      }
 
      g_assert(filename != NULL);
      /* Save the file */
-     r = document_save(w->doc, filename);
+     r = document_save(w->doc, filename, type_id, use_defs);
      if (r) { if (fmal) g_free(filename); return TRUE; }
 
      inifile_set("lastSaveFile",filename);
@@ -571,11 +618,11 @@ static void file_open(GtkMenuItem *menuitem, gpointer user_data)
      Document *doc;
      Mainwindow *w = MAINWINDOW ( user_data );     
      if (w->doc != NULL && w->doc->filename != NULL)
-	  c = get_filename(w->doc->filename,"*.wav", _("Load File"), FALSE );
+	  c = get_filename(w->doc->filename,"*.wav",_("Load File"),FALSE,NULL);
      else {
 	  c = inifile_get("lastOpenFile",NULL);
 	  if (c == NULL) c = inifile_get("lastSaveFile",NULL);
-	  c = get_filename(c,"*.wav", _("Load File"), FALSE);
+	  c = get_filename(c,"*.wav", _("Load File"), FALSE, NULL);
      }
      if (!c) return;
      doc = document_new_with_file ( c, w->statusbar );
@@ -602,14 +649,17 @@ static void file_saveas(GtkMenuItem *menuitem, gpointer user_data)
 
 static void file_saveselection(GtkMenuItem *menuitem, gpointer user_data)
 {
+     gint type_id;
+     gboolean use_defs;
      gchar *fn;
      Chunk *c;
      Mainwindow *w = MAINWINDOW(user_data);
-     fn = get_save_filename(NULL,_("Save selection as ..."));
+     fn = get_save_filename(NULL,_("Save selection as ..."),
+			    &type_id,&use_defs);
      if (!fn) return;
      c = chunk_get_part(w->doc->chunk,w->doc->selstart,
 			w->doc->selend-w->doc->selstart);
-     if (!chunk_save(c,fn,dither_editing,w->statusbar))
+     if (!chunk_save(c,fn,type_id,use_defs,dither_editing,w->statusbar))
 	  inifile_set("lastSaveFile",fn);
      gtk_object_sink(GTK_OBJECT(c));     
      g_free(fn);

@@ -89,7 +89,7 @@ gboolean file_is_directory(char *filename);
 gboolean program_exists(char *progname);
 
 gchar *get_filename(gchar *current_name, gchar *filemask, gchar *title_text,
-		    gboolean savemode);
+		    gboolean savemode, GtkWidget *custom_widget);
 gchar *get_directory(gchar *current_name, gchar *title_text);
 
 gchar *make_filename_rooted(gchar *name);

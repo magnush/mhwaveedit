@@ -1,3 +1,12 @@
+2005-10-30  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (get_save_filename): Display file format combo
+	box and check box to use default settings.
+
+	* src/filetypes.c: Support file-type specific settings when saving.
+
+	* src/gtkfiles.c (get_filename): Support extra custom widget.
+
 2005-10-29  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* If an mp3 or ogg file is loaded and then saved, display a

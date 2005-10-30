@@ -262,7 +262,8 @@ Document *document_new_with_chunk(Chunk *chunk, gchar *sourcename,
      return d;
 }
 
-gboolean document_save(Document *d, gchar *filename)
+gboolean document_save(Document *d, gchar *filename, gint type_id, 
+		       gboolean use_defs)
 {
      gboolean b;
      int i;
@@ -274,7 +275,7 @@ gboolean document_save(Document *d, gchar *filename)
 			     "file."), UM_OKCANCEL);
 	  if (i == MR_CANCEL) return TRUE;
      }
-     b = chunk_save(d->chunk,filename,dither_editing,d->bar);
+     b = chunk_save(d->chunk,filename,type_id,use_defs,dither_editing,d->bar);
      if (!b) {
 	  clear_history(d->history_pos);
 	  d->history_pos = NULL;

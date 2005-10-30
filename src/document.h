@@ -132,7 +132,8 @@ Document *document_new_with_chunk(Chunk *chunk, gchar *sourcename,
 
 void document_set_status_bar(Document *d, StatusBar *bar);
 
-gboolean document_save(Document *d, gchar *filename);
+gboolean document_save(Document *d, gchar *filename, gint type_id, 
+		       gboolean use_defs);
 
 
 

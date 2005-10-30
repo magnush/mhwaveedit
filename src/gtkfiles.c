@@ -336,7 +336,7 @@ static void get_filename_destroy(void)
 }
 
 gchar *get_filename(gchar *current_name, gchar *filemask, gchar *title_text,
-		    gboolean savemode)
+		    gboolean savemode, GtkWidget *custom_widget)
 {
      GtkFileSelection *f;
      GtkAllocation all;
@@ -345,6 +345,9 @@ gchar *get_filename(gchar *current_name, gchar *filemask, gchar *title_text,
      get_filename_result=NULL;
      get_filename_savemode = savemode;
      f=GTK_FILE_SELECTION(gtk_file_selection_new(title_text));
+     if (custom_widget != NULL)
+	  gtk_box_pack_end(GTK_BOX(GTK_FILE_SELECTION(f)->main_vbox),
+			   custom_widget, FALSE, FALSE, 0);
      c = inifile_get("fileGeometry",NULL);     
      if (c!=NULL && inifile_get_gboolean("useGeometry",FALSE) &&
 	 !parse_geom(c,&all)) {
@@ -464,7 +467,7 @@ static void response(GtkDialog *dialog, gint arg1, gpointer user_data)
 static gchar *get_filename_main(gchar *current_name, gchar *title_text, 
 				gboolean savemode, 
 				GtkFileChooserAction action, 
-				gchar *geom_setting)
+				gchar *geom_setting, GtkWidget *custom_widget)
 {
      GtkWidget *w;
      GtkFileChooser *fc;
@@ -480,6 +483,10 @@ static gchar *get_filename_main(gchar *current_name, gchar *title_text,
 				     savemode?GTK_STOCK_SAVE_AS:GTK_STOCK_OPEN,
 				     GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
 				     GTK_RESPONSE_CANCEL,NULL);
+     fc = GTK_FILE_CHOOSER(w);
+
+     if (custom_widget != NULL)
+	  gtk_file_chooser_set_extra_widget(fc, custom_widget);
      
      d = inifile_get(geom_setting,NULL);
      if (d!=NULL && !savemode && inifile_get_gboolean("useGeometry",FALSE) &&
@@ -490,7 +497,6 @@ static gchar *get_filename_main(gchar *current_name, gchar *title_text,
 	  gtk_window_set_position(GTK_WINDOW(w),GTK_WIN_POS_CENTER);
      gtk_window_set_modal(GTK_WINDOW(w),TRUE);
 
-     fc = GTK_FILE_CHOOSER(w);
      if (c != NULL) {
 	  if (c[0] == '/' &&
 	      (action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER || 
@@ -526,18 +532,19 @@ static gchar *get_filename_main(gchar *current_name, gchar *title_text,
 }
 
 gchar *get_filename(gchar *current_name, gchar *filemask, gchar *title_text,
-		    gboolean savemode)
+		    gboolean savemode, GtkWidget *custom_widget)
 {
      return get_filename_main(current_name,title_text,savemode,
 			      savemode?GTK_FILE_CHOOSER_ACTION_SAVE:
-			      GTK_FILE_CHOOSER_ACTION_OPEN,"fileGeometry");
+			      GTK_FILE_CHOOSER_ACTION_OPEN,"fileGeometry",
+			      custom_widget);
 }
 
 gchar *get_directory(gchar *current_name, gchar *title_text)
 {
      return get_filename_main(current_name,title_text,FALSE,
 			      GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-			      "dirGeometry");
+			      "dirGeometry",NULL);
 }
 
 #endif
