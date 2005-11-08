@@ -1,3 +1,9 @@
+2005-11-08  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/inifile.c (inifile_save): Fix segfault when settings file
+	failed to open.
+	(inifile_set): Handle value==NULL properly.
+
 2005-10-30  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/mainwindow.c (get_save_filename): Display file format combo

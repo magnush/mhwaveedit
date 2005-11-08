@@ -164,7 +164,7 @@ gboolean inifile_set(gchar *setting, gchar *value)
 
      b = g_hash_table_lookup_extended(settings,setting,&c,&d);
      if (!b && value == NULL) return FALSE;
-     if (b && !strcmp(d,value)) return FALSE;     
+     if (b && value != NULL && !strcmp(d,value)) return FALSE;     
 
      /* printf("key: '%s', from: '%s', to: '%s'\n",setting,b?d:"(none)",value);
       */
@@ -175,7 +175,8 @@ gboolean inifile_set(gchar *setting, gchar *value)
 	  g_free(d);
      }
 
-     g_hash_table_insert(settings,g_strdup(setting),g_strdup(value));
+     if (value != NULL)
+	  g_hash_table_insert(settings,g_strdup(setting),g_strdup(value));
      settings_changed = TRUE;
      return TRUE;
 }
@@ -217,6 +218,7 @@ void inifile_save(void)
 	  "# settings are saved.\n"
 	  "# Remove this file to restore default settings.\n"
 	  "\n";
+     if (f == NULL) return;
      if (e_fwrite(c,strlen(c),f)) return;
      g_hash_table_foreach(settings,(GHFunc)do_save_setting,f);
      e_fclose(f);
