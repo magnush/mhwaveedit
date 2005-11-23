@@ -1,3 +1,7 @@
+2005-11-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (get_save_filename): Forgot a -1.
+
 2005-11-08  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/inifile.c (inifile_save): Fix segfault when settings file

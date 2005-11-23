@@ -34,6 +34,7 @@
 #include "main.h"
 #include "filetypes.h"
 #include "tempfile.h"
+#include "combo.h"
 #include "gettext.h"
 
 #define MAX_REAL_SIZE inifile_get_guint32(INI_SETTING_REALMAX,INI_SETTING_REALMAX_DEFAULT)
@@ -86,6 +87,7 @@ static gboolean ogg_save(Chunk *chunk, gchar *filename, gpointer settings,
 			 int dither_mode, StatusBar *bar, gboolean *fatal);
 
 
+static gpointer mp3_get_settings(void);
 static Chunk *mp3_load(gchar *filename, int dither_mode, StatusBar *bar);
 static gboolean mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
 			 struct file_type *type,
@@ -137,6 +139,7 @@ static struct file_type *register_file_type
 
 static void setup_types(void)
 {
+     struct file_type *t;
 #if defined(HAVE_LIBSNDFILE)
      SF_FORMAT_INFO info;
      int major_count,i;
@@ -164,8 +167,11 @@ static void setup_types(void)
      if (program_exists("oggenc") || program_exists("oggdec"))
 	  register_file_type(_("Ogg Vorbis"),".ogg", TRUE, NULL, ogg_load, 
 			     ogg_save, 0);
-     if (program_exists("lame"))
-	    register_file_type("MP3",".mp3",TRUE,NULL,mp3_load,mp3_save,0);
+     if (program_exists("lame")) {
+	    t = register_file_type("MP3",".mp3",TRUE,NULL,mp3_load,mp3_save,0);
+	    t->get_settings = mp3_get_settings;
+	    t->free_settings = g_free;
+     }
      register_file_type(_("Raw PCM data"), ".raw", FALSE,NULL, raw_load, 
 			raw_save, 0);
 }
@@ -965,7 +971,214 @@ static gboolean ogg_save(Chunk *chunk, gchar *filename, gpointer settings,
      return FALSE;
 }
 
+static struct {
+     Combo *type_combo, *subtype_combo;
+     GtkEntry *arg_entry;
+     GtkToggleButton *set_default;
+     gboolean ok_flag, destroyed_flag;
+     GList *preset_list, *bitrate_list;
+} mp3_get_settings_data;
 
+static void set_flag(gboolean *flag) {
+     *flag = TRUE;
+}
+
+static void mp3_get_settings_type_changed(Combo *obj, gpointer user_data)
+{
+     int i;
+     i = combo_selected_index(obj);
+     gtk_widget_set_sensitive(GTK_WIDGET(mp3_get_settings_data.subtype_combo),
+			      (i<3));
+     gtk_widget_set_sensitive(GTK_WIDGET(mp3_get_settings_data.arg_entry),
+			      (i==3));
+     if (i == 0)
+	  combo_set_items(mp3_get_settings_data.subtype_combo, 
+			  mp3_get_settings_data.preset_list, 0);
+     else if (i < 3)
+	  combo_set_items(mp3_get_settings_data.subtype_combo,
+			  mp3_get_settings_data.bitrate_list, 5);
+     
+}
+
+static gpointer mp3_get_settings(void)
+{
+     gchar *type_strings[] = { "vbr_preset", "abr_preset", "cbr_preset", 
+			       "custom" };
+     gchar *type_names[] = { _("Variable bitrate (default)"),
+			     _("Average bitrate"),
+			     _("Constant bitrate"),
+			     _("Custom argument") };
+     gchar *bitrate_strings[] = { "80", "96", "112", "128", "160", "192", 
+				  "224", "256", "320" };
+     gchar *vbr_preset_strings[] = { "standard", "extreme", "insane" };
+     gchar *vbr_preset_names[] = { _("Standard (high quality)"), 
+				   _("Extreme (higher quality)"),
+				   _("Insane (highest possible quality)") };
+     
+     
+     int type; /* 0 = VBR preset, 1 = ABR preset, 2 = CBR preset, 3 = custom */
+     int subtype = 0;
+     gchar *custom_arg = NULL;
+
+     GList *l; 
+     GtkWidget *a,*b,*c,*d;
+
+     gchar *p;
+     int i,j;
+
+     /* Setup lists */
+     for (l=NULL, i=0; i<ARRAY_LENGTH(vbr_preset_names); i++)
+	  l = g_list_append(l, vbr_preset_names[i]);          
+     mp3_get_settings_data.preset_list = l;
+     for (l=NULL, i=0; i<ARRAY_LENGTH(bitrate_strings); i++) {
+	  p = g_strdup_printf(_("%s kbit/s"),bitrate_strings[i]);
+	  l = g_list_append(l,p);
+     }
+     mp3_get_settings_data.bitrate_list = l;
+
+     /* Get default settings */     
+     p = inifile_get("mp3_EncodingType",type_strings[0]);
+     for (i=0; i<ARRAY_LENGTH(type_strings); i++)
+	  if (!strcmp(p,type_strings[i])) break;    
+     if (i < ARRAY_LENGTH(type_strings)) type = i;
+     else type = 0;
+     p = inifile_get("mp3_EncodingArg","");
+     if (type == 0) {
+	  for (i=0; i<ARRAY_LENGTH(vbr_preset_strings); i++) 
+	       if (!strcmp(p,vbr_preset_strings[i])) break;
+	  if (i < ARRAY_LENGTH(vbr_preset_strings)) subtype = i;
+	  else subtype = 0;
+     } else if (type < 3) {
+	  for (i=0; i<ARRAY_LENGTH(bitrate_strings); i++)
+	       if (!strcmp(p,bitrate_strings[i])) break;
+	  if (i<ARRAY_LENGTH(bitrate_strings)) subtype = i;
+	  else subtype = 5;
+     } else {
+	  custom_arg = p;
+     }
+
+     /* Create the window */
+
+     a = gtk_window_new(GTK_WINDOW_DIALOG);
+     gtk_window_set_title(GTK_WINDOW(a),_("MP3 Preferences"));
+     gtk_window_set_modal(GTK_WINDOW(a),TRUE);
+     gtk_signal_connect_object(GTK_OBJECT(a),"destroy",
+			       GTK_SIGNAL_FUNC(set_flag),
+			       (GtkObject *)
+			       &(mp3_get_settings_data.destroyed_flag));
+     b = gtk_vbox_new(FALSE,6);
+     gtk_container_add(GTK_CONTAINER(a),b);
+     gtk_container_set_border_width(GTK_CONTAINER(b),6);
+     c = gtk_hbox_new(FALSE,6);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
+     d = gtk_label_new(_("Encoding type: "));
+     gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
+     for (l=NULL, i=0; i<ARRAY_LENGTH(type_names); i++)
+	  l = g_list_append(l,type_names[i]);     
+     d = combo_new();
+     mp3_get_settings_data.type_combo = COMBO(d);
+     combo_set_items(mp3_get_settings_data.type_combo, l, 0);
+     gtk_signal_connect(GTK_OBJECT(d),"selection_changed",
+			GTK_SIGNAL_FUNC(mp3_get_settings_type_changed),NULL);
+     gtk_box_pack_start(GTK_BOX(c),d,TRUE,TRUE,0);     
+     g_list_free(l);
+     c = gtk_hbox_new(FALSE,4);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
+     d = gtk_label_new(_("Quality: "));
+     gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
+     d = combo_new();
+     mp3_get_settings_data.subtype_combo = COMBO(d);
+     combo_set_items(mp3_get_settings_data.subtype_combo, 
+		     mp3_get_settings_data.preset_list, 0);
+     gtk_box_pack_start(GTK_BOX(c),d,TRUE,TRUE,0);
+     c = gtk_hbox_new(FALSE, 4);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
+     d = gtk_label_new(_("Custom argument: "));
+     gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
+     d = gtk_entry_new();
+     mp3_get_settings_data.arg_entry = GTK_ENTRY(d);
+     gtk_widget_set_sensitive(d,FALSE);
+     gtk_box_pack_start(GTK_BOX(c),d,TRUE,TRUE,0);
+     c = gtk_check_button_new_with_label(_("Use this setting by default"));
+     mp3_get_settings_data.set_default = GTK_TOGGLE_BUTTON(c);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
+     c = gtk_hbutton_box_new();
+     gtk_box_pack_end(GTK_BOX(b),c,FALSE,FALSE,0);
+     d = gtk_button_new_with_label(_("OK"));
+     gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
+			       GTK_SIGNAL_FUNC(set_flag),
+			       (GtkObject *)&(mp3_get_settings_data.ok_flag));
+     gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
+			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
+			       GTK_OBJECT(a));
+     gtk_container_add(GTK_CONTAINER(c),d);
+     d = gtk_button_new_with_label(_("Cancel"));
+     gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
+			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
+			       GTK_OBJECT(a));
+     gtk_container_add(GTK_CONTAINER(c),d);
+     c = gtk_hseparator_new();
+     gtk_box_pack_end(GTK_BOX(b),c,FALSE,FALSE,0);
+     gtk_widget_show_all(a);
+     
+     gtk_object_ref(GTK_OBJECT(mp3_get_settings_data.type_combo));
+     gtk_object_ref(GTK_OBJECT(mp3_get_settings_data.subtype_combo));
+     gtk_object_ref(GTK_OBJECT(mp3_get_settings_data.arg_entry));
+     gtk_object_ref(GTK_OBJECT(mp3_get_settings_data.set_default));
+
+     mp3_get_settings_data.destroyed_flag = FALSE;
+     mp3_get_settings_data.ok_flag = FALSE;
+
+     combo_set_selection(mp3_get_settings_data.type_combo, type);
+     if (type < 3)
+	  combo_set_selection(mp3_get_settings_data.subtype_combo, subtype);
+     else
+	  gtk_entry_set_text(mp3_get_settings_data.arg_entry, custom_arg);
+
+     while (!mp3_get_settings_data.destroyed_flag)
+	  mainloop(TRUE);
+
+     if (mp3_get_settings_data.ok_flag) {
+	  i = combo_selected_index(mp3_get_settings_data.type_combo);
+	  j = combo_selected_index(mp3_get_settings_data.subtype_combo);
+	  switch (i) {
+	  case 0: 
+	       p = g_strdup_printf("--preset %s",vbr_preset_strings[j]); 
+	       break;
+	  case 1: 
+	       p = g_strdup_printf("--preset %s",bitrate_strings[j]);
+	       break;
+	  case 2:
+	       p = g_strdup_printf("--preset cbr %s",bitrate_strings[j]);
+	       break;
+	  case 3:
+	       p=g_strdup(gtk_entry_get_text(mp3_get_settings_data.arg_entry));
+	       break;
+	  default:
+	       g_assert_not_reached();
+	  }
+	  if (gtk_toggle_button_get_active(mp3_get_settings_data.set_default)){
+	       inifile_set("mp3_EncodingType",type_strings[i]);
+	       if (i == 0)
+		    inifile_set("mp3_EncodingArg",vbr_preset_strings[j]);
+	       else if (i < 3)
+		    inifile_set("mp3_EncodingArg",bitrate_strings[j]);
+	       else
+		    inifile_set("mp3_EncodingArg",p);
+	  }	  
+     } else p = NULL;
+
+     gtk_object_unref(GTK_OBJECT(mp3_get_settings_data.type_combo));
+     gtk_object_unref(GTK_OBJECT(mp3_get_settings_data.subtype_combo));
+     gtk_object_unref(GTK_OBJECT(mp3_get_settings_data.arg_entry));
+     gtk_object_unref(GTK_OBJECT(mp3_get_settings_data.set_default));
+     
+     g_list_free(mp3_get_settings_data.preset_list);
+     g_list_foreach(mp3_get_settings_data.bitrate_list,(GFunc)g_free,NULL);
+     g_list_free(mp3_get_settings_data.bitrate_list);
+
+     return p;
+}
 
 static Chunk *mp3_load(gchar *filename, int dither_mode, StatusBar *bar)
 {
@@ -994,9 +1207,12 @@ static gboolean mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
      xunlink(filename);
      c = g_strdup_printf("OUTFILE=%s",filename);
      if (xputenv(c)) { g_free(c); return TRUE; }
+     c = g_strdup_printf("LAMEFLAGS=%s",(settings == NULL) ? 
+			 "--preset standard" : (gchar *)settings);
+     if (xputenv(c)) { g_free(c); return TRUE; }
      if (wav_regular_format(&(chunk->format)))
 	 b = pipe_dialog_send_chunk(chunk,
-				    "lame --silent --preset standard - "
+				    "lame --silent $LAMEFLAGS - "
 				    "\"$OUTFILE\"",TRUE,dither_mode,bar);
      else {
 	  memcpy(&fmt,&(chunk->format),sizeof(Dataformat));

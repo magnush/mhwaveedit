@@ -305,7 +305,7 @@ static gchar *get_save_filename(gchar *old_filename, gchar *title_text,
      }
 
      *use_defaults = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(usedef));
-     *type_id = combo_selected_index(COMBO(typesel));
+     *type_id = combo_selected_index(COMBO(typesel)) - 1;
 
      g_free(lsd);
      gtk_object_unref(GTK_OBJECT(typesel));
