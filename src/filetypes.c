@@ -332,7 +332,8 @@ gboolean chunk_save(Chunk *chunk, gchar *filename, int filetype,
 
      if (!use_default_settings) {
 	  if (ft->get_settings == NULL) {
-	       i = user_message("There are no settings for this file format.",
+	       i = user_message("There are no settings for this file format. "
+				"Proceeding with standard settings.",
 				UM_OKCANCEL);
 	       if (i == MR_CANCEL) return TRUE;
 	  } else {
