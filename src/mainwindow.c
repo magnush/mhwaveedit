@@ -2014,15 +2014,18 @@ static void mainwindow_value_changed(GtkAdjustment *adjustment,
 static void mainwindow_zoom_changed(GtkAdjustment *adjustment, 
 				    gpointer user_data)
 {
+     gboolean follow_cursor;
      float max_samp,min_samp,target_samp,current_samp;
      Mainwindow *w = MAINWINDOW(user_data);
 
+     /* puts("mainwindow_zoom_changed"); */
      if (setting_zoom_flag) return;
      current_samp = w->doc->viewend - w->doc->viewstart;
      min_samp = GTK_WIDGET(w->view)->allocation.width;
      max_samp = w->doc->chunk->length;
      target_samp = max_samp * pow(min_samp/max_samp,adjustment->value);
-     document_zoom(w->doc,current_samp/target_samp,(target_samp<current_samp));
+     follow_cursor = target_samp <= current_samp;
+     document_zoom(w->doc,current_samp/target_samp,(target_samp<=current_samp));
 }
 
 static void mainwindow_vertical_zoom_changed(GtkAdjustment *adjustment,

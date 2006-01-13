@@ -650,6 +650,7 @@ void document_set_view(Document *d, off_t viewstart, off_t viewend)
 {
      off_t o;
 
+     /* puts("document_set_view"); */
      if (viewstart > viewend) {
 	  o = viewstart;
 	  viewstart = viewend;
@@ -701,9 +702,10 @@ void document_set_selection(Document *d, off_t selstart, off_t selend)
 }
 
 void document_zoom(Document *d, gfloat zoom, gboolean followcursor)
-{
+{     
      off_t dist,newdist;
      off_t newstart,newend;
+     /* puts("document_zoom"); */
      dist = d->viewend - d->viewstart;
      newdist = (off_t) ((gfloat) dist / zoom);
      if (newdist >= d->chunk->length) {
@@ -711,16 +713,19 @@ void document_zoom(Document *d, gfloat zoom, gboolean followcursor)
 	  return;
      }
      if (newdist < 1) newdist = 1;
+     /* printf("dist: %d, newdist: %d\n",(int)dist,(int)newdist);
+	printf("d->cursorpos: %d, d->viewstart: %d, d->viewend: %d\n",
+	(int)d->cursorpos,(int)d->viewstart,(int)d->viewend); */
      if (followcursor && d->cursorpos >= d->viewstart && 
 	 d->cursorpos < d->viewend)
-	  newstart = d->cursorpos - dist/2;
+	  newstart = d->cursorpos - newdist/2;
      else
 	  newstart = d->viewstart + (dist - newdist)/2;
      if (newstart < 0) newstart = 0;
      newend = newstart + newdist;
      if (newend > d->chunk->length) {
 	  newend = d->chunk->length;
-	  newstart = newend - dist;
+	  newstart = newend - newdist;
      }
      document_set_view(d, newstart, newend);
 }
