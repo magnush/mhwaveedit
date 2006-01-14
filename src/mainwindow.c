@@ -231,6 +231,24 @@ static void update_desc(Mainwindow *w)
 			      
 }
 
+static void typesel_changed(Combo *obj, GtkWidget *user_data)
+{
+     int i;
+     gchar *c;
+     i = combo_selected_index(obj);
+     if (i == 0) {
+	  gtk_widget_set_sensitive(user_data,TRUE);
+     } else {
+	  c = fileformat_extension(i-1);
+	  get_filename_modify_extension(c);
+	  if (fileformat_has_options(i-1)) {
+	       gtk_widget_set_sensitive(user_data,TRUE);
+	  } else {
+	       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(user_data),TRUE);
+	       gtk_widget_set_sensitive(user_data,FALSE);
+	  }
+     }
+}
 
 static gchar *get_save_filename(gchar *old_filename, gchar *title_text, 
 				gint *type_id, gboolean *use_defaults)
@@ -272,6 +290,8 @@ static gchar *get_save_filename(gchar *old_filename, gchar *title_text,
 	  l = g_list_append(l,e);
      }
      combo_set_items(COMBO(typesel),l,0);
+     gtk_signal_connect(GTK_OBJECT(typesel),"selection-changed",
+			GTK_SIGNAL_FUNC(typesel_changed),usedef);
      g_list_foreach(l,(GFunc)g_free,NULL);
      g_list_free(l);
 

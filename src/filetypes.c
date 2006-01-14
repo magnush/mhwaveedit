@@ -198,6 +198,14 @@ gchar *fileformat_extension(guint fileformat)
      return NULL;
 }
 
+gboolean fileformat_has_options(guint fileformat)
+{
+     struct file_type *t;
+     t = g_list_nth_data(file_types, fileformat);
+     if (t) return ((t->get_settings) != NULL);
+     else return FALSE;
+}
+
 static Chunk *chunk_load_main(gchar *filename, int dither_mode, StatusBar *bar,
 			      struct file_type **format)
 {

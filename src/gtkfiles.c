@@ -300,6 +300,7 @@ static void cleanup_filename(gchar *fn)
 static gchar *get_filename_result;
 static gboolean get_filename_quitflag;
 static gboolean get_filename_savemode;
+static GtkFileSelection *get_filename_fs;
 
 static void get_filename_callback(GtkButton *button, gpointer user_data)
 {
@@ -335,6 +336,16 @@ static void get_filename_destroy(void)
      get_filename_quitflag = TRUE;
 }
 
+static gchar *get_filename_internal_get_name(void)
+{
+     return g_strdup(gtk_file_selection_get_filename(get_filename_fs));
+}
+
+static void get_filename_internal_set_name(gchar *new_name)
+{
+     gtk_file_selection_set_filename(get_filename_fs,new_name);
+}
+
 gchar *get_filename(gchar *current_name, gchar *filemask, gchar *title_text,
 		    gboolean savemode, GtkWidget *custom_widget)
 {
@@ -345,6 +356,7 @@ gchar *get_filename(gchar *current_name, gchar *filemask, gchar *title_text,
      get_filename_result=NULL;
      get_filename_savemode = savemode;
      f=GTK_FILE_SELECTION(gtk_file_selection_new(title_text));
+     get_filename_fs = f;
      if (custom_widget != NULL)
 	  gtk_box_pack_end(GTK_BOX(GTK_FILE_SELECTION(f)->main_vbox),
 			   custom_widget, FALSE, FALSE, 0);
@@ -442,6 +454,8 @@ gchar *get_directory(gchar *current_name, gchar *title_text)
 
 /* Use the GtkFileChooserDialog */
 
+static GtkFileChooser *get_filename_fc;
+
 struct response {
      gboolean savemode;
      gboolean responded;
@@ -464,6 +478,25 @@ static void response(GtkDialog *dialog, gint arg1, gpointer user_data)
      sr->r = arg1;
 }
 
+static gchar *get_filename_internal_get_name(void)
+{
+     gchar *c;
+     c = gtk_file_chooser_get_filename(get_filename_fc);
+     if (c == NULL) return g_strdup("");
+     return c;
+}
+
+static void get_filename_internal_set_name(gchar *new_name)
+{
+     gchar *c,*d;
+     c = g_filename_to_utf8(new_name,-1,NULL,NULL,NULL);
+     gtk_file_chooser_set_filename(get_filename_fc,c);
+     d = strrchr(c,'/');
+     if (d != NULL && d[1] != 0)
+	  gtk_file_chooser_set_current_name(get_filename_fc,d+1);
+     g_free(c);
+}
+
 static gchar *get_filename_main(gchar *current_name, gchar *title_text, 
 				gboolean savemode, 
 				GtkFileChooserAction action, 
@@ -484,7 +517,7 @@ static gchar *get_filename_main(gchar *current_name, gchar *title_text,
 				     GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
 				     GTK_RESPONSE_CANCEL,NULL);
      fc = GTK_FILE_CHOOSER(w);
-
+     get_filename_fc = fc;
      if (custom_widget != NULL)
 	  gtk_file_chooser_set_extra_widget(fc, custom_widget);
      
@@ -548,6 +581,23 @@ gchar *get_directory(gchar *current_name, gchar *title_text)
 }
 
 #endif
+
+void get_filename_modify_extension(gchar *new_extension)
+{
+     gchar *c,*d,*e,*f;
+     c = get_filename_internal_get_name();
+     d = strrchr(c,'.');
+     e = strrchr(c,'/');
+     if (d != NULL && (e == NULL || e < d))
+	  *d = 0;
+     if (c[0] != 0 && (e == NULL || e[1] != 0)) {
+	  printf("%s\n",c);
+	  f = g_strdup_printf("%s%s",c,new_extension);
+	  get_filename_internal_set_name(f);
+	  g_free(f);
+     }
+     g_free(c);
+}
 
 gboolean e_copydata(EFILE *from, EFILE *to, off_t bytes)
 {

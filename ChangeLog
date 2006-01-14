@@ -1,5 +1,11 @@
 2006-01-14  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/mainwindow.c (get_save_filename): Update extension in file
+	dialog when the type is changed. Also dim the default settings
+	checkbox when appropriate.
+
+	* src/gtkfiles.c: Support changing extension in the file dialog.
+
 	* src/document.c (document_zoom): Used old distance instead of new
 	in some calculations causing weird zooming behaviour.
 

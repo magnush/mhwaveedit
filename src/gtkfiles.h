@@ -88,6 +88,8 @@ gboolean file_is_directory(char *filename);
 
 gboolean program_exists(char *progname);
 
+/* Meant to be called from signal handlers when inside get_filename */
+void get_filename_modify_extension(gchar *new_extension);
 gchar *get_filename(gchar *current_name, gchar *filemask, gchar *title_text,
 		    gboolean savemode, GtkWidget *custom_widget);
 gchar *get_directory(gchar *current_name, gchar *title_text);

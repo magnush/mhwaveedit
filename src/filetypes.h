@@ -39,7 +39,7 @@ guint fileformat_count(void);
 /* Returns the name or default extension for a certain file format. */
 gchar *fileformat_name(guint fileformat);
 gchar *fileformat_extension(guint fileformat);
-
+gboolean fileformat_has_options(guint fileformat);
 
 /* Loads a document from a specified file. */
 
