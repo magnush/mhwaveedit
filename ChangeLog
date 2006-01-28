@@ -1,3 +1,7 @@
+2006-01-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.4.6.
+
 2006-01-14  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/mainwindow.c (get_save_filename): Update extension in file
