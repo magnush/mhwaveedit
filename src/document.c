@@ -228,8 +228,8 @@ static void document_set_filename(Document *d, gchar *filename,
 	  for (l=document_objects->list;l!=NULL;l=l->next) {
 	       x = DOCUMENT(l->data);
 	       if (x == d) continue;
-	       if (d->filename == NULL || strcmp(namepart(d->filename),
-						 namepart(x->filename)))
+	       if (d->filename == NULL || x->filename == NULL ||
+		   strcmp(namepart(d->filename),namepart(x->filename)))
 		    continue;
 	       if (x->title_serial > i) i=x->title_serial;
 	  }
