@@ -1,3 +1,8 @@
+2006-02-18  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_save): Don't warn when saving new
+	recordings.
+
 2006-02-06  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/document.c (document_set_filename): Null pointer bug fixed.

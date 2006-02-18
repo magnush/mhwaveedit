@@ -341,7 +341,7 @@ static gboolean mainwindow_save ( Mainwindow *w, gchar *filename )
      gboolean r;
      gboolean fmal = FALSE; /* TRUE if filename should be g_free:d */    
 
-     if (!document_can_undo(w->doc))
+     if (!document_can_undo(w->doc) && w->doc->filename != NULL)
 	  if (user_message(_("The file has not changed since last save. Press OK"
 			   " if you want to save it anyway?"),UM_OKCANCEL) == 
 	      MR_CANCEL) 
