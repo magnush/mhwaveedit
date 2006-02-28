@@ -1,3 +1,7 @@
+2006-02-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.4.7.
+
 2006-02-18  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/mainwindow.c (mainwindow_save): Don't warn when saving new
