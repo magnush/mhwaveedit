@@ -606,6 +606,7 @@ static void mainwindow_set_document(Mainwindow *w, Document *d,
      gtk_signal_connect(GTK_OBJECT(d),"state_changed",
 			GTK_SIGNAL_FUNC(mainwindow_state_changed),w);
      chunk_view_set_document ( w->view, d );
+     document_set_status_bar(d, w->statusbar);
      fix_title(w);
      update_desc(w);
      set_sensitive(w->need_chunk_items,TRUE);

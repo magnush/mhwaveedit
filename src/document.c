@@ -865,3 +865,8 @@ gboolean document_update_cursors(void)
 
      return TRUE;
 }
+
+void document_set_status_bar(Document *d, StatusBar *bar)
+{
+     d->bar = bar;
+}

@@ -1022,7 +1022,7 @@ Chunk *chunk_replace_part(Chunk *chunk, off_t start, off_t length, Chunk *new)
 	  g_assert(dp->length <= start);
 	  start -= dp->length;
      }
-     for (l=nl; l!=NULL; l=l->next)
+     for (l=nl; l!=NULL; l=l->next,i++)
 	  c->parts = g_list_insert(c->parts, l->data, i);
      g_list_free(nl);
      c->length += new->length;
