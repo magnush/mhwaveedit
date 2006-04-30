@@ -717,7 +717,7 @@ void document_zoom(Document *d, gfloat zoom, gboolean followcursor)
 	printf("d->cursorpos: %d, d->viewstart: %d, d->viewend: %d\n",
 	(int)d->cursorpos,(int)d->viewstart,(int)d->viewend); */
      if (followcursor && d->cursorpos >= d->viewstart && 
-	 d->cursorpos < d->viewend)
+	 d->cursorpos <= d->viewend)
 	  newstart = d->cursorpos - newdist/2;
      else
 	  newstart = d->viewstart + (dist - newdist)/2;

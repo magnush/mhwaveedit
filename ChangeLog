@@ -1,3 +1,15 @@
+2006-04-30  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/document.c (document_zoom): Small logic fix.
+
+2006-04-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_replace_part): Inserted new chunk's part list
+	in reversed order. 
+
+	* src/mainwindow.c (mainwindow_set_document): Change the
+	document's status bar.
+
 2006-02-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* Released version 1.4.7.
