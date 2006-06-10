@@ -1,5 +1,6 @@
 New features in version 1.4.8:
 
+  * Detect and reload files from crashed sessions on startup. 
   * Bug fixes
 
 New features in version 1.4.7:
