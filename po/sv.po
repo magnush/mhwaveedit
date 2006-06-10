@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mhWaveEdit 1.3.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-10 17:37+0200\n"
-"PO-Revision-Date: 2006-06-10 18:10+0100\n"
+"POT-Creation-Date: 2006-06-10 22:02+0200\n"
+"PO-Revision-Date: 2006-06-10 22:03+0100\n"
 "Last-Translator: Magnus Hjorth <magnus.hjorth@home.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -3098,7 +3098,7 @@ msgstr "Beräkna toppvolym"
 msgid "untitled #%d"
 msgstr "namnlös #%d"
 
-#: src/document.c:277
+#: src/document.c:278
 msgid "Loading and then saving files with 'lossy' formats (like mp3 and ogg) leads to a quality loss, also for the unmodified parts of the file."
 msgstr "Om man laddar in och sedan sparar filer i icke förlustfria format (som mp3 eller ogg) tappar man lite i kvalitet, även för de delar av filen som inte redigerats."
 
@@ -3116,41 +3116,51 @@ msgstr "%s: Fel filtyp"
 msgid "Could not create session file"
 msgstr "Kunde inte skapa sessionsfil"
 
-#: src/session.c:315
+#: src/session.c:274
+msgid ""
+"The files that belonged to the crashed session have been recovered. Any files that are not saved will be removed permanently.\n"
+"\n"
+"(This notice is only shown once)"
+msgstr ""
+"Filerna som tillhörde den kraschade sessionen har återställts. De filer som inte sparas kommer att raderas.\n"
+"\n"
+"(Detta meddelande visas bara en gång)"
+
+#: src/session.c:324
 msgid "Suspended"
 msgstr "Sparad"
 
-#: src/session.c:315
-#: src/session.c:316
+#: src/session.c:324
+#: src/session.c:325
 msgid "Crash"
 msgstr "Krasch"
 
-#: src/session.c:316
+#: src/session.c:325
 msgid "Left files"
 msgstr "Överblivna filer"
 
-#: src/session.c:325
+#: src/session.c:334
 #, c-format
 msgid "%s on %s(%d files, %ld bytes)"
 msgstr "%s, %s(%d filer, %ld byte)"
 
-#: src/session.c:342
+#: src/session.c:351
 msgid "Sessions"
 msgstr "Sessioner"
 
-#: src/session.c:352
+#: src/session.c:361
 msgid "Earlier sessions were found. Choose one to resume or start a new session."
 msgstr "Data från tidigare sessioner hittades. Välj en session att återställa eller påbörja en ny session."
 
-#: src/session.c:371
+#: src/session.c:380
 msgid "Resume selected"
 msgstr "Återställ"
 
-#: src/session.c:381
+#: src/session.c:390
 msgid "Start new session"
 msgstr "Ny session"
 
-#: src/session.c:387
+#: src/session.c:396
 msgid "Exit"
 msgstr "Avsluta"
 
