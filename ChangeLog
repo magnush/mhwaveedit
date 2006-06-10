@@ -1,5 +1,8 @@
 2006-06-10  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/sound-jack.c (mhjack_connect): If connection fails, append
+	the PID to the client name and try again.
+
 	* src/session.c (session_init): Use ~/.mhwaveedit directory for 
 	  sessions.
 	  (session_init): Fix segfault.

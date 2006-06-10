@@ -414,9 +414,15 @@ static void mhjack_autoconnect(jack_port_t **ports, int typeflag,
 
 static void mhjack_connect(gboolean silent)
 {
+     gchar *c;
      if (mhjack.myself == NULL) {
 	  /* Connect to the JACK server */
 	  mhjack.myself = jack_client_new(mhjack.client_name);
+	  if (mhjack.myself == NULL) {
+	       c = g_strdup_printf("%s%d",mhjack.client_name,getpid());
+	       mhjack.myself = jack_client_new(c);
+	       g_free(c);
+	  }
 	  if (mhjack.myself == NULL) {
 	       if (!silent)
 		    user_error(_("Could not connect to the JACK server."));

@@ -1,6 +1,7 @@
 New features in version 1.4.8:
 
-  * Detect and reload files from crashed sessions on startup. 
+  * Detect and reload files from crashed sessions on startup
+  * Allow multiple instances to use Jack at the same time
   * Bug fixes
 
 New features in version 1.4.7:
