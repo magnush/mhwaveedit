@@ -244,6 +244,11 @@ static void document_set_filename(Document *d, gchar *filename,
 	  list_object_notify(document_objects,d);     
 }
 
+void document_forget_filename(Document *d)
+{
+     document_set_filename(d,NULL,TRUE);
+}
+
 Document *document_new_with_chunk(Chunk *chunk, gchar *sourcename,
 				  StatusBar *bar)
 {

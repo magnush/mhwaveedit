@@ -233,6 +233,9 @@ off_t document_get_mark(Document *d, gchar *label);
 #define DOCUMENT_BAD_MARK ((off_t)-1)
 
 
+/* Clears the filename component */
+void document_forget_filename(Document *d);
+
 
 /* Removes all marks. */
 void document_clear_marks(Document *d);
