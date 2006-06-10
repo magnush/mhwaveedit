@@ -52,3 +52,4 @@ src/viewcache.c
 src/volumedialog.c
 src/vu_meter.c
 src/document.c
+src/session.c
