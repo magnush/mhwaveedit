@@ -80,6 +80,7 @@ void set_temp_directories(GList *dirs);
 gchar *get_temp_directory(guint num);
 
 gchar *get_temp_filename(guint dirnum);
+gchar *get_temp_filename_d(gchar *dir);
 
 
 /* Creates a wav file header for the specified sample format and size and 
