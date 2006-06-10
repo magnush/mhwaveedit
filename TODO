@@ -5,7 +5,6 @@ Things I would like to do sooner or later:
 
 UI stuff:
 
-* Check for old tempfiles on startup
 * Be able to do some stuff with only one channel (select, play, copy)
 * Display mouse pointer position.
 * Song split function
@@ -13,6 +12,7 @@ UI stuff:
   (windows, tempfiles, history, clipboard, marks, selections etc)
   could then be recalled another time.
   * Integrate with the LASH session handling system.
+  * Journalling so a session can be recovered fully after a crash. 
 * Do the I/O for the view with async IO or thread.
 * Logarithmic (dB) peak display. 
 * Amplitude scale
@@ -22,6 +22,8 @@ Editing:
 * Make the insert silence function click-free (keeping the same amplitude
   as the surrounding sound)
 * Shaped dithering
+* Copy/paste between mhwaveedit instances
+  * Copy/paste to and from other audio applications
 
 Playback/recording:
 
