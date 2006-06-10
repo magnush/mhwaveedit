@@ -1,5 +1,14 @@
 2006-06-10  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* Released version 1.4.8.
+
+	* src/session.c (session_resume): Don't add the tempfiles to the
+	recently opened files. 
+	(session_resume): Added a message after recovery. 
+
+	* src/document.c (document_forget_filename): Send the
+	state-changed signal so the window title is updated.
+
 	* src/sound-jack.c (mhjack_connect): If connection fails, append
 	the PID to the client name and try again.
 
