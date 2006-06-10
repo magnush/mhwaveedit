@@ -205,7 +205,7 @@ int main(int argc, char **argv)
 	  if (b && !strcmp(argv[i],"--")) b = FALSE;
 	  else if (b && !strcmp(argv[i],"--driver")) { i++; continue; }
 	  else if (b && argv[i][0] == '-') continue;
-	  gtk_widget_show(mainwindow_new_with_file(argv[i]));
+	  gtk_widget_show(mainwindow_new_with_file(argv[i],TRUE));
 	  wavefile_count++;
      }
      if (wavefile_count==0 && !session_dialog()) 

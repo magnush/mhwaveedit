@@ -2271,7 +2271,7 @@ GtkWidget *mainwindow_new(void)
      return GTK_WIDGET( gtk_type_new(mainwindow_get_type()) );
 }
 
-GtkWidget *mainwindow_new_with_file(char *filename)
+GtkWidget *mainwindow_new_with_file(char *filename, gboolean log)
 {
      Mainwindow *w;
      Document *doc;
@@ -2281,8 +2281,10 @@ GtkWidget *mainwindow_new_with_file(char *filename)
      doc = document_new_with_file(d, w->statusbar);
      if (doc != NULL) {
           mainwindow_set_document(w, doc, d);
-          inifile_set("lastOpenFile",d);
-	  recent_file(d);
+          if (log) {
+	       inifile_set("lastOpenFile",d);
+	       recent_file(d);
+	  }
      }
      g_free(d);
      return GTK_WIDGET(w);

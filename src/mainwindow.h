@@ -73,7 +73,7 @@ extern gboolean autoplay_mark_flag, varispeed_reset_flag;
 
 guint mainwindow_get_type(void);
 GtkWidget *mainwindow_new();
-GtkWidget *mainwindow_new_with_file(char *filename);
+GtkWidget *mainwindow_new_with_file(char *filename, gboolean log);
 
 gboolean mainwindow_update_caches(void);
 

@@ -250,7 +250,7 @@ static void session_resume(struct session *s)
 	      s->state == SESSION_OLD);
      for (l=s->datafiles; l!=NULL; l=l->next) {
 	  fn = (gchar *) l->data;
-	  w = MAINWINDOW(mainwindow_new_with_file(fn));
+	  w = MAINWINDOW(mainwindow_new_with_file(fn,FALSE));
 	  gtk_widget_show(GTK_WIDGET(w));
 	  if (w->doc == NULL) continue;
 	  /* This will rename the file to a regular tempfile name for this 
@@ -268,6 +268,15 @@ static void session_resume(struct session *s)
      g_list_free(s->datafiles);
      g_free(s->logfile);
      session_list = g_list_remove(session_list, s);
+
+     /* Popup notification */
+     if (!inifile_get_gboolean("crashMsgShown",FALSE)) {
+	  user_message(_("The files that belonged to the crashed session have been "
+			 "recovered. Any files that are not saved will be "
+			 "removed permanently.\n\n(This notice is only shown once)"), 
+		       UM_OK);
+	  inifile_set_gboolean("crashMsgShown",TRUE);
+     }
 }
 
 void session_quit(void)
