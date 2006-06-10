@@ -77,7 +77,7 @@ void session_init(int *argc, char **argv)
      GList *list,*list2;
      gboolean b;
      /* Check for session files on the system */
-     session_dir = inifile_get("sessionDir",get_temp_directory(0));
+     session_dir = g_strjoin(NULL,get_home_directory(),"/.mhwaveedit",NULL);
      d = opendir(session_dir);
      if (d == NULL) {
 	  user_perror(_("Error opening session directory"));

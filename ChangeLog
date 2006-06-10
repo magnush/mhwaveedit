@@ -1,5 +1,8 @@
 2006-06-10  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/session.c (session_init): Use ~/.mhwaveedit directory for 
+	  sessions.
+
 	* src/main.c (main): Launch sessions dialog if appropriate.
 
 	* src/session.c: New file. 
