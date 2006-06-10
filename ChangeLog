@@ -2,6 +2,7 @@
 
 	* src/session.c (session_init): Use ~/.mhwaveedit directory for 
 	  sessions.
+	  (session_init): Fix segfault.
 
 	* src/main.c (main): Launch sessions dialog if appropriate.
 

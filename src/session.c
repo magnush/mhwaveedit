@@ -202,6 +202,7 @@ void session_init(int *argc, char **argv)
 		    xunlink(s->logfile);
 	       list2 = list->prev;
 	       session_list = g_list_remove(session_list, s);
+	       if (session_list == NULL) break;
 	       if (list2 != NULL) list = list2; else list = session_list;
 	  }
      }
