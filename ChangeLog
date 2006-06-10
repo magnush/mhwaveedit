@@ -1,3 +1,9 @@
+2006-06-10  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.c (main): Launch sessions dialog if appropriate.
+
+	* src/session.c: New file. 
+
 2006-04-30  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/document.c (document_zoom): Small logic fix.

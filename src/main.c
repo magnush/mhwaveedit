@@ -43,6 +43,7 @@
 #include "statusbar.h"
 #include "ladspadialog.h"
 #include "gettext.h"
+#include "session.h"
 
 #ifdef HAVE_SCHED_H
 #include <sched.h>
@@ -164,6 +165,7 @@ int main(int argc, char **argv)
      /* Call init functions. */
      inifile_init();
      sound_init();
+     session_init(&argc,argv);
 
      /* Setup some global flags from inifile */
      status_bar_roll_cursor=inifile_get_gboolean("rollCursor",FALSE);
@@ -206,7 +208,7 @@ int main(int argc, char **argv)
 	  gtk_widget_show(mainwindow_new_with_file(argv[i]));
 	  wavefile_count++;
      }
-     if (wavefile_count==0) 
+     if (wavefile_count==0 && !session_dialog()) 
 	  gtk_widget_show(mainwindow_new());
 
      /* gtk_idle_add(idle_work,NULL); */
@@ -227,7 +229,8 @@ int main(int argc, char **argv)
      sound_quit();
      effect_browser_shutdown();
      inifile_quit();
-     g_assert ( chunk_alive_count() == 0 && datasource_count() == 0);
+     session_quit();
+     g_assert ( chunk_alive_count() == 0 && datasource_count() == 0);     
      return 0;
 }
 

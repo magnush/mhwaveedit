@@ -27,6 +27,7 @@
 #include "tempfile.h"
 #include "ringbuf.h"
 #include "inifile.h"
+#include "session.h"
 
 #define MAX_REAL_SIZE inifile_get_guint32(INI_SETTING_REALMAX,INI_SETTING_REALMAX_DEFAULT)
 
@@ -257,18 +258,23 @@ gchar *get_temp_directory(guint num)
 
 G_LOCK_DEFINE_STATIC(tempfile);
 
-gchar *get_temp_filename(guint dirnum)
+gchar *get_temp_filename_d(gchar *dir)
 {
-     gchar *c,*d;
+     gchar *c;
      /* printf("%s\n",d); */
      G_LOCK(tempfile);
-     d = get_temp_directory(dirnum);
-     if (d != NULL)
-	  c =  g_strdup_printf("%s/mhwaveedit-temp-%d-%04d",d,
-			       (int)getpid(),++tempfile_count);
+     if (dir != NULL)
+	  c =  g_strdup_printf("%s/mhwaveedit-temp-%d-%04d-%d",dir,
+			       (int)getpid(),++tempfile_count,
+			       session_get_id());
      else c = NULL;
      G_UNLOCK(tempfile);
      return c;
+}
+
+gchar *get_temp_filename(guint dirnum)
+{
+     return get_temp_filename_d(get_temp_directory(dirnum));
 }
 
 struct temp {
