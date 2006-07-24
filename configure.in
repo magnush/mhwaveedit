@@ -1,5 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT
+AC_PREREQ(2.59)
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/chunk.c])
 
@@ -39,20 +40,20 @@ AC_DEFINE([USE_DOUBLE_SAMPLES],[],
   [Use gdouble instead of gfloat as sample data type]) 
 MHW_DOUBLE="yes")
 
-AC_DEFUN(AC_WITHOUT_CHECK_CASTS,
+AC_DEFUN([AC_WITHOUT_CHECK_CASTS],[
 	if test "x$withval" = "xno" ; then 
 	AC_DEFINE(GTK_NO_CHECK_CASTS,[],[If defined, disables GTK+ type checking])
 	fi
-)
+])
 
 AC_ARG_WITH(check-casts,
 [  --without-check-casts   Do not type-check GTK casts.],AC_WITHOUT_CHECK_CASTS)
 
-AC_DEFUN(AC_ENABLE_WERROR,
+AC_DEFUN([AC_ENABLE_WERROR],[
 	if test "x$enableval" = "xyes" ; then
 	AM_CFLAGS="$AM_CFLAGS -Werror"
 	fi
-)
+])
 
 AC_ARG_ENABLE(werror,
 [  --enable-werror         Treat warnings as errors during compilation],
@@ -67,6 +68,9 @@ AC_DEFINE_UNQUOTED(DEFAULT_DRIVER,"${DEFAULT_DRIVER}",[Default sound driver])
                                 
 dnl Checks for programs.
 AC_PROG_CC
+AC_PROG_GCC_TRADITIONAL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -libs:
@@ -83,7 +87,7 @@ SKIP_SNDFILE_CHECK=no
 SNDFILE_LIBS=""
 SNDFILE_CFLAGS=""
 
-AC_DEFUN(AC_WITH_LIBSNDFILE,
+AC_DEFUN([AC_WITH_LIBSNDFILE],[
 	if test "x$withval" = "xno" ; then 
 		HAVE_SNDFILE=no
 	else
@@ -91,7 +95,7 @@ AC_DEFUN(AC_WITH_LIBSNDFILE,
 		SNDFILE_CFLAGS="-I$withval/include"
 		SKIP_SNDFILE_CHECK=yes
 	fi
-)
+])
 
 AC_ARG_WITH(libsndfile,[  --with-libsndfile=prefix Prefix where libsndfile is installed (optional)
   --without-libsndfile    Don't use libsndfile library],AC_WITH_LIBSNDFILE)
@@ -114,7 +118,7 @@ SKIP_LIBSAMPLERATE_CHECK=no
 LIBSAMPLERATE_LIBS=""
 LIBSAMPLERATE_CFLAGS=""
 
-AC_DEFUN(AC_WITH_LIBSAMPLERATE,
+AC_DEFUN([AC_WITH_LIBSAMPLERATE],[
 	if test "x$withval" = "xno" ; then 
 		HAVE_LIBSAMPLERATE=no
 	else
@@ -122,7 +126,7 @@ AC_DEFUN(AC_WITH_LIBSAMPLERATE,
 		LIBSAMPLERATE_CFLAGS="-I$withval/include"
 		SKIP_LIBSAMPLERATE_CHECK=yes
 	fi
-)
+])
 
 AC_ARG_WITH(libsamplerate,[  --with-libsamplerate=prefix Prefix where libsamplerate is installed (optional)
   --without-libsamplerate Don't use libsamplerate library],AC_WITH_LIBSAMPLERATE)
@@ -170,11 +174,11 @@ dnl Check for SDL
 SKIP_SDL_TEST=no
 MHW_HAVE_SDL=no
 
-AC_DEFUN(AC_WITHOUT_SDL,
+AC_DEFUN([AC_WITHOUT_SDL],[
 	if test "x$withval" = "xno" ; then
 		SKIP_SDL_TEST=yes
 	fi
-)
+])
 
 AC_ARG_WITH(sdl,[  --without-sdl           Don't use SDL library],AC_WITHOUT_SDL)
 
@@ -190,11 +194,11 @@ ALSALIB_LIBS=""
 
 AC_CHECK_LIB(asound,snd_pcm_open,HAVE_ALSALIB=yes,HAVE_ALSALIB=no)
 
-AC_DEFUN(AC_WITHOUT_ALSALIB,
+AC_DEFUN([AC_WITHOUT_ALSALIB],[
 	if test "x$withval" = "xno" ; then
 		HAVE_ALSALIB=no
 	fi
-)
+])
 
 AC_ARG_WITH(alsalib,[  --without-alsalib       Don't compile ALSA-lib driver],AC_WITHOUT_ALSALIB)
 
@@ -214,13 +218,16 @@ dnl Check for OSS
 
 HAVE_OSS=yes
 
-AC_DEFUN(AC_WITHOUT_OSS,
+AC_DEFUN([AC_WITHOUT_OSS],[
 	if test "x$withval" = "xno" ; then
 		HAVE_OSS=no
 	fi
-)
+])
 
 AC_ARG_WITH(oss,[  --without-oss           Don't compile OSS driver],AC_WITHOUT_OSS)
+
+dnl Check for libossaudio, needed for OSS on OpenBSD
+AC_CHECK_LIB(ossaudio,_oss_ioctl)
 
 mhw_found_one=no
 AC_CHECK_HEADERS(soundcard.h sys/soundcard.h,mhw_found_one=yes)
@@ -237,11 +244,11 @@ dnl Check for JACK
 MHW_HAVE_JACK=no
 MHW_SKIP_JACKTEST=no
 
-AC_DEFUN(AC_WITHOUT_JACK,
+AC_DEFUN([AC_WITHOUT_JACK],[
 	if test "x$withval" = "xno" ; then
 	   MHW_SKIP_JACKTEST='yes'
 	fi
-)
+])
 
 AC_ARG_WITH(jack,[  --without-jack          Don't compile JACK driver],AC_WITHOUT_JACK)
 
@@ -275,11 +282,11 @@ dnl Check for Sun audio
 
 MHW_HAVE_SUNAUDIO=yes
 
-AC_DEFUN(AC_WITHOUT_SUNAUDIO,
+AC_DEFUN([AC_WITHOUT_SUNAUDIO],[
 	if test "x$withval" = "xno" ; then
 		MHW_HAVE_SUNAUDIO=no
 	fi
-)
+])
 
 AC_ARG_WITH(sun,[  --without-sun           Don't compile Sun audio driver],AC_WITHOUT_SUNAUDIO)
 
@@ -298,11 +305,11 @@ MHW_HAVE_ARTSC=yes
 ARTSC_LIBS=""
 ARTSC_CFLAGS=""
 
-AC_DEFUN(AC_WITHOUT_ARTSC,
+AC_DEFUN([AC_WITHOUT_ARTSC],[
 	if test "x$withval" = "xno"; then
 	        MHW_HAVE_ARTSC=no
 	fi
-)
+])
 
 AC_ARG_WITH(arts, [  --without-arts          Don't compile aRts driver],AC_WITHOUT_ARTSC)
 
@@ -324,11 +331,11 @@ AC_SUBST(ARTSC_LIBS)
 
 dnl Check for GTK+
 
-AC_DEFUN(AC_DISABLE_GTK2,
+AC_DEFUN([AC_DISABLE_GTK2],[
 	if test "x$enableval" = "xno" ; then
 	DISABLE_GTK2='yes'
 	fi
-)
+])
 
 AC_ARG_ENABLE(gtk2, [  --disable-gtk2          Don't use GTK+ 2, use 1.2 instead],
 	      AC_DISABLE_GTK2, DISABLE_GTK2='no')
@@ -354,7 +361,7 @@ AC_CHECK_SIZEOF(off_t)
 
 dnl Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(sys/time.h time.h sys/ioctl.h sys/types.h unistd.h fcntl.h sched.h)
+AC_CHECK_HEADERS([sys/time.h time.h sys/ioctl.h sys/types.h unistd.h fcntl.h sched.h libintl.h locale.h])
 
 HAVE_LADSPA=yes
 AC_CHECK_HEADER(ladspa.h,,HAVE_LADSPA=no)
@@ -371,7 +378,13 @@ fi
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
+AC_TYPE_PID_T
+AC_TYPE_SIGNAL
 AC_HEADER_TIME
+AC_HEADER_DIRENT
+AC_HEADER_SYS_WAIT
+AC_C_CONST
+AC_C_VOLATILE
 
 dnl Check return type of unsetenv
 AC_MSG_CHECKING([whether unsetenv returns a value])
@@ -387,8 +400,14 @@ AC_MSG_RESULT([$HAVE_INT_UNSETENV])
 
 dnl Checks for library functions.
 AC_FUNC_MEMCMP
-AC_CHECK_FUNCS(gettimeofday mkdir strerror strtod strtol sched_yield ceill setlocale fseeko ftello lrint lrintf) 
+AC_CHECK_FUNCS([gettimeofday mkdir strerror strtod strtol sched_yield ceill setlocale fseeko ftello lrint lrintf dup2 memchr memmove memset pow putenv select sqrt strchr strrchr strstr strtoul]) 
+AC_FUNC_CLOSEDIR_VOID
+AC_FUNC_FORK
+AC_FUNC_SELECT_ARGTYPES
+AC_FUNC_STAT
+AC_FUNC_STRTOD
 
+dnl Write output
 AC_CONFIG_FILES([Makefile src/Makefile po/Makefile.in m4/Makefile ])
 AC_OUTPUT
 
