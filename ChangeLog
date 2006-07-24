@@ -1,3 +1,8 @@
+2006-07-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/filetypes.c (xunsetenv): Alternate implementation if
+	unsetenv returns void.
+
 2006-06-10  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* Released version 1.4.8.

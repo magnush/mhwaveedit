@@ -373,6 +373,18 @@ AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
 AC_HEADER_TIME
 
+dnl Check return type of unsetenv
+AC_MSG_CHECKING([whether unsetenv returns a value])
+HAVE_INT_UNSETENV=no
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
+#include <stdlib.h>
+],[int i; i = unsetenv("dummy"); return 0;])],HAVE_INT_UNSETENV=yes)
+if test "x$HAVE_INT_UNSETENV" = "xyes";
+then
+    AC_DEFINE(UNSETENV_RETVAL,[],[Defined if unsetenv returns an integer])    
+fi
+AC_MSG_RESULT([$HAVE_INT_UNSETENV])
+
 dnl Checks for library functions.
 AC_FUNC_MEMCMP
 AC_CHECK_FUNCS(gettimeofday mkdir strerror strtod strtol sched_yield ceill setlocale fseeko ftello lrint lrintf) 
