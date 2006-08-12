@@ -24,6 +24,7 @@ Editing:
 * Shaped dithering
 * Copy/paste between mhwaveedit instances
   * Copy/paste to and from other audio applications
+* Create and edit curves and use them for effect parameters.
 
 Playback/recording:
 
@@ -38,6 +39,8 @@ Playback/recording:
 * Place cursor exactly where we stopped on low-latency sound drivers.
 * Record a few seconds "ahead" so you can start recording a bit too
   late without missing anything.
+* Change the start/endpoint of a loop in real-time as the selection 
+  changes.
 
 File formats:
 
