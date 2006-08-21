@@ -1,3 +1,7 @@
+2006-08-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.4.9.
+
 2006-08-21  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/sound-oss.c (OSS_PCMFILE_DEFAULT): Use different default
