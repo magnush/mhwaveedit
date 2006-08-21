@@ -45,7 +45,13 @@
 #include "gettext.h"
 
 #define OSS_PCMFILE "OSSdevice"
+
+#ifdef __OpenBSD__
+#define OSS_PCMFILE_DEFAULT "/dev/audio"
+#else
 #define OSS_PCMFILE_DEFAULT "/dev/dsp"
+#endif
+
 #define OSS_NOSELECT "OSSAvoidSelect"
 #define OSS_NOSELECT_DEFAULT FALSE
 

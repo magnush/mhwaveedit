@@ -1,3 +1,8 @@
+2006-08-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/sound-oss.c (OSS_PCMFILE_DEFAULT): Use different default
+	device under OpenBSD
+
 2006-07-24  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/filetypes.c (xunsetenv): Alternate implementation if
