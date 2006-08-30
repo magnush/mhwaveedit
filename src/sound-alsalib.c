@@ -200,11 +200,14 @@ static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
 	       / format->samplebytes;     
 	  snd_pcm_hw_params_set_buffer_size_near(*handp,par,&uf);
      } else {
+	  /* Setting buffer size shouldn't be necessary 
+	   * (and uf hasn't been assigned at this point)
 	  i = snd_pcm_hw_params_set_buffer_size_max(*handp,par,&uf);
 	  if (i) {
 	       console_message("snd_pcm_hw_params_set_buffer_size_max");
 	       return TRUE;
 	  }
+	  */
 	  /* printf("Buffer size: %d\n",(int)uf); */
 	  alsa_data.overrun_count = 0;
      }
