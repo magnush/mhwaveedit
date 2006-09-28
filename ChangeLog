@@ -1,3 +1,9 @@
+2006-09-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (do_play): Set speed properly when having
+	multiple windows with different speeds. Also fixes speed
+	auto-reset not updating the speed slider.
+
 2006-08-30  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/sound-alsalib.c (alsa_set_format): Comment out a call that

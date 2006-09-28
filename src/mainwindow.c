@@ -447,13 +447,15 @@ static void mainwindow_toggle_mark(Mainwindow *w, gchar *label)
 
 static void do_play(Mainwindow *w, off_t start, off_t end, gboolean loop)
 {
-     gfloat s;
+     gboolean speed_reset = FALSE;
      if (varispeed_reset_flag && 
 	 !(player_playing() && playing_document == w->doc))
-	  s = 1.0;
-     else
-	  s = player_get_speed();
-     document_play(w->doc, start, end, loop, s);
+	  speed_reset = TRUE;
+     if (speed_reset) {
+	  document_stop(w->doc,FALSE);
+	  gtk_adjustment_set_value(w->speed_adj,-1.0);
+     }
+     document_play(w->doc, start, end, loop, -w->speed_adj->value);
 }
 
 
