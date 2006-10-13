@@ -1,3 +1,9 @@
+2006-10-13  Jacek M. Holeczek  <holeczek@us.edu.pl>
+
+	* src/filetypes.c (try_mplayer): Moved variable declaration to top. 
+
+	* src/dataformat.c (convert_array): Moved variable declaration to top.
+
 2006-09-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/mainwindow.c (do_play): Set speed properly when having

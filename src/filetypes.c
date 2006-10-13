@@ -1260,6 +1260,10 @@ static Chunk *try_mplayer(gchar *filename, int dither_mode, StatusBar *bar)
      gchar *c,*d;
      char *tempname;
      Chunk *x;
+     char *argv[] = { "sh", "-c", 
+		      "mplayer -quiet -noconsolecontrols "
+		      "-ao \"pcm:file=$OUTFILE\" -vc dummy -vo null "
+		      "\"$INFILE\"", NULL };
      if (!program_exists("mplayer")) return NULL;
      tempname = get_temp_filename(0);
      c = g_strdup_printf("OUTFILE=%s",tempname);
@@ -1272,10 +1276,6 @@ static Chunk *try_mplayer(gchar *filename, int dither_mode, StatusBar *bar)
 	  g_free(tempname);
 	  return NULL; 
      }
-     char *argv[] = { "sh", "-c", 
-		      "mplayer -quiet -noconsolecontrols "
-		      "-ao \"pcm:file=$OUTFILE\" -vc dummy -vo null "
-		      "\"$INFILE\"", NULL };
 
      x = run_decoder(filename,tempname,"sh",argv,dither_mode,bar);
 

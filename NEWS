@@ -1,3 +1,9 @@
+New features in version 1.4.10:
+  
+  * ALSA recording bug fixed.
+  * Varispeed slider bug fixed.
+  * Portability fixes
+
 New features in version 1.4.9:
 
   * Portability fixes

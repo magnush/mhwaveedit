@@ -349,6 +349,7 @@ void convert_array(void *indata, Dataformat *indata_format,
 		   guint count, int dither_mode)
 {     
      int i;
+     char *c;
      if (dataformat_samples_equal(indata_format,outdata_format)) {
 	  memcpy(outdata,indata,count*indata_format->samplesize);
      } else if (indata_format->type == DATAFORMAT_PCM) {
@@ -356,7 +357,6 @@ void convert_array(void *indata, Dataformat *indata_format,
 	       /* PCM -> PCM conversion */
 	       if (outdata_format->samplesize > indata_format->samplesize)
 		    dither_mode = DITHER_NONE;
-	       char *c;
 	       c = g_malloc(count * sizeof(sample_t));	       
 	       convert_array(indata,indata_format,c,&dataformat_sample_t,
 			     count,dither_mode);
