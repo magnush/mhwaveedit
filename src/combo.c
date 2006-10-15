@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, Magnus Hjorth
+ * Copyright (C) 2004 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -52,6 +52,24 @@ static void list_select_child(GtkList *list, GtkWidget *child,
      gtk_signal_emit(GTK_OBJECT(combo),combo_signals[CHANGED_SIGNAL]);
 }
 
+static gboolean list_motion_notify(GtkWidget *widget, GdkEventMotion *event,
+				   gpointer user_data)
+{
+     gint mx,my;
+     gint wx,wy,ww,wh;
+     
+     gdk_window_get_root_origin(widget->window,&wx,&wy);
+     gdk_window_get_size(widget->window,&ww,&wh);
+     mx = (gint) (event->x_root);
+     my = (gint) (event->y_root);
+
+     /*printf("mouse: <%d,%d>, window: <%d,%d>+<%d,%d>\n",mx,my,wx,wy,ww,wh);*/
+     if (mx < wx || mx > wx+ww || my < wy || my > wy+wh)
+	  gtk_signal_emit_stop_by_name(GTK_OBJECT(widget),
+				       "motion-notify-event");
+     return FALSE;
+}
+
 static void combo_init(GtkObject *obj)
 {
      GtkCombo *cbo = GTK_COMBO(obj);
@@ -59,6 +77,8 @@ static void combo_init(GtkObject *obj)
      gtk_editable_set_editable(GTK_EDITABLE(cbo->entry),FALSE);     
      gtk_signal_connect(GTK_OBJECT(cbo->list),"select_child",list_select_child,
 			obj);
+     gtk_signal_connect(GTK_OBJECT(cbo->list),"motion-notify-event",
+			GTK_SIGNAL_FUNC(list_motion_notify),obj);
 }
 
 void combo_set_items(Combo *combo, GList *item_strings, int default_index)
