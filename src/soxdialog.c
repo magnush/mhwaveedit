@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2003 2004 2005 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -78,16 +78,17 @@ static gchar *samplesize_switch[] = { NULL,"-b","-w",NULL,"-l" };
 
 #define COMPAND_LINES 6
 
-void sox_dialog_format_string(gchar *buf, guint bufsize, guint samplerate,
-			      gboolean sign, guint samplesize, guint channels)
+void sox_dialog_format_string(gchar *buf, guint bufsize, Dataformat *fmt)
 {
-     g_snprintf(buf,bufsize,"-t raw -r %d %s %s -c %d",samplerate,
-		sign?"-s":"-u",samplesize_switch[samplesize],channels);
-		
+     g_assert(fmt->type == DATAFORMAT_PCM && fmt->samplesize != 3);
+
+     g_snprintf(buf,bufsize,"-t raw -r %d %s %s -c %d",fmt->samplerate,
+		fmt->sign?"-s":"-u",samplesize_switch[fmt->samplesize],
+		fmt->channels);
 }
 
-static Chunk *sox_dialog_apply_proc(Chunk *chunk, StatusBar *bar, 
-				    gpointer user_data)
+static Chunk *sox_dialog_apply_proc_main(Chunk *chunk, StatusBar *bar, 
+					 gpointer user_data)
 {
      SoxDialog *sd = SOX_DIALOG(user_data);
      EffectDialog *ed = &(sd->ed);
@@ -99,11 +100,9 @@ static Chunk *sox_dialog_apply_proc(Chunk *chunk, StatusBar *bar,
      gint idx;
      gboolean b;
 
-     sox_dialog_format_string(fmt_buf,sizeof(fmt_buf),chunk->format.samplerate,
-			      chunk->format.sign,chunk->format.samplesize,
-			      chunk->format.channels);
+     sox_dialog_format_string(fmt_buf,sizeof(fmt_buf),&(chunk->format));
      g_snprintf(cmd_buf,sizeof(cmd_buf),"sox %s - %s - ",fmt_buf,fmt_buf);
-		
+     
      c=strchr(cmd_buf,0);     
      if (!strcmp(ed->effect_name,"echo") || 
 	 !strcmp(ed->effect_name,"echos") ||
@@ -235,18 +234,38 @@ static Chunk *sox_dialog_apply_proc(Chunk *chunk, StatusBar *bar,
      return pipe_dialog_pipe_chunk(chunk,cmd_buf,FALSE,dither_editing,bar);
 }
 
+static Chunk *sox_dialog_apply_proc(Chunk *chunk, StatusBar *bar, 
+				    gpointer user_data)
+{
+     Chunk *c,*d,*r;
+     Dataformat stype = { DATAFORMAT_PCM, 44100, 4, 1, 4, TRUE, IS_BIGENDIAN };
+     if ((chunk->format.type == DATAFORMAT_FLOAT) || 
+	 (chunk->format.type == DATAFORMAT_PCM && 
+	  chunk->format.samplesize == 3)) {
+	  c = chunk_convert_sampletype(chunk,&stype);
+	  d = sox_dialog_apply_proc_main(c,bar,user_data);
+	  gtk_object_sink(GTK_OBJECT(c));
+	  r = chunk_convert_sampletype(d,&(chunk->format));
+	  gtk_object_sink(GTK_OBJECT(d));
+	  return r;
+     } else
+	  return sox_dialog_apply_proc_main(chunk,bar,user_data);
+}
+
 static gboolean sox_dialog_apply(EffectDialog *ed)
 {
      SoxDialog *sd = SOX_DIALOG(ed);
      Document *d = EFFECT_BROWSER(ed->eb)->dl->selected;
-     Chunk *chunk = d->chunk;
+     /* Chunk *chunk = d->chunk; */
      guint i,j;
+     /*
      if (chunk->format.samplesize != 1 &&
 	 chunk->format.samplesize != 2 &&
 	 chunk->format.samplesize != 4) {
 	  user_info(_("SoX only supports 8, 16 and 32-bit sample sizes"));
 	  return TRUE;
      }
+     */
      if ((sd->fb1!=NULL && floatbox_check(sd->fb1)) ||
 	 (sd->fb2!=NULL && floatbox_check(sd->fb2)) || 
 	 (sd->fb3!=NULL && floatbox_check(sd->fb3)) || 

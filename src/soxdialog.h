@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 2004, Magnus Hjorth
+ * Copyright (C) 2003 2004 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -49,7 +49,6 @@ typedef struct {
 GtkType sox_dialog_get_type(void);
 void sox_dialog_register(void);
 gchar *sox_dialog_first_effect(void);
-void sox_dialog_format_string(gchar *buf, guint bufsize, guint samplerate,
-			      gboolean sign, guint samplesize, guint channels);
+void sox_dialog_format_string(gchar *buf, guint bufsize, Dataformat *fmt);
 
 #endif
