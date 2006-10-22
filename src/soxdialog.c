@@ -686,27 +686,37 @@ GtkType sox_dialog_get_type(void)
 
 gboolean sox_dialog_register_main(void)
 {
-     int fd[2],i,lb_pos=0;
+     int fd[2],fd2[2],i,j,lb_pos=0;
      pid_t p;
      gchar *c,*d,**s,**sn;
-     gchar linebuf[1024];
+     gchar linebuf[4096];
      gboolean *map;
      /* Run the command 'sox -h' and try to see which effects it
       * supports. */
      i = pipe(fd);
-     if (i == -1) {
+     j = pipe(fd2);
+     if (i == -1 || j == -1) {
 	  console_perror(_("Error creating pipe"));
+	  if (i == 0) { close(fd[0]); close(fd[1]); }
+	  if (j == 0) { close(fd2[0]); close(fd2[1]); }
 	  return TRUE;
      }
      p = fork();
      if (p == -1) {
 	  console_perror(_("Couldn't fork"));
+	  close(fd[0]);
+	  close(fd[1]);
+	  close(fd2[0]);
+	  close(fd2[1]);
 	  return TRUE;
      }
      if (p == 0) {
-	  /* Child process - run 'sox -h' and catch stderr output */
-	  close_all_files_except(&(fd[1]),1);
-	  if (dup2(fd[1],2)==-1 || execlp("sox","sox","-h",NULL)==-1)
+	  /* Child process - run 'sox -h' and catch stdout/stderr output */
+	  /* Put stdout descriptor in fd[0] */
+	  fd[0] = fd2[1];
+	  close_all_files_except(fd,2);
+	  if (dup2(fd[0],1)==-1 || dup2(fd[1],2)==-1 || 
+	      execlp("sox","sox","-h",NULL)==-1)
 	       
 	       printf(_("Error running 'sox -h': %s\n"),strerror(errno));
 	  else 
@@ -715,9 +725,14 @@ gboolean sox_dialog_register_main(void)
      } else {
 	  /* Parent process - read data */
 	  close(fd[1]);
-	  while (lb_pos < sizeof(linebuf)-1) {
-	       i = read(fd[0],linebuf+lb_pos,sizeof(linebuf)-lb_pos-1);
-	       if (i == 0) break;
+	  close(fd2[1]);
+	  /* Put stdout descriptor in fd array */
+	  fd[1] = fd2[0];
+	  /* Read input */
+	  j = 0;
+	  while (lb_pos < sizeof(linebuf)-1 && j<2) {
+	       i = read(fd[j],linebuf+lb_pos,sizeof(linebuf)-lb_pos-1);
+	       if (i == 0) j++; /* Read from other descriptor */
 	       if (i < 0) {
 		    if (errno == EINTR) continue;
 		    console_perror(_("Error reading sox output"));
@@ -731,10 +746,16 @@ gboolean sox_dialog_register_main(void)
 	  /* Scan for available effects */
 	  c = strstr(linebuf,"effect: ");
 	  if (c == NULL) {
-	       console_message(_("Unable to detect supported SoX effects"));
-	       return TRUE;
-	  }
-	  c += 8;
+	       c = strstr(linebuf,"effects: ");
+	       if (c == NULL) {
+		    console_message(_("Unable to detect supported "
+				      "SoX effects"));
+		    return TRUE;
+	       } else
+		    c += 9;
+	       
+	  } else
+	       c += 8;
 	  d = strchr(c,'\n');
 	  if (d) *d=0;
 	  for (d=strtok(c," "); d!=NULL; d=strtok(NULL," ")) {

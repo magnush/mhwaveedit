@@ -1,3 +1,9 @@
+2006-10-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/soxdialog.c (sox_dialog_apply): Handle floating-point files
+	and 24-bit PCM files by autoconverting into 32-bit PCM.
+	(sox_dialog_register_main): Support newer versions of SoX. 
+
 2006-10-15  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/combo.c: Add a hack to the GTK 1 version, to avoid changing
