@@ -320,11 +320,17 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
      gboolean writing=TRUE;
      gboolean send_header = sendwav;
      off_t ui,read_bytes=0;
-     gchar *c=NULL;
+     gchar *inbuf=NULL,*outbuf,*c;
      ChunkHandle *ch=NULL;
      TempFile ct=0;
      fd_set rset,wset;
      gpointer pipehandle;
+
+     /*
+     puts("---");
+     puts(command);
+     puts("///");
+     */
      
      if (sent_all) *sent_all = FALSE;
 
@@ -345,8 +351,9 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
 	       return NULL;
 	  }
      }
-     status_bar_begin_progress(bar,ch->length,NULL);
-     c = g_malloc(BZ);
+     status_bar_begin_progress(bar,ch->size,NULL);     
+     if (do_read) inbuf = g_malloc(BZ);
+     outbuf = g_malloc(BZ);
      ui = 0;
      bs = bp = 0;
      /* We want to handle broken pipes ourselves. */
@@ -374,11 +381,11 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
 	  /* Read data from standard output */
 	  if (FD_ISSET(fds[1],&rset)) {
 	       /* printf("Reading from stdin..\n"); */
-	       i = read(fds[1],c,BZ);
+	       i = read(fds[1],inbuf,BZ);
 	       /* printf("Read finished\n"); */
 	       if (i == -1) { if (errno != EINTR) goto errno_error_exit; }
 	       else if (i == 0) { break; }
-	       else { if (tempfile_write(ct,c,i)) goto error_exit; }
+	       else { if (tempfile_write(ct,inbuf,i)) goto error_exit; }
 	       read_bytes += i;
 	       continue;
 	  }
@@ -394,7 +401,8 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
 	       if (bs == bp) {
 		    if (send_header) {
 			 /* FIXME: Broken for float on bigendian machines */
-			 bs = get_wav_header(&(chunk->format),chunk->size,c);
+			 bs = get_wav_header(&(chunk->format),chunk->size,
+					     outbuf);
 			 bp = 0;
 			 send_header = FALSE;
 		    } else {
@@ -403,7 +411,7 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
 			      pipe_dialog_close_input(pipehandle);
 			      continue; 
 			 }
-			 i = chunk_read_array(ch,ui,BZ,c, dither_mode);
+			 i = chunk_read_array(ch,ui,BZ,outbuf, dither_mode);
 			 if (!i) goto error_exit;
 			 bs = i;
 			 bp = 0;
@@ -414,7 +422,8 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
 	       }
 	       /* printf("Writing data...\n"); */
 	       /* Write data */
-	       i = write(fds[0],c+bp,MIN(bs-bp,PIPE_BUF));
+	       i = write(fds[0],outbuf+bp,MIN(bs-bp,PIPE_BUF));
+	       /* i = write(fds[0],outbuf+bp,1); */
 	       /* printf("Finished writing.\n"); */
 	       if (i == -1) {
 		    /* Broken pipe - stop writing */
@@ -427,7 +436,7 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
 		    goto errno_error_exit;
 	       } 
 	       bp += i;
-	       if (status_bar_progress(bar, i / chunk->format.samplebytes)) 
+	       if (status_bar_progress(bar, i)) 
 		    goto error_exit;
 	  }
      }
@@ -436,7 +445,8 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
      while (pipe_dialog_error_check(pipehandle)) { }
      
      /* Finish */
-     g_free(c);
+     g_free(inbuf);
+     g_free(outbuf);
      chunk_close(ch);
      pipe_dialog_close(pipehandle);
      status_bar_end_progress(bar);
@@ -452,11 +462,12 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
      return do_read ? tempfile_finished(ct) : NULL;
 
 errno_error_exit:
-     g_free(c);
      c = g_strdup_printf(_("Error: %s"),strerror(errno));
      user_error(c);
-error_exit:
      g_free(c);
+error_exit:
+     g_free(inbuf);
+     g_free(outbuf);
      chunk_close(ch);
      if (do_read) tempfile_abort(ct);
      pipe_dialog_close(pipehandle);

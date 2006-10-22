@@ -2,6 +2,8 @@ New features in version 1.4.10:
   
   * ALSA recording bug fixed.
   * Varispeed slider bug fixed.
+  * SoX filtering bugs fixed.
+  * Support for newer SoX versions.
   * Portability fixes
 
 New features in version 1.4.9:

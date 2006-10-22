@@ -1,5 +1,9 @@
 2006-10-22  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/pipedialog.c (pipe_dialog_pipe_chunk_main): Progress bar fix.
+	(pipe_dialog_pipe_chunk_main): Use different buffers for input and
+	output.
+
 	* src/soxdialog.c (sox_dialog_apply): Handle floating-point files
 	and 24-bit PCM files by autoconverting into 32-bit PCM.
 	(sox_dialog_register_main): Support newer versions of SoX. 
