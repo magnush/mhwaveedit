@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -1067,7 +1067,7 @@ static gboolean chunk_peak_level_proc(void *sample, gint sample_size,
      s = (sample_t)fabs((double)(*((sample_t *)sample)));
      if (s > chunk_peak_level_max) {
 	  chunk_peak_level_max = s;
-	  if (s == 1.0) return TRUE;
+	  if (s == 1.0 && chunk->format.type == DATAFORMAT_PCM) return TRUE;
      }
      return FALSE;
 }

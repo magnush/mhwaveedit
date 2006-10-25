@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -49,9 +49,9 @@ void user_warning(char *msg);
 extern int user_message_flag;
 
 gchar *user_input(gchar *label, gchar *title, gchar *defvalue, 
-		  gboolean (*validator)(gchar *c));
+		  gboolean (*validator)(gchar *c), GtkWindow *below);
 gboolean user_input_float(gchar *label, gchar *title, gfloat defvalue, 
-			  gfloat *result);
+			  GtkWindow *below, gfloat *result);
 
 gint user_choice(gchar **choices, guint def, gchar *windowtitle, 
 		 gchar *windowtext, gboolean allow_cancel);

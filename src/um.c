@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -303,11 +303,16 @@ static void user_input_ok(GtkButton *button, gpointer user_data)
 }
 
 gchar *user_input(gchar *label, gchar *title, gchar *defvalue, 
-		  gboolean (*validator)(gchar *c))
+		  gboolean (*validator)(gchar *c), GtkWindow *below)
 {
      GtkWidget *a,*b,*c,*d,*ent;
      struct user_input_data uid;
      a = gtk_window_new(GTK_WINDOW_DIALOG);
+     if (below != NULL) {
+	  gtk_window_set_transient_for(GTK_WINDOW(a),below);
+	  gtk_window_set_position(GTK_WINDOW(a),GTK_WIN_POS_CENTER_ON_PARENT);
+     } else
+	  gtk_window_set_position(GTK_WINDOW(a),GTK_WIN_POS_CENTER);
      gtk_window_set_title(GTK_WINDOW(a),title?title:_("Input"));
      gtk_window_set_modal(GTK_WINDOW(a),TRUE);
      gtk_container_set_border_width(GTK_CONTAINER(a),5);
@@ -315,39 +320,31 @@ gchar *user_input(gchar *label, gchar *title, gchar *defvalue,
 			GTK_SIGNAL_FUNC(user_input_destroy),NULL);
      b = gtk_vbox_new(FALSE,3);
      gtk_container_add(GTK_CONTAINER(a),b);
-     gtk_widget_show(b);
      c = gtk_hbox_new(FALSE,2);
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
-     gtk_widget_show(c);
      if (label) {
 	  d = gtk_label_new(label);
 	  gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
-	  gtk_widget_show(d);
      }
      ent = gtk_entry_new();
      gtk_entry_set_text(GTK_ENTRY(ent),defvalue);
      gtk_box_pack_start(GTK_BOX(b),ent,FALSE,FALSE,0);
-     gtk_widget_show(ent);
      c = gtk_hseparator_new();
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,3);
+     c = gtk_hbutton_box_new();
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
-     gtk_widget_show(c);
-     c = gtk_hbox_new(FALSE,2);
-     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
-     gtk_widget_show(c);
      d = gtk_button_new_with_label(_("OK"));
      gtk_signal_connect(GTK_OBJECT(d),"clicked",
 			GTK_SIGNAL_FUNC(user_input_ok),&uid);
-     gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
-     gtk_widget_show(d);
+     gtk_container_add(GTK_CONTAINER(c),d);
      d = gtk_button_new_with_label(_("Cancel"));
      gtk_signal_connect(GTK_OBJECT(d),"clicked",GTK_SIGNAL_FUNC(modal_callback),
 			(gpointer)MR_CANCEL);
      gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
 			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
 			       GTK_OBJECT(a));
-     gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
-     gtk_widget_show(d);
-     gtk_widget_show(a);
+     gtk_container_add(GTK_CONTAINER(c),d);
+     gtk_widget_show_all(a);
      uid.window = a;
      uid.validator = validator;
      uid.entry = ent;
@@ -367,11 +364,11 @@ static gboolean user_input_float_validator(gchar *c)
 }
 
 gboolean user_input_float(gchar *label, gchar *title, gfloat defvalue, 
-			  gfloat *result)
+			  GtkWindow *below, gfloat *result)
 {
      gchar *c,d[128],*e;
      g_snprintf(d,sizeof(d),"%f",defvalue);
-     c = user_input(label,title,d,user_input_float_validator);
+     c = user_input(label,title,d,user_input_float_validator,below);
      if (!c) return TRUE;
      *result = (gfloat)strtod(c,&e);
      g_assert(*e == 0);

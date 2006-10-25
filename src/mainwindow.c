@@ -1401,7 +1401,8 @@ static void edit_insertsilence(GtkMenuItem *menuitem, gpointer user_data)
      gfloat f;
      off_t cp;
      Chunk *c,*nc;
-     if (user_input_float(_("Seconds of silence: "),_("Insert Silence"),0.0,&f)) 
+     if (user_input_float(_("Seconds of silence: "),_("Insert Silence"),0.0,
+			  GTK_WINDOW(w),&f)) 
 	  return;
      if (f<=0.0) return;
      c = chunk_new_silent(&(w->doc->chunk->format),f);
@@ -1430,10 +1431,11 @@ static Chunk *effects_normalize_proc(Chunk *chunk, StatusBar *bar,
 {
      sample_t s;
      Chunk *c;
+     gfloat *lp = (gfloat *)user_data;
+     sample_t level = (lp == NULL) ? 1.0 : *lp;
      s = chunk_peak_level(chunk,bar);
-     if (s <= 0.0) return NULL;
-     c = chunk_amplify(chunk,maximum_float_value(&(chunk->format))/s,
-		       dither_editing,bar);
+     if ((s < 0.0 && level >= 1.0) || s == 0.0) return NULL;
+     c = chunk_amplify(chunk,level/s,dither_editing,bar);
      return c;
 }
 
@@ -1442,6 +1444,21 @@ static void effects_normalize(GtkMenuItem *menuitem, gpointer user_data)
      document_apply_cb(MAINWINDOW(user_data)->doc,effects_normalize_proc,
 		       TRUE,NULL);
 }
+
+static void effects_normalizeto(GtkMenuItem *menuitem, gpointer user_data)
+{
+     gboolean b;
+     gfloat val;
+     val = inifile_get_gfloat("lastNormLevel",1.0);
+     b = user_input_float(_("Level: "),_("Normalize to..."),val,
+			  GTK_WINDOW(user_data),&val);
+     if (b) return;
+     b = document_apply_cb(MAINWINDOW(user_data)->doc,effects_normalize_proc,
+			   TRUE,&val);
+     if (b) return;
+     inifile_set_gfloat("lastNormLevel",val);    
+}
+
 
 static void effects_pipe(GtkMenuItem *menuitem, gpointer user_data)
 {
@@ -1598,6 +1615,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/Effects/Fade _in"),NULL,       effects_fadein, 0, NULL          },
 	  { N_("/Effects/Fade o_ut"),NULL,      effects_fadeout,0, NULL          },
 	  { N_("/Effects/_Normalize"),"<control>N",effects_normalize,0, NULL     },
+	  { N_("/Effects/Normali_ze to..."),NULL,effects_normalizeto,0,NULL },
 	  { N_("/Effects/_Volume adjust (fade)..."),NULL,effects_volume,0,NULL   },
 	  { N_("/Effects/sep1"),  NULL,         NULL,           0, "<Separator>" },
 	  { N_("/Effects/Convert sample_rate..."),NULL,effects_samplerate,0,NULL },

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -40,6 +40,7 @@
 #if GTK_MAJOR_VERSION == 1
 #define GTK_CLASS_TYPE(klass) (((GtkObjectClass *)klass)->type)
 #define gtk_style_get_font(style) ((style)->font)
+#define GTK_WIN_POS_CENTER_ON_PARENT GTK_WIN_POS_CENTER
 #else
 #define GTK_WINDOW_DIALOG GTK_WINDOW_TOPLEVEL
 #define gtk_object_class_add_signals(x,y,z)
