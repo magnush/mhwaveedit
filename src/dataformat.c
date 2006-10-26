@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -380,6 +380,7 @@ void convert_array(void *indata, Dataformat *indata_format,
 	       (outdata_format->bigendian?2:0) + 
 	       (indata_format->samplesize/sizeof(double));
 	  g_assert(i < ARRAY_LENGTH(fp_pcm_functions));
+	  g_assert(dither_mode != DITHER_UNSPEC);
 	  if (dither_mode != DITHER_NONE) {
 	       if (indata_format->samplesize == sizeof(float))
 		    dither_convert_float(indata,outdata,count,

@@ -1,3 +1,7 @@
+2006-10-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/dataformat.c: Add unspecified dither constant. 
+
 2006-10-25  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/chunk.c (chunk_peak_level_proc): Only quit prematurely for

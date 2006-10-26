@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -90,6 +90,10 @@ typedef gfloat sample_t;
 #define DITHER_NONE       0
 #define DITHER_TRIANGULAR 1
 #define DITHER_MAX        1
+/* This constant can be used to indicate that dithering should not
+ * be necessary. If this is given when an FP->PCM conversion is done,
+ * the program will halt. */
+#define DITHER_UNSPEC    -1
 
 /* These convert one or many samples between pcm formats and sample_t 
  * NOTE: These convert SINGLE-CHANNEL samples so you have to multiply the
