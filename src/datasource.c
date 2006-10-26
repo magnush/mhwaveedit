@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -766,4 +766,77 @@ Datasource *datasource_convert(Datasource *source, Dataformat *new_format)
      gtk_object_ref(GTK_OBJECT(source));
      gtk_object_sink(GTK_OBJECT(source));
      return ds;     
+}
+
+#define NS 4096
+static gint datasource_clip_check_fp(Datasource *ds, StatusBar *bar)
+{
+     sample_t *buf;     
+     off_t o;
+     guint i,j;
+     g_assert(ds->format.type == DATAFORMAT_FLOAT);
+     if (datasource_open(ds)) return -1;
+     buf = g_malloc(sizeof(sample_t) * ds->format.samplebytes);
+     for (o=0; o<ds->length; ) {
+	  i = datasource_read_array_fp(ds,o,NS,buf,DITHER_UNSPEC);
+	  o += i;
+	  if (i == 0) {
+	       g_free(buf);
+	       datasource_close(ds);
+	       return -1;
+	  }	  
+	  for (j=0; j<i*ds->format.channels; j++)
+	       if (buf[j] > 1.0 || buf[j] < -1.0) {
+		    g_free(buf);
+		    datasource_close(ds);
+		    return 1;
+	       }
+	  if (status_bar_progress(bar,NS)) {
+	       g_free(buf);
+	       datasource_close(ds);
+	       return -2;
+	  }	  
+     }
+     datasource_close(ds);
+     g_free(buf);
+     return 0;
+}
+#undef NS
+
+gint datasource_clip_check(Datasource *ds, StatusBar *bar)
+{
+     gint i;
+     switch (ds->type) {
+     case DATASOURCE_SNDFILE:
+     case DATASOURCE_SNDFILE_TEMPORARY:
+	  /* Libsndfile is always used with normalization turned on */
+	  return 0;
+     case DATASOURCE_SILENCE:
+	  /* Trivial */
+	  return 0;
+     case DATASOURCE_REAL:
+     case DATASOURCE_VIRTUAL:
+     case DATASOURCE_TEMPFILE:
+	  /* If we contain PCM data, clipping can't occur */
+	  if (ds->format.type == DATAFORMAT_PCM) return 0;
+	  return datasource_clip_check_fp(ds,bar);
+     case DATASOURCE_BYTESWAP:
+     case DATASOURCE_CLONE:
+	  /* This could cause clipping in special cases. 
+	   * That clipping can not be solved by normalizing the data. */
+	  i = datasource_clip_check(ds->data.clone,bar);
+	  if (i < 0) return i;
+	  if (i > 0) return 2;
+	  if (ds->format.type == DATAFORMAT_FLOAT) 
+	       return datasource_clip_check_fp(ds,bar);
+	  else
+	       return 0;
+     case DATASOURCE_REF:
+     case DATASOURCE_CONVERT:
+	  return datasource_clip_check(ds->data.clone,bar);
+     default:
+	  break;
+     }
+     g_assert_not_reached();
+     return 0;
 }

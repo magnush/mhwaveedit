@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2006, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -245,5 +245,14 @@ gboolean datasource_realize(Datasource *ds, int dither_mode);
 
 gboolean datasource_backup_unlink(gchar *filename);
 
+/* Returns zero if reading the datasource does not cause clipping conversion.
+ * and the datasource contains normalized data.
+ * Returns non-zero if reading the datasource causes clipping conversion
+ * Returns 1 if the error can be solved by normalizing the Datasource
+ * Returns 2 if the error can not be solved in that way (very special cases)
+ * Returns <0 if an error or break occurred while checking
+ * The StatusBar must already be in progress mode.
+ */
+gint datasource_clip_check(Datasource *ds, StatusBar *bar);
 
 #endif
