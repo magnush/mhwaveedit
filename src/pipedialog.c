@@ -325,6 +325,7 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
      TempFile ct=0;
      fd_set rset,wset;
      gpointer pipehandle;
+     off_t clipcount = 0;
 
      /*
      puts("---");
@@ -411,7 +412,8 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
 			      pipe_dialog_close_input(pipehandle);
 			      continue; 
 			 }
-			 i = chunk_read_array(ch,ui,BZ,outbuf, dither_mode);
+			 i = chunk_read_array(ch,ui,BZ,outbuf, dither_mode,
+					      &clipcount);
 			 if (!i) goto error_exit;
 			 bs = i;
 			 bp = 0;
@@ -458,6 +460,8 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
      }
 
      if (sent_all) *sent_all = !writing;
+     
+     clipwarn(clipcount);
 
      return do_read ? tempfile_finished(ct) : NULL;
 

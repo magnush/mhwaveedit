@@ -408,6 +408,15 @@ void convert_array(void *indata, Dataformat *indata_format,
      }
 }
 
+gint unnormalized_count(sample_t *buf, gint count)
+{
+     gint i,c=0;
+     for (i=0; i<count; i++)
+	  if (buf[i] > 1.0 || buf[i] < -1.0)
+	       c++;
+     return c;
+}
+
 static void print_format(Dataformat *fmt)
 {
      if (fmt->type == DATAFORMAT_FLOAT) {

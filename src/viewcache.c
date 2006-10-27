@@ -319,7 +319,8 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 	       sbuf = g_malloc(m);
 	  }
 	  readflag = TRUE;
-	  m = chunk_read_array_fp(cache->handle, start_samp, k, sbuf, DITHER_NONE);
+	  m = chunk_read_array_fp(cache->handle, start_samp, k, sbuf, 
+				  DITHER_NONE, NULL);
 	  readflag = FALSE;
 	  
 	  for (n=0; n<xres; n++) {
@@ -392,7 +393,7 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 	  }
 	  readflag = TRUE;
 	  m=chunk_read_array_fp(cache->handle,cache->offsets[i],k,sbuf,
-				DITHER_NONE);
+				DITHER_NONE, NULL);
 	  readflag = FALSE;
 	  g_assert(m==0 || m==k);
 
@@ -443,7 +444,7 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 	       }
 	       readflag = TRUE;
 	       m = chunk_read_array_fp(cache->handle, cache->offsets[i]+impr,
-				       k, sbuf,DITHER_NONE);
+				       k, sbuf,DITHER_NONE,NULL);
 	       readflag = FALSE;
 	       if (m == 0) {
 		    memset(cache->calced, CALC_DONE, xres);
@@ -477,7 +478,7 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 	       }
 	       readflag = TRUE;
 	       l=chunk_read_array_fp(cache->handle, cache->offsets[i]+impr, 
-				     new_spp-impr, sbuf, DITHER_NONE);
+				     new_spp-impr, sbuf, DITHER_NONE,NULL);
 	       readflag = FALSE;
 	       g_assert(l==new_spp-impr || l==0);
 	       if (l == 0) {

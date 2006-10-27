@@ -107,6 +107,8 @@ void convert_array(void *indata, Dataformat *indata_format,
 		   void *outdata, Dataformat *outdata_format,
 		   guint count, int dither_mode);
 
+gint unnormalized_count(sample_t *buf, gint buflen);
+
 void conversion_selftest(void);
 void conversion_performance_test(void);
 

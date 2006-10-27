@@ -287,14 +287,16 @@ gboolean chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian,
 {
      GList *l;
      DataPart *dp;
+     off_t clipcount = 0;
      l = chunk->parts;
      while (l) {
 	  dp = (DataPart *)l->data;
 	  if (datasource_dump(dp->ds,dp->position,dp->length,file,
-			      dither_mode,bar))
+			      dither_mode,bar,&clipcount))
 	       return TRUE;
 	  l = l->next;
      }
+     clipwarn(clipcount);
      return FALSE;
 }
 
@@ -331,6 +333,7 @@ struct convert_back {
      Dataformat *tofmt;
      gchar buf[16384];
      int dither_mode;
+     off_t *clipcount;
 };
 
 static gboolean convert_back_write(WriteoutID id, gpointer data, guint length)
@@ -338,6 +341,7 @@ static gboolean convert_back_write(WriteoutID id, gpointer data, guint length)
      struct convert_back *cbp = (struct convert_back *)id;
      guint i;
      i = length / sizeof(sample_t);
+     *(cbp->clipcount) += unnormalized_count(data,i);
      convert_array(data,&dataformat_sample_t,cbp->buf,cbp->tofmt,i,
 		   cbp->dither_mode);
      return tempfile_write(cbp->tmp,cbp->buf,i*cbp->tofmt->samplesize);
@@ -357,8 +361,9 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
      Dataformat informat,outformat;
      ChunkHandle *ch;
      TempFile tmp;
-     Chunk *ds,*r;
+     Chunk *ds,*r;     
      struct convert_back *cbp = NULL;
+     off_t clipcount = 0;
      
      /* Force processing in floating-point if any of the Datasources has 
       * faked pcm data */
@@ -394,6 +399,7 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
 	  cbp->tmp = tmp;
 	  cbp->tofmt = tofmt;
 	  cbp->dither_mode = dither_mode;
+	  cbp->clipcount = &clipcount;
      }
      status_bar_begin_progress(bar,samplesleft,title);
 
@@ -401,11 +407,13 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
 	  if (convert)
 	       u = chunk_read_array_fp(ch,samplepos,
 				       MIN(sizeof(buf)/full_size,samplesleft),
-				       (sample_t *)buf,dither_mode)*full_size;
+				       (sample_t *)buf,dither_mode,
+				       &clipcount) *
+		    full_size;
 	  else
 	       u = chunk_read_array(ch,samplepos,
 				    MIN(sizeof(buf),samplesleft*full_size),buf,
-				    dither_mode);
+				    dither_mode,&clipcount);
 	  if (!u) {
 	       chunk_close(ch);
 	       tempfile_abort(tmp);
@@ -448,6 +456,8 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
      ds = tempfile_finished(tmp);
      status_bar_end_progress(bar);
 
+     clipwarn(clipcount);
+
      /* Check if the datasources format is the same as the user expects. If 
       * not, convert. */
      if (ds != NULL && convert && !convert_back && 
@@ -473,6 +483,7 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc,
      off_t samplepos=0, samplesleft=chunk->length;
      guint u, x;
      ChunkHandle *ch;
+     off_t clipcount = 0;
 
      if (convert) single_size = sizeof(sample_t);
      else single_size = chunk->format.samplesize;
@@ -490,9 +501,11 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc,
      while (samplesleft > 0) {
 	  if (convert)	       
 	       u = chunk_read_array_fp(ch,samplepos,sizeof(buf)/full_size,
-				       (sample_t *)buf,dither_mode)*full_size;
+				       (sample_t *)buf,dither_mode,&clipcount)*
+		    full_size;
 	  else
-	       u = chunk_read_array(ch,samplepos,sizeof(buf),buf,dither_mode);
+	       u = chunk_read_array(ch,samplepos,sizeof(buf),buf,dither_mode,
+				    &clipcount);
 	  if (!u) {
 	       chunk_close(ch);
 	       g_free(c);
@@ -520,6 +533,7 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc,
      chunk_close(ch);
      g_free(c);
      status_bar_end_progress(bar);
+     clipwarn(clipcount);
      return FALSE;
 }
 
@@ -595,8 +609,8 @@ Chunk *chunk_copy_channel(Chunk *chunk, gint channel, int dither_mode,
 				 NULL);
      else 
 	  c = chunk_filter_tofmt(chunk,chunk_copy_channel_proc,NULL,
-				 CHUNK_FILTER_ONE,FALSE,&fmt,dither_mode, 
-				 bar,NULL);
+				 CHUNK_FILTER_ONE,FALSE,&fmt,dither_mode,bar,
+				 NULL);
      return c;
 }
 
@@ -606,7 +620,7 @@ Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
      #define BUFLEN 256
      off_t u,mixlen;
      guint i,chn,x1,x2,x;
-     guint clipcount = 0;
+     off_t clipcount = 0;
      sample_t buf1[BUFLEN],buf2[BUFLEN],buf3[BUFLEN];
      sample_t s,pmax;
      gchar *str;
@@ -639,8 +653,10 @@ Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
 
      for (u=0; u<mixlen; u+=x) {
 
-	  x1 = chunk_read_array_fp(ch1,u,BUFLEN/chn,buf1,dither_mode);
-	  x2 = chunk_read_array_fp(ch2,u,BUFLEN/chn,buf2,dither_mode);
+	  x1 = chunk_read_array_fp(ch1,u,BUFLEN/chn,buf1,dither_mode,
+				   &clipcount);
+	  x2 = chunk_read_array_fp(ch2,u,BUFLEN/chn,buf2,dither_mode,
+				   &clipcount);
 	  if (x1 == 0 || x2 == 0) {
 	       tempfile_abort(tmp);
 	       chunk_close(ch1);
@@ -687,8 +703,9 @@ Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
 
      /* Warn if clipping occured */
      if (clipcount > 0) {
+	  if (clipcount > 1000000000) clipcount = 1000000000;
 	  str = g_strdup_printf(_("The mixed result was clipped %d times."),
-				clipcount);
+				(int)clipcount);
 	  user_warning(str);
 	  g_free(str);
      }
@@ -796,7 +813,8 @@ gboolean chunk_read_fp(ChunkHandle *handle, off_t sampleno, sample_t *buffer,
 }
 
 guint chunk_read_array(ChunkHandle *handle, off_t sampleno, 
-		       guint size, void *buffer, int dither_mode)
+		       guint size, void *buffer, int dither_mode, 
+		       off_t *clipcount)
 {
      GList *l;     
      DataPart *dp;
@@ -813,7 +831,7 @@ guint chunk_read_array(ChunkHandle *handle, off_t sampleno,
 	       /* Read data. */
 	       i = datasource_read_array(dp->ds,
 					 dp->position + sampleno,
-					 j,buffer,dither_mode);
+					 j,buffer,dither_mode,clipcount);
 	       if (i == 0) return 0;
 	       r+=i;
 	       sampleno = 0;
@@ -827,7 +845,8 @@ guint chunk_read_array(ChunkHandle *handle, off_t sampleno,
 }
 
 guint chunk_read_array_fp(ChunkHandle *handle, off_t sampleno, 
-			  guint samples, sample_t *buffer, int dither_mode)
+			  guint samples, sample_t *buffer, int dither_mode,
+			  off_t *clipcount)
 {
      GList *l;     
      DataPart *dp;
@@ -844,7 +863,7 @@ guint chunk_read_array_fp(ChunkHandle *handle, off_t sampleno,
 		    j = samples;
 	       i = datasource_read_array_fp(dp->ds,
 					    dp->position+sampleno,
-					    j,buffer,dither_mode);
+					    j,buffer,dither_mode,clipcount);
 	       g_assert(i <= samples);
 	       g_assert(i <= dp->length - sampleno);
 	       if (i==0) return 0;
@@ -1312,4 +1331,17 @@ Chunk *chunk_convert(Chunk *chunk, Dataformat *new_format,
      d = chunk_convert_sampletype(d,new_format);
      if (c != NULL) gtk_object_sink(GTK_OBJECT(c));
      return d;
+}
+
+void clipwarn(off_t clipcount)
+{
+     gchar *c;
+     if (clipcount > 0) {
+	  if (clipcount > 1000000000)
+	       clipcount = 1000000000;
+	  c = g_strdup_printf(_("The input was clipped %d times during "
+				"processing."),(int)clipcount);
+	  user_warning(c);
+	  g_free(c);
+     }
 }

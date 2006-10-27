@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mhWaveEdit 1.4.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-10 22:02+0200\n"
+"POT-Creation-Date: 2006-08-21 23:48+0200\n"
 "PO-Revision-Date: 2006-06-29 14:26+0200\n"
 "Last-Translator: Georg Funke <schorsch.funke@freenet.de>\n"
 "Language-Team: German <Project-Id-Version: gtranslator 1.1.>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/chunk.c:197
 msgid "Converting samplerate"
@@ -63,7 +63,9 @@ msgstr "Anzahl der aktuelle Dateien"
 msgid ""
 "Some of the settings you have changed will not be activated until you "
 "restart the program"
-msgstr "Einige der Einstellungen werden erst nach einem Neustart des Programms aktiviert"
+msgstr ""
+"Einige der Einstellungen werden erst nach einem Neustart des Programms "
+"aktiviert"
 
 #: src/configdialog.c:263
 msgid "Colors"
@@ -115,7 +117,9 @@ msgstr "Halte den Musik Treiber offen (um start/stop _Klicks zu vermeiden)"
 
 #: src/configdialog.c:569
 msgid "_Byte-swap output (try this if playback sounds horrible)"
-msgstr "_Byte-getauschte Wiedergabe (versuche es wenn die Wiedergabe scheußlich klingt)"
+msgstr ""
+"_Byte-getauschte Wiedergabe (versuche es wenn die Wiedergabe scheußlich "
+"klingt)"
 
 #: src/configdialog.c:578
 msgid "_Update cursor information while playing"
@@ -123,7 +127,8 @@ msgstr "Akt_ualisiere Cursor Informationen beim Abspielen"
 
 #: src/configdialog.c:586
 msgid "_Keep cursor in center of view when following playback"
-msgstr "Halte den Cursor in der Mitte der Ansicht wenn er der Wiedergabe folgen soll"
+msgstr ""
+"Halte den Cursor in der Mitte der Ansicht wenn er der Wiedergabe folgen soll"
 
 #: src/configdialog.c:596
 msgid "_Auto-start playback when jumping to mark"
@@ -243,7 +248,9 @@ msgstr " Rückfall Format "
 
 #: src/configdialog.c:863
 msgid "Sample format to try when the sound file's format isn't supported."
-msgstr "Auszuprobierendes Sampleformat wenn das Format des Musik Stücks nicht unterstützt wird."
+msgstr ""
+"Auszuprobierendes Sampleformat wenn das Format des Musik Stücks nicht "
+"unterstützt wird."
 
 #: src/configdialog.c:875
 msgid "Playback"
@@ -274,7 +281,10 @@ msgid ""
 "To avoid rounding errors when applying more than one effect on the same "
 "data, floating-point temporary files can be used. However, this will "
 "increase disk and CPU usage."
-msgstr "Um Rundungsfehler beim Hinzufügen von einem oder mehreren Effekten an das Musikstück, können Temporäre Dateien im Fließpunktformat benutzt werden. Allerdings steigert das die Festplattegebrauch und die CPU Zeit."
+msgstr ""
+"Um Rundungsfehler beim Hinzufügen von einem oder mehreren Effekten an das "
+"Musikstück, können Temporäre Dateien im Fließpunktformat benutzt werden. "
+"Allerdings steigert das die Festplattegebrauch und die CPU Zeit."
 
 #: src/configdialog.c:950 src/help.c:36
 msgid "Quality"
@@ -471,10 +481,10 @@ msgstr "[B] Pipe zu einem externen Programm"
 msgid "You have no open file to apply the effect to!"
 msgstr "Sie haben keine Datei geöffnet um dem Effekt anzuwenden!"
 
-#: src/effectbrowser.c:268 src/filetypes.c:1115 src/gotodialog.c:114
+#: src/effectbrowser.c:268 src/filetypes.c:1119 src/gotodialog.c:114
 #: src/mainwindow.c:1292 src/rawdialog.c:88 src/recorddialog.c:369
 #: src/sound-alsalib.c:78 src/sound-esound.c:284 src/sound-jack.c:256
-#: src/sound-oss.c:410 src/um.c:107 src/um.c:140 src/um.c:337 src/um.c:437
+#: src/sound-oss.c:416 src/um.c:107 src/um.c:140 src/um.c:337 src/um.c:437
 msgid "OK"
 msgstr "OK"
 
@@ -484,7 +494,7 @@ msgstr "Anwenden"
 
 #: src/effectbrowser.c:277 src/gotodialog.c:127 src/mainwindow.c:1221
 #: src/pipedialog.c:146 src/recorddialog.c:803 src/sound-esound.c:288
-#: src/sound-jack.c:260 src/sound-oss.c:414
+#: src/sound-jack.c:260 src/sound-oss.c:420
 msgid "Close"
 msgstr "Schließen"
 
@@ -500,171 +510,183 @@ msgstr "Anwenden nach: "
 msgid "putenv failed!"
 msgstr "putenv ist fehlgeschlagen!"
 
-#: src/filetypes.c:110
+#: src/filetypes.c:111
 msgid "unsetenv failed!"
 msgstr "unsetenv ist fehlgeschlagen!"
 
-#: src/filetypes.c:149
+#: src/filetypes.c:153
 msgid "Microsoft WAV format"
 msgstr "Microsoft WAV Format"
 
-#: src/filetypes.c:168
+#: src/filetypes.c:172
 msgid "Ogg Vorbis"
 msgstr "Ogg Vorbis"
 
-#: src/filetypes.c:175
+#: src/filetypes.c:179
 msgid "Raw PCM data"
 msgstr "Rohe PCM Daten"
 
-#: src/filetypes.c:256
+#: src/filetypes.c:260
 #, c-format
 msgid "The file %s does not exist!"
 msgstr "Die Datei %s existiert nicht!"
 
-#: src/filetypes.c:263
+#: src/filetypes.c:267
 #, c-format
 msgid "The file %s is not a regular file!"
 msgstr "Die Datei %s ist keine normale Datei!"
 
-#: src/filetypes.c:275
+#: src/filetypes.c:279
 msgid "Loading"
 msgstr "Lade"
 
-#: src/filetypes.c:314
+#: src/filetypes.c:318
 #, c-format
 msgid ""
 "The file name '%s' has an extension unknown to the program. Please specify "
 "in which format this file should be saved."
-msgstr "Der Dateiname '%s' hat eine unbekannte Endung. Bitte geben sie das Format an in welchem die Datei gespeichert werden soll."
+msgstr ""
+"Der Dateiname '%s' hat eine unbekannte Endung. Bitte geben sie das Format an "
+"in welchem die Datei gespeichert werden soll."
 
-#: src/filetypes.c:319
+#: src/filetypes.c:323
 msgid "Unknown file type"
 msgstr "Unbekannter Datei Type"
 
-#: src/filetypes.c:370
+#: src/filetypes.c:374
 msgid "Saving"
 msgstr "Speichere"
 
-#: src/filetypes.c:374
+#: src/filetypes.c:378
 #, c-format
 msgid ""
 "The file %s may be destroyed since the saving failed. Try to free up some "
 "disk space and save again. If you exit now the file's contents could be in a "
 "bad state. "
-msgstr "Die Datei %s ist evtl. zerstört, da das Speicher fehlgeschlagen ist. Versuchen sie Speicherplatz auf dem Medium freizugeben und Speichern sie erneut. Wenn sie jetzt das Programm beenden, kann der Inhalt der Datei in einem fehlerhaften Zustand sein. "
+msgstr ""
+"Die Datei %s ist evtl. zerstört, da das Speicher fehlgeschlagen ist. "
+"Versuchen sie Speicherplatz auf dem Medium freizugeben und Speichern sie "
+"erneut. Wenn sie jetzt das Programm beenden, kann der Inhalt der Datei in "
+"einem fehlerhaften Zustand sein. "
 
-#: src/filetypes.c:438
+#: src/filetypes.c:442
 #, c-format
 msgid "%s is not a valid wav file"
 msgstr "%s ist keine gültige WAV Datei"
 
-#: src/filetypes.c:453
+#: src/filetypes.c:457
 #, c-format
 msgid ""
 "The file %s is a compressed wav file. This program can only work with "
 "uncompressed wav files."
 msgstr ""
-"Die Datei %s ist eine komprimierte WAV-Datei. Dieses Programm kann nur mit unkomprimierten WAV-Dateien arbeiten."
+"Die Datei %s ist eine komprimierte WAV-Datei. Dieses Programm kann nur mit "
+"unkomprimierten WAV-Dateien arbeiten."
 
-#: src/filetypes.c:536
+#: src/filetypes.c:540
 msgid ""
 "On this system, libsndfile is required to save floating-point wav files."
-msgstr "Auf diesem Rechner wird libsndfile benötigt um Fließpunkt Wave Dateien zu speichern."
+msgstr ""
+"Auf diesem Rechner wird libsndfile benötigt um Fließpunkt Wave Dateien zu "
+"speichern."
 
-#: src/filetypes.c:543
+#: src/filetypes.c:547
 msgid "8-bit wav-files must be in unsigned format!"
 msgstr "8-bit WAV Dateien müssen im unsigned Format sein!"
 
-#: src/filetypes.c:547
+#: src/filetypes.c:551
 msgid "16/24/32-bit wav-files must be in signed format!"
 msgstr "16/24/32-bit WAV Dateien müssen in signed Format sein!"
 
-#: src/filetypes.c:551
+#: src/filetypes.c:555
 msgid "wav files must be in little endian format!"
 msgstr "WAV Dateien müssen im kleinen Endian Format sein!"
 
-#: src/filetypes.c:558
+#: src/filetypes.c:562
 msgid ""
 "You are saving a wav file larger than 2048MB. Such large files are non-"
 "standard and may not be readable by all programs.\n"
 "\n"
 " (this warning will not be displayed again)"
-msgstr "Sie sind dabei eine WAV Datei zu speichern die größer als 2048MB ist. Solche großen Dateien sind kein Standard und können möglicherweise nicht von allen Programmen gelesen werden.\n"
+msgstr ""
+"Sie sind dabei eine WAV Datei zu speichern die größer als 2048MB ist. Solche "
+"großen Dateien sind kein Standard und können möglicherweise nicht von allen "
+"Programmen gelesen werden.\n"
 "\n"
 " (diese Warnung wird nicht erneut angezeigt)"
 
-#: src/filetypes.c:675 src/filetypes.c:807
+#: src/filetypes.c:679 src/filetypes.c:811
 #, c-format
 msgid "Failed to open '%s'!"
 msgstr "Fehler beim Öffnen von '%s'!"
 
-#: src/filetypes.c:783
+#: src/filetypes.c:787
 msgid "Invalid sample format or number of channels for this file format"
 msgstr "Falsches Sampleformat oder falsche Anzahl der Kanäle für dieses Format"
 
-#: src/filetypes.c:836
+#: src/filetypes.c:840
 #, c-format
 msgid "Failed to write to '%s'!"
 msgstr "Fehler beim Schreiben nach '%s'!"
 
-#: src/filetypes.c:903
+#: src/filetypes.c:907
 msgid "Decoding"
 msgstr "Dekodiere"
 
-#: src/filetypes.c:1015
+#: src/filetypes.c:1019
 msgid "Variable bitrate (default)"
 msgstr "Variable Bitrate (Grundeinstellung)"
 
-#: src/filetypes.c:1016
+#: src/filetypes.c:1020
 msgid "Average bitrate"
 msgstr "Durchschnittliche Bitrate"
 
-#: src/filetypes.c:1017
+#: src/filetypes.c:1021
 msgid "Constant bitrate"
 msgstr "Konstante Bitrate"
 
-#: src/filetypes.c:1018
+#: src/filetypes.c:1022
 msgid "Custom argument"
 msgstr "Eigene Optionen"
 
-#: src/filetypes.c:1022
+#: src/filetypes.c:1026
 msgid "Standard (high quality)"
 msgstr "Standard (hohe Qualität)"
 
-#: src/filetypes.c:1023
+#: src/filetypes.c:1027
 msgid "Extreme (higher quality)"
 msgstr "Extrem (höhere Qualität)"
 
-#: src/filetypes.c:1024
+#: src/filetypes.c:1028
 msgid "Insane (highest possible quality)"
 msgstr "Unsicher (höchst mögliche Qualität)"
 
-#: src/filetypes.c:1042
+#: src/filetypes.c:1046
 #, c-format
 msgid "%s kbit/s"
 msgstr "%s kbit/s"
 
-#: src/filetypes.c:1071
+#: src/filetypes.c:1075
 msgid "MP3 Preferences"
 msgstr "MP3 Einstellungen"
 
-#: src/filetypes.c:1082
+#: src/filetypes.c:1086
 msgid "Encoding type: "
 msgstr "Art der Kodierung: "
 
-#: src/filetypes.c:1095
+#: src/filetypes.c:1099
 msgid "Quality: "
 msgstr "Qualität: "
 
-#: src/filetypes.c:1104
+#: src/filetypes.c:1108
 msgid "Custom argument: "
 msgstr "Eigenes Argument: "
 
-#: src/filetypes.c:1110
+#: src/filetypes.c:1114
 msgid "Use this setting by default"
 msgstr "Benutzte standardmäßig diese Einstellung"
 
-#: src/filetypes.c:1123 src/rawdialog.c:94 src/recorddialog.c:377
+#: src/filetypes.c:1127 src/rawdialog.c:94 src/recorddialog.c:377
 #: src/sound-alsalib.c:82 src/um.c:131 src/um.c:148 src/um.c:342 src/um.c:446
 msgid "Cancel"
 msgstr "Abbruch"
@@ -768,7 +790,9 @@ msgstr "hinter dem Ende der Markierung"
 msgid ""
 "(use a negative number to place the cursor before instead of after the "
 "selected point)"
-msgstr "(benutzen sie eine negative Zahl um den Cursor vor anstatt hinter dem markierten Punkt zu platzieren)"
+msgstr ""
+"(benutzen sie eine negative Zahl um den Cursor vor anstatt hinter dem "
+"markierten Punkt zu platzieren)"
 
 #: src/gotodialog.c:142
 msgid "Position cursor"
@@ -888,7 +912,8 @@ msgid ""
 "http://gna.org/projects/mhwaveedit/\n"
 msgstr ""
 "\n"
-"mhWaveEdit ist ein grafisches Programm zu Editieren von Musikdateien. Es ist komplett frei (GPL).\n"
+"mhWaveEdit ist ein grafisches Programm zu Editieren von Musikdateien. Es ist "
+"komplett frei (GPL).\n"
 "\n"
 "Die neuste Version können von mhWaveEdit bekommen sie auf:\n"
 "http://gna.org/projects/mhwaveedit/\n"
@@ -1300,7 +1325,8 @@ msgstr "Effekt %s enthält ungültigen Port %s"
 msgid ""
 "Environment variable LADSPA_PATH not set.\n"
 "LADSPA support is disabled."
-msgstr "Die Umgebungsvariable LADSPA_PATH ist nicht gesetzt.\n"
+msgstr ""
+"Die Umgebungsvariable LADSPA_PATH ist nicht gesetzt.\n"
 "Die LADSPA Unterstütztung wird deaktiviert."
 
 #: src/ladspacore.c:307
@@ -1324,7 +1350,8 @@ msgid ""
 "You have mapped more than one output port to channel '%s'. You can only map "
 "one output port to each channel."
 msgstr ""
-"Sie haben dem Kanal '%s' mehr als einen Ausgabe Port zugewiesen. Sie können pro Kanal nur einen Ausgabe Port zuweisen."
+"Sie haben dem Kanal '%s' mehr als einen Ausgabe Port zugewiesen. Sie können "
+"pro Kanal nur einen Ausgabe Port zuweisen."
 
 #: src/ladspadialog.c:190
 #, c-format
@@ -1385,7 +1412,9 @@ msgstr "Unbekannte Einstellung '%s'"
 #: src/main.c:291
 msgid ""
 "Could not find home directory. Using current directory as home directory."
-msgstr "Kann Home Verzeichnis nicht finden. Benutze das aktuelle Verzeichnis als Home Verzeichnis."
+msgstr ""
+"Kann Home Verzeichnis nicht finden. Benutze das aktuelle Verzeichnis als "
+"Home Verzeichnis."
 
 #: src/main.c:319
 msgid "Black"
@@ -1496,7 +1525,9 @@ msgstr "Dateityp: "
 msgid ""
 "The file has not changed since last save. Press OK if you want to save it "
 "anyway?"
-msgstr "Die Datei wurde dem letzten Speichern nicht verändert. Drücken sie OK um sie trotzdem zu speichern."
+msgstr ""
+"Die Datei wurde dem letzten Speichern nicht verändert. Drücken sie OK um sie "
+"trotzdem zu speichern."
 
 #: src/mainwindow.c:354
 msgid "Save File"
@@ -1553,7 +1584,8 @@ msgstr "Über mhWaveEdit"
 msgid ""
 "Created by Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2006, Magnus Hjorth"
-msgstr "Programmiert von Magnus Hjorth (magnus.hjorth@home.se)\n"
+msgstr ""
+"Programmiert von Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2006, Magnus Hjorth"
 
 #: src/mainwindow.c:1267
@@ -1574,7 +1606,8 @@ msgstr "Benutzt doppelt genau Berechnungen"
 msgid ""
 "Distributed under GNU General Public License.\n"
 "For information, see the file COPYING"
-msgstr "Veröffentlicht unter der GNU General Public License.\n"
+msgstr ""
+"Veröffentlicht unter der GNU General Public License.\n"
 "Für mehr Informationen siehe die Datei COPYING"
 
 #: src/mainwindow.c:1402
@@ -2010,7 +2043,8 @@ msgstr "Prozeßausgabe"
 msgid ""
 "Output from command '%s':\n"
 "\n"
-msgstr "Ausgabe vom Kommando '%s':\n"
+msgstr ""
+"Ausgabe vom Kommando '%s':\n"
 "\n"
 
 #: src/pipedialog.c:181
@@ -2038,7 +2072,8 @@ msgstr "Fehler: %s"
 
 #: src/player.c:244
 msgid "The sound format of this file is not supported for playing."
-msgstr "Zum Abspielen wird das Musikformat dieser Datei wird nicht unterstützt."
+msgstr ""
+"Zum Abspielen wird das Musikformat dieser Datei wird nicht unterstützt."
 
 #: src/rateconv.c:92
 #, c-format
@@ -2095,7 +2130,8 @@ msgid ""
 "The format of file '%s' could not be recognized.\n"
 "\n"
 "Please specify the sample format below."
-msgstr "Das Format der Datei '%s' kann nicht erkannt werden.\n"
+msgstr ""
+"Das Format der Datei '%s' kann nicht erkannt werden.\n"
 "\n"
 "Bitte geben sie das Sampleformat an."
 
@@ -2142,13 +2178,18 @@ msgstr "Eigenes Format"
 msgid ""
 "The sign and endian-ness can usually be left at their defaults, but should "
 "be changed if you're unable to record or get bad sound."
-msgstr "Signed und Endian können normalerweise auf ihren Grundeinstellungen bleiben, aber sollten geändert werden, wenn sie keine Musik aufnehmen können oder seltsame Töne bekommen."
+msgstr ""
+"Signed und Endian können normalerweise auf ihren Grundeinstellungen bleiben, "
+"aber sollten geändert werden, wenn sie keine Musik aufnehmen können oder "
+"seltsame Töne bekommen."
 
 #: src/recorddialog.c:354
 msgid ""
 "To add this format to the presets, enter a name below. Otherwise, leave it "
 "blank."
-msgstr "Um dieses Format zu den Voreinstellungen zu speichern geben sie einen Namen ein. Anderfalls lassen sie das Feld frei."
+msgstr ""
+"Um dieses Format zu den Voreinstellungen zu speichern geben sie einen Namen "
+"ein. Anderfalls lassen sie das Feld frei."
 
 #: src/recorddialog.c:360
 msgid "Name :"
@@ -2157,7 +2198,8 @@ msgstr "Name :"
 #: src/recorddialog.c:411
 msgid ""
 "Invalid time value. Time must be specified in the form (HH')MM:SS(.mmmm)"
-msgstr "Falscher Zeit Wert. Zeit muß in der Form (HH')MM:SS(.mmmm) angegeben werden"
+msgstr ""
+"Falscher Zeit Wert. Zeit muß in der Form (HH')MM:SS(.mmmm) angegeben werden"
 
 #: src/recorddialog.c:454 src/recorddialog.c:764
 msgid "Format not selected"
@@ -2267,7 +2309,8 @@ msgstr "Stelle Maximum zurück"
 msgid ""
 "(This changes the sample rate of \n"
 "the entire file, not just the selection)"
-msgstr "(Dies ändert die Samplerate der \n"
+msgstr ""
+"(Dies ändert die Samplerate der \n"
 "gesamten Datei, nicht nur der Markierung)"
 
 #: src/sampleratedialog.c:92
@@ -2281,11 +2324,14 @@ msgstr "Methode:"
 #: src/samplesizedialog.c:82
 msgid ""
 "(This changes the sample type of the entire file, not just the selection)"
-msgstr "(Es wird der Sampletyp der gesamten Datei geändert, nicht nur der der Markierung)"
+msgstr ""
+"(Es wird der Sampletyp der gesamten Datei geändert, nicht nur der der "
+"Markierung)"
 
 #: src/samplesizedialog.c:94
 msgid "Don't actually change the data (for repairing bad files etc)"
-msgstr "Aktuell die Daten nicht ändern ( um fehlerhafte Dateien zu reparieren usw.)"
+msgstr ""
+"Aktuell die Daten nicht ändern ( um fehlerhafte Dateien zu reparieren usw.)"
 
 #: src/sound-alsalib.c:57
 msgid "ALSA Preferences"
@@ -2391,7 +2437,9 @@ msgstr "ESD Einstellungen"
 msgid ""
 "If the cursor starts running too early when jumping, this delay should be "
 "increased."
-msgstr "Wenn der Cursor sich zu früh bewegt beim springen, sollte diese Verzögerung erhöht werden."
+msgstr ""
+"Wenn der Cursor sich zu früh bewegt beim springen, sollte diese Verzögerung "
+"erhöht werden."
 
 #: src/sound-esound.c:267
 msgid "Jump delay:"
@@ -2405,7 +2453,8 @@ msgstr "sekunden"
 msgid ""
 "Selecting the ESD host to connect to is done through the ESPEAKER "
 "environment variable."
-msgstr "Das Auswählen des ESD Host wird über die Umgebungsvariable ESPEAKER getätigt."
+msgstr ""
+"Das Auswählen des ESD Host wird über die Umgebungsvariable ESPEAKER getätigt."
 
 #: src/sound-jack.c:113
 msgid "Invalid number of input ports."
@@ -2417,7 +2466,9 @@ msgstr "Ungültige Anzahl von Ausgangsports"
 
 #: src/sound-jack.c:126
 msgid "The client name change won't take effect until you restart the program."
-msgstr "Die Änderung des Klientnames wird erst nach dem Neustarten des Programms aktiv."
+msgstr ""
+"Die Änderung des Klientnames wird erst nach dem Neustarten des Programms "
+"aktiv."
 
 #: src/sound-jack.c:183
 msgid " Input ports "
@@ -2478,44 +2529,47 @@ msgstr "Aktivierung fehlgeschlagen!"
 msgid ""
 "With JACK, the only supported recording format is Floating-point, single "
 "precision, %d Hz"
-msgstr "Jack unterstützt nur das Aufnahmeformat Fließpunkt, einfache Präzision, %d Hz"
+msgstr ""
+"Jack unterstützt nur das Aufnahmeformat Fließpunkt, einfache Präzision, %d Hz"
 
-#: src/sound-oss.c:82
+#: src/sound-oss.c:88
 #, c-format
 msgid "Could not open '%s': %s"
 msgstr "Kann '%s' nicht öffnen: %s"
 
-#: src/sound-oss.c:95
+#: src/sound-oss.c:101
 #, c-format
 msgid "Error in sound driver: ioctl failed: %s"
 msgstr "Fehler im Musik Treiber: IOCTL Fehler: %s"
 
-#: src/sound-oss.c:185
+#: src/sound-oss.c:191
 #, c-format
 msgid "Error in sound driver: write failed: %s"
 msgstr "Fehler im Musik Treiber: schreiben fehlgeschlagen: %s"
 
-#: src/sound-oss.c:198
+#: src/sound-oss.c:204
 #, c-format
 msgid "Error in sound driver: read failed: %s"
 msgstr "Fehler im Musiktreiber: Lesen ist fehlgeschlagen: %s"
 
-#: src/sound-oss.c:222 src/sound-oss.c:334
+#: src/sound-oss.c:228 src/sound-oss.c:340
 #, c-format
 msgid "Error in sound driver: select failed: %s"
 msgstr "Fehler im Musik Treiber: Auswahl fehlgeschlagen: %s"
 
-#: src/sound-oss.c:384
+#: src/sound-oss.c:390
 msgid "OSS preferences"
 msgstr "OSS Einstellungen"
 
-#: src/sound-oss.c:394
+#: src/sound-oss.c:400
 msgid "Sound device file:"
 msgstr "Musik Gerätedatei: "
 
-#: src/sound-oss.c:400
+#: src/sound-oss.c:406
 msgid "Avoid select calls (try this if recording locks up)"
-msgstr "Vermeide Select Aufrufe (Probiere dies wenn das Aufnehmen das Programm blockiert)"
+msgstr ""
+"Vermeide Select Aufrufe (Probiere dies wenn das Aufnehmen das Programm "
+"blockiert)"
 
 #: src/sound-portaudio.c:61
 msgid "sound-portaudio: No output devices available!"
@@ -2907,7 +2961,6 @@ msgstr "Geschwindigkeit:"
 #: src/statusbar.c:72
 msgid "(no file loaded)"
 msgstr "(keine Datei geladen)"
-""
 
 #: src/statusbar.c:233
 msgid "Cursor: running"
@@ -2990,7 +3043,10 @@ msgstr "ohne Namen #%d"
 msgid ""
 "Loading and then saving files with 'lossy' formats (like mp3 and ogg) leads "
 "to a quality loss, also for the unmodified parts of the file."
-msgstr "Das Laden und Speicher von Dateien mit 'verlustbehafteten' Formaten (wie MP3 und Ogg) bringt einen Qualitätsverlust mit sich, auch für die nicht veränderten Teile der Datei."
+msgstr ""
+"Das Laden und Speicher von Dateien mit 'verlustbehafteten' Formaten (wie MP3 "
+"und Ogg) bringt einen Qualitätsverlust mit sich, auch für die nicht "
+"veränderten Teile der Datei."
 
 #: src/session.c:83
 msgid "Error opening session directory"
@@ -3011,7 +3067,9 @@ msgid ""
 "files that are not saved will be removed permanently.\n"
 "\n"
 "(This notice is only shown once)"
-msgstr "Die Dateien die zu der abgestürzten Sitzung gehören sind wiederhergestellt. Jede Datei die nicht gespeichert ist wird dauerhaft gelöscht.\n"
+msgstr ""
+"Die Dateien die zu der abgestürzten Sitzung gehören sind wiederhergestellt. "
+"Jede Datei die nicht gespeichert ist wird dauerhaft gelöscht.\n"
 "\n"
 "(Diese Notiz wird nur einmal angezeigt)"
 
@@ -3039,7 +3097,9 @@ msgstr "Sitzungen"
 #: src/session.c:361
 msgid ""
 "Earlier sessions were found. Choose one to resume or start a new session."
-msgstr "Ältere Sitzungen sind gefunden worden. Wählen sie eine zum Wiederherstellen oder starten sie eine neue Sitzung."
+msgstr ""
+"Ältere Sitzungen sind gefunden worden. Wählen sie eine zum Wiederherstellen "
+"oder starten sie eine neue Sitzung."
 
 #: src/session.c:380
 msgid "Resume selected"
@@ -3052,5 +3112,3 @@ msgstr "Eine neue Sitzung starten"
 #: src/session.c:396
 msgid "Exit"
 msgstr "Beenden"
-
-

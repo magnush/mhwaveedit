@@ -250,7 +250,7 @@ Datasource *datasource_new_from_data(void *data, Dataformat *format,
 
 gboolean datasource_dump(Datasource *ds, off_t position, 
 			 off_t length, EFILE *file, int dither_mode, 
-			 StatusBar *bar)
+			 StatusBar *bar, off_t *clipcount)
 {
      gchar *buf;
      off_t i;
@@ -259,7 +259,7 @@ gboolean datasource_dump(Datasource *ds, off_t position,
      buf = g_malloc(DUMP_BUFSIZE);
      while (length > 0) {
 	  i = MIN(length*ds->format.samplebytes,DUMP_BUFSIZE);
-	  u = datasource_read_array(ds,position,i,buf,dither_mode);
+	  u = datasource_read_array(ds,position,i,buf,dither_mode,clipcount);
 	  if (u==0 || e_fwrite(buf,u,file) || status_bar_progress(bar,u)) { 
 	       datasource_close(ds); 
 	       g_free(buf);
@@ -281,7 +281,7 @@ gboolean datasource_realize(Datasource *ds, int dither_mode)
      if (datasource_open(ds)) return TRUE;
 
      c = g_malloc(sz);
-     if (datasource_read_array(ds,0,sz,c, dither_mode)) {
+     if (datasource_read_array(ds,0,sz,c, dither_mode,NULL)) {
 	  g_free(c);
 	  datasource_close(ds);
 	  return TRUE;
@@ -385,7 +385,7 @@ void datasource_close(Datasource *ds)
 
 static guint datasource_clone_read_array(Datasource *source, off_t sampleno,
 					 guint size, gpointer buffer, 
-					 int dither_mode)
+					 int dither_mode, off_t *clipcount)
 {
      /* This is not optimized but it's only used in rare cases so the important
       * thing is that it works.*/
@@ -405,7 +405,7 @@ static guint datasource_clone_read_array(Datasource *source, off_t sampleno,
      orig_size = size + orig_adjust + source->data.clone->format.samplebytes - 1;
      p = g_malloc(orig_size);
      x = datasource_read_array(source->data.clone, orig_sampleno, orig_size, p,
-			       dither_mode);
+			       dither_mode,clipcount);
      if (x != 0) {
 	  g_assert(x-orig_adjust >= size);
 	  memcpy(buffer, p+orig_adjust, size);
@@ -512,11 +512,12 @@ static guint datasource_sndfile_read_array_fp(Datasource *source,
 
 static guint datasource_read_array_main(Datasource *source, 
 					off_t sampleno, guint size, 
-					gpointer buffer, int dither_mode)
+					gpointer buffer, int dither_mode,
+					off_t *clipcount)
 {
      off_t x;
      guint u;
-     gchar *c;
+     sample_t *c;
      switch (source->type) {
      case DATASOURCE_REAL:
 	  memcpy(buffer,source->data.real+sampleno*source->format.samplebytes,
@@ -547,13 +548,13 @@ static guint datasource_read_array_main(Datasource *source,
 		    (source,sampleno,size/source->format.samplebytes,buffer);
      case DATASOURCE_REF:
 	  return datasource_read_array_main(source->data.clone,sampleno,size,
-					    buffer,dither_mode);
+					    buffer,dither_mode,clipcount);
      case DATASOURCE_CLONE:
 	  return datasource_clone_read_array(source,sampleno,size,buffer,
-					     dither_mode);
+					     dither_mode,clipcount);
      case DATASOURCE_BYTESWAP:
 	  u = datasource_read_array_main(source->data.clone,sampleno,size,
-					 buffer,dither_mode);
+					 buffer,dither_mode,clipcount);
 	  if (u>0) byteswap(buffer,source->format.samplesize,u);
 	  return u;
      case DATASOURCE_CONVERT:
@@ -561,12 +562,15 @@ static guint datasource_read_array_main(Datasource *source,
 	  if (source->format.type == DATAFORMAT_FLOAT && 
 	      source->format.samplesize == sizeof(sample_t)) 
 	       return datasource_read_array_fp(source->data.clone,sampleno,u,
-					       buffer,dither_mode) *
+					       buffer,dither_mode,clipcount) *
 		    source->format.samplebytes ;
 	  c = g_malloc(u*sizeof(sample_t)*source->format.channels);
 	  u = datasource_read_array_fp(source->data.clone, sampleno, u, 
-				       (gpointer)c,dither_mode);
+				       (gpointer)c,dither_mode,clipcount);
 	  if (u > 0) {
+	       if (clipcount != NULL)
+		    *clipcount += 
+			 unnormalized_count(c,u*source->format.channels);
 	       convert_array(c,&dataformat_sample_t,buffer,&(source->format),
 			     u*source->format.channels,dither_mode);
 	  }
@@ -579,7 +583,8 @@ static guint datasource_read_array_main(Datasource *source,
 }
 
 guint datasource_read_array(Datasource *source, off_t sampleno, guint size,
-			    gpointer buffer, int dither_mode)
+			    gpointer buffer, int dither_mode, 
+			    off_t *clipcount)
 {
      off_t o;
      g_assert(source->opencount > 0);
@@ -593,21 +598,21 @@ guint datasource_read_array(Datasource *source, off_t sampleno, guint size,
      if (size == 0) return 0;
      /* Do it */
      return datasource_read_array_main(source,sampleno,size,buffer,
-				       dither_mode);
+				       dither_mode,clipcount);
 }
 
 gboolean datasource_read(Datasource *source, off_t sampleno, gpointer buffer, 
 			 int dither_mode)
 {
      return (datasource_read_array(source,sampleno,source->format.samplebytes,
-				   buffer,dither_mode) 
+				   buffer,dither_mode,NULL) 
 	     != source->format.samplebytes);
 }
 
 
 guint datasource_read_array_fp(Datasource *source, off_t sampleno,
 			       guint samples, sample_t *buffer, 
-			       int dither_mode)
+			       int dither_mode, off_t *clipcount)
 {
      gchar *p;
      guint x,s;
@@ -629,19 +634,20 @@ guint datasource_read_array_fp(Datasource *source, off_t sampleno,
      case DATASOURCE_REF:
      case DATASOURCE_CONVERT:
 	  return datasource_read_array_fp(source->data.clone,sampleno,
-					  samples,buffer,dither_mode);
+					  samples,buffer,dither_mode,
+					  clipcount);
      default:
 	  if (source->format.type == DATAFORMAT_FLOAT &&
 	      source->format.samplesize == sizeof(sample_t))
 	       
 	       return datasource_read_array(source,sampleno,
 					    samples*source->format.samplebytes,
-					    buffer, dither_mode) 
+					    buffer, dither_mode, clipcount) 
 		    / source->format.samplebytes;
 	       
 	  s = samples * source->format.samplebytes;
 	  p = g_malloc(s);
-	  x = datasource_read_array(source,sampleno,s,p,dither_mode);
+	  x = datasource_read_array(source,sampleno,s,p,dither_mode,clipcount);
 	  g_assert(x==s || x==0);
 	  if (x==s) {
 	       convert_array(p,&(source->format),buffer,&dataformat_sample_t,
@@ -657,7 +663,7 @@ guint datasource_read_array_fp(Datasource *source, off_t sampleno,
 gboolean datasource_read_fp(Datasource *ds, off_t sampleno, sample_t *buffer,
 			    int dither_mode)
 {
-     return (datasource_read_array_fp(ds,sampleno,1,buffer,dither_mode)!=1);
+     return (datasource_read_array_fp(ds,sampleno,1,buffer,dither_mode,NULL)!=1);
 }
 
 static gboolean datasource_uses_file(Datasource *ds, gchar *filename)
@@ -689,9 +695,17 @@ gboolean datasource_backup_unlink(gchar *filename)
 	  ds = (Datasource *)l->data;
 	  if (!datasource_uses_file(ds,filename)) continue;
 
-	  /* FIXME: When multiple tempdir support has been added, try moving to
-	   * all different partitions before copying */
+	  /* For the first affected datasource (backup == NULL), the file is
+	   * moved to a temporary directory and the filename in the datasource 
+	   * is updated. For each remaining sources, the file is copied.
+	   *
+	   * This is not optimal, but the case with more than one reference to
+	   * a file can only happen when the user has opened the same file
+	   * multiple times.
+	   */
 	  if (backup == NULL) {
+	       /* This loop first tries to move the file to each temporary 
+		* directory. If all directories fail, we copy the file. */
 	       dirnum = 0;
 	       while (1) {
 		    t = get_temp_filename(dirnum);
@@ -773,24 +787,24 @@ static gint datasource_clip_check_fp(Datasource *ds, StatusBar *bar)
 {
      sample_t *buf;     
      off_t o;
-     guint i,j;
+     guint i;
+     off_t clipcount = 0;
      g_assert(ds->format.type == DATAFORMAT_FLOAT);
      if (datasource_open(ds)) return -1;
      buf = g_malloc(sizeof(sample_t) * ds->format.samplebytes);
      for (o=0; o<ds->length; ) {
-	  i = datasource_read_array_fp(ds,o,NS,buf,DITHER_UNSPEC);
+	  i = datasource_read_array_fp(ds,o,NS,buf,DITHER_UNSPEC,&clipcount);
 	  o += i;
 	  if (i == 0) {
 	       g_free(buf);
 	       datasource_close(ds);
 	       return -1;
 	  }	  
-	  for (j=0; j<i*ds->format.channels; j++)
-	       if (buf[j] > 1.0 || buf[j] < -1.0) {
-		    g_free(buf);
-		    datasource_close(ds);
-		    return 1;
-	       }
+	  if (clipcount > 0) {
+	       g_free(buf);
+	       datasource_close(ds);
+	       return 1;
+	  }
 	  if (status_bar_progress(bar,NS)) {
 	       g_free(buf);
 	       datasource_close(ds);

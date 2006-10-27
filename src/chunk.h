@@ -266,7 +266,7 @@ gboolean chunk_read_fp(ChunkHandle *handle, off_t sampleno, sample_t *buffer,
 */
 
 guint chunk_read_array(ChunkHandle *handle, off_t sampleno, guint size, 
-		       void *buffer, int dither_mode);
+		       void *buffer, int dither_mode, off_t *clipcount);
 
 
 
@@ -281,7 +281,7 @@ guint chunk_read_array(ChunkHandle *handle, off_t sampleno, guint size,
 */
 
 guint chunk_read_array_fp(ChunkHandle *handle, off_t sampleno, guint samples,
-			  sample_t *buffer, int dither_mode);
+			  sample_t *buffer, int dither_mode, off_t *clipcount);
 
 
 /* Frees the resources used by a ChunkHandle. All handles should be freed when
@@ -489,7 +489,7 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc, gboolean allchannels,
 /* Calls func for each existing chunk. */
 void chunk_foreach(GFunc func, gpointer user_data);
 
-
+void clipwarn(off_t clipcount);
 
 
 #endif

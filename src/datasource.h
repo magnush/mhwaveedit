@@ -200,13 +200,16 @@ gboolean datasource_read(Datasource *source, off_t sampleno, gpointer buffer,
 			 int dither_mode);
 gboolean datasource_read_fp(Datasource *source, off_t sampleno, 
 			    sample_t *buffer, int dither_mode);
-/* Returns number of bytes read (0 on error). */
+/* Returns number of bytes read (0 on error). If clipping != NULL and clipping
+ * conversion was performed, sets *clipping to TRUE.
+ */
 guint datasource_read_array(Datasource *source, off_t sampleno, 
-			    guint size, gpointer buffer, int dither_mode);
+			    guint size, gpointer buffer, int dither_mode,
+			    off_t *clipcount);
 /* Returns number of (multi-channel) samples read (0 on error). */
 guint datasource_read_array_fp(Datasource *source, off_t sampleno,
 			       guint samples, sample_t *buffer, 
-			       int dither_mode);
+			       int dither_mode, off_t *clipcount);
 
 
 
@@ -229,7 +232,8 @@ guint datasource_count(void);
  */
 
 gboolean datasource_dump(Datasource *ds, off_t position, off_t length,
-			 EFILE *file, int dither_mode, StatusBar *bar);
+			 EFILE *file, int dither_mode, StatusBar *bar,
+			 off_t *clipcount);
 
 
 /* This reads all the data of the datasource into a memory buffer and converts

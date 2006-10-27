@@ -1,6 +1,12 @@
+2006-10-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Make sure we always detect and warn when clipping conversion occurs.
+
 2006-10-26  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/datasource.c (datasource_clip_check): Added.
+	(datasource_read_array_main): Check for clipping when converting
+	float to PCM
 
 	* src/dataformat.c: Add unspecified dither constant. 
 

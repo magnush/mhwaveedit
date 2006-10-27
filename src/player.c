@@ -82,7 +82,7 @@ static int get_frames(void *buffer, int maxsize)
 
      sz = frames * ch->format.samplebytes;
      if (sz > maxsize) sz = maxsize;
-     read = chunk_read_array(ch,curpos,sz,buffer,dither_playback);
+     read = chunk_read_array(ch,curpos,sz,buffer,dither_playback,NULL);
      g_assert(read <= sz);
      curpos += read / ch->format.samplebytes;
      if (loop && curpos == loopend) curpos = loopstart;
@@ -164,7 +164,8 @@ static void check_small_loop(void)
 	  if (o <= sizeof(small_loop_buf)) {
 	       u = (guint32) o;
 	       small_loop = TRUE;
-	       chunk_read_array(ch,loopstart,u,small_loop_buf,dither_playback);
+	       chunk_read_array(ch,loopstart,u,small_loop_buf,dither_playback,
+				NULL);
 	       for (v=1; v < sizeof(player_buf)/u; v++) 
 		    memcpy(small_loop_buf+u*v,small_loop_buf,u); 
 	       /* printf("check_small_loop: u=%d, v=%d\n",u,v); */

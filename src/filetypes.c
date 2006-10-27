@@ -721,7 +721,7 @@ static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar)
      while (ds->data.sndfile.pos < ds->length) {
 
 	  st = datasource_read_array(ds,ds->data.sndfile.pos,rawbuf_size,
-				     rawbuf, dither_mode);
+				     rawbuf, dither_mode, NULL);
 	  
 	  if (st == 0 || tempfile_write(tmp,rawbuf,st) || 
 	      status_bar_progress(bar, st/f.samplebytes)) {
@@ -802,6 +802,7 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
      SF_INFO info;
      sample_t *samplebuf;
      ChunkHandle *ch;
+     off_t clipcount = 0;
 
      if (find_nearest_sndfile_format(&(chunk->format),format,&info,filename)) 
 	  return TRUE;
@@ -828,7 +829,7 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
 
      for (i=0; i<chunk->length; i+=n) {
 	  /* FIXME: Use chunk_read_array for FP chunks */
-	  n = chunk_read_array_fp(ch,i,1024,samplebuf,dither_mode);
+	  n = chunk_read_array_fp(ch,i,1024,samplebuf,dither_mode,&clipcount);
 	  if (!n) {
 	       chunk_close(ch);
 	       sf_close(s);
@@ -836,6 +837,7 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
 	       *fatal = TRUE;
 	       return TRUE;
 	  }
+	  clipcount += unnormalized_count(samplebuf,n*chunk->format.channels);
 	  if (sf_writef_sample_t(s,samplebuf,n) != n) {
 	       c = g_strdup_printf(_("Failed to write to '%s'!"),filename);
 	       user_error(c);
@@ -857,7 +859,7 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
      chunk_close(ch);
      sf_close(s);
      g_free(samplebuf);
-
+     clipwarn(clipcount);
      return FALSE;
 
 }
