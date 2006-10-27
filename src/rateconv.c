@@ -224,6 +224,7 @@ static gpointer sox_new(struct driver_data *driver, gboolean realtime,
 			Dataformat *format, guint32 outrate, int dither_mode)
 {
      struct convdata_sox cd,*cdp;
+     Dataformat fmt;
      gchar c[512],d[64],e[64];
      if (format->type == DATAFORMAT_FLOAT || format->samplesize == 3 ||
 	 XOR(format->bigendian,IS_BIGENDIAN)) {
@@ -240,12 +241,14 @@ static gpointer sox_new(struct driver_data *driver, gboolean realtime,
 	  cd.converting = FALSE;
 	  memcpy(&(cd.format),format,sizeof(Dataformat));
      }
-     sox_dialog_format_string(d,sizeof(d),format->samplerate,
-			      format->sign,format->samplesize,
-			      format->channels);
-     sox_dialog_format_string(e,sizeof(e),outrate,format->sign,
-			      format->samplesize,format->channels);
+     sox_dialog_format_string(d,sizeof(d),&(cd.format));
+     memcpy(&fmt,&(cd.format),sizeof(fmt));
+     fmt.samplerate = outrate;
+     sox_dialog_format_string(e,sizeof(e),&fmt);
+     /* driver->id+4 converts driver name to effect name, for example 
+      * "sox_resample" to "resample" */
      g_snprintf(c,sizeof(c),"sox %s - %s - %s",d,e,driver->id+4);
+     /* puts(c); */
      cd.pipehandle = pipe_dialog_open_pipe(c,cd.fds,TRUE);
      if (cd.pipehandle == NULL) return NULL;
      cd.driver = driver;
