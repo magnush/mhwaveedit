@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mhWaveEdit 1.3.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-21 23:48+0200\n"
-"PO-Revision-Date: 2006-06-10 22:03+0100\n"
+"POT-Creation-Date: 2006-10-28 16:41+0200\n"
+"PO-Revision-Date: 2006-10-28 16:44+0100\n"
 "Last-Translator: Magnus Hjorth <magnus.hjorth@home.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -27,41 +27,44 @@ msgstr "Ändrar hastighet"
 msgid "Removing channel"
 msgstr "Tar bort kanal"
 
-#: src/chunk.c:638
+#: src/chunk.c:652
 msgid "Mixing"
 msgstr "Mixar"
 
-#: src/chunk.c:690
+#: src/chunk.c:707
 #, c-format
 msgid "The mixed result was clipped %d times."
 msgstr "Mixningen bottnade %d gånger."
 
-#: src/chunk.c:1079
+#: src/chunk.c:1098
 msgid "Calculating peak level"
-msgstr "Beräknar toppnivå"
+msgstr "Beräknar toppnivå"
 
-#: src/chunk.c:1101 src/chunk.c:1136
+#: src/chunk.c:1120
+#: src/chunk.c:1155
 msgid "Amplifying"
 msgstr "Förstärker"
 
-#: src/chunk.c:1255
+#: src/chunk.c:1274
 msgid "Removing channels"
 msgstr "Tar bort kanaler"
 
-#: src/chunk.c:1261
+#: src/chunk.c:1280
 msgid "Adding channels"
 msgstr "Lägger till kanaler"
+
+#: src/chunk.c:1342
+#, c-format
+msgid "The input was clipped %d times during processing."
+msgstr "Insignalen bottnade %d gånger."
 
 #: src/configdialog.c:62
 msgid "number of recent files"
 msgstr "antal nyligen öppnade filer"
 
 #: src/configdialog.c:75
-msgid ""
-"Some of the settings you have changed will not be activated until you "
-"restart the program"
-msgstr ""
-"Programmet måste startas om för att vissa ändrade inställningar ska aktiveras"
+msgid "Some of the settings you have changed will not be activated until you restart the program"
+msgstr "Programmet måste startas om för att vissa ändrade inställningar ska aktiveras"
 
 #: src/configdialog.c:263
 msgid "Colors"
@@ -71,7 +74,8 @@ msgstr "Färger"
 msgid "_Preview"
 msgstr "_Visa"
 
-#: src/configdialog.c:307 src/configdialog.c:1064
+#: src/configdialog.c:307
+#: src/configdialog.c:1064
 msgid "_OK"
 msgstr "_OK"
 
@@ -255,7 +259,8 @@ msgstr " Uppspelningsinställningar "
 msgid " Variable speed "
 msgstr " Variabel hastighet "
 
-#: src/configdialog.c:904 src/help.c:38
+#: src/configdialog.c:904
+#: src/help.c:38
 msgid "Files"
 msgstr "Filer"
 
@@ -268,16 +273,11 @@ msgid " Temporary file settings "
 msgstr " Inställningar för temporära filer "
 
 #: src/configdialog.c:937
-msgid ""
-"To avoid rounding errors when applying more than one effect on the same "
-"data, floating-point temporary files can be used. However, this will "
-"increase disk and CPU usage."
-msgstr ""
-"För att undvika de avrundningsfel som man får när man genomför mer än en "
-"effekt på samma data, kan man använda flyttalsformat i de temporära filerna. "
-"Detta förbättrar kvaliteten men försämrar prestandan något."
+msgid "To avoid rounding errors when applying more than one effect on the same data, floating-point temporary files can be used. However, this will increase disk and CPU usage."
+msgstr "För att undvika de avrundningsfel som man får när man genomför mer än en effekt på samma data, kan man använda flyttalsformat i de temporära filerna. Detta förbättrar kvaliteten men försämrar prestandan något."
 
-#: src/configdialog.c:950 src/help.c:36
+#: src/configdialog.c:950
+#: src/help.c:36
 msgid "Quality"
 msgstr "Kvalitet"
 
@@ -349,72 +349,74 @@ msgstr "byte"
 msgid "_Close"
 msgstr "_Stäng"
 
-#: src/dataformat.c:414
+#: src/dataformat.c:424
 msgid "Floating-point (single)"
 msgstr "Flyttal (normal)"
 
-#: src/dataformat.c:416
+#: src/dataformat.c:426
 msgid "Floating-point (double)"
 msgstr "Flyttal (dubbel)"
 
-#: src/dataformat.c:418
+#: src/dataformat.c:428
 #, c-format
 msgid "PCM, %d bit, %s %s\n"
 msgstr "PCM, %d bitar, %s %s\n"
 
-#: src/dataformat.c:419 src/formatselector.c:91
+#: src/dataformat.c:429
+#: src/formatselector.c:91
 msgid "Signed"
 msgstr "Med tecken"
 
-#: src/dataformat.c:419 src/formatselector.c:90
+#: src/dataformat.c:429
+#: src/formatselector.c:90
 msgid "Unsigned"
 msgstr "Utan tecken"
 
-#: src/dataformat.c:420
+#: src/dataformat.c:430
 msgid "Big-endian"
 msgstr "Big-endian"
 
-#: src/dataformat.c:420
+#: src/dataformat.c:430
 msgid "Little-endian"
 msgstr "Little-endian"
 
-#: src/dataformat.c:467
+#: src/dataformat.c:477
 msgid "Testing ranges..."
 msgstr "Testar gränser..."
 
-#: src/dataformat.c:483
+#: src/dataformat.c:493
 msgid "Range test failed for format: "
 msgstr "Gränstest misslyckades för format: "
 
-#: src/dataformat.c:491
+#: src/dataformat.c:501
 msgid "Testing all conversions.."
 msgstr "Testar alla omvandlingar..."
 
-#: src/dataformat.c:524
+#: src/dataformat.c:534
 msgid "(expected) "
 msgstr "(förväntat) "
 
-#: src/dataformat.c:525
+#: src/dataformat.c:535
 msgid "Conversion test failed, between: "
 msgstr "Omvandlingstest misslyckades, mellan: "
 
-#: src/dataformat.c:527
+#: src/dataformat.c:537
 msgid "  and: "
 msgstr "  och: "
 
-#: src/dataformat.c:535
+#: src/dataformat.c:545
 msgid "No errors detected!"
 msgstr "Inga fel upptäcktes!"
 
-#: src/dataformat.c:569
+#: src/dataformat.c:579
 msgid "Preparing tests.."
 msgstr "Förbereder tester.."
 
-#: src/dataformat.c:577
+#: src/dataformat.c:587
 msgid "Running tests.."
 msgstr "Kör tester.."
 
-#: src/dataformat.c:617
+#: src/dataformat.c:627
 #, c-format
 msgid ""
 "\n"
@@ -439,7 +441,8 @@ msgstr "Oväntat slut på fil"
 msgid "Error reading %s: %s"
 msgstr "Fel vid läsning av %s: %s"
 
-#: src/datasource.c:442 src/datasource.c:490
+#: src/datasource.c:442
+#: src/datasource.c:490
 #, c-format
 msgid "Error seeking in %s: %s"
 msgstr "Fel vid positionering i %s: %s"
@@ -468,28 +471,46 @@ msgstr "[B] Hastighet"
 msgid "[B] Pipe through program"
 msgstr "[B] Filtrera genom program"
 
-#: src/effectbrowser.c:128 src/effectbrowser.c:145
+#: src/effectbrowser.c:128
+#: src/effectbrowser.c:145
 msgid "You have no open file to apply the effect to!"
 msgstr "Det finns ingen öppen fil att verkställa effekten på!"
 
-#: src/effectbrowser.c:268 src/filetypes.c:1119 src/gotodialog.c:114
-#: src/mainwindow.c:1292 src/rawdialog.c:88 src/recorddialog.c:369
-#: src/sound-alsalib.c:78 src/sound-esound.c:284 src/sound-jack.c:256
-#: src/sound-oss.c:416 src/um.c:107 src/um.c:140 src/um.c:337 src/um.c:437
+#: src/effectbrowser.c:268
+#: src/filetypes.c:1126
+#: src/gotodialog.c:114
+#: src/mainwindow.c:1294
+#: src/rawdialog.c:88
+#: src/recorddialog.c:369
+#: src/sound-alsalib.c:78
+#: src/sound-esound.c:284
+#: src/sound-jack.c:256
+#: src/sound-oss.c:416
+#: src/um.c:107
+#: src/um.c:140
+#: src/um.c:336
+#: src/um.c:434
 msgid "OK"
 msgstr "OK"
 
-#: src/effectbrowser.c:273 src/gotodialog.c:122
+#: src/effectbrowser.c:273
+#: src/gotodialog.c:122
 msgid "Apply"
 msgstr "Verkställ"
 
-#: src/effectbrowser.c:277 src/gotodialog.c:127 src/mainwindow.c:1221
-#: src/pipedialog.c:146 src/recorddialog.c:803 src/sound-esound.c:288
-#: src/sound-jack.c:260 src/sound-oss.c:420
+#: src/effectbrowser.c:277
+#: src/gotodialog.c:127
+#: src/mainwindow.c:1223
+#: src/pipedialog.c:151
+#: src/recorddialog.c:803
+#: src/sound-esound.c:288
+#: src/sound-jack.c:260
+#: src/sound-oss.c:420
 msgid "Close"
 msgstr "Stäng"
 
-#: src/effectbrowser.c:298 src/help.c:35
+#: src/effectbrowser.c:298
+#: src/help.c:35
 msgid "Effects"
 msgstr "Effekter"
 
@@ -533,12 +554,8 @@ msgstr "Laddar"
 
 #: src/filetypes.c:318
 #, c-format
-msgid ""
-"The file name '%s' has an extension unknown to the program. Please specify "
-"in which format this file should be saved."
-msgstr ""
-"Filnamnet '%s' har en ändelse som programmet inte känner till. Ange i vilket "
-"format filen skall sparas."
+msgid "The file name '%s' has an extension unknown to the program. Please specify in which format this file should be saved."
+msgstr "Filnamnet '%s' har en ändelse som programmet inte känner till. Ange i vilket format filen skall sparas."
 
 #: src/filetypes.c:323
 msgid "Unknown file type"
@@ -550,14 +567,8 @@ msgstr "Sparar"
 
 #: src/filetypes.c:378
 #, c-format
-msgid ""
-"The file %s may be destroyed since the saving failed. Try to free up some "
-"disk space and save again. If you exit now the file's contents could be in a "
-"bad state. "
-msgstr ""
-"Filen %s kan ha skadats då sparningen misslyckades. Försök att frigöra "
-"utrymme på hårddisken och spara igen. Om du avslutar nu kan filens innehåll "
-"bli skadat."
+msgid "The file %s may be destroyed since the saving failed. Try to free up some disk space and save again. If you exit now the file's contents could be in a bad state. "
+msgstr "Filen %s kan ha skadats då sparningen misslyckades. Försök att frigöra utrymme på hårddisken och spara igen. Om du avslutar nu kan filens innehåll bli skadat."
 
 #: src/filetypes.c:442
 #, c-format
@@ -566,121 +577,120 @@ msgstr "%s är inte en giltig wav-fil"
 
 #: src/filetypes.c:457
 #, c-format
-msgid ""
-"The file %s is a compressed wav file. This program can only work with "
-"uncompressed wav files."
-msgstr ""
-"Filen %s är en komprimerad wav-fil. Detta program kan bara arbeta med "
-"okomprimerade wav-filer."
+msgid "The file %s is a compressed wav file. This program can only work with uncompressed wav files."
+msgstr "Filen %s är en komprimerad wav-fil. Detta program kan bara arbeta med okomprimerade wav-filer."
 
-#: src/filetypes.c:540
-msgid ""
-"On this system, libsndfile is required to save floating-point wav files."
-msgstr ""
-"På denna dator krävs libsndfile för att man ska kunna spara wav-filer i "
-"flyttalsformat."
+#: src/filetypes.c:541
+msgid "On this system, libsndfile is required to save floating-point wav files."
+msgstr "På denna dator krävs libsndfile för att man ska kunna spara wav-filer i flyttalsformat."
 
-#: src/filetypes.c:547
+#: src/filetypes.c:548
 msgid "8-bit wav-files must be in unsigned format!"
 msgstr "8-bitars wavfiler måste ha sampelformat utan tecken!"
 
-#: src/filetypes.c:551
+#: src/filetypes.c:552
 msgid "16/24/32-bit wav-files must be in signed format!"
 msgstr "16/24/32-bitars wavfiler måste ha sampelformat med tecken!"
 
-#: src/filetypes.c:555
+#: src/filetypes.c:556
 msgid "wav files must be in little endian format!"
 msgstr "wav-filer måste ha little-endian sampleformat!"
 
-#: src/filetypes.c:562
+#: src/filetypes.c:563
 msgid ""
-"You are saving a wav file larger than 2048MB. Such large files are non-"
-"standard and may not be readable by all programs.\n"
+"You are saving a wav file larger than 2048MB. Such large files are non-standard and may not be readable by all programs.\n"
 "\n"
 " (this warning will not be displayed again)"
 msgstr ""
-"Du vill spara en wav-fil som är större än 2048MB. Så stora wav-filer är inte "
-"standard, och kan därför vara oläsliga för vissa program.\n"
+"Du vill spara en wav-fil som är större än 2048MB. Så stora wav-filer är inte standard, och kan därför vara oläsliga för vissa program.\n"
 "\n"
 "(denna varning visas bara en gång)"
 
-#: src/filetypes.c:679 src/filetypes.c:811
+#: src/filetypes.c:682
+#: src/filetypes.c:815
 #, c-format
 msgid "Failed to open '%s'!"
 msgstr "Misslyckades med att öppna '%s'!"
 
-#: src/filetypes.c:787
+#: src/filetypes.c:790
 msgid "Invalid sample format or number of channels for this file format"
 msgstr "Ogiltigt sampelformat eller antal kanaler för detta filformat"
 
-#: src/filetypes.c:840
+#: src/filetypes.c:845
 #, c-format
 msgid "Failed to write to '%s'!"
 msgstr "Misslyckades att skriva till '%s'!"
 
-#: src/filetypes.c:907
+#: src/filetypes.c:912
 msgid "Decoding"
 msgstr "Avkodar"
 
-#: src/filetypes.c:1019
+#: src/filetypes.c:1026
 msgid "Variable bitrate (default)"
 msgstr "Varierande bitrate (standard)"
 
-#: src/filetypes.c:1020
+#: src/filetypes.c:1027
 msgid "Average bitrate"
 msgstr "Genomsnittlig bitrate"
 
-#: src/filetypes.c:1021
+#: src/filetypes.c:1028
 msgid "Constant bitrate"
 msgstr "Konstant bitrate"
 
-#: src/filetypes.c:1022
+#: src/filetypes.c:1029
 msgid "Custom argument"
 msgstr "Eget kommandoargument"
 
-#: src/filetypes.c:1026
+#: src/filetypes.c:1033
 msgid "Standard (high quality)"
 msgstr "Standard (hög kvalitet)"
 
-#: src/filetypes.c:1027
+#: src/filetypes.c:1034
 msgid "Extreme (higher quality)"
 msgstr "Extrem (högre kvalitet)"
 
-#: src/filetypes.c:1028
+#: src/filetypes.c:1035
 msgid "Insane (highest possible quality)"
 msgstr "Galen (högsta kvalitet)"
 
-#: src/filetypes.c:1046
+#: src/filetypes.c:1053
 #, c-format
 msgid "%s kbit/s"
 msgstr "%s kbit/s"
 
-#: src/filetypes.c:1075
+#: src/filetypes.c:1082
 msgid "MP3 Preferences"
 msgstr "Inställningar för MP3-export"
 
-#: src/filetypes.c:1086
+#: src/filetypes.c:1093
 msgid "Encoding type: "
 msgstr "Kodningstyp: "
 
-#: src/filetypes.c:1099
+#: src/filetypes.c:1106
 msgid "Quality: "
 msgstr "Kvalitet: "
 
-#: src/filetypes.c:1108
+#: src/filetypes.c:1115
 msgid "Custom argument: "
 msgstr "Eget argument: "
 
-#: src/filetypes.c:1114
+#: src/filetypes.c:1121
 msgid "Use this setting by default"
 msgstr "Använd denna inställning som standard"
 
-#: src/filetypes.c:1127 src/rawdialog.c:94 src/recorddialog.c:377
-#: src/sound-alsalib.c:82 src/um.c:131 src/um.c:148 src/um.c:342 src/um.c:446
+#: src/filetypes.c:1134
+#: src/rawdialog.c:94
+#: src/recorddialog.c:377
+#: src/sound-alsalib.c:82
+#: src/um.c:131
+#: src/um.c:148
+#: src/um.c:340
+#: src/um.c:443
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: src/float_box.c:167 src/int_box.c:169
+#: src/float_box.c:167
+#: src/int_box.c:169
 #, c-format
 msgid "'%s' is not a number!"
 msgstr "'%s' är inte ett nummer!"
@@ -750,8 +760,10 @@ msgstr "samplingsfrekvens"
 msgid "Place cursor "
 msgstr "Placera markör "
 
-#: src/gotodialog.c:86 src/soxdialog.c:491 src/soxdialog.c:496
-#: src/soxdialog.c:526
+#: src/gotodialog.c:86
+#: src/soxdialog.c:515
+#: src/soxdialog.c:520
+#: src/soxdialog.c:550
 msgid " seconds"
 msgstr " sekunder"
 
@@ -776,12 +788,8 @@ msgid "after selection end"
 msgstr "efter markerat områdes slut"
 
 #: src/gotodialog.c:107
-msgid ""
-"(use a negative number to place the cursor before instead of after the "
-"selected point)"
-msgstr ""
-"(använd negativt tal för att placera markören före i stället för efter vald "
-"punkt)"
+msgid "(use a negative number to place the cursor before instead of after the selected point)"
+msgstr "(använd negativt tal för att placera markören före i stället för efter vald punkt)"
 
 #: src/gotodialog.c:142
 msgid "Position cursor"
@@ -797,7 +805,8 @@ msgstr "Kunde inte öppna %s: %s"
 msgid "Warning: Unexpected error: %s"
 msgstr "Varning: Oväntat fel: %s"
 
-#: src/gtkfiles.c:109 src/gtkfiles.c:124
+#: src/gtkfiles.c:109
+#: src/gtkfiles.c:124
 #, c-format
 msgid "Error closing %s: %s"
 msgstr "Fel vid stängning av %s: %s"
@@ -807,7 +816,8 @@ msgstr "Fel vid stängning av %s: %s"
 msgid "Could not seek in %s: %s"
 msgstr "Kunde inte positionera i %s: %s"
 
-#: src/gtkfiles.c:158 src/gtkfiles.c:203
+#: src/gtkfiles.c:158
+#: src/gtkfiles.c:203
 #, c-format
 msgid "Could not read from %s: %s"
 msgstr "Kunde inte läsa från %s: %s"
@@ -827,7 +837,8 @@ msgstr "Kunde inte skriva data till %s"
 msgid "Could not get file position in %s: %s"
 msgstr "Kunde inte utläsa filposition i %s: %s"
 
-#: src/gtkfiles.c:312 src/gtkfiles.c:472
+#: src/gtkfiles.c:312
+#: src/gtkfiles.c:472
 msgid "File already exists. Overwrite?"
 msgstr "Filen finns redan. Vill du ersätta den?"
 
@@ -894,15 +905,13 @@ msgstr "Adresser"
 #, no-c-format
 msgid ""
 "\n"
-"mhWaveEdit is a graphical program for editing sound files. It is completely "
-"free (GPL).\n"
+"mhWaveEdit is a graphical program for editing sound files. It is completely free (GPL).\n"
 "\n"
 "You can find the latest release of mhWaveEdit at:\n"
 "http://gna.org/projects/mhwaveedit/\n"
 msgstr ""
 "\n"
-"mhWaveEdit är ett grafiskt program för att redigera ljudfiler. Det är fri "
-"programvara (GPL).\n"
+"mhWaveEdit är ett grafiskt program för att redigera ljudfiler. Det är fri programvara (GPL).\n"
 "\n"
 "Den senaste versionen av mhWaveEdit finns på:\n"
 "http://gna.org/projects/mhwaveedit/\n"
@@ -911,56 +920,31 @@ msgstr ""
 #, no-c-format
 msgid ""
 "\n"
-"The area where you 'see' the contents of the file you are editing, is called "
-"the 'sample view'. \n"
+"The area where you 'see' the contents of the file you are editing, is called the 'sample view'. \n"
 "\n"
-"In the sample view there is a grey vertical bar called the 'cursor'. The "
-"cursor follows the sound wave when you play the sound. You can position the "
-"cursor by clicking with the right (2:nd) mouse button. If you do this while "
-"you're playing a file, the playing will continue from the new cursor "
-"position. You can also position the cursor more exact by using the 'Position "
-"Cursor...' command on the Edit menu.\n"
+"In the sample view there is a grey vertical bar called the 'cursor'. The cursor follows the sound wave when you play the sound. You can position the cursor by clicking with the right (2:nd) mouse button. If you do this while you're playing a file, the playing will continue from the new cursor position. You can also position the cursor more exact by using the 'Position Cursor...' command on the Edit menu.\n"
 "\n"
-"You can place marks in your file by holding down Ctrl and pressing a number "
-"from 0 to 9. This will place a mark (green vertical bar) with the same "
-"number at the current cursor position. You can later make the cursor go to "
-"that position again by just pressing the number. Setting and jumping to "
-"marks can be done while playing. To remove a mark, jump to the mark and set "
-"it again.\n"
+"You can place marks in your file by holding down Ctrl and pressing a number from 0 to 9. This will place a mark (green vertical bar) with the same number at the current cursor position. You can later make the cursor go to that position again by just pressing the number. Setting and jumping to marks can be done while playing. To remove a mark, jump to the mark and set it again.\n"
 msgstr ""
 "\n"
 "Den yta där du ser ljudvågen kallas för vyn.\n"
 "\n"
-"I vyn finns en grå linje som kallas 'markör'. Markören följer ljudvågen när "
-"man spelar upp ljudet. Man kan placera markören med höger musknapp. Om man "
-"gör detta medan ljudet spelas upp, kommer uppspelningen hoppa till den nya "
-"positionen. Man kan också placera markören mer exakt genom att använda "
-"'Placera markör...' i Redigera-menyn\n"
+"I vyn finns en grå linje som kallas 'markör'. Markören följer ljudvågen när man spelar upp ljudet. Man kan placera markören med höger musknapp. Om man gör detta medan ljudet spelas upp, kommer uppspelningen hoppa till den nya positionen. Man kan också placera markören mer exakt genom att använda 'Placera markör...' i Redigera-menyn\n"
 "\n"
-"Man kan placera märken i filen genom att trycka Ctrl och en siffertangent. "
-"Gör man detta placeras en linje med motsvarande siffra vid nuvarande "
-"markörposition. Man kan sedan flytta markören till denna position genom att "
-"bara trycka på siffertangenten. Man kan placera och hoppa till märken medan "
-"uppspelning pågår.\n"
+"Man kan placera märken i filen genom att trycka Ctrl och en siffertangent. Gör man detta placeras en linje med motsvarande siffra vid nuvarande markörposition. Man kan sedan flytta markören till denna position genom att bara trycka på siffertangenten. Man kan placera och hoppa till märken medan uppspelning pågår.\n"
 
 #: src/help.c:62
 #, no-c-format
 msgid ""
 "\n"
-"Playing a file is simple, just load the file and press the play button. The "
-"green play button plays from the current position. The yellow play button "
-"plays the current selection, or the entire file if nothing is selected. Stop "
-"the playback with the stop button (with the red square). \n"
+"Playing a file is simple, just load the file and press the play button. The green play button plays from the current position. The yellow play button plays the current selection, or the entire file if nothing is selected. Stop the playback with the stop button (with the red square). \n"
 "\n"
 "The playback speed can be varied by adjusting the slider to the far right. \n"
 "\n"
 "You can do normal editing while the file is playing.\n"
 msgstr ""
 "\n"
-"Att spela upp en fil är enkelt, bara ladda filen och tryck på spelaknappen. "
-"Den gröna spelaknappen spelar från nuvarande markörposition. Den gula spelar "
-"aktuell markering eller hela filen om ingenting är markerat. Stoppa "
-"uppspelningen med stoppknappen.\n"
+"Att spela upp en fil är enkelt, bara ladda filen och tryck på spelaknappen. Den gröna spelaknappen spelar från nuvarande markörposition. Den gula spelar aktuell markering eller hela filen om ingenting är markerat. Stoppa uppspelningen med stoppknappen.\n"
 "\n"
 "Uppspelningshastigheten kan regleras med kontrollen längst till höger.\n"
 "\n"
@@ -970,28 +954,16 @@ msgstr ""
 #, no-c-format
 msgid ""
 "\n"
-"Recording is done with 'Record...' on the Play menu, or the Record button "
-"(the red circle). A dialog box will pop up where you can select what format "
-"you want to record in. After selecting the format, meters and numbers will "
-"appear showing info about the volume level of the sound input. \n"
+"Recording is done with 'Record...' on the Play menu, or the Record button (the red circle). A dialog box will pop up where you can select what format you want to record in. After selecting the format, meters and numbers will appear showing info about the volume level of the sound input. \n"
 "\n"
-"When you want to start recording, press the \"Start recording\" button. When "
-"you've recorded everything you wanted to, press the Finish button and the "
-"record dialog will disappear and newly recorded sound will show up in a new "
-"window.\n"
+"When you want to start recording, press the \"Start recording\" button. When you've recorded everything you wanted to, press the Finish button and the record dialog will disappear and newly recorded sound will show up in a new window.\n"
 "\n"
-"Currently it is impossible to play and record at the same time, so the "
-"playback will stop when you record.\n"
+"Currently it is impossible to play and record at the same time, so the playback will stop when you record.\n"
 msgstr ""
 "\n"
-"Inspelning startas med 'Spela in...' på Spela-menyn, eller "
-"inspelningsknappen (den röda cirkeln). En dialogruta dyker upp där man kan "
-"välja vilket format man ska spela in. Efter att ha valt format dyker mätare "
-"och nummer upp som visar information om volymnivå på insignalen.\n"
+"Inspelning startas med 'Spela in...' på Spela-menyn, eller inspelningsknappen (den röda cirkeln). En dialogruta dyker upp där man kan välja vilket format man ska spela in. Efter att ha valt format dyker mätare och nummer upp som visar information om volymnivå på insignalen.\n"
 "\n"
-"När man vill starta inspelningen, tryck knappen \\\"Starta inspelning\\\". "
-"När inspelningen är klar, tryck Sluta-knappen. Dialogrutan försvinner då och "
-"det inspelade ljudet dyker upp i ett nytt fönster.\n"
+"När man vill starta inspelningen, tryck knappen \\\"Starta inspelning\\\". När inspelningen är klar, tryck Sluta-knappen. Dialogrutan försvinner då och det inspelade ljudet dyker upp i ett nytt fönster.\n"
 "\n"
 "Det går för närvarande inte att spela in och spela upp ljud på samma gång.\n"
 
@@ -999,76 +971,50 @@ msgstr ""
 #, no-c-format
 msgid ""
 "\n"
-"You make selections by dragging the mouse over the sample view. You can hear "
-"what you've currently selected by clicking on the \"play selection\" button "
-"(the button with the yellow arrow) or by selecting 'Play selection' from the "
-"Play menu.\n"
+"You make selections by dragging the mouse over the sample view. You can hear what you've currently selected by clicking on the \"play selection\" button (the button with the yellow arrow) or by selecting 'Play selection' from the Play menu.\n"
 "\n"
-"You can use the cursor to refine the selection. Use the 'Selection start at "
-"cursor' and 'Selection end at cursor' buttons to move the selection starting "
-"point or the selection end point to the current cursor position. You can "
-"also drag the selection endpoints using the mouse.\n"
+"You can use the cursor to refine the selection. Use the 'Selection start at cursor' and 'Selection end at cursor' buttons to move the selection starting point or the selection end point to the current cursor position. You can also drag the selection endpoints using the mouse.\n"
 "\n"
 "The 'Cut' and 'Copy' functions work like in any other software. \n"
 "\n"
-"The 'Paste' function insert the clipboard contents at the cursor position. "
-"The 'Paste over' function works like 'Paste', except that it overwrites the "
-"data after the insert position. \n"
+"The 'Paste' function insert the clipboard contents at the cursor position. The 'Paste over' function works like 'Paste', except that it overwrites the data after the insert position. \n"
 "\n"
-"The 'Paste mix' function combines the clipboard data with the data at the "
-"cursor position.\n"
+"The 'Paste mix' function combines the clipboard data with the data at the cursor position.\n"
 "\n"
-"The 'Paste as new' function opens a new window and puts the clipboard "
-"contents into it. \n"
+"The 'Paste as new' function opens a new window and puts the clipboard contents into it. \n"
 "\n"
 "The 'Crop' function deletes all parts of the file that are not selected.\n"
 "\n"
-"The 'Silence selection' function replaces the selected part with silence. To "
-"avoid clicks, the silent part is a line that meets the wave at the "
-"endpoints.\n"
+"The 'Silence selection' function replaces the selected part with silence. To avoid clicks, the silent part is a line that meets the wave at the endpoints.\n"
 "\n"
-"All editing functions work non-destructively, that is, the file you're "
-"editing isn't actually changed until you save it (the effects also work this "
-"way).\n"
+"All editing functions work non-destructively, that is, the file you're editing isn't actually changed until you save it (the effects also work this way).\n"
 "\n"
 msgstr ""
 "\n"
-"Man kan markera genom att dra med musen. Man kan lyssna på det som markerats "
-"genom att trycka på \"spela markering\"-knappen (den gula triangeln) eller "
-"välja \"Spela markering\" på Spela-menyn\n"
+"Man kan markera genom att dra med musen. Man kan lyssna på det som markerats genom att trycka på \"spela markering\"-knappen (den gula triangeln) eller välja \"Spela markering\" på Spela-menyn\n"
 "\n"
-"Man kan använda markören för att förfina markeringen. Använd knapparna "
-"\"Flytta markeringens början till markören\" och \"Flytta markeringens slut "
-"till markören\" för att flytta början eller slutet på markeringen till "
-"markörens position. Man kan också justera markeringen genom att dra med "
-"musen.\n"
+"Man kan använda markören för att förfina markeringen. Använd knapparna \"Flytta markeringens början till markören\" och \"Flytta markeringens slut till markören\" för att flytta början eller slutet på markeringen till markörens position. Man kan också justera markeringen genom att dra med musen.\n"
 "\n"
 "'Klipp up' och 'Kopiera' fungerar som i de flesta andra program.\n"
 "\n"
-"'Klistra in' infogar urklippets innehåll vid markören. 'Klistra över' "
-"fungerar som 'Klistra in', fast det skriver över datat som ligger framför "
-"markören. \n"
+"'Klistra in' infogar urklippets innehåll vid markören. 'Klistra över' fungerar som 'Klistra in', fast det skriver över datat som ligger framför markören. \n"
 "\n"
 "'Mixa in'-funktionen mixar ihop urklippets data och datat vid markören.\n"
 "\n"
-"'Klistra in som ny' öppnar ett nytt fönster och lägger in urklippets "
-"innehåll.\n"
+"'Klistra in som ny' öppnar ett nytt fönster och lägger in urklippets innehåll.\n"
 "\n"
 "'Skär ut' tar bort allt utom markeringen.\n"
 "\n"
-"'Tysta markering' byter ut markerat område mot tystnad. För att undvika "
-"klick så görs tystnaden som en linje mellan ändpunkterna.\n"
+"'Tysta markering' byter ut markerat område mot tystnad. För att undvika klick så görs tystnaden som en linje mellan ändpunkterna.\n"
 "\n"
-"All redigering och alla effekter sker icke-destruktivt, dvs filen ändras "
-"inte i verkligheten förrän man sparar.\n"
+"All redigering och alla effekter sker icke-destruktivt, dvs filen ändras inte i verkligheten förrän man sparar.\n"
 "\n"
 
 #: src/help.c:99
 #, no-c-format
 msgid ""
 "\n"
-"mhWaveEdit has a few simple effects, which are available from the 'Effects' "
-"menu. \n"
+"mhWaveEdit has a few simple effects, which are available from the 'Effects' menu. \n"
 "\n"
 " * Fade in/out\n"
 "\n"
@@ -1076,41 +1022,29 @@ msgid ""
 "\n"
 " * Normalize\n"
 "\n"
-"   This amplifies the sound as much as possible without getting clipping "
-"distortion. \n"
+"   This amplifies the sound as much as possible without getting clipping distortion. \n"
 "\n"
 " * Volume adjust/fade...\n"
 "\n"
-"   This effect lets you select a starting volume and a ending volume and "
-"amplifies the selection fading from the starting volume to the ending "
-"volume.\n"
+"   This effect lets you select a starting volume and a ending volume and amplifies the selection fading from the starting volume to the ending volume.\n"
 "\n"
-"   Note that volumes above 100% may cause sound distortion. Use the 'Find "
-"top volume' to find out the maximum amplification possible without "
-"distortion. (You can use this for normalizing samples.) \n"
+"   Note that volumes above 100% may cause sound distortion. Use the 'Find top volume' to find out the maximum amplification possible without distortion. (You can use this for normalizing samples.) \n"
 "\n"
-"   By setting starting volume and ending volume to the same value you get a "
-"simple amplification of the sound. \n"
+"   By setting starting volume and ending volume to the same value you get a simple amplification of the sound. \n"
 "\n"
 " * Convert samplerate...\n"
 "\n"
-"   This converts the samplerate of the entire file to one you specify. There "
-"are different methods for doing this, usually the one in the top has the "
-"best quality but can take longer than the other methode.\n"
+"   This converts the samplerate of the entire file to one you specify. There are different methods for doing this, usually the one in the top has the best quality but can take longer than the other methode.\n"
 "\n"
 " * Convert sample format...\n"
 "\n"
 "   This converts the sample format of the entire file.\n"
 "\n"
-"   The 'Don't actually change the data' option can be used if the program "
-"was wrong about the file's format.\n"
+"   The 'Don't actually change the data' option can be used if the program was wrong about the file's format.\n"
 "\n"
 " * Byte swap\n"
 "\n"
-"   This \"byte swaps\" the selected part. It can be used to repair damaged "
-"files where the byte order is wrong. Note that if the sound looks alright "
-"but plays wrong, you should not use this option, instead you should use the "
-"\"byte-swap output\" option in the Preferences dialog.\n"
+"   This \"byte swaps\" the selected part. It can be used to repair damaged files where the byte order is wrong. Note that if the sound looks alright but plays wrong, you should not use this option, instead you should use the \"byte-swap output\" option in the Preferences dialog.\n"
 "\n"
 " * Mix channels...\n"
 "\n"
@@ -1118,26 +1052,17 @@ msgid ""
 "\n"
 " * Split channel...\n"
 "\n"
-"   This copies the first channel to a new channel in the sound, converting "
-"mono to stereo etc.\n"
+"   This copies the first channel to a new channel in the sound, converting mono to stereo etc.\n"
 "\n"
 " * Combine channels...\n"
 "\n"
-"   This effect lets you create a new sound by a linear combination of the "
-"old channels. This means you can do channel mixing / swapping / balance / "
-"panning / amplification etc. by entering different values. For example, to "
-"swap the left and right channel, you select that the new Channel 1 should be "
-"0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 "
-"should be 100% of the old Channel 1 and 0% of the old Channel 2 \n"
+"   This effect lets you create a new sound by a linear combination of the old channels. This means you can do channel mixing / swapping / balance / panning / amplification etc. by entering different values. For example, to swap the left and right channel, you select that the new Channel 1 should be 0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 should be 100% of the old Channel 1 and 0% of the old Channel 2 \n"
 "\n"
 " * Speed adjustment...\n"
 "\n"
-"   This effect changes the speed of the selection. The tone will change as "
-"well.\n"
+"   This effect changes the speed of the selection. The tone will change as well.\n"
 "\n"
-"mhWaveEdit supports LADSPA effects and can also make use of most of the SoX "
-"utility's effects. All supported effects can be found by choosing the "
-"'Effects...' menu item. \n"
+"mhWaveEdit supports LADSPA effects and can also make use of most of the SoX utility's effects. All supported effects can be found by choosing the 'Effects...' menu item. \n"
 "\n"
 msgstr ""
 "\n"
@@ -1153,37 +1078,25 @@ msgstr ""
 "\n"
 " * Volymjustering...\n"
 "\n"
-"   Denna effekt låter dig ange start- och slutvolym och \"fade:ar\" "
-"markeringen. För att skapa en fade-ut, välj startvolym 100% och slutvolym "
-"0%.\n"
+"   Denna effekt låter dig ange start- och slutvolym och \"fade:ar\" markeringen. För att skapa en fade-ut, välj startvolym 100% och slutvolym 0%.\n"
 "\n"
-"   Förstärkning över 100% kan orsaka distortion. Använd 'Hitta maxvolym'-"
-"knappen för att hitta högsta möjliga förstärkning som går att få utan "
-"distortion.\n"
+"   Förstärkning över 100% kan orsaka distortion. Använd 'Hitta maxvolym'-knappen för att hitta högsta möjliga förstärkning som går att få utan distortion.\n"
 "\n"
-"   Sätter man samma start- och slutvolym får man en vanlig förstärkning av "
-"ljudet.\n"
+"   Sätter man samma start- och slutvolym får man en vanlig förstärkning av ljudet.\n"
 "\n"
 " * Omvandla samplingsfrekvens...\n"
 "\n"
-"   Denna effekt omvandlar samplingsfrekvensen på aktuell fil. Det finns "
-"olika metoder att göra detta på, det första alternativet i listan har högst "
-"kvalitet men kan ta längre tid än metoderna längre ner.\n"
+"   Denna effekt omvandlar samplingsfrekvensen på aktuell fil. Det finns olika metoder att göra detta på, det första alternativet i listan har högst kvalitet men kan ta längre tid än metoderna längre ner.\n"
 "\n"
 " * Omvandla sampelformat...\n"
 "\n"
 "   Denna effekt omvandlar sampelformatet på filen.\n"
 "\n"
-"   Knappen \"Ändra ej datat\" kan användas om programmet inte har läst filen "
-"med rätt format.\n"
+"   Knappen \"Ändra ej datat\" kan användas om programmet inte har läst filen med rätt format.\n"
 "\n"
 " * Växla byteordning\n"
 "\n"
-"   Denna effekt kan användas för att reparera skadade filer där "
-"byteordningen blivit fel. Observera att om ljudfilen ser bra ut på skärmen "
-"men låter illa när man spelar den ska man inte använda denna effekt, använd "
-"i stället inställningen \"Växla byteordning på spelat ljud\" i Inställningar-"
-"fönstret. \n"
+"   Denna effekt kan användas för att reparera skadade filer där byteordningen blivit fel. Observera att om ljudfilen ser bra ut på skärmen men låter illa när man spelar den ska man inte använda denna effekt, använd i stället inställningen \"Växla byteordning på spelat ljud\" i Inställningar-fönstret. \n"
 "\n"
 " * Mixa kanaler...\n"
 "\n"
@@ -1191,26 +1104,17 @@ msgstr ""
 "\n"
 " * Dela kanal...\n"
 "\n"
-"   Delar den första kanalen till en ny kanal i ljudet, om ljudet var mono "
-"blir det stereo.\n"
+"   Delar den första kanalen till en ny kanal i ljudet, om ljudet var mono blir det stereo.\n"
 "\n"
 " * Kombinera kanaler...\n"
 "\n"
-"   Med denna effekt gör man en linjärkombination av kanalerna. Genom att "
-"välja olika värden kan man göra mixning, byta plats på kanaler, justera "
-"balans, förstärking osv. Till exempel, för att byta plats på vänster och "
-"höger kanal, ange att nya Kanal 1 ska vara 0% av gamla Kanal 1 och 100% av "
-"gamla Kanal 2, och nya Kanal 2 ska vara 100% av gamla Kanal 1 och 0% av "
-"gamla Kanal 2\n"
+"   Med denna effekt gör man en linjärkombination av kanalerna. Genom att välja olika värden kan man göra mixning, byta plats på kanaler, justera balans, förstärking osv. Till exempel, för att byta plats på vänster och höger kanal, ange att nya Kanal 1 ska vara 0% av gamla Kanal 1 och 100% av gamla Kanal 2, och nya Kanal 2 ska vara 100% av gamla Kanal 1 och 0% av gamla Kanal 2\n"
 "\n"
 " * Ändra hastighet...\n"
 "\n"
-"   Med denna effekt ändrar man hastigheten på ljudet. Tonen kommer att "
-"ändras på samma sätt.\n"
+"   Med denna effekt ändrar man hastigheten på ljudet. Tonen kommer att ändras på samma sätt.\n"
 "\n"
-"mhWaveEdit stöder LADSPA-effekter och kan också använda de flesta av "
-"programmet SoX effekter. Alla effekter som stöds kan man hitta genom att "
-"välja \"Effektfönster...\" på Effekter-menyn.\n"
+"mhWaveEdit stöder LADSPA-effekter och kan också använda de flesta av programmet SoX effekter. Alla effekter som stöds kan man hitta genom att välja \"Effektfönster...\" på Effekter-menyn.\n"
 "\n"
 
 #: src/help.c:152
@@ -1219,124 +1123,67 @@ msgid ""
 "\n"
 "Some notes on sound quality.\n"
 "\n"
-"The general rule when doing audio editing/processing is to not manipulate "
-"the data more than necessary and keep an original copy whenever you're "
-"processing your important files. \n"
+"The general rule when doing audio editing/processing is to not manipulate the data more than necessary and keep an original copy whenever you're processing your important files. \n"
 "\n"
-"Cut, copy and paste operations move the data around without modifying it, so "
-"these don't degrade the sound quality. Because of level differences, you may "
-"get a \"step\" at the start and end of the inserted part, which can cause a "
-"small clicking sound. \n"
+"Cut, copy and paste operations move the data around without modifying it, so these don't degrade the sound quality. Because of level differences, you may get a \"step\" at the start and end of the inserted part, which can cause a small clicking sound. \n"
 "\n"
-"The mix paste function doesn't decrease quality, unless the peaks become too "
-"high and you get clipping. In that case you will get a warning message.\n"
+"The mix paste function doesn't decrease quality, unless the peaks become too high and you get clipping. In that case you will get a warning message.\n"
 "\n"
-"Sound data is normally stored as integer values. Therefore, whenever you "
-"normalize, adjust volume, decrease sample size or filter a sound, the result "
-"must be rounded. If you use 24 or 32 bit sample sizes, this is not really a "
-"problem, but if you use 8 or 16 bits sample size, this rounding causes a "
-"decrease in quality. \n"
+"Sound data is normally stored as integer values. Therefore, whenever you normalize, adjust volume, decrease sample size or filter a sound, the result must be rounded. If you use 24 or 32 bit sample sizes, this is not really a problem, but if you use 8 or 16 bits sample size, this rounding causes a decrease in quality. \n"
 "\n"
-"The quality decrease that the rounding causes can be masked by adding a "
-"small amount of noise before rounding. This is called \"dithering\". "
-"mhWaveEdit supports basic triangular dithering and it's enabled by "
-"default. \n"
+"The quality decrease that the rounding causes can be masked by adding a small amount of noise before rounding. This is called \"dithering\". mhWaveEdit supports basic triangular dithering and it's enabled by default. \n"
 "\n"
-"By default, mhWaveEdit uses floating-point temporary files for storing "
-"processed results to avoid rounding until the file is saved.\n"
+"By default, mhWaveEdit uses floating-point temporary files for storing processed results to avoid rounding until the file is saved.\n"
 msgstr ""
 "\n"
 "Lite information om ljudkvalitet.\n"
 "\n"
-"Den viktigaste regeln när man håller på med ljud är att inte ändra datat mer "
-"än nödvändigt och att behålla originalversionen när man gör någon form av "
-"bearbetning av ljudfiler.\n"
+"Den viktigaste regeln när man håller på med ljud är att inte ändra datat mer än nödvändigt och att behålla originalversionen när man gör någon form av bearbetning av ljudfiler.\n"
 "\n"
-"Klipp ut, kopiera och klistra in flyttar data utan att ändra i det, så de "
-"sänker normalt inte ljudkvaliteten. På grund av nivåskillnader kan man få "
-"ett litet \"steg\" vid början och slutet på den inklistrade delen, vilket "
-"kan orsaka ett litet klickljud.\n"
+"Klipp ut, kopiera och klistra in flyttar data utan att ändra i det, så de sänker normalt inte ljudkvaliteten. På grund av nivåskillnader kan man få ett litet \"steg\" vid början och slutet på den inklistrade delen, vilket kan orsaka ett litet klickljud.\n"
 "\n"
-"Mixa in-funktionen sänker inte kvaliteten om inte topparna blir för höga och "
-"klipps. I så fall får man ett varningsmeddelande.\n"
+"Mixa in-funktionen sänker inte kvaliteten om inte topparna blir för höga och klipps. I så fall får man ett varningsmeddelande.\n"
 "\n"
-"Ljuddata lagras normalt som heltalsvärden. Därför sker det avrundningar när "
-"man normaliserar, justerar volym, omvandlar mellan format eller filtrerar "
-"ljud på olika sätt. Om man använder 24- eller 32-bitars sampelstorlek så "
-"märks inte avrundningen, men använder man 8 eller 16 bitar orsakar "
-"avrundningen en kvalitetssänkning. \n"
+"Ljuddata lagras normalt som heltalsvärden. Därför sker det avrundningar när man normaliserar, justerar volym, omvandlar mellan format eller filtrerar ljud på olika sätt. Om man använder 24- eller 32-bitars sampelstorlek så märks inte avrundningen, men använder man 8 eller 16 bitar orsakar avrundningen en kvalitetssänkning. \n"
 "\n"
-"Kvalitetssänkningen vid avrundningar kan döljas genom att lägga till mycket "
-"svagt brus innan avrundningen. Detta kallas \"dithering\". mhWaveEdit stöder "
-"vanlig triangulär dithering och det är påslaget som standard. \n"
+"Kvalitetssänkningen vid avrundningar kan döljas genom att lägga till mycket svagt brus innan avrundningen. Detta kallas \"dithering\". mhWaveEdit stöder vanlig triangulär dithering och det är påslaget som standard. \n"
 "\n"
-"Vanligtvis använder mhWaveEdit temporära filer i flyttalsformat för att "
-"undvika onödiga avrundningar tills filen sparas.\n"
+"Vanligtvis använder mhWaveEdit temporära filer i flyttalsformat för att undvika onödiga avrundningar tills filen sparas.\n"
 
 #: src/help.c:168
 #, no-c-format
 msgid ""
 "\n"
-"Even if mhWaveEdit is mainly built for editing wav files, it's also possible "
-"to load and save in a few other formats. mhWaveEdit always supports wav and "
-"raw files, but if it's compiled with the libsndfile library, mhWaveEdit "
-"supports a couple of other formats as well. \n"
+"Even if mhWaveEdit is mainly built for editing wav files, it's also possible to load and save in a few other formats. mhWaveEdit always supports wav and raw files, but if it's compiled with the libsndfile library, mhWaveEdit supports a couple of other formats as well. \n"
 "\n"
-"To save a file with a different file format, save it under a name that does "
-"not end with '.wav'. A few other suffixes are recognized directly (for "
-"example '.iff') but if the suffix is not recognized a dialog box will pop up "
-"and ask you in what format to save the file.\n"
+"To save a file with a different file format, save it under a name that does not end with '.wav'. A few other suffixes are recognized directly (for example '.iff') but if the suffix is not recognized a dialog box will pop up and ask you in what format to save the file.\n"
 "\n"
-"mhWaveEdit has basic support for mp3 and ogg formats. For this to work you "
-"need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg "
-"support. If you have these programs, you can open and save mp3/ogg files "
-"just like any other file format.\n"
+"mhWaveEdit has basic support for mp3 and ogg formats. For this to work you need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg support. If you have these programs, you can open and save mp3/ogg files just like any other file format.\n"
 msgstr ""
 "\n"
-"Även om mhWaveEdit från början byggdes för att redigera wav-filer kan man "
-"också ladda in och spara filer i ett antal andra format. Wav och raw-filer "
-"stöds alltid, men om mhWaveEdit kompilerats med libsndfile-biblioteket, "
-"stöds ett antal andra format också. \n"
+"Även om mhWaveEdit från början byggdes för att redigera wav-filer kan man också ladda in och spara filer i ett antal andra format. Wav och raw-filer stöds alltid, men om mhWaveEdit kompilerats med libsndfile-biblioteket, stöds ett antal andra format också. \n"
 "\n"
-"För att spara en fil med ett annat filformat, spara den med ett namn som "
-"inte slutar på \".wav\". Ett antal andra ändelser känns igen automatiskt "
-"(till exempel \".iff\") men om ändelsen inte känns igen kommer ett fönster "
-"som frågar vilket format filen ska sparas i.\n"
+"För att spara en fil med ett annat filformat, spara den med ett namn som inte slutar på \".wav\". Ett antal andra ändelser känns igen automatiskt (till exempel \".iff\") men om ändelsen inte känns igen kommer ett fönster som frågar vilket format filen ska sparas i.\n"
 "\n"
-"mhWaveEdit har visst stöd för mp3- och ogg-filer. För att detta ska fungera "
-"måste du ha LAME installerat för mp3, och OggDec/OggEnc för Ogg-stöd. Finns "
-"dessa program kan man öppna och spara mp3/ogg-filer.\n"
+"mhWaveEdit har visst stöd för mp3- och ogg-filer. För att detta ska fungera måste du ha LAME installerat för mp3, och OggDec/OggEnc för Ogg-stöd. Finns dessa program kan man öppna och spara mp3/ogg-filer.\n"
 
 #: src/help.c:176
 #, no-c-format
 msgid ""
 "\n"
-"mhWaveEdit creates a directory ~/.mhwaveedit where it stores configuration "
-"information. \n"
+"mhWaveEdit creates a directory ~/.mhwaveedit where it stores configuration information. \n"
 "\n"
-"The configuration file is called config. It can be hand edited, but the "
-"easiest way is through 'Preferences' on the Edit menu.\n"
+"The configuration file is called config. It can be hand edited, but the easiest way is through 'Preferences' on the Edit menu.\n"
 "\n"
-"Temporary files are by default also stored in the ~/.mhwaveedit directory. "
-"Which directories to use can be set through the preferences dialog. To get "
-"the best performance, you should have one temporary directory for each local "
-"filesystem. The temporary files have names of the form \"mhwaveedit-temp-"
-"<pid>-nnnn\". Do NOT open or remove temporary files with the same pid number "
-"as a currently running mhWaveEdit.\n"
+"Temporary files are by default also stored in the ~/.mhwaveedit directory. Which directories to use can be set through the preferences dialog. To get the best performance, you should have one temporary directory for each local filesystem. The temporary files have names of the form \"mhwaveedit-temp-<pid>-nnnn\". Do NOT open or remove temporary files with the same pid number as a currently running mhWaveEdit.\n"
 "\n"
 msgstr ""
 "\n"
 "mhWaveEdit skapar en katalog ~/.mhwaveedit där inställningar lagras.\n"
 "\n"
-"Inställningsfilen kallas config. Den kan redigeras \"för hand\" med en "
-"texteditor, men det enklaste sättet är genom \"Inställningar\" på Redigera-"
-"menyn.\n"
+"Inställningsfilen kallas config. Den kan redigeras \"för hand\" med en texteditor, men det enklaste sättet är genom \"Inställningar\" på Redigera-menyn.\n"
 "\n"
-"Temporära filer lagras också normalt i ~/.mhwaveedit-katalogen. Vilka "
-"kataloger som skall användas kan man välja genom Inställningar-fönstret. För "
-"att få så bra prestanda som möjligt, använd en katalog för varje lokalt "
-"filsystem. Temporära filer har namn på formen \"mhwaveedit-temp-<pid>-nnnn"
-"\". Öppna INTE och ta INTE bort temporära filer medan mhWaveEdit körs.\n"
+"Temporära filer lagras också normalt i ~/.mhwaveedit-katalogen. Vilka kataloger som skall användas kan man välja genom Inställningar-fönstret. För att få så bra prestanda som möjligt, använd en katalog för varje lokalt filsystem. Temporära filer har namn på formen \"mhwaveedit-temp-<pid>-nnnn\". Öppna INTE och ta INTE bort temporära filer medan mhWaveEdit körs.\n"
 "\n"
 
 #: src/help.c:185
@@ -1434,19 +1281,14 @@ msgstr ""
 #, no-c-format
 msgid ""
 "\n"
-"If you find a bug or flaw in the program that's not mentioned in the BUGS "
-"file, report the bug in the bug tracker (see contact info) or mail a bug "
-"report describing the bug to: magnus.hjorth@home.se\n"
+"If you find a bug or flaw in the program that's not mentioned in the BUGS file, report the bug in the bug tracker (see contact info) or mail a bug report describing the bug to: magnus.hjorth@home.se\n"
 "\n"
-"In case of a crash, please do not send me any core dumps. They are huge and "
-"completely useless to me. Instead, create a backtrace. Backtraces tell you "
-"exactly where the program crashed.\n"
+"In case of a crash, please do not send me any core dumps. They are huge and completely useless to me. Instead, create a backtrace. Backtraces tell you exactly where the program crashed.\n"
 "\n"
 "How to create a backtrace:\n"
 "1. Enable core dumps: ulimit -c unlimited\n"
 "2. Run the program:   mhwaveedit\n"
-"3. Make the program crash. You should now get a file named core or core.1234 "
-"in the directory you're in.\n"
+"3. Make the program crash. You should now get a file named core or core.1234 in the directory you're in.\n"
 "4. Run gdb with the program and core file: \n"
 "   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
 "5. After gdb has loaded, use the command: bt\n"
@@ -1454,18 +1296,14 @@ msgid ""
 "7. Now you should have a back trace in the file backtrace.txt\n"
 msgstr ""
 "\n"
-"Om du hittar ett fel i programmet som inte nämnts i BUGS-filen, maila en "
-"buggrapport till: magnus.hjorth@home.se\n"
+"Om du hittar ett fel i programmet som inte nämnts i BUGS-filen, maila en buggrapport till: magnus.hjorth@home.se\n"
 "\n"
-"Om programmet kraschar, maila inte några core-filer till mig. De har jag "
-"ingen användning för. Skapa istället en \"backtrace\" som talar om var "
-"programmet kraschade.\n"
+"Om programmet kraschar, maila inte några core-filer till mig. De har jag ingen användning för. Skapa istället en \"backtrace\" som talar om var programmet kraschade.\n"
 "\n"
 "Så här skapar man en backtrace:\n"
 "1. Aktivera core-filer: ulimit -c unlimited\n"
 "2. Kör programmet:      mhwaveedit\n"
-"3. Gör så att programmet kraschar. När det gör det så ska en fil som heter "
-"core eller core.nnnn dyka upp i den katalog du är i. \n"
+"3. Gör så att programmet kraschar. När det gör det så ska en fil som heter core eller core.nnnn dyka upp i den katalog du är i. \n"
 "4. Kör gdb med programmet och core-filen:\n"
 "   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
 "5. Efter att gdb laddats, använd kommandot: bt\n"
@@ -1477,93 +1315,42 @@ msgstr ""
 #, no-c-format
 msgid ""
 "\n"
-"There are plenty of things you can do if you want to help the development of "
-"mhWaveEdit. \n"
+"There are plenty of things you can do if you want to help the development of mhWaveEdit. \n"
 "\n"
-"First of all, look for bugs and report all bugs you find into the bug "
-"tracker or through e-mail. Sometimes a bug can get overlooked for a long "
-"time because nobody reports it, so don't be afraid to report bugs that have "
-"been there for a few releases. You don't have to provide fixes or very "
-"detailed information, although it helps of course.\n"
+"First of all, look for bugs and report all bugs you find into the bug tracker or through e-mail. Sometimes a bug can get overlooked for a long time because nobody reports it, so don't be afraid to report bugs that have been there for a few releases. You don't have to provide fixes or very detailed information, although it helps of course.\n"
 "\n"
-"Feature requests are also welcome, report them to the mailing list or to the "
-"bug tracker.\n"
+"Feature requests are also welcome, report them to the mailing list or to the bug tracker.\n"
 "\n"
-"If you speak a language other than English and mhWaveEdit isn't translated "
-"to your language, you can contribute a translation. To do that, copy the "
-"template mhwaveedit.pot in the po directory into a new file ll.po, where ll "
-"is your language code (see http://www.gnu.org/software/gettext/manual/"
-"html_node/gettext_221.html for a list of language codes). \n"
+"If you speak a language other than English and mhWaveEdit isn't translated to your language, you can contribute a translation. To do that, copy the template mhwaveedit.pot in the po directory into a new file ll.po, where ll is your language code (see http://www.gnu.org/software/gettext/manual/html_node/gettext_221.html for a list of language codes). \n"
 "\n"
-"It's possible to edit po-files by hand, but I recommend a program such as "
-"poEdit (http://www.poedit.org) for editing translations. \n"
+"It's possible to edit po-files by hand, but I recommend a program such as poEdit (http://www.poedit.org) for editing translations. \n"
 "\n"
-"Note that for those translatable strings that look like \"RecordStatus|Paused"
-"\", you should ignore what's to the left and only translate the string to "
-"the right (\"Paused\" in this example). This convention is there to make it "
-"possible to translate the same string to different things depending on "
-"context. \n"
+"Note that for those translatable strings that look like \"RecordStatus|Paused\", you should ignore what's to the left and only translate the string to the right (\"Paused\" in this example). This convention is there to make it possible to translate the same string to different things depending on context. \n"
 "\n"
-"After you've filled in all the translations you want (you don't have to "
-"translate all the strings), mail in the po file to me (see contact info) and "
-"I'll add it to the next release. \n"
+"After you've filled in all the translations you want (you don't have to translate all the strings), mail in the po file to me (see contact info) and I'll add it to the next release. \n"
 "\n"
-"If a translation is incomplete, you're very welcome to translate the "
-"remaining untranslated messages and mail them in. Corrections to "
-"translations are also appreciated, but they may need to be checked with the "
-"previous translator before including them. \n"
+"If a translation is incomplete, you're very welcome to translate the remaining untranslated messages and mail them in. Corrections to translations are also appreciated, but they may need to be checked with the previous translator before including them. \n"
 "\n"
-"Money donations through PayPal are also gratefully accepted. For the "
-"address, see the contact information. Donors of $10 or more will be credited "
-"with the donor's name ($25 for a company name), email and web site as a "
-"sponsor in the AUTHORS file of future releases and also in other places in "
-"the future. Note that any donations are gifts to me (Magnus Hjorth) "
-"personally, not payment for a service of any kind. If you want some other "
-"arrangement, send me an email. \n"
+"Money donations through PayPal are also gratefully accepted. For the address, see the contact information. Donors of $10 or more will be credited with the donor's name ($25 for a company name), email and web site as a sponsor in the AUTHORS file of future releases and also in other places in the future. Note that any donations are gifts to me (Magnus Hjorth) personally, not payment for a service of any kind. If you want some other arrangement, send me an email. \n"
 msgstr ""
 "\n"
-"Det finns mycket du kan göra om du vill hjälpa till med utvecklingen av "
-"mhWaveEdit. \n"
+"Det finns mycket du kan göra om du vill hjälpa till med utvecklingen av mhWaveEdit. \n"
 "\n"
-"Först och främst, leta efter fel och buggar och rapportera alla fel du "
-"hittar i buggrapporteringssystemet eller via e-mail. Ibland kan en bugg "
-"finnas länge utan att upptäckas, så tveka inte att rapportera även om "
-"problemet funnits i flera versioner tillbaka. Du måste inte ha lösningar "
-"eller detaljerad information, även om det underlättar. \n"
+"Först och främst, leta efter fel och buggar och rapportera alla fel du hittar i buggrapporteringssystemet eller via e-mail. Ibland kan en bugg finnas länge utan att upptäckas, så tveka inte att rapportera även om problemet funnits i flera versioner tillbaka. Du måste inte ha lösningar eller detaljerad information, även om det underlättar. \n"
 "\n"
-"Förbättringsförslag och nya idéer är också välkomna, skicka dem till "
-"maillistan eller buggrapporteringssystemet.\n"
+"Förbättringsförslag och nya idéer är också välkomna, skicka dem till maillistan eller buggrapporteringssystemet.\n"
 "\n"
-"Om du pratar något språk som mhWaveEdit inte har blivit översatt till ännu "
-"så kan du bidra med en översättning till det språket. För att göra detta, "
-"kopiera filen mhwaveedit.pot i po-katalogen till en ny fil ll.po, där ll är "
-"en språkkod (se http://www.gnu.org/software/gettext/manual/html_node/"
-"gettext_221.html för en lista med sådana koder.)\n"
+"Om du pratar något språk som mhWaveEdit inte har blivit översatt till ännu så kan du bidra med en översättning till det språket. För att göra detta, kopiera filen mhwaveedit.pot i po-katalogen till en ny fil ll.po, där ll är en språkkod (se http://www.gnu.org/software/gettext/manual/html_node/gettext_221.html för en lista med sådana koder.)\n"
 "\n"
-"Det går att redigera po-filer för hand, men jag rekommenderar att du "
-"använder ett program som poEdit (http://www.poedit.org).\n"
+"Det går att redigera po-filer för hand, men jag rekommenderar att du använder ett program som poEdit (http://www.poedit.org).\n"
 "\n"
-"I de texter som ser ut som \"RecordStatus|Paused\" så ska man ignorera det "
-"som står till vänster och bara översätta det som står till höger, dvs "
-"\"Paused\" i detta exempel. Denna konvention används när samma ord kan "
-"betyda olika saker beroende på sammanhanget. \n"
+"I de texter som ser ut som \"RecordStatus|Paused\" så ska man ignorera det som står till vänster och bara översätta det som står till höger, dvs \"Paused\" i detta exempel. Denna konvention används när samma ord kan betyda olika saker beroende på sammanhanget. \n"
 "\n"
-"Efter att du översatt så mycket du vill (du behöver inte översätta allt på "
-"en gång), skicka in po-filen till mig (se Adresser) så lägger jag till den "
-"till nästa version.\n"
+"Efter att du översatt så mycket du vill (du behöver inte översätta allt på en gång), skicka in po-filen till mig (se Adresser) så lägger jag till den till nästa version.\n"
 "\n"
-"Om en översättning är ofullständig så får du gärna översätta de återstående "
-"icke-översatta meddelandena och skicka in dem. Rättelser tas också emot, men "
-"de kan behöva godkännas av tidigare översättare om han eller hon går att "
-"nå.\n"
+"Om en översättning är ofullständig så får du gärna översätta de återstående icke-översatta meddelandena och skicka in dem. Rättelser tas också emot, men de kan behöva godkännas av tidigare översättare om han eller hon går att nå.\n"
 "\n"
-"Pengadonationer genom PayPal emottas tacksamt. Se Adresser-sektionen för min "
-"adress. Donatorer på $10 eller mer får sitt personnamn ($25 för ett "
-"företagsnamn) och websideadress nämnt som sponsor i AUTHORS-filen i framtida "
-"versioner och även på andra platser framöver. Observera att alla donationer "
-"är gåvor till mig (Magnus Hjorth) personligen och inte betalning för någon "
-"tjänst. Om du är intresserad av någon form av tjänst, kontakta mig via "
-"mail. \n"
+"Pengadonationer genom PayPal emottas tacksamt. Se Adresser-sektionen för min adress. Donatorer på $10 eller mer får sitt personnamn ($25 för ett företagsnamn) och websideadress nämnt som sponsor i AUTHORS-filen i framtida versioner och även på andra platser framöver. Observera att alla donationer är gåvor till mig (Magnus Hjorth) personligen och inte betalning för någon tjänst. Om du är intresserad av någon form av tjänst, kontakta mig via mail. \n"
 
 #: src/help.c:266
 #, no-c-format
@@ -1580,8 +1367,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"För buggrapporter, uppdaterade översättningar, patchar och PayPal-"
-"donationer:\n"
+"För buggrapporter, uppdaterade översättningar, patchar och PayPal-donationer:\n"
 "magnus.hjorth@home.se\n"
 "\n"
 "Projektsida med buggrapporteringssystem, mailinglistmedlemskap med mera:\n"
@@ -1591,7 +1377,8 @@ msgstr ""
 "mhwaveedit-discuss@gna.org\n"
 "\n"
 
-#: src/inifile.c:84 src/inifile.c:91
+#: src/inifile.c:84
+#: src/inifile.c:91
 #, c-format
 msgid "%s: Expected '=': %s\n"
 msgstr "%s: Förväntade '=': %s\n"
@@ -1641,12 +1428,8 @@ msgstr "Värdet på '%s' för inte vara över %f"
 
 #: src/ladspadialog.c:127
 #, c-format
-msgid ""
-"You have mapped more than one output port to channel '%s'. You can only map "
-"one output port to each channel."
-msgstr ""
-"Du har kopplat mer än en utport till kanal '%s'. Du kan bara koppla en "
-"utport till varje kanal."
+msgid "You have mapped more than one output port to channel '%s'. You can only map one output port to each channel."
+msgstr "Du har kopplat mer än en utport till kanal '%s'. Du kan bara koppla en utport till varje kanal."
 
 #: src/ladspadialog.c:190
 #, c-format
@@ -1666,7 +1449,9 @@ msgstr " Inkontroller "
 msgid " Output controls "
 msgstr " Utkontroller "
 
-#: src/ladspadialog.c:308 src/recorddialog.c:204 src/recorddialog.c:498
+#: src/ladspadialog.c:308
+#: src/recorddialog.c:204
+#: src/recorddialog.c:498
 msgid "None"
 msgstr "Ingen"
 
@@ -1705,8 +1490,7 @@ msgid "Unknown option '%s'"
 msgstr "Okänd flagga '%s'"
 
 #: src/main.c:291
-msgid ""
-"Could not find home directory. Using current directory as home directory."
+msgid "Could not find home directory. Using current directory as home directory."
 msgstr "Kunde inte hitta hemkatalog. Använder aktuell katalog som hemkatalog."
 
 #: src/main.c:319
@@ -1754,7 +1538,8 @@ msgstr "Nollnivå"
 msgid "Error launching mixer: fork: %s"
 msgstr "Fel vid start av mixerprogram: fork: %s"
 
-#: src/main.c:502 src/main.c:521
+#: src/main.c:502
+#: src/main.c:521
 msgid "Mono"
 msgstr "Mono"
 
@@ -1789,11 +1574,13 @@ msgstr "Ignorerar extrema sparade värden för läge/storlek på fönster\n"
 msgid "mhWaveEdit: %s (%s): %d Hz, %s"
 msgstr "mhWaveEdit: %s (%s): %d Hz, %s"
 
-#: src/mainwindow.c:203 src/recorddialog.c:65
+#: src/mainwindow.c:203
+#: src/recorddialog.c:65
 msgid "double"
 msgstr "dubbel"
 
-#: src/mainwindow.c:203 src/recorddialog.c:63
+#: src/mainwindow.c:203
+#: src/recorddialog.c:63
 msgid "float"
 msgstr "flyttal"
 
@@ -1815,12 +1602,8 @@ msgid "File type: "
 msgstr "Filtyp: "
 
 #: src/mainwindow.c:345
-msgid ""
-"The file has not changed since last save. Press OK if you want to save it "
-"anyway?"
-msgstr ""
-"Filen har inte ändrats sedan den sparades sist. Tryck OK om du vill spara "
-"den ändå."
+msgid "The file has not changed since last save. Press OK if you want to save it anyway?"
+msgstr "Filen har inte ändrats sedan den sparades sist. Tryck OK om du vill spara den ändå."
 
 #: src/mainwindow.c:354
 msgid "Save File"
@@ -1831,20 +1614,21 @@ msgstr "Spara fil"
 msgid "Save changes to %s?"
 msgstr "Spara ändrad fil %s?"
 
-#: src/mainwindow.c:642 src/mainwindow.c:646
+#: src/mainwindow.c:644
+#: src/mainwindow.c:648
 msgid "Load File"
 msgstr "Ladda fil"
 
-#: src/mainwindow.c:678
+#: src/mainwindow.c:680
 msgid "Save selection as ..."
 msgstr "Spara markering som ..."
 
-#: src/mainwindow.c:956
+#: src/mainwindow.c:958
 #, c-format
 msgid "Chunk %p has opencount=%d\n"
 msgstr "Chunk %p har opencount=%d\n"
 
-#: src/mainwindow.c:1027
+#: src/mainwindow.c:1029
 #, c-format
 msgid ""
 "\n"
@@ -1853,27 +1637,27 @@ msgstr ""
 "\n"
 "Fönster '%s'\n"
 
-#: src/mainwindow.c:1028
+#: src/mainwindow.c:1030
 msgid "  Current chunk:"
 msgstr "  Aktuell chunk:"
 
-#: src/mainwindow.c:1030
+#: src/mainwindow.c:1032
 msgid "  History:"
 msgstr "  Historia:"
 
-#: src/mainwindow.c:1074
+#: src/mainwindow.c:1076
 msgid "There already is only one channel!"
 msgstr "Det finns redan bara en kanal!"
 
-#: src/mainwindow.c:1152
+#: src/mainwindow.c:1154
 msgid "mhWaveEdit Help"
 msgstr "mhWaveEdit-hjälp"
 
-#: src/mainwindow.c:1248
+#: src/mainwindow.c:1250
 msgid "About mhWaveEdit"
 msgstr "Om mhWaveEdit"
 
-#: src/mainwindow.c:1260
+#: src/mainwindow.c:1262
 msgid ""
 "Created by Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2006, Magnus Hjorth"
@@ -1881,21 +1665,21 @@ msgstr ""
 "Skapad av Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2006, Magnus Hjorth"
 
-#: src/mainwindow.c:1267
+#: src/mainwindow.c:1269
 #, c-format
 msgid "Current sound driver: %s"
 msgstr "Aktuell ljuddrivrutin: %s"
 
-#: src/mainwindow.c:1275
+#: src/mainwindow.c:1277
 #, c-format
 msgid "Compiled %s %s"
 msgstr "Kompilerad %s %s"
 
-#: src/mainwindow.c:1281
+#: src/mainwindow.c:1283
 msgid "Uses double-precision math"
 msgstr "Använder dubbelprecision vid beräkningar"
 
-#: src/mainwindow.c:1288
+#: src/mainwindow.c:1290
 msgid ""
 "Distributed under GNU General Public License.\n"
 "For information, see the file COPYING"
@@ -1903,435 +1687,449 @@ msgstr ""
 "Distribuerad under GNU General Public License.\n"
 "För mer information, se filen COPYING"
 
-#: src/mainwindow.c:1402
+#: src/mainwindow.c:1404
 msgid "Seconds of silence: "
 msgstr "Sekunder med tystnad: "
 
-#: src/mainwindow.c:1402
+#: src/mainwindow.c:1404
 msgid "Insert Silence"
 msgstr "Infoga tystnad"
 
-#: src/mainwindow.c:1537
+#: src/mainwindow.c:1453
+msgid "Level: "
+msgstr "Nivå: "
+
+#: src/mainwindow.c:1453
+msgid "Normalize to..."
+msgstr "Normalisera till..."
+
+#: src/mainwindow.c:1556
 msgid "/_File"
 msgstr "/_Arkiv"
 
-#: src/mainwindow.c:1538
+#: src/mainwindow.c:1557
 msgid "/File/_Open..."
 msgstr "/Arkiv/_Öppna..."
 
-#: src/mainwindow.c:1539
+#: src/mainwindow.c:1558
 msgid "/File/_Save"
 msgstr "/Arkiv/_Spara"
 
-#: src/mainwindow.c:1540
+#: src/mainwindow.c:1559
 msgid "/File/Save _as..."
 msgstr "/Arkiv/S_para som..."
 
-#: src/mainwindow.c:1541
+#: src/mainwindow.c:1560
 msgid "/File/Save selection as..."
 msgstr "/Arkiv/Spara _markering som..."
 
-#: src/mainwindow.c:1542
+#: src/mainwindow.c:1561
 msgid "/_Edit"
 msgstr "/_Redigera"
 
-#: src/mainwindow.c:1543
+#: src/mainwindow.c:1562
 msgid "/Edit/_Undo"
 msgstr "/Redigera/_Ångra"
 
-#: src/mainwindow.c:1544
+#: src/mainwindow.c:1563
 msgid "/Edit/_Redo"
 msgstr "/Redigera/_Gör om"
 
-#: src/mainwindow.c:1545
+#: src/mainwindow.c:1564
 msgid "/Edit/sep1"
 msgstr "/Redigera/sep1"
 
-#: src/mainwindow.c:1546
+#: src/mainwindow.c:1565
 msgid "/Edit/Cu_t"
 msgstr "/Redigera/Klipp u_t"
 
-#: src/mainwindow.c:1547
+#: src/mainwindow.c:1566
 msgid "/Edit/_Copy"
 msgstr "/Redigera/_Kopiera"
 
-#: src/mainwindow.c:1548
+#: src/mainwindow.c:1567
 msgid "/Edit/_Paste"
 msgstr "/Redigera/Klistra _in"
 
-#: src/mainwindow.c:1549
+#: src/mainwindow.c:1568
 msgid "/Edit/Paste _over"
 msgstr "/Redigera/Klistra _över"
 
-#: src/mainwindow.c:1550
+#: src/mainwindow.c:1569
 msgid "/Edit/_Mix paste"
 msgstr "/Redigera/_Mixa in"
 
-#: src/mainwindow.c:1551
+#: src/mainwindow.c:1570
 msgid "/Edit/Insert _silence"
 msgstr "/Redigera/Infoga _tystnad"
 
-#: src/mainwindow.c:1552
+#: src/mainwindow.c:1571
 msgid "/Edit/Paste to _new"
 msgstr "/Redigera/Klistra in till _ny"
 
-#: src/mainwindow.c:1553
+#: src/mainwindow.c:1572
 msgid "/Edit/Cr_op"
 msgstr "/Redigera/Skär ut"
 
-#: src/mainwindow.c:1554
+#: src/mainwindow.c:1573
 msgid "/Edit/_Delete"
 msgstr "/Redigera/Ta bort"
 
-#: src/mainwindow.c:1555
+#: src/mainwindow.c:1574
 msgid "/Edit/Silence selection"
 msgstr "/Redigera/Tysta markering"
 
-#: src/mainwindow.c:1556
+#: src/mainwindow.c:1575
 msgid "/Edit/sep2"
 msgstr "/Redigera/sep2"
 
-#: src/mainwindow.c:1557
+#: src/mainwindow.c:1576
 msgid "/Edit/Select _all"
 msgstr "/Redigera/Markera _allt"
 
-#: src/mainwindow.c:1558
+#: src/mainwindow.c:1577
 msgid "/Edit/sep3"
 msgstr "/Redigera/sep3"
 
-#: src/mainwindow.c:1559
+#: src/mainwindow.c:1578
 msgid "/Edit/Clear clipboard"
 msgstr "/Redigera/Rensa urklipp"
 
-#: src/mainwindow.c:1560
+#: src/mainwindow.c:1579
 msgid "/Edit/sep4"
 msgstr "/Redigera/sep4"
 
-#: src/mainwindow.c:1561
+#: src/mainwindow.c:1580
 msgid "/Edit/Preferences"
 msgstr "/Redigera/_Inställningar"
 
-#: src/mainwindow.c:1562
+#: src/mainwindow.c:1581
 msgid "/_View"
 msgstr "/_Visa"
 
-#: src/mainwindow.c:1563
+#: src/mainwindow.c:1582
 msgid "/View/Zoom _in"
 msgstr "/Visa/Zooma _in"
 
-#: src/mainwindow.c:1564
+#: src/mainwindow.c:1583
 msgid "/View/Zoom _out"
 msgstr "/Visa/Zooma _ut"
 
-#: src/mainwindow.c:1565
+#: src/mainwindow.c:1584
 msgid "/View/Zoom to _selection"
 msgstr "/Visa/Zooma till markering"
 
-#: src/mainwindow.c:1566
+#: src/mainwindow.c:1585
 msgid "/View/sep1"
 msgstr "/Visa/sep1"
 
-#: src/mainwindow.c:1567
+#: src/mainwindow.c:1586
 msgid "/View/Zoom _all"
 msgstr "/Visa/Zooma ut helt"
 
-#: src/mainwindow.c:1568
+#: src/mainwindow.c:1587
 msgid "/View/sep2"
 msgstr "/View/sep2"
 
-#: src/mainwindow.c:1569
+#: src/mainwindow.c:1588
 msgid "/View/_Time scale"
 msgstr "/Visa/_Tidsskala"
 
-#: src/mainwindow.c:1570
+#: src/mainwindow.c:1589
 msgid "/View/_Horizontal zoom"
 msgstr "/Visa/_Horisontell zoom"
 
-#: src/mainwindow.c:1571
+#: src/mainwindow.c:1590
 msgid "/View/_Vertical zoom"
 msgstr "/Visa/_Vertikal zoom"
 
-#: src/mainwindow.c:1572
+#: src/mainwindow.c:1591
 msgid "/View/Sp_eed slider"
 msgstr "/Visa/Hastighetsväljare"
 
-#: src/mainwindow.c:1573
+#: src/mainwindow.c:1592
 msgid "/_Cursor"
 msgstr "/_Markör"
 
-#: src/mainwindow.c:1574
+#: src/mainwindow.c:1593
 msgid "/Cursor/Set selection start"
 msgstr "/Markör/Sätt start på markering"
 
-#: src/mainwindow.c:1576
+#: src/mainwindow.c:1595
 msgid "/Cursor/Set selection end"
 msgstr "/Markör/Sätt slut på markering"
 
-#: src/mainwindow.c:1577
+#: src/mainwindow.c:1596
 msgid "/Cursor/sep1"
 msgstr "/Markör/sep1"
 
-#: src/mainwindow.c:1578
+#: src/mainwindow.c:1597
 msgid "/Cursor/Move to beginning"
 msgstr "/Markör/Flytta till början"
 
-#: src/mainwindow.c:1580
+#: src/mainwindow.c:1599
 msgid "/Cursor/Move to end"
 msgstr "/Markör/Flytta till slutet"
 
-#: src/mainwindow.c:1581
+#: src/mainwindow.c:1600
 msgid "/Cursor/Move to selection start"
 msgstr "/Markör/Flytta till markeringens början"
 
-#: src/mainwindow.c:1583
+#: src/mainwindow.c:1602
 msgid "/Cursor/Move to selection end"
 msgstr "/Markör/Flytta till markeringens slut"
 
-#: src/mainwindow.c:1585
+#: src/mainwindow.c:1604
 msgid "/Cursor/sep2"
 msgstr "/Markör/sep2"
 
-#: src/mainwindow.c:1586
+#: src/mainwindow.c:1605
 msgid "/Cursor/Position cursor..."
 msgstr "/Markör/Placera markör..."
 
-#: src/mainwindow.c:1588
+#: src/mainwindow.c:1607
 msgid "/_Play"
 msgstr "/S_pela"
 
-#: src/mainwindow.c:1589
+#: src/mainwindow.c:1608
 msgid "/Play/_Play from cursor"
 msgstr "/Spela/S_pela från markör"
 
-#: src/mainwindow.c:1590
+#: src/mainwindow.c:1609
 msgid "/Play/Play _all"
 msgstr "/Spela/Spela allt"
 
-#: src/mainwindow.c:1591
+#: src/mainwindow.c:1610
 msgid "/Play/Play se_lection"
 msgstr "/Spela/Spela _markering"
 
-#: src/mainwindow.c:1592
+#: src/mainwindow.c:1611
 msgid "/Play/_Stop"
 msgstr "/Spela/_Stopp"
 
-#: src/mainwindow.c:1593
+#: src/mainwindow.c:1612
 msgid "/Play/sep1"
 msgstr "/Spela/sep1"
 
-#: src/mainwindow.c:1594
+#: src/mainwindow.c:1613
 msgid "/Play/_Record..."
 msgstr "/Spela/Spela in"
 
-#: src/mainwindow.c:1595
+#: src/mainwindow.c:1614
 msgid "/Effec_ts"
 msgstr "/Effekter"
 
-#: src/mainwindow.c:1596
+#: src/mainwindow.c:1615
 msgid "/Effects/Fade _in"
 msgstr "/Effekter/Fade-in"
 
-#: src/mainwindow.c:1597
+#: src/mainwindow.c:1616
 msgid "/Effects/Fade o_ut"
 msgstr "/Effekter/Fade-ut"
 
-#: src/mainwindow.c:1598
+#: src/mainwindow.c:1617
 msgid "/Effects/_Normalize"
 msgstr "/Effekter/Normalisera volym"
 
-#: src/mainwindow.c:1599
+#: src/mainwindow.c:1618
+msgid "/Effects/Normali_ze to..."
+msgstr "/Effekter/Normalisera till..."
+
+#: src/mainwindow.c:1619
 msgid "/Effects/_Volume adjust (fade)..."
 msgstr "/Effekter/Volymjustering..."
 
-#: src/mainwindow.c:1600
+#: src/mainwindow.c:1620
 msgid "/Effects/sep1"
 msgstr "/Effekter/sep1"
 
-#: src/mainwindow.c:1601
+#: src/mainwindow.c:1621
 msgid "/Effects/Convert sample_rate..."
 msgstr "/Effekter/Omvandla samplingsfrekvens..."
 
-#: src/mainwindow.c:1602
+#: src/mainwindow.c:1622
 msgid "/Effects/Convert sample _format..."
 msgstr "/Effekter/Omvandla sampelformat..."
 
-#: src/mainwindow.c:1604
+#: src/mainwindow.c:1624
 msgid "/Effects/B_yte swap"
 msgstr "/Effekter/Växla byteordning"
 
-#: src/mainwindow.c:1605
+#: src/mainwindow.c:1625
 msgid "/Effects/sep2"
 msgstr "/Effekter/sep2"
 
-#: src/mainwindow.c:1606
+#: src/mainwindow.c:1626
 msgid "/Effects/_Mix channels..."
 msgstr "/Effekter/_Mixa kanaler..."
 
-#: src/mainwindow.c:1607
+#: src/mainwindow.c:1627
 msgid "/Effects/Sp_lit channel..."
 msgstr "/Effekter/De_la kanal..."
 
-#: src/mainwindow.c:1608
+#: src/mainwindow.c:1628
 msgid "/Effects/_Combine channels..."
 msgstr "/Effekter/_Kombinera kanaler..."
 
-#: src/mainwindow.c:1609
+#: src/mainwindow.c:1629
 msgid "/Effects/sep3"
 msgstr "/Effekter/sep3"
 
-#: src/mainwindow.c:1610
+#: src/mainwindow.c:1630
 msgid "/Effects/_Speed adjustment..."
 msgstr "/Effekter/Ändra hastighet..."
 
-#: src/mainwindow.c:1611
+#: src/mainwindow.c:1631
 msgid "/Effects/Pipe through program..."
 msgstr "/Effekter/Filtrera genom program..."
 
-#: src/mainwindow.c:1612
+#: src/mainwindow.c:1632
 msgid "/Effects/sep4"
 msgstr "/Effekter/sep4"
 
-#: src/mainwindow.c:1613
+#: src/mainwindow.c:1633
 msgid "/Effects/Effects dialog..."
 msgstr "/Effekter/Effektfönster..."
 
-#: src/mainwindow.c:1615
+#: src/mainwindow.c:1635
 msgid "/Debug"
 msgstr "/Debug"
 
-#: src/mainwindow.c:1616
+#: src/mainwindow.c:1636
 msgid "/Debug/Mark as modified"
 msgstr "/Debug/Märk som ändrad"
 
-#: src/mainwindow.c:1617
+#: src/mainwindow.c:1637
 msgid "/Debug/Dummy effect"
 msgstr "/Debug/Gör ingenting-effekt"
 
-#: src/mainwindow.c:1618
+#: src/mainwindow.c:1638
 msgid "/Debug/Check opencount"
 msgstr "/Debug/Kolla opencount"
 
-#: src/mainwindow.c:1619
+#: src/mainwindow.c:1639
 msgid "/Debug/Dump chunk info"
 msgstr "/Debug/Dumpa chunkinformation"
 
-#: src/mainwindow.c:1621
+#: src/mainwindow.c:1641
 msgid "/_Help"
 msgstr "/_Hjälp"
 
-#: src/mainwindow.c:1622
+#: src/mainwindow.c:1642
 msgid "/Help/_Documentation"
 msgstr "/Hjälp/_Dokumentation"
 
-#: src/mainwindow.c:1623
+#: src/mainwindow.c:1643
 msgid "/Help/_About"
 msgstr "/Hjälp/_Om"
 
-#: src/mainwindow.c:1627
+#: src/mainwindow.c:1647
 msgid "/File/sep1"
 msgstr "/Arkiv/sep1"
 
-#: src/mainwindow.c:1628
+#: src/mainwindow.c:1648
 msgid "/File/_Close"
 msgstr "/Arkiv/Stäng"
 
-#: src/mainwindow.c:1629
+#: src/mainwindow.c:1649
 msgid "/File/sep2"
 msgstr "/Arkiv/sep2"
 
-#: src/mainwindow.c:1630
+#: src/mainwindow.c:1650
 msgid "/File/_Exit"
 msgstr "/Arkiv/A_vsluta"
 
-#: src/mainwindow.c:1788
+#: src/mainwindow.c:1808
 msgid "Load a file from disk"
 msgstr "Ladda in en fil från disk"
 
-#: src/mainwindow.c:1795
+#: src/mainwindow.c:1815
 msgid "Save the current file to disk"
 msgstr "Spara aktuell fil till disk"
 
-#: src/mainwindow.c:1804
+#: src/mainwindow.c:1824
 msgid "Undo the last change"
 msgstr "Ångra den senaste ändringen"
 
-#: src/mainwindow.c:1812
+#: src/mainwindow.c:1832
 msgid "Redo the last undo operation"
 msgstr "Gör om den senast ångrade åtgärden"
 
-#: src/mainwindow.c:1822
+#: src/mainwindow.c:1842
 msgid "Cut out the current selection"
 msgstr "Klipp ut markerat område"
 
-#: src/mainwindow.c:1830
+#: src/mainwindow.c:1850
 msgid "Copy the current selection"
 msgstr "Kopiera markerat område"
 
-#: src/mainwindow.c:1838
+#: src/mainwindow.c:1858
 msgid "Paste at cursor position"
 msgstr "Klistra in vid markören"
 
-#: src/mainwindow.c:1846
+#: src/mainwindow.c:1866
 msgid "Paste, overwriting the data after the cursor position"
 msgstr "Klistra in, skriv över vid markören"
 
-#: src/mainwindow.c:1856
+#: src/mainwindow.c:1876
 msgid "Delete the selection"
 msgstr "Ta bort markeringen"
 
-#: src/mainwindow.c:1865
+#: src/mainwindow.c:1885
 msgid "Set selection start to cursor position"
 msgstr "Sätt start på markeringen till markörpositionen"
 
-#: src/mainwindow.c:1874
+#: src/mainwindow.c:1894
 msgid "Set selection end to cursor position"
 msgstr "Sätt slut på markeringen till markörpositionen"
 
-#: src/mainwindow.c:1884
+#: src/mainwindow.c:1904
 msgid "Play from cursor position"
 msgstr "Spela från markörposition"
 
-#: src/mainwindow.c:1893
+#: src/mainwindow.c:1913
 msgid "Play selected area"
 msgstr "Spela markerat område"
 
-#: src/mainwindow.c:1902
+#: src/mainwindow.c:1922
 msgid "Stop playing"
 msgstr "Stoppa uppspelning"
 
-#: src/mainwindow.c:1912
+#: src/mainwindow.c:1932
 msgid "Loop mode (play over and over)"
 msgstr "Loopa (spela om och om igen)"
 
-#: src/mainwindow.c:1922
+#: src/mainwindow.c:1942
 msgid "Follow cursor while playing"
 msgstr "Följ markören under spelning"
 
-#: src/mainwindow.c:1935
+#: src/mainwindow.c:1955
 msgid "Auto return to playback start"
 msgstr "Hoppa automatiskt tillbaka till uppspelningens början"
 
-#: src/mainwindow.c:1949 src/recorddialog.c:630
+#: src/mainwindow.c:1969
+#: src/recorddialog.c:630
 msgid "Record"
 msgstr "Spela in"
 
-#: src/mainwindow.c:1958 src/recorddialog.c:799
+#: src/mainwindow.c:1978
+#: src/recorddialog.c:799
 msgid "Launch mixer"
 msgstr "Öppna mixer"
 
-#: src/pipedialog.c:84
+#: src/pipedialog.c:89
 msgid "Command line: "
 msgstr "Kommando: "
 
-#: src/pipedialog.c:91
+#: src/pipedialog.c:96
 msgid "Send wav header"
 msgstr "Sänd wav-huvud"
 
-#: src/pipedialog.c:138
+#: src/pipedialog.c:143
 msgid "Process output"
 msgstr "Kör kommando"
 
-#: src/pipedialog.c:159
+#: src/pipedialog.c:164
 #, c-format
 msgid ""
 "Output from command '%s':\n"
@@ -2340,75 +2138,76 @@ msgstr ""
 "Från kommandot '%s':\n"
 "\n"
 
-#: src/pipedialog.c:181
+#: src/pipedialog.c:186
 #, c-format
 msgid "Could not create pipe: %s"
 msgstr "Kunde inte skapa pipe: %s"
 
-#: src/pipedialog.c:196
+#: src/pipedialog.c:201
 #, c-format
 msgid "Error: fork: %s"
 msgstr "Fel: fork: %s"
 
-#: src/pipedialog.c:247
+#: src/pipedialog.c:252
 msgid "Should not reach this point!"
 msgstr "Borde inte nå denna punkt!"
 
-#: src/pipedialog.c:445
+#: src/pipedialog.c:461
 msgid "Command failed without returning any data"
 msgstr "Kommandot misslyckades utan att returnera något data"
 
-#: src/pipedialog.c:456
+#: src/pipedialog.c:471
 #, c-format
 msgid "Error: %s"
 msgstr "Fel: %s"
 
-#: src/player.c:244
+#: src/player.c:245
 msgid "The sound format of this file is not supported for playing."
 msgstr "Ljudformatet i denna fil kan inte spelas upp."
 
-#: src/rateconv.c:92
+#: src/rateconv.c:97
 #, c-format
 msgid "Error initialising sample rate conversion: %s"
 msgstr "Fel vid uppstart av omvandling av samplingsfrekvens: %s"
 
-#: src/rateconv.c:158
+#: src/rateconv.c:162
 #, c-format
 msgid "Error converting samplerate: %s\n"
 msgstr "Fel vid omvandling av samplingsfrekvens: %s\n"
 
-#: src/rateconv.c:197
+#: src/rateconv.c:201
 #, c-format
 msgid "Error changing samplerate conversion ratio: %s\n"
 msgstr "Fel vid ändring at omvandlingsratio: %s\n"
 
-#: src/rateconv.c:313
+#: src/rateconv.c:319
 msgid "Unexpected EOF in connection to subprocess"
 msgstr "Oväntat filslut i uppkoppling mot underprocess"
 
-#: src/rateconv.c:317
+#: src/rateconv.c:323
 #, c-format
 msgid "Error writing to subprocess: %s"
 msgstr "Fel vid skrivning till underprocess: %s"
 
-#: src/rateconv.c:373 src/rateconv.c:395
+#: src/rateconv.c:379
+#: src/rateconv.c:401
 #, c-format
 msgid "Error reading from sub process: %s"
 msgstr "Fel vid läsning från underprocess: %s"
 
-#: src/rateconv.c:403
+#: src/rateconv.c:409
 msgid "SoX closed connection too early!"
 msgstr "SoX stängde uppkopplingen för tidigt!"
 
-#: src/rateconv.c:591
+#: src/rateconv.c:593
 msgid "(SoX) Simulated analog filtration"
 msgstr "(SoX) Simulerade analog filtrering"
 
-#: src/rateconv.c:597
+#: src/rateconv.c:599
 msgid "(SoX) Polyphase interpolation"
 msgstr "(SoX) Polyfas-interpolation"
 
-#: src/rateconv.c:604
+#: src/rateconv.c:606
 msgid "Sample repeat/skip (low quality)"
 msgstr "Upprepa/skippa sampel (låg kvalitet)"
 
@@ -2450,7 +2249,9 @@ msgstr "%s %s %d Hz"
 msgid "Other format..."
 msgstr "Annat format..."
 
-#: src/recorddialog.c:101 src/recorddialog.c:428 src/recorddialog.c:734
+#: src/recorddialog.c:101
+#: src/recorddialog.c:428
+#: src/recorddialog.c:734
 msgid "(no limit)"
 msgstr "(ingen gräns)"
 
@@ -2467,31 +2268,23 @@ msgid "Custom format"
 msgstr "Annat format"
 
 #: src/recorddialog.c:347
-msgid ""
-"The sign and endian-ness can usually be left at their defaults, but should "
-"be changed if you're unable to record or get bad sound."
-msgstr ""
-"Tecken och endian-ness kan vanligvis lämnas på sina standardvärden, men ska "
-"ändras om du inte kan spela in eller får dåligt ljud."
+msgid "The sign and endian-ness can usually be left at their defaults, but should be changed if you're unable to record or get bad sound."
+msgstr "Tecken och endian-ness kan vanligvis lämnas på sina standardvärden, men ska ändras om du inte kan spela in eller får dåligt ljud."
 
 #: src/recorddialog.c:354
-msgid ""
-"To add this format to the presets, enter a name below. Otherwise, leave it "
-"blank."
-msgstr ""
-"För att lägga till detta format till de förinställda, skriv in ett namn "
-"nedan. Annars, lämna det tomt. "
+msgid "To add this format to the presets, enter a name below. Otherwise, leave it blank."
+msgstr "För att lägga till detta format till de förinställda, skriv in ett namn nedan. Annars, lämna det tomt. "
 
 #: src/recorddialog.c:360
 msgid "Name :"
 msgstr "Namn: "
 
 #: src/recorddialog.c:411
-msgid ""
-"Invalid time value. Time must be specified in the form (HH')MM:SS(.mmmm)"
+msgid "Invalid time value. Time must be specified in the form (HH')MM:SS(.mmmm)"
 msgstr "Felaktigt tidsvärde. Tid måste anges på formen (TT')MM:SS(.mmmm)"
 
-#: src/recorddialog.c:454 src/recorddialog.c:764
+#: src/recorddialog.c:454
+#: src/recorddialog.c:764
 msgid "Format not selected"
 msgstr "Format ej valt"
 
@@ -2523,7 +2316,8 @@ msgstr "Klippning: "
 msgid "Resume recording"
 msgstr "Fortsätt inspelning"
 
-#: src/recorddialog.c:559 src/recorddialog.c:572
+#: src/recorddialog.c:559
+#: src/recorddialog.c:572
 msgid "Pause recording"
 msgstr "Pausa inspelning"
 
@@ -2531,7 +2325,8 @@ msgstr "Pausa inspelning"
 msgid "RecordStatus|Paused"
 msgstr "Pausad"
 
-#: src/recorddialog.c:562 src/recorddialog.c:580
+#: src/recorddialog.c:562
+#: src/recorddialog.c:580
 msgid "RecordStatus|Recording"
 msgstr "Spelar in"
 
@@ -2599,8 +2394,7 @@ msgstr "Nollställ högsta toppvärden"
 msgid ""
 "(This changes the sample rate of \n"
 "the entire file, not just the selection)"
-msgstr ""
-"(detta ändrar samplingfrekvensen på hela filen, inte bara markerat område)"
+msgstr "(detta ändrar samplingfrekvensen på hela filen, inte bara markerat område)"
 
 #: src/sampleratedialog.c:92
 msgid "New samplerate: "
@@ -2611,8 +2405,7 @@ msgid "Method: "
 msgstr "Metod: "
 
 #: src/samplesizedialog.c:82
-msgid ""
-"(This changes the sample type of the entire file, not just the selection)"
+msgid "(This changes the sample type of the entire file, not just the selection)"
 msgstr "(Detta ändrar sampelformatet på hela filen, inte bara markerat område)"
 
 #: src/samplesizedialog.c:94
@@ -2657,11 +2450,12 @@ msgstr "snd_pcm_hw_params_set_channels misslyckades"
 msgid "snd_pcm_hw_params_set_rate failed"
 msgstr "snd_pcm_hw_params_set_rate misslyckades"
 
-#: src/sound-alsalib.c:292 src/sound-alsalib.c:313
+#: src/sound-alsalib.c:295
+#: src/sound-alsalib.c:316
 msgid "<ALSA playback buffer underrun>"
 msgstr "<underrun i ALSAs uppspelningsbuffert>"
 
-#: src/sound-alsalib.c:351
+#: src/sound-alsalib.c:354
 msgid "<ALSA recording buffer overrun>"
 msgstr "<overrun i ALSAs inspelningsbuffert>"
 
@@ -2695,7 +2489,8 @@ msgstr "EsounD: Kunde inte öppna uppspelningsström"
 msgid "EsounD: Unable to open recording stream"
 msgstr "EsounD: Kunde inte öppna inspelningsström"
 
-#: src/sound-esound.c:143 src/sound-esound.c:215
+#: src/sound-esound.c:143
+#: src/sound-esound.c:215
 msgid "EsounD driver: select"
 msgstr "EsounD-drivrutin: select"
 
@@ -2720,12 +2515,8 @@ msgid "ESD preferences"
 msgstr "ESD-inställningar"
 
 #: src/sound-esound.c:261
-msgid ""
-"If the cursor starts running too early when jumping, this delay should be "
-"increased."
-msgstr ""
-"Om markören börjar rulla för tidigt när man hoppar, ska denna fördröjning "
-"ökas."
+msgid "If the cursor starts running too early when jumping, this delay should be increased."
+msgstr "Om markören börjar rulla för tidigt när man hoppar, ska denna fördröjning ökas."
 
 #: src/sound-esound.c:267
 msgid "Jump delay:"
@@ -2736,9 +2527,7 @@ msgid "seconds"
 msgstr "sekunder"
 
 #: src/sound-esound.c:276
-msgid ""
-"Selecting the ESD host to connect to is done through the ESPEAKER "
-"environment variable."
+msgid "Selecting the ESD host to connect to is done through the ESPEAKER environment variable."
 msgstr "Val av ESD-server att ansluta till görs genom miljövariabeln ESPEAKER."
 
 #: src/sound-jack.c:113
@@ -2751,9 +2540,7 @@ msgstr "Felaktigt antal utportar."
 
 #: src/sound-jack.c:126
 msgid "The client name change won't take effect until you restart the program."
-msgstr ""
-"Ändringen av klientnamn kommer inte genomföras förrän du startat om "
-"programmet."
+msgstr "Ändringen av klientnamn kommer inte genomföras förrän du startat om programmet."
 
 #: src/sound-jack.c:183
 msgid " Input ports "
@@ -2811,12 +2598,8 @@ msgstr "Aktivering misslyckades!"
 
 #: src/sound-jack.c:682
 #, c-format
-msgid ""
-"With JACK, the only supported recording format is Floating-point, single "
-"precision, %d Hz"
-msgstr ""
-"Med JACK är det enda inspelningsformat som stöds, flyttal, normal precision, "
-"%d Hz"
+msgid "With JACK, the only supported recording format is Floating-point, single precision, %d Hz"
+msgstr "Med JACK är det enda inspelningsformat som stöds, flyttal, normal precision, %d Hz"
 
 #: src/sound-oss.c:88
 #, c-format
@@ -2838,7 +2621,8 @@ msgstr "Fel i ljuddrivrutin: write misslyckades: %s"
 msgid "Error in sound driver: read failed: %s"
 msgstr "Fel i ljuddrivrutin: read misslyckades: %s"
 
-#: src/sound-oss.c:228 src/sound-oss.c:340
+#: src/sound-oss.c:228
+#: src/sound-oss.c:340
 #, c-format
 msgid "Error in sound driver: select failed: %s"
 msgstr "Fel i ljuddrivrutin: select misslyckades: %s"
@@ -2863,7 +2647,8 @@ msgstr "sound-portaudio: Inga utenheter tillgängliga!"
 msgid "sound-portaudio: No input devices available!"
 msgstr "sound-portaudio: Inga inenheter tillgängliga!"
 
-#: src/sound-portaudio.c:186 src/sound-portaudio.c:272
+#: src/sound-portaudio.c:186
+#: src/sound-portaudio.c:272
 #, c-format
 msgid "Pa_OpenStream failed: %s\n"
 msgstr "Pa_OpenStream misslyckades: %s\n"
@@ -2983,258 +2768,261 @@ msgstr "[S] Butterworth bandstopp filter"
 msgid "[S] Sinc-windowed filter"
 msgstr "[S] Sinc-fönstrat filter"
 
-#: src/soxdialog.c:247
-msgid "SoX only supports 8, 16 and 32-bit sample sizes"
-msgstr "SoX stöder endast 8, 16 och 32-bitars sampelstorlekar"
-
-#: src/soxdialog.c:273
+#: src/soxdialog.c:297
 msgid "Frequency: "
 msgstr "Frekvens: "
 
-#: src/soxdialog.c:278 src/soxdialog.c:285 src/soxdialog.c:444
-#: src/soxdialog.c:446
+#: src/soxdialog.c:302
+#: src/soxdialog.c:309
+#: src/soxdialog.c:468
+#: src/soxdialog.c:470
 msgid "Hz"
 msgstr "Hz"
 
-#: src/soxdialog.c:288
+#: src/soxdialog.c:312
 msgid "Noise mode"
 msgstr "Brusig metod"
 
-#: src/soxdialog.c:348
+#: src/soxdialog.c:372
 msgid "Reverb time: "
 msgstr "Reverbtid: "
 
-#: src/soxdialog.c:353
+#: src/soxdialog.c:377
 msgid "ms"
 msgstr "ms"
 
-#: src/soxdialog.c:358
+#: src/soxdialog.c:382
 msgid "Delay (ms)  "
 msgstr "Fördröjning (ms)  "
 
-#: src/soxdialog.c:361
+#: src/soxdialog.c:385
 msgid "Decay  "
 msgstr "Decay  "
 
-#: src/soxdialog.c:365
+#: src/soxdialog.c:389
 msgid "Speed (Hz)  "
 msgstr "Hastighet (Hz)  "
 
-#: src/soxdialog.c:369
+#: src/soxdialog.c:393
 msgid "Depth (ms)  "
 msgstr "Djup (ms)  "
 
-#: src/soxdialog.c:373
+#: src/soxdialog.c:397
 msgid "Modulation  "
 msgstr "Modulering  "
 
-#: src/soxdialog.c:376
+#: src/soxdialog.c:400
 msgid "Modulation|Sinusoidal"
 msgstr "Sinusoid"
 
-#: src/soxdialog.c:377
+#: src/soxdialog.c:401
 msgid "Modulation|Triangular"
 msgstr "Triangulär"
 
-#: src/soxdialog.c:390
+#: src/soxdialog.c:414
 msgid "(Lines with delay=0 will be ignored.)"
 msgstr "(Rader med delay=0 kommer att ignoreras)"
 
-#: src/soxdialog.c:409 src/soxdialog.c:411 src/soxdialog.c:415
-#: src/soxdialog.c:417 src/soxdialog.c:419
+#: src/soxdialog.c:433
+#: src/soxdialog.c:435
+#: src/soxdialog.c:439
+#: src/soxdialog.c:441
+#: src/soxdialog.c:443
 msgid "Input gain: "
 msgstr "Införstärkning: "
 
-#: src/soxdialog.c:413
+#: src/soxdialog.c:437
 msgid "Output gain: "
 msgstr "Utförstärkning: "
 
-#: src/soxdialog.c:425
+#: src/soxdialog.c:449
 msgid "Width: "
 msgstr "Bredd: "
 
-#: src/soxdialog.c:431 src/soxdialog.c:433
+#: src/soxdialog.c:455
+#: src/soxdialog.c:457
 msgid "Bandwidth: "
 msgstr "Bandbredd: "
 
-#: src/soxdialog.c:442
+#: src/soxdialog.c:466
 msgid "Filter type: "
 msgstr "Filtertyp: "
 
-#: src/soxdialog.c:443
+#: src/soxdialog.c:467
 msgid "Low 6dB corner: "
 msgstr "Lågt 6dB-hörn: "
 
-#: src/soxdialog.c:445
+#: src/soxdialog.c:469
 msgid "High 6db corner: "
 msgstr "Högt 6dB-hörn: "
 
-#: src/soxdialog.c:447
+#: src/soxdialog.c:471
 msgid "Window length: "
 msgstr "Fönsterlängd: "
 
-#: src/soxdialog.c:448
+#: src/soxdialog.c:472
 msgid "samples"
 msgstr "sampel"
 
-#: src/soxdialog.c:449
+#: src/soxdialog.c:473
 msgid "Beta"
 msgstr "Beta"
 
-#: src/soxdialog.c:452
+#: src/soxdialog.c:476
 msgid "Lowpass"
 msgstr "Lågpass"
 
-#: src/soxdialog.c:453
+#: src/soxdialog.c:477
 msgid "Highpass"
 msgstr "Högpass"
 
-#: src/soxdialog.c:454
+#: src/soxdialog.c:478
 msgid "Bandpass"
 msgstr "Bandpass"
 
-#: src/soxdialog.c:487
+#: src/soxdialog.c:511
 msgid "Attack integration time: "
 msgstr "Attack integrationstid: "
 
-#: src/soxdialog.c:492
+#: src/soxdialog.c:516
 msgid "Decay integration time: "
 msgstr "Decay integrationstid: "
 
-#: src/soxdialog.c:499
+#: src/soxdialog.c:523
 msgid "Input level (dB)"
 msgstr "Ingångsnivå (dB)"
 
-#: src/soxdialog.c:500
+#: src/soxdialog.c:524
 msgid "Output level (dB)"
 msgstr "Utgångsnivå (dB)"
 
-#: src/soxdialog.c:513
+#: src/soxdialog.c:537
 msgid "Post-processing gain: "
 msgstr "Efterbearbetningsförstärkning: "
 
-#: src/soxdialog.c:517
+#: src/soxdialog.c:541
 msgid " dB"
 msgstr " dB"
 
-#: src/soxdialog.c:518
+#: src/soxdialog.c:542
 msgid "Initial volume: "
 msgstr "Startvolym: "
 
-#: src/soxdialog.c:522
+#: src/soxdialog.c:546
 msgid "Delay time: "
 msgstr "Fördröjning: "
 
-#: src/soxdialog.c:531
+#: src/soxdialog.c:555
 msgid "Shift amount: "
 msgstr "Skiftmängd: "
 
-#: src/soxdialog.c:535
+#: src/soxdialog.c:559
 msgid "Peak limiter"
 msgstr "Toppbegränsning"
 
-#: src/soxdialog.c:539
+#: src/soxdialog.c:563
 msgid "Limiter gain: "
 msgstr "Begränsarens förstärkning: "
 
-#: src/soxdialog.c:552
+#: src/soxdialog.c:576
 msgid "Amount: "
 msgstr "Mängd: "
 
-#: src/soxdialog.c:553
+#: src/soxdialog.c:577
 msgid " cents"
 msgstr " cent"
 
-#: src/soxdialog.c:554
+#: src/soxdialog.c:578
 msgid "Window width: "
 msgstr "Fönsterbredd: "
 
-#: src/soxdialog.c:555 src/soxdialog.c:586
+#: src/soxdialog.c:579
+#: src/soxdialog.c:610
 msgid " ms"
 msgstr " ms"
 
-#: src/soxdialog.c:556
+#: src/soxdialog.c:580
 msgid "Interpolation: "
 msgstr "Interpolering: "
 
-#: src/soxdialog.c:557
+#: src/soxdialog.c:581
 msgid "Fade: "
 msgstr "Fade: "
 
-#: src/soxdialog.c:566
+#: src/soxdialog.c:590
 msgid "Interpolation|Cubic"
 msgstr "Kubisk"
 
-#: src/soxdialog.c:567
+#: src/soxdialog.c:591
 msgid "Interpolation|Linear"
 msgstr "Linjär"
 
-#: src/soxdialog.c:573
+#: src/soxdialog.c:597
 msgid "Fade|Cos"
 msgstr "Cos"
 
-#: src/soxdialog.c:574
+#: src/soxdialog.c:598
 msgid "Fade|Hamming"
 msgstr "Hamming"
 
-#: src/soxdialog.c:575
+#: src/soxdialog.c:599
 msgid "Fade|Linear"
 msgstr "Linjär"
 
-#: src/soxdialog.c:576
+#: src/soxdialog.c:600
 msgid "Fade|Trapezoid"
 msgstr "Trapezoid"
 
-#: src/soxdialog.c:584
+#: src/soxdialog.c:608
 msgid "Factor: "
 msgstr "Faktor: "
 
-#: src/soxdialog.c:585
+#: src/soxdialog.c:609
 msgid "Window size: "
 msgstr "Fönsterstorlek: "
 
-#: src/soxdialog.c:597
+#: src/soxdialog.c:621
 msgid "Speed: "
 msgstr "Hastighet: "
 
-#: src/soxdialog.c:598
+#: src/soxdialog.c:622
 msgid " Hz"
 msgstr " Hz"
 
-#: src/soxdialog.c:599
+#: src/soxdialog.c:623
 msgid "Depth: "
 msgstr "Djup: "
 
-#: src/soxdialog.c:610
+#: src/soxdialog.c:634
 msgid "This effect has no options."
 msgstr "Denna effekt har inga alternativ."
 
-#: src/soxdialog.c:679
+#: src/soxdialog.c:704
 msgid "Error creating pipe"
 msgstr "Fel vid skapande av pipe"
 
-#: src/soxdialog.c:684
+#: src/soxdialog.c:711
 msgid "Couldn't fork"
 msgstr "Kunde inte göra fork"
 
-#: src/soxdialog.c:692
+#: src/soxdialog.c:726
 #, c-format
 msgid "Error running 'sox -h': %s\n"
 msgstr "Fel vid körning av 'sox -h': %s\n"
 
-#: src/soxdialog.c:694
+#: src/soxdialog.c:728
 msgid "Should not reach this point"
 msgstr "Borde inte nå denna punkt"
 
-#: src/soxdialog.c:704
+#: src/soxdialog.c:743
 msgid "Error reading sox output"
 msgstr "Fel vid läsning av utdata från sox"
 
-#: src/soxdialog.c:715
+#: src/soxdialog.c:756
 msgid "Unable to detect supported SoX effects"
 msgstr "Kunde inte detektera stödda SoX-effekter"
 
-#: src/soxdialog.c:745
+#: src/soxdialog.c:790
 msgid "Sox support couldn't be initialized"
 msgstr "Sox-stöd kunde inte initieras"
 
@@ -3294,11 +3082,11 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nej"
 
-#: src/um.c:311
+#: src/um.c:316
 msgid "Input"
 msgstr "Inmatning"
 
-#: src/um.c:401
+#: src/um.c:398
 msgid "Choice"
 msgstr "Val"
 
@@ -3324,90 +3112,81 @@ msgid "untitled #%d"
 msgstr "namnlös #%d"
 
 #: src/document.c:278
-msgid ""
-"Loading and then saving files with 'lossy' formats (like mp3 and ogg) leads "
-"to a quality loss, also for the unmodified parts of the file."
-msgstr ""
-"Om man laddar in och sedan sparar filer i icke förlustfria format (som mp3 "
-"eller ogg) tappar man lite i kvalitet, även för de delar av filen som inte "
-"redigerats."
+msgid "Loading and then saving files with 'lossy' formats (like mp3 and ogg) leads to a quality loss, also for the unmodified parts of the file."
+msgstr "Om man laddar in och sedan sparar filer i icke förlustfria format (som mp3 eller ogg) tappar man lite i kvalitet, även för de delar av filen som inte redigerats."
 
-#: src/session.c:83
+#: src/session.c:84
 msgid "Error opening session directory"
 msgstr "Fel vid öppning av sessionskatalog"
 
-#: src/session.c:100 src/session.c:160
+#: src/session.c:101
+#: src/session.c:161
 #, c-format
 msgid "%s: Wrong file type"
 msgstr "%s: Fel filtyp"
 
-#: src/session.c:232
+#: src/session.c:233
 msgid "Could not create session file"
 msgstr "Kunde inte skapa sessionsfil"
 
-#: src/session.c:274
+#: src/session.c:275
 msgid ""
-"The files that belonged to the crashed session have been recovered. Any "
-"files that are not saved will be removed permanently.\n"
+"The files that belonged to the crashed session have been recovered. Any files that are not saved will be removed permanently.\n"
 "\n"
 "(This notice is only shown once)"
 msgstr ""
-"Filerna som tillhörde den kraschade sessionen har återställts. De filer som "
-"inte sparas kommer att raderas.\n"
+"Filerna som tillhörde den kraschade sessionen har återställts. De filer som inte sparas kommer att raderas.\n"
 "\n"
 "(Detta meddelande visas bara en gång)"
 
-#: src/session.c:324
+#: src/session.c:325
 msgid "Suspended"
 msgstr "Sparad"
 
-#: src/session.c:324 src/session.c:325
+#: src/session.c:325
+#: src/session.c:326
 msgid "Crash"
 msgstr "Krasch"
 
-#: src/session.c:325
+#: src/session.c:326
 msgid "Left files"
 msgstr "Överblivna filer"
 
-#: src/session.c:334
+#: src/session.c:335
 #, c-format
 msgid "%s on %s(%d files, %ld bytes)"
 msgstr "%s, %s(%d filer, %ld byte)"
 
-#: src/session.c:351
+#: src/session.c:352
 msgid "Sessions"
 msgstr "Sessioner"
 
-#: src/session.c:361
-msgid ""
-"Earlier sessions were found. Choose one to resume or start a new session."
-msgstr ""
-"Data från tidigare sessioner hittades. Välj en session att återställa eller "
-"påbörja en ny session."
+#: src/session.c:362
+msgid "Earlier sessions were found. Choose one to resume or start a new session."
+msgstr "Data från tidigare sessioner hittades. Välj en session att återställa eller påbörja en ny session."
 
-#: src/session.c:380
+#: src/session.c:381
 msgid "Resume selected"
 msgstr "Återställ"
 
-#: src/session.c:390
+#: src/session.c:391
 msgid "Start new session"
 msgstr "Ny session"
 
-#: src/session.c:396
+#: src/session.c:397
 msgid "Exit"
 msgstr "Avsluta"
 
+#~ msgid "SoX only supports 8, 16 and 32-bit sample sizes"
+#~ msgstr "SoX stöder endast 8, 16 och 32-bitars sampelstorlekar"
 #~ msgid "This will clear the entire undo buffer!"
 #~ msgstr "Detta kommer att tömma hela ångra-bufferten!"
-
 #~ msgid "This will clear the undo buffer up to the last save"
 #~ msgstr "Detta kommer att tömma ångra-bufferten bort till senaste sparningen"
-
 #~ msgid "/Edit/Clear undo buffer"
 #~ msgstr "/Redigera/Rensa ångra-buffert"
-
 #~ msgid "Conversion method: "
 #~ msgstr "Omvandlingsmetod: "
-
 #~ msgid "mhWaveEdit: Couldn't open %s: %s\n"
 #~ msgstr "mhWaveEdit: Kunde inte öppna %s: %s\n"
+
