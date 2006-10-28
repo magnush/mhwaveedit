@@ -17,6 +17,7 @@ UI stuff:
 * Logarithmic (dB) peak display. 
 * Amplitude scale
 * Preview function in effect browser
+* Clip information dialog box
 
 Editing:
 * Make the insert silence function click-free (keeping the same amplitude
