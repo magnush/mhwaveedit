@@ -702,6 +702,8 @@ rateconv *rateconv_new(gboolean realtime, const char *driver_id,
 	       else
 		    conv->passthru_buffer = NULL;
 	       conv->emptying = FALSE;
+	       conv->readcount = conv->writecount = 0;
+	       conv->empty_point = 0;
 	       return conv;
 	  }
      }     

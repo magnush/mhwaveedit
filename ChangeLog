@@ -1,5 +1,11 @@
 2006-10-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/session.c (session_init): Free pointer.
+
+	* src/ladspacore.c (ladspa_init): Remember to free pointer.
+
+	* src/rateconv.c (rateconv_new): Setup readcount and writecount.
+
 	* src/player.c (player_set_buffer_pos): Always restart converter
 	when jumping
 

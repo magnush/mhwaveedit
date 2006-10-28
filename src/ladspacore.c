@@ -166,6 +166,7 @@ void ladspa_init(void)
 	  scan_directory(c);
 	  c = strtok(NULL,":");
      }
+     free(p);
 }
 
 static void foreach_func(gpointer key, gpointer value, gpointer user_data)
