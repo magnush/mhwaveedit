@@ -1,5 +1,7 @@
 2006-10-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* Released version 1.4.10.
+
 	* src/session.c (session_init): Free pointer.
 
 	* src/ladspacore.c (ladspa_init): Remember to free pointer.
