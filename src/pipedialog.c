@@ -56,10 +56,15 @@ static Chunk *pipe_dialog_apply_proc(Chunk *chunk, StatusBar *bar,
      gchar *cmd;
      gboolean sendwav;
      PipeDialog *pd = PIPE_DIALOG(user_data);
+     Chunk *r;
+     off_t clipcount = 0;
      cmd = history_box_get_value(pd->cmd);
      sendwav = gtk_toggle_button_get_active(pd->sendwav);
      inifile_set_gboolean("PipeDialog_sendWav",sendwav);
-     return pipe_dialog_pipe_chunk(chunk,cmd,sendwav,dither_editing,bar);
+     r = pipe_dialog_pipe_chunk(chunk,cmd,sendwav,dither_editing,bar,
+				&clipcount);
+     if (r != NULL) clipwarn(clipcount);
+     return r;
 }
 
 static gboolean pipe_dialog_apply(EffectDialog *ed)
@@ -314,7 +319,7 @@ void pipe_dialog_close_input(gpointer handle)
 static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command, 
 					  gboolean sendwav, gboolean do_read, 
 					  StatusBar *bar, gboolean *sent_all, 
-					  int dither_mode)
+					  int dither_mode, off_t *clipcount)
 {
      int fds[3],bs,bp,i;
      gboolean writing=TRUE;
@@ -325,7 +330,6 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
      TempFile ct=0;
      fd_set rset,wset;
      gpointer pipehandle;
-     off_t clipcount = 0;
 
      /*
      puts("---");
@@ -413,7 +417,7 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
 			      continue; 
 			 }
 			 i = chunk_read_array(ch,ui,BZ,outbuf, dither_mode,
-					      &clipcount);
+					      clipcount);
 			 if (!i) goto error_exit;
 			 bs = i;
 			 bp = 0;
@@ -461,8 +465,6 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
 
      if (sent_all) *sent_all = !writing;
      
-     clipwarn(clipcount);
-
      return do_read ? tempfile_finished(ct) : NULL;
 
 errno_error_exit:
@@ -480,17 +482,19 @@ error_exit:
 }
 
 Chunk *pipe_dialog_pipe_chunk(Chunk *chunk, gchar *command, gboolean sendwav,
-			      int dither_mode, StatusBar *bar)
+			      int dither_mode, StatusBar *bar, 
+			      off_t *clipcount)
 {
      return pipe_dialog_pipe_chunk_main(chunk,command,sendwav,TRUE,
-					bar,NULL,dither_mode);
+					bar,NULL,dither_mode,clipcount);
 }
 
 gboolean pipe_dialog_send_chunk(Chunk *chunk, gchar *command, gboolean sendwav,
-				int dither_mode, StatusBar *bar)
+				int dither_mode, StatusBar *bar,
+				off_t *clipcount)
 {
      gboolean sent_all;
      pipe_dialog_pipe_chunk_main(chunk,command,sendwav,FALSE,
-				 bar,&sent_all,dither_mode);
+				 bar,&sent_all,dither_mode,clipcount);
      return !sent_all;
 }

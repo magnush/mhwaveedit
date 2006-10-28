@@ -50,11 +50,11 @@ Chunk *chunk_load_x(gchar *filename, int dither_mode, StatusBar *bar,
 
 /* Saves the contents of a chunk into a new file. The file format is determined
  * from the extension or asked at run time. 
- * Returns TRUE on failure
+ * Returns <0 on hard failure and >0 if clipping occurred.
  */
 
-gboolean chunk_save(Chunk *chunk, gchar *filename, int filetype, 
-		    gboolean user_default_settings, int dither_mode, 
-		    StatusBar *bar);
+gint chunk_save(Chunk *chunk, gchar *filename, int filetype, 
+		gboolean user_default_settings, int dither_mode, 
+		StatusBar *bar);
 
 #endif

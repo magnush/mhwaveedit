@@ -215,8 +215,8 @@ guint chunk_alive_count(void);
      bar - Status bar to display progress. Must already be in progress mode.
 */
 
-gboolean chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian, 
-		    int dither_mode, StatusBar *bar);
+gint chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian, 
+		int dither_mode, StatusBar *bar);
 
 
 

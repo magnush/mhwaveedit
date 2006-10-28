@@ -49,9 +49,9 @@ struct file_type {
      gboolean lossy;
      gboolean (*typecheck)(gchar *filename);
      Chunk *(*load)(gchar *filename, int dither_mode, StatusBar *bar);
-     gboolean (*save)(Chunk *chunk, gchar *filename, gpointer settings,
-		      struct file_type *type, int dither_mode, StatusBar *bar,
-		      gboolean *fatal);
+     gint (*save)(Chunk *chunk, gchar *filename, gpointer settings,
+		  struct file_type *type, int dither_mode, StatusBar *bar,
+		  gboolean *fatal);
      gpointer (*get_settings)(void);
      void (*free_settings)(gpointer settings);
      gint extra_data;
@@ -61,37 +61,37 @@ static GList *file_types = NULL;
 
 static gboolean wav_check(gchar *filename);
 static Chunk *wav_load(gchar *filename, int dither_mode, StatusBar *bar);
-static gboolean wav_save(Chunk *chunk, gchar *filename, gpointer settings,
-			 struct file_type *type, int dither_mode, 
-			 StatusBar *bar,gboolean *fatal);
+static gint wav_save(Chunk *chunk, gchar *filename, gpointer settings,
+		     struct file_type *type, int dither_mode, 
+		     StatusBar *bar,gboolean *fatal);
 
 #ifdef HAVE_LIBSNDFILE
 static gboolean sndfile_check(gchar *filename);
 static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar);
-static gboolean sndfile_save(Chunk *chunk, gchar *filename, gpointer settings,
-			     struct file_type *type, int dither_mode, 
-			     StatusBar *bar, gboolean *fatal);
+static gint sndfile_save(Chunk *chunk, gchar *filename, gpointer settings,
+			 struct file_type *type, int dither_mode, 
+			 StatusBar *bar, gboolean *fatal);
 static gboolean sndfile_save_main(Chunk *chunk, gchar *filename, 
 				  int format, int dither_mode, StatusBar *bar,
 				  gboolean *fatal);
 #endif
 
 static Chunk *raw_load(gchar *filename, int dither_mode, StatusBar *bar);
-static gboolean raw_save(Chunk *chunk, gchar *filename, gpointer settings,
-			 struct file_type *type, int dither_mode,
-			 StatusBar *bar, gboolean *fatal);
+static gint raw_save(Chunk *chunk, gchar *filename, gpointer settings,
+		     struct file_type *type, int dither_mode,
+		     StatusBar *bar, gboolean *fatal);
 
 static Chunk *ogg_load(gchar *filename, int dither_mode, StatusBar *bar);
-static gboolean ogg_save(Chunk *chunk, gchar *filename, gpointer settings,
-			 struct file_type *type,
-			 int dither_mode, StatusBar *bar, gboolean *fatal);
+static gint ogg_save(Chunk *chunk, gchar *filename, gpointer settings,
+		     struct file_type *type,
+		     int dither_mode, StatusBar *bar, gboolean *fatal);
 
 
 static gpointer mp3_get_settings(void);
 static Chunk *mp3_load(gchar *filename, int dither_mode, StatusBar *bar);
-static gboolean mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
-			 struct file_type *type,
-			 int dither_mode, StatusBar *bar, gboolean *fatal);
+static gint mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
+		     struct file_type *type,
+		     int dither_mode, StatusBar *bar, gboolean *fatal);
 
 static Chunk *try_mplayer(gchar *filename, int dither_mode, StatusBar *bar);
 
@@ -121,9 +121,9 @@ static struct file_type *register_file_type
 (gchar *name, gchar *ext, gboolean lossy,
  gboolean (*typecheck)(gchar *filename), 
  Chunk *(*load)(gchar *filename, int dither_mode, StatusBar *bar),
- gboolean (*save)(Chunk *chunk, gchar *filename,gpointer settings,
-		  struct file_type *type,int dither_mode,
-		  StatusBar *bar,gboolean *fatal),
+ gint (*save)(Chunk *chunk, gchar *filename,gpointer settings,
+	      struct file_type *type,int dither_mode,
+	      StatusBar *bar,gboolean *fatal),
  int extra_data)
 {
      struct file_type *t;
@@ -329,16 +329,16 @@ static struct file_type *choose_format(gchar *filename)
      return ft;
 }
 
-gboolean chunk_save(Chunk *chunk, gchar *filename, int filetype, 
-		    gboolean use_default_settings, int dither_mode, 
-		    StatusBar *bar)
+gint chunk_save(Chunk *chunk, gchar *filename, int filetype, 
+		gboolean use_default_settings, int dither_mode, 
+		StatusBar *bar)
 {
      gchar *d;
-     gboolean b=FALSE,res;
+     gboolean b=FALSE;
      EFILE *f;
      gpointer settings = NULL;
      struct file_type *ft;
-     gint i;
+     gint i,res;
      
      /* Let the user choose a format first, so that if the user presses cancel,
       * we haven't done any of the backup/unlink stuff.. */	
@@ -374,7 +374,7 @@ gboolean chunk_save(Chunk *chunk, gchar *filename, int filetype,
      status_bar_begin_progress(bar,chunk->size,_("Saving"));
      res = ft->save(chunk,filename,settings,ft,dither_mode,bar,&b);
 
-     if (res && b && !status_bar_progress(bar,0)) {
+     if (res<0 && b && !status_bar_progress(bar,0)) {
 	  d = g_strdup_printf(_("The file %s may be destroyed since the"
 			      " saving failed. Try to free up some disk space "
 			      "and save again. If you exit now the "
@@ -522,14 +522,15 @@ static Chunk *wav_load(char *filename, int dither_mode, StatusBar *bar)
      return chunk_new_from_datasource(ds);
 }
 
-static gboolean wav_save(Chunk *chunk, char *filename, gpointer settings,
-			 struct file_type *type, int dither_mode, 
-			 StatusBar *bar, gboolean *fatal)
+static gint wav_save(Chunk *chunk, char *filename, gpointer settings,
+		     struct file_type *type, int dither_mode, 
+		     StatusBar *bar, gboolean *fatal)
 {
      EFILE *f;
      Datasource *ds;
      DataPart *dp;
      Dataformat *fmt;
+     gint i;
      fmt = &(chunk->format);
 
      /* Check if the format is OK */     
@@ -603,13 +604,15 @@ static gboolean wav_save(Chunk *chunk, char *filename, gpointer settings,
 	       e_fclose(f);
 	       return TRUE;
 	  }
-	  if (chunk_dump(chunk,f,FALSE,dither_mode,bar)) {
+	  i = chunk_dump(chunk,f,FALSE,dither_mode,bar);
+	  if (i < 0) {
 	       e_fclose_remove(f);
 	       return TRUE;
 	  }
 	  e_fclose ( f );
+	  return i;
      }    
-     return FALSE;
+     return 0;
 }
 
 /* RAW */
@@ -633,20 +636,20 @@ static Chunk *raw_load(gchar *filename, int dither_mode, StatusBar *bar)
      return chunk_new_from_datasource(ds);
 }
 
-static gboolean raw_save(Chunk *chunk, gchar *filename, gpointer settings,
+static gint raw_save(Chunk *chunk, gchar *filename, gpointer settings,
 			 struct file_type *type, int dither_mode, 
 			 StatusBar *bar, gboolean *fatal)
 {
      EFILE *f;
+     gint i;
+
      f = e_fopen(filename,EFILE_WRITE);
      if (!f) return TRUE;
-     if (chunk_dump(chunk,f,IS_BIGENDIAN,dither_mode,bar)) {
-          e_fclose(f);
-	  *fatal = TRUE;
-          return TRUE;
-     }
+    
+     i = chunk_dump(chunk,f,IS_BIGENDIAN,dither_mode,bar);
+     if (i < 0) *fatal = TRUE;
      e_fclose(f);
-     return FALSE;
+     return i;
 }
 
 /* SNDFILE */
@@ -791,9 +794,9 @@ static gboolean find_nearest_sndfile_format(Dataformat *fmt, int format,
 }
 
 
-static gboolean sndfile_save_main(Chunk *chunk, gchar *filename, 
-				  int format, int dither_mode, StatusBar *bar,
-				  gboolean *fatal)
+static gint sndfile_save_main(Chunk *chunk, gchar *filename, 
+			      int format, int dither_mode, StatusBar *bar,
+			      gboolean *fatal)
 {
      gchar *c;
      off_t i;
@@ -805,14 +808,14 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
      off_t clipcount = 0;
 
      if (find_nearest_sndfile_format(&(chunk->format),format,&info,filename)) 
-	  return TRUE;
+	  return -1;
      
      s = sf_open(filename, SFM_WRITE, &info);
      if (!s) {
           c = g_strdup_printf(_("Failed to open '%s'!"),filename);
           user_error(c);
           g_free(c);
-          return TRUE;
+          return -1;
      }
 
      sf_command ( s, SFC_SET_NORM_FLOAT, NULL, SF_TRUE );
@@ -821,7 +824,7 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
      ch = chunk_open(chunk);
      if (ch == NULL) {
 	  sf_close(s);
-	  return TRUE;
+	  return -1;
      }
 
      /* We could speed this up a LOT esp. on output to PCM files. */
@@ -835,7 +838,7 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
 	       sf_close(s);
 	       g_free(samplebuf);
 	       *fatal = TRUE;
-	       return TRUE;
+	       return -1;
 	  }
 	  clipcount += unnormalized_count(samplebuf,n*chunk->format.channels);
 	  if (sf_writef_sample_t(s,samplebuf,n) != n) {
@@ -846,27 +849,27 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
 	       sf_close(s);
 	       g_free(samplebuf);
 	       *fatal = TRUE;
-	       return TRUE;  
+	       return -1;  
 	  }
 	  if (status_bar_progress(bar, n*chunk->format.samplebytes)) {
 	       chunk_close(ch);
 	       sf_close(s);
 	       g_free(samplebuf);
 	       xunlink(filename);
-	       return TRUE;
+	       return -1;
 	  }
      }
      chunk_close(ch);
      sf_close(s);
      g_free(samplebuf);
      clipwarn(clipcount);
-     return FALSE;
+     return (clipcount>0)?1:0;
 
 }
 
-static gboolean sndfile_save(Chunk *chunk, gchar *filename, gpointer settings,
-			     struct file_type *type, int dither_mode, 
-			     StatusBar *bar, gboolean *fatal)
+static gint sndfile_save(Chunk *chunk, gchar *filename, gpointer settings,
+			 struct file_type *type, int dither_mode, 
+			 StatusBar *bar, gboolean *fatal)
 {
      return sndfile_save_main(chunk,filename,type->extra_data,dither_mode,
 			      bar,fatal);
@@ -949,14 +952,15 @@ static Chunk *ogg_load(gchar *filename, int dither_mode, StatusBar *bar)
      return c;
 }
 
-static gboolean ogg_save(Chunk *chunk, gchar *filename, gpointer settings,
-			 struct file_type *type,
-			 int dither_mode, StatusBar *bar, gboolean *fatal)
+static gint ogg_save(Chunk *chunk, gchar *filename, gpointer settings,
+		     struct file_type *type,
+		     int dither_mode, StatusBar *bar, gboolean *fatal)
 {
      Chunk *x=NULL,*y;
      Dataformat fmt;
      gchar *c,*d;
      gboolean b;
+     off_t clipcount = 0;
      xunlink(filename);
      d = g_strdup_printf("OUTFILE=%s",filename);     
      if (xputenv(d)) { g_free(d); return TRUE; }
@@ -974,15 +978,16 @@ static gboolean ogg_save(Chunk *chunk, gchar *filename, gpointer settings,
 			 y->format.samplesize*8, 
 			 y->format.channels, y->format.samplerate,
 			 y->format.bigendian?1:0);
-     b = pipe_dialog_send_chunk(y,c,FALSE,dither_mode,bar);
+     b = pipe_dialog_send_chunk(y,c,FALSE,dither_mode,bar,&clipcount);
      g_free(c);     
      if (x != NULL) gtk_object_sink(GTK_OBJECT(x));
      if (!xunsetenv("OUTFILE")) g_free(d);
      if (b || !file_exists(filename)) {
 	  *fatal = TRUE;
-	  return TRUE;
+	  return -1;
      }
-     return FALSE;
+     clipwarn(clipcount);
+     return (clipcount>0)?1:0;
 }
 
 static struct {
@@ -1210,24 +1215,26 @@ static gboolean wav_regular_format(Dataformat *fmt)
      return (XOR(fmt->samplesize == 1, fmt->sign));
 }
 
-static gboolean mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
-			 struct file_type *type,
-			 int dither_mode, StatusBar *bar, gboolean *fatal)
+static gint mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
+		     struct file_type *type,
+		     int dither_mode, StatusBar *bar, gboolean *fatal)
 {
      Chunk *x;
      Dataformat fmt;
      gchar *c;
      gboolean b;
+     off_t clipcount = 0;
      xunlink(filename);
      c = g_strdup_printf("OUTFILE=%s",filename);
-     if (xputenv(c)) { g_free(c); return TRUE; }
+     if (xputenv(c)) { g_free(c); return -1; }
      c = g_strdup_printf("LAMEFLAGS=%s",(settings == NULL) ? 
 			 "--preset standard" : (gchar *)settings);
-     if (xputenv(c)) { g_free(c); return TRUE; }
+     if (xputenv(c)) { g_free(c); return -1; }
      if (wav_regular_format(&(chunk->format)))
 	 b = pipe_dialog_send_chunk(chunk,
 				    "lame --silent $LAMEFLAGS - "
-				    "\"$OUTFILE\"",TRUE,dither_mode,bar);
+				    "\"$OUTFILE\"",TRUE,dither_mode,bar,
+				    &clipcount);
      else {
 	  memcpy(&fmt,&(chunk->format),sizeof(Dataformat));
 	  if (fmt.type == DATAFORMAT_FLOAT || fmt.samplesize == 3) {
@@ -1242,16 +1249,17 @@ static gboolean mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
 	  else {
 	       b = pipe_dialog_send_chunk(x,
 					  "lame --silent --preset standard - "
-					  "\"$OUTFILE\"",TRUE,dither_mode,bar);
+					  "\"$OUTFILE\"",TRUE,dither_mode,bar,
+					  &clipcount);
 	       gtk_object_sink(GTK_OBJECT(x));
 	  }
      }
      if (!xunsetenv("OUTFILE")) g_free(c);
      if (b || !file_exists(filename)) {
 	  *fatal = TRUE;
-	  return TRUE;
+	  return -1;
      }
-     return FALSE;
+     return (clipcount>0)?1:0;
 }
 
 

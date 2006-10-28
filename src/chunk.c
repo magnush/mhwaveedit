@@ -282,8 +282,8 @@ Chunk *chunk_remove_channel(Chunk *chunk, gint channel, StatusBar *bar)
 			       _("Removing channel"));
 }
 
-gboolean chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian, 
-		    int dither_mode, StatusBar *bar)
+gint chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian, 
+		int dither_mode, StatusBar *bar)
 {
      GList *l;
      DataPart *dp;
@@ -293,11 +293,11 @@ gboolean chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian,
 	  dp = (DataPart *)l->data;
 	  if (datasource_dump(dp->ds,dp->position,dp->length,file,
 			      dither_mode,bar,&clipcount))
-	       return TRUE;
+	       return -1;
 	  l = l->next;
      }
      clipwarn(clipcount);
-     return FALSE;
+     return (clipcount>0) ? 1 : 0;
 }
 
 static gboolean has_fake_pcm(Chunk *c)

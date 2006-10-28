@@ -99,6 +99,8 @@ static Chunk *sox_dialog_apply_proc_main(Chunk *chunk, StatusBar *bar,
      guint i,j;
      gint idx;
      gboolean b;
+     off_t clipcount = 0;
+     Chunk *r;
 
      sox_dialog_format_string(fmt_buf,sizeof(fmt_buf),&(chunk->format));
      g_snprintf(cmd_buf,sizeof(cmd_buf),"sox %s - %s - ",fmt_buf,fmt_buf);
@@ -231,7 +233,10 @@ static Chunk *sox_dialog_apply_proc_main(Chunk *chunk, StatusBar *bar,
      } else {
 	  g_assert_not_reached();
      }
-     return pipe_dialog_pipe_chunk(chunk,cmd_buf,FALSE,dither_editing,bar);
+     r = pipe_dialog_pipe_chunk(chunk,cmd_buf,FALSE,dither_editing,bar,
+				&clipcount);
+     if (r != NULL) clipwarn(clipcount);
+     return r;
 }
 
 static Chunk *sox_dialog_apply_proc(Chunk *chunk, StatusBar *bar, 

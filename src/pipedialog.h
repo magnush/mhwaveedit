@@ -52,8 +52,10 @@ void pipe_dialog_close(gpointer handle);
 void pipe_dialog_close_input(gpointer handle);
 
 Chunk *pipe_dialog_pipe_chunk(Chunk *chunk, gchar *command, gboolean sendwav, 
-			      int dither_mode, StatusBar *bar);
+			      int dither_mode, StatusBar *bar, 
+			      off_t *clipcount);
 gboolean pipe_dialog_send_chunk(Chunk *chunk, gchar *command, gboolean sendwav,
-				int dither_mode, StatusBar *bar);
+				int dither_mode, StatusBar *bar, 
+				off_t *clipcount);
 
 #endif
