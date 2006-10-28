@@ -151,7 +151,7 @@ static gboolean chunk_convert_samplerate_proc(void *in, guint sample_size,
      gchar buf[4096];
      if (conv == NULL) 
 	  conv = rateconv_new(FALSE,conv_driver,informat,
-			      conv_outrate,conv_dither_mode);
+			      conv_outrate,conv_dither_mode,FALSE);
      if (conv == NULL) return TRUE;
      if (sample_size == 0) rateconv_write(conv,NULL,0);
      while (1) {

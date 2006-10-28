@@ -1,5 +1,12 @@
 2006-10-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/rateconv.c (rateconv_new): Add ability to pass through data
+	when outrate == inrate
+
+	* src/inifile.c (inifile_init): Small memory leak found by Valgrind.
+
+	* src/session.c (session_init): Make session_dir static.
+
 	* src/document.c (document_save): Don't clear history if a soft
 	error (clipping) occurred while saving.
 

@@ -36,7 +36,8 @@ typedef void rateconv;
  * for quality reasons. */
 gboolean rateconv_prefers_float(const char *driver_id);
 rateconv *rateconv_new(gboolean realtime, const char *driver_id, 
-		       Dataformat *format, guint32 outrate, int dither_mode);
+		       Dataformat *format, guint32 outrate, int dither_mode,
+		       gboolean passthru);
 /* data == NULL means no more data will be sent */
 gint rateconv_write(rateconv *conv, void *data, guint bufsize);
 gint rateconv_read(rateconv *conv, void *buffer, guint bufsize);

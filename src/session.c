@@ -54,6 +54,7 @@ struct session {
 
 static int current_id = 0;
 static gchar *current_filename;
+static gchar *session_dir;
 static EFILE *current_file;
 static GList *session_list = NULL;
 /* static EFILE *current_session = NULL; */
@@ -67,7 +68,7 @@ static gint session_compare_func(gconstpointer a, gconstpointer b)
 void session_init(int *argc, char **argv)
 {
      int highest_id = 0;
-     gchar *session_dir,*c,*p,*q;
+     gchar *c,*p,*q;
      DIR *d;     
      struct dirent *de;
      int i,j,k,l,m,n;

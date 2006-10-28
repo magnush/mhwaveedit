@@ -1,10 +1,12 @@
 New features in version 1.4.10:
   
   * Normalize to specific level.
+  * Automatic disabling of varispeed when playing at normal speed.
   * ALSA recording bug fixed.
   * Varispeed slider bug fixed.
   * SoX filtering bugs fixed.
   * Support for newer SoX versions.
+  * Warn user on clipping conversions.
   * Portability fixes
 
 New features in version 1.4.9:

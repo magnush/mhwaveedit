@@ -102,6 +102,7 @@ void inifile_init(void)
 			      g_strdup(valuestart));
      }
      e_fclose(f);
+     g_free(c);
 }
 
 gchar *inifile_get(gchar *setting, gchar *defaultValue)

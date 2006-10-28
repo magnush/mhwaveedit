@@ -187,7 +187,7 @@ static void restart_converter(void)
 	  varispeed_conv = rateconv_new(TRUE,rateconv_driver_id(TRUE,i),
 					&(ch->format),
 					(gfloat)ch->format.samplerate / 
-					true_speed, dither_playback);
+					true_speed, dither_playback, TRUE);
      } else
 	  varispeed_conv = NULL;
 }

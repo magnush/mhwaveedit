@@ -56,6 +56,11 @@ struct driver_data *repeat_driver;
 
 struct convdata_base {
      struct driver_data *driver;
+     Ringbuf *passthru_buffer;
+     gboolean emptying;     
+     guint32 writecount,readcount;
+     guint32 empty_point;
+     guint32 inrate,outrate;
 };
 
 static GList *drivers = NULL;
@@ -66,7 +71,7 @@ static gint sox_read(gpointer convdata, gpointer buf, guint bufsize);
 #ifdef HAVE_LIBSAMPLERATE
 
 struct convdata_src {
-     struct driver_data *driver;
+     struct convdata_base b;
      Dataformat format;
      SRC_STATE *state;
      long maxframes;
@@ -97,7 +102,6 @@ static gpointer rateconv_src_new(struct driver_data *driver, gboolean realtime,
      }
 
      cd = g_malloc(sizeof(*cd));
-     cd->driver = driver;
      cd->state = state;
      memcpy(&(cd->format),format,sizeof(Dataformat));     
      frames = 16384;
@@ -206,7 +210,7 @@ static void rateconv_src_set_outrate(gpointer convdata, guint32 outrate)
 #endif
 
 struct convdata_sox {
-     struct driver_data *driver;
+     struct convdata_base b;
      Dataformat format;
      gboolean converting;
      Dataformat convert_from_format;
@@ -251,7 +255,6 @@ static gpointer sox_new(struct driver_data *driver, gboolean realtime,
      /* puts(c); */
      cd.pipehandle = pipe_dialog_open_pipe(c,cd.fds,TRUE);
      if (cd.pipehandle == NULL) return NULL;
-     cd.driver = driver;
      cd.tmpbuf_size = 0;
      cd.tmpbuf_in_size = 0;
      cd.close_status = 0;
@@ -455,10 +458,9 @@ static gboolean sox_hasdata(gpointer convdata)
 }
 
 struct convdata_repeat {
-     struct driver_data *driver;
+     struct convdata_base b;
      Ringbuf *databuf;
      Dataformat format;
-     guint32 outrate;
      gchar cursamp[32];
      gfloat fracpos, ratio;
 };
@@ -469,10 +471,8 @@ static gpointer repeat_new(struct driver_data *driver, gboolean realtime,
 {
      struct convdata_repeat *data;
      data = g_malloc(sizeof(*data));
-     data->driver = driver;
      data->databuf = ringbuf_new(realtime ? 1024*format->samplebytes : 
 				 format->samplerate * format->samplebytes);
-     data->outrate = outrate;
      data->fracpos = 1.0;
      data->ratio = (format->samplerate) / ((gfloat)outrate);
      memcpy(&(data->format),format,sizeof(Dataformat));
@@ -503,7 +503,7 @@ static gint repeat_read(gpointer convdata, gpointer buf, guint bufsize)
 
      bufsize -= bufsize % data->format.samplebytes;
 
-     if (data->format.samplerate == data->outrate) 
+     if (data->format.samplerate == data->b.outrate) 
 	  return ringbuf_dequeue(data->databuf,buf,bufsize);     
 
      i = bufsize;
@@ -540,7 +540,6 @@ static gboolean repeat_hasdata(gpointer convdata)
 static void repeat_set_outrate(gpointer convdata, guint32 outrate)
 {
      struct convdata_repeat *data = (struct convdata_repeat *)convdata;
-     data->outrate = outrate;
      data->ratio = (data->format.samplerate) / ((gfloat)outrate);
 }
 
@@ -674,10 +673,12 @@ gboolean rateconv_prefers_float(const gchar *driver_id)
 }
 
 rateconv *rateconv_new(gboolean realtime, const char *driver_id, 
-		       Dataformat *format, guint32 outrate, int dither_mode)
+		       Dataformat *format, guint32 outrate, int dither_mode,
+		       gboolean passthru)
 {
      GList *l;
      struct driver_data *d;
+     struct convdata_base *conv;
      register_drivers();
 
      /* If desired sample rate is same as input rate, use the repeat
@@ -689,8 +690,20 @@ rateconv *rateconv_new(gboolean realtime, const char *driver_id,
      l = realtime ? realtime_drivers : drivers;
      for (; l!=NULL; l=l->next) {
 	  d = (struct driver_data *)l->data;
-	  if (!strcmp(d->id,driver_id)) 
-	       return d->new_func(d,realtime,format,outrate,dither_mode);
+	  if (!strcmp(d->id,driver_id)) {
+	       conv = d->new_func(d,realtime,format,outrate,dither_mode);
+	       if (conv == NULL) return NULL;
+	       conv->driver = d;
+	       conv->inrate = format->samplerate;
+	       conv->outrate = outrate;
+	       if (passthru)
+		    conv->passthru_buffer = 
+			 ringbuf_new(16384 - (16384%format->samplebytes));
+	       else
+		    conv->passthru_buffer = NULL;
+	       conv->emptying = FALSE;
+	       return conv;
+	  }
      }     
      return NULL;
 }
@@ -698,13 +711,58 @@ rateconv *rateconv_new(gboolean realtime, const char *driver_id,
 gint rateconv_write(rateconv *conv, void *data, guint bufsize)
 {
      struct convdata_base *convdata = (struct convdata_base *)conv;
-     return convdata->driver->write_func(conv,data,bufsize);
+     guint i = 0;
+     gint j;
+     if (convdata->passthru_buffer != NULL && 
+	 convdata->inrate == convdata->outrate) {
+	  i = ringbuf_freespace(convdata->passthru_buffer);
+	  if (i < bufsize) bufsize = i;	  
+     }
+     j = convdata->driver->write_func(conv,data,bufsize);
+     if (j > 0 && i > 0) {
+	  g_assert(j <= i);
+	  i = ringbuf_enqueue(convdata->passthru_buffer,data,j);
+	  g_assert(i == j);
+     }
+     if (j > 0) convdata->writecount += j;
+     return j;
 }
 
 gint rateconv_read(rateconv *conv, void *data, guint bufsize)
 {
      struct convdata_base *convdata = (struct convdata_base *)conv;
-     return convdata->driver->read_func(conv,data,bufsize);
+     gint i;
+
+     i = convdata->driver->read_func(conv,data,bufsize);
+
+     if (i > 0) {
+
+	  convdata->readcount += i;
+	  while (convdata->readcount > convdata->outrate) {
+	       convdata->readcount -= convdata->outrate;
+
+	       if (convdata->empty_point > convdata->outrate)
+		    convdata->empty_point -= convdata->outrate;
+	       else
+		    convdata->empty_point = 0;
+
+	       if (convdata->writecount > convdata->inrate)
+		    convdata->writecount -= convdata->inrate;
+	       else
+		    convdata->writecount = 0;	       
+
+	  }
+
+	  if (convdata->emptying && 
+	      convdata->readcount >= convdata->empty_point)
+	       convdata->emptying = FALSE;
+
+	  if (convdata->passthru_buffer != NULL && 
+	      convdata->inrate == convdata->outrate && !convdata->emptying)
+	       return ringbuf_dequeue(convdata->passthru_buffer,data,i);
+
+     }
+     return i;
 }
 
 gboolean rateconv_hasdata(rateconv *conv)
@@ -719,9 +777,21 @@ void rateconv_destroy(rateconv *conv)
      return convdata->driver->destroy_func(conv);
 }
 
+#define FLOAT(x) ((float)x)
+#define GUINT32(x) ((guint32)x)
+
 void rateconv_set_outrate(rateconv *conv, guint32 outrate)
 {
      struct convdata_base *convdata = (struct convdata_base *)conv;
      g_assert(convdata->driver->is_realtime);
      convdata->driver->set_outrate_func(conv,outrate);
+     convdata->outrate = outrate;
+     if (convdata->passthru_buffer != NULL && 
+	 convdata->outrate == convdata->inrate) {
+	  ringbuf_drain(convdata->passthru_buffer);
+	  convdata->emptying = TRUE;
+	  convdata->empty_point = GUINT32(FLOAT(convdata->writecount) * 
+					  (FLOAT(convdata->outrate) / 
+					   FLOAT(convdata->inrate)));	  
+     }
 }
