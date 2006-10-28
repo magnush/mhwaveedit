@@ -354,8 +354,8 @@ void player_change_range(off_t start, off_t end)
 void player_set_buffer_pos(off_t pos)
 {
      if (pos != curpos) {
-	  if (curpos == loopend && !loop && varispeed_conv != NULL)
-	       restart_converter();
+	  /* if (curpos == loopend && !loop && varispeed_conv != NULL) */
+	  restart_converter();
 	  curpos = pos;
 	  output_clear_buffers();
 	  rateest_init(rateest_real_samplerate());

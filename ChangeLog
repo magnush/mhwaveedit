@@ -1,5 +1,8 @@
 2006-10-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/player.c (player_set_buffer_pos): Always restart converter
+	when jumping
+
 	* src/rateconv.c (rateconv_new): Add ability to pass through data
 	when outrate == inrate
 
