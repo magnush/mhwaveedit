@@ -1,0 +1,119 @@
+Info for hackers
+----------------
+
+-- Document history --
+
+Oct 28, 2006: First version
+
+-- General info --
+
+mhWaveEdit is written completely in C, and tries to be as portable as 
+possible. There's no point in being more portable than GTK+ though, 
+since we depend on it. 
+
+The only hard dependency is GTK+, version 1.2 or newer. All other 
+dependencies should be autodetected by the configure script or at 
+runtime. In general I prefer calling separate programs, such as 
+Lame and SoX, rather than using libraries, because programs can be 
+portably detected at runtime so the user can install these programs 
+after installing mhWaveEdit. 
+
+The philosophy is to never remove a feature. If a behavior is changed, 
+there should be an option to get the old back (unless it's a bug of 
+course).
+
+All settings should be configurable via the Preferences menu, there 
+should not be any hidden settings, except for "automatic" things like 
+recently opened files etc. Settings are handled through inifile.h.
+
+-- Code conventions --
+
+Most functions returning a boolean return TRUE on failure and FALSE on 
+success. The function that fails is usually responsible for displaying 
+an error message, so if a function returns TRUE an error message has 
+already been displayed. 
+
+I have avoided threads for several reasons. The main reasons are 
+that it's not portable, makes the program much more complex and a lot 
+harder to debug. Most problems that are solved by threads can be 
+solved by other means, for example forking, non-blocking IO, select 
+calls, and/or clever coding. Some sound drivers use threads though.
+
+mhWaveEdit doesn't use the GTK+ main loop, instead I have coded my own 
+(mainloop in main.h), allowing me to control the priority of the 
+different activities.
+
+-- File handling --
+
+File handling is separated into layers. 
+
+The lowest layer is the efile functions in gtkfiles.h, that provides a 
+wrapper around the C library IO functions. 
+
+Above that is the Datasource layer. Each Datasource object gives access 
+to some audio data. The data can be in a file, in memory or converted 
+from another datasource. The Datasources are "immutable", meaning the 
+data never changes after the datasource has been created. The objects 
+are using the standard GtkObject reference counting scheme so data in 
+memory and temporary files are removed when nobody needs them anymore.
+
+The Chunk layer is above the Datasource layer. A Chunk object is a 
+collection of data from different Datasource objects. Each Chunk 
+contains a list of Datasources, positions and lengths of data. Chunk 
+objects are also immutable.
+
+The filetypes.h and tempfile.h functions are in both the Chunk layer and 
+the Datasource layer. This is because sometimes temporary data end up 
+in multiple files, so a Chunk must be returned to represent the data. 
+
+The Document object contains a Chunk with the file currently being 
+edited, along with information on selection, view info, history etc.
+
+The Chunkview object is a graphical GTK component displaying a Document. 
+
+The Mainwindow is a GtkWindow subclass containing a Chunkview and a 
+Document.
+
+-- Sound handling --
+
+The sound handling is also separated into layers.
+
+The lowest layer is the sound driver. Each sound driver is in a file 
+called sound-xyz.c. The sound drivers are not compiled separately, but 
+are included in sound.c
+
+The layer above is the sound.h module. This contains glue code for the 
+drivers and handles byte-swapping of output and locking of driver (an 
+option to not actually stop the driver when playback stops).
+
+The layer above the sound module is the player.h module. This handles 
+many things; reading data from the playing chunk, looping, converting 
+speed (optional) and sending the data to the sound driver. Also 
+estimating cursor position. The player has a function called player_work 
+that has to be called periodically. 
+
+The playback position and speed can be changed at runtime. There are 
+also functions for smooth switching of playback between two Chunks to 
+allow editing while playing.
+
+The player layer handles sample type conversion if the sound driver 
+doesn't support the file's sample type. Sample rate conversion is done 
+at the same time when applying varispeed.
+
+Recording is done through the recorddialog.h module, which is above the 
+sound.h layer. This contains both the recording dialog component and a 
+recording function. This module has it's own main loop and blocks the 
+rest of the application while recording.
+
+-- Utility modules --
+
+um.h has functions for displaying messages and getting simple input.
+
+rateest.h contains code for estimating the true playback sample rate and 
+detect underruns by studying the time and size of writes to the sound 
+driver.
+
+ringbuf.h contains a lock-free ring buffer implementation.
+
+main.h contains apart from the main() function main loop, some utility 
+macros and functions. 
