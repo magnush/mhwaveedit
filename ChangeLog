@@ -2,6 +2,8 @@
 
 	* src/mainwindow.c (mainwindow_keypress): Ctrl-arrow now moves
 	cursor also when not playing. 
+	(mainwindow_keypress): Arrow-up and Arrow-down zooms view about
+	the view center.
 
 2006-10-28  Magnus Hjorth  <magnus.hjorth@home.se>
 

@@ -536,11 +536,19 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 	  case GDK_7: mainwindow_goto_mark(w,"7"); return TRUE;
 	  case GDK_8: mainwindow_goto_mark(w,"8"); return TRUE;
 	  case GDK_9: mainwindow_goto_mark(w,"9"); return TRUE;
-	  case GDK_plus: view_zoomin(NULL,widget); return TRUE;
-	  case GDK_KP_Add: view_zoomin(NULL,widget); return TRUE;
-	  case GDK_equal: view_zoomin(NULL,widget); return TRUE;
-	  case GDK_minus: view_zoomout(NULL,widget); return TRUE;
-	  case GDK_KP_Subtract: view_zoomout(NULL,widget); return TRUE;
+	  case GDK_plus:
+	  case GDK_KP_Add:
+	  case GDK_equal:
+	       view_zoomin(NULL,widget); return TRUE;
+	  case GDK_Down:
+	  case GDK_KP_Down:
+	       document_zoom(w->doc,2.0,FALSE); return TRUE;
+	  case GDK_minus:
+	  case GDK_KP_Subtract: 
+	       view_zoomout(NULL,widget); return TRUE;
+	  case GDK_Up:
+	  case GDK_KP_Up:
+	       document_zoom(w->doc,0.5,FALSE); return TRUE;
 	  case GDK_greater: view_zoomtoselection(NULL,widget); return TRUE;
 	  case GDK_less: view_zoomall(NULL,widget); return TRUE;
 	  case GDK_comma: edit_play(NULL,widget); return TRUE;
