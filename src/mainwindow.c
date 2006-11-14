@@ -505,10 +505,24 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 	  case GDK_9: mainwindow_toggle_mark(w,"9"); return TRUE;
 	  case GDK_Left:
 	  case GDK_KP_Left: 
-	       if (playing_document == w->doc) player_nudge(-0.5); return TRUE;
+	       if (playing_document == w->doc) 
+		    player_nudge(-0.5); 
+	       else {
+		    o = w->doc->cursorpos - w->doc->chunk->format.samplerate/2;
+		    if (o < 0) o = 0;
+		    document_set_cursor(w->doc,o);
+	       }
+	       return TRUE;
 	  case GDK_Right:
 	  case GDK_KP_Right:
-	       if (playing_document == w->doc) player_nudge(0.5); return TRUE;
+	       if (playing_document == w->doc) 
+		    player_nudge(0.5); 
+	       else {
+		    o = w->doc->cursorpos + w->doc->chunk->format.samplerate/2;
+		    if (o > w->doc->chunk->length) o = w->doc->chunk->length;
+		    document_set_cursor(w->doc,o);
+	       }
+	       return TRUE;
 	  }
      else 
 	  switch (event->keyval) {	       

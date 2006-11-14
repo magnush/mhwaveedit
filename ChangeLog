@@ -1,3 +1,8 @@
+2006-11-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c (mainwindow_keypress): Ctrl-arrow now moves
+	cursor also when not playing. 
+
 2006-10-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* Released version 1.4.10.
