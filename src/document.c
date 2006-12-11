@@ -518,9 +518,9 @@ gboolean document_apply(Document *d, chunk_filter_proc proc,
 		* If the result is shorter, report the difference as a 
 		* removal at the new selection's right endpoint */
 	       if (rlen > plen)
-		    document_update(d, r, d->selstart+plen, rlen-plen);
+		    document_update(d, c, d->selstart+plen, rlen-plen);
 	       else
-		    document_update(d, r, d->selstart+rlen, rlen-plen);
+		    document_update(d, c, d->selstart+rlen, rlen-plen);
 	       return FALSE;
 	  } else
 	       return TRUE;
