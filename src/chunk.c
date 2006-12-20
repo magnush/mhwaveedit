@@ -475,15 +475,25 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
 
 gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc, 
 		     gboolean allchannels, gboolean convert, int dither_mode, 
-		     StatusBar *bar, gchar *title)
+		     StatusBar *bar, gchar *title, off_t samplepos, 
+		     gboolean reverse)
 {
 
      guint single_size,full_size,proc_size;
      gchar buf[4096],*c=NULL,*d;
-     off_t samplepos=0, samplesleft=chunk->length;
-     guint u, x;
+     off_t samplesleft;
+     off_t readpos;
+     off_t readsamples;
+     guint u;
+     gint x;
      ChunkHandle *ch;
      off_t clipcount = 0;
+
+     if(reverse) {
+          samplesleft = samplepos;
+     } else {
+          samplesleft = chunk->length - samplepos;
+     }
 
      if (convert) single_size = sizeof(sample_t);
      else single_size = chunk->format.samplesize;
@@ -493,36 +503,76 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc,
      if (allchannels) proc_size = full_size;
      else proc_size = single_size;
 
+     readsamples = sizeof(buf) / full_size;
+     if(samplesleft < readsamples) {
+          readsamples = samplesleft;
+     }
 
      ch = chunk_open(chunk);
      if (ch == NULL) { g_free(c); return TRUE; }
      status_bar_begin_progress( bar, chunk->length, title);
 
      while (samplesleft > 0) {
-	  if (convert)	       
-	       u = chunk_read_array_fp(ch,samplepos,sizeof(buf)/full_size,
-				       (sample_t *)buf,dither_mode,&clipcount)*
-		    full_size;
-	  else
-	       u = chunk_read_array(ch,samplepos,sizeof(buf),buf,dither_mode,
-				    &clipcount);
+	  if(reverse) {
+	       readpos = samplepos - readsamples;
+	  } else {
+	       readpos = samplepos;
+	  }
+
+	  if (convert) {
+	       u = chunk_read_array_fp(ch,readpos,
+				       readsamples,
+				       (sample_t *)buf,dither_mode,&clipcount);
+	       u = u * full_size;
+	  } else {
+	       u = chunk_read_array(ch,readpos,readsamples * full_size,
+				    buf,dither_mode,&clipcount);
+	  }
+
+	  g_assert((u / full_size) == readsamples);
+
 	  if (!u) {
 	       chunk_close(ch);
 	       g_free(c);
 	       status_bar_end_progress(bar);
 	       return TRUE;
 	  }
+
 	  d = buf;
-	  for (x=0; x<u; x+=proc_size) {
+
+	  if(reverse) {
+	       x = u - proc_size;
+	  } else {
+	       x = 0;
+	  }
+
+	  while((x >= 0) && (x < u)) {
 	       if (proc(d+x,proc_size,chunk)) {
 		    chunk_close(ch);
 		    g_free(c);
 		    status_bar_end_progress(bar);
 		    return TRUE;
 	       }
+	       if(reverse) {
+		    x -= proc_size;
+	       } else {
+		    x += proc_size;
+	       }
 	  }
-	  samplesleft -= u / full_size;
-	  samplepos += u / full_size;
+
+	  samplesleft -= readsamples;
+	  if(reverse) {
+	       samplepos -= readsamples;
+	       if(samplepos < 0) {
+		    readsamples = readsamples + samplepos;
+		    samplepos = 0;
+	       }
+	  } else {
+	       samplepos += readsamples;
+	  }
+	  if(samplesleft < readsamples) {
+	       readsamples = samplesleft;
+	  }
 	  if (status_bar_progress(bar, u / full_size)) {
 	       chunk_close(ch);
 	       g_free(c);
@@ -1095,9 +1145,143 @@ sample_t chunk_peak_level(Chunk *c, StatusBar *bar)
 {
      chunk_peak_level_max = 0.0;
      if (chunk_parse(c,chunk_peak_level_proc,FALSE,TRUE,DITHER_NONE,bar,
-		     _("Calculating peak level"))) return -1.0;
+		     _("Calculating peak level"),0,FALSE)) return -1.0;
      return chunk_peak_level_max;
 }
+
+/* BEGIN zero-crossing search added by Forest Bond */
+
+static off_t chunk_zero_crossing_seen_samples;
+static sample_t *chunk_zero_crossing_saved_sample = NULL;
+
+static gboolean chunk_signal_crossed_zero(sample_t prev, sample_t current)
+{
+     if((current >= 0.0) && (prev <= 0.0)) {
+          return TRUE;
+     } else if((current <= 0.0) && (prev >= 0.0)) {
+          return TRUE;
+     }
+     return FALSE;
+}
+
+static void chunk_zero_crossing_init(gint sample_size) {
+     if(chunk_zero_crossing_saved_sample != NULL) {
+          g_free(chunk_zero_crossing_saved_sample);
+          chunk_zero_crossing_saved_sample = NULL;
+     }
+     chunk_zero_crossing_saved_sample = g_malloc(sample_size);
+}
+
+static void chunk_zero_crossing_cleanup() {
+     if(chunk_zero_crossing_saved_sample != NULL) {
+          g_free(chunk_zero_crossing_saved_sample);
+          chunk_zero_crossing_saved_sample = NULL;
+     }
+}
+
+static void chunk_zero_crossing_save_sample(sample_t *sample,
+  gint sample_size) {
+     memcpy(chunk_zero_crossing_saved_sample, sample, sample_size);
+}
+
+static gboolean chunk_zero_crossing_any_proc(void *sample, gint sample_size, 
+				      Chunk *chunk)
+{
+     sample_t *start = (sample_t *)sample;
+     sample_t *end = start + (sample_size/sizeof(sample_t));
+     sample_t *current = start;
+     sample_t *prev = chunk_zero_crossing_saved_sample;
+
+     if(chunk_zero_crossing_seen_samples < 1) {
+          chunk_zero_crossing_init(sample_size);
+          chunk_zero_crossing_save_sample(start, sample_size);
+          chunk_zero_crossing_seen_samples++;
+          return FALSE;
+     }
+
+     while(current < end) {
+          if(chunk_signal_crossed_zero(*prev, *current)) {
+               return TRUE;
+          }
+          current++;
+          prev++;
+     }
+
+     chunk_zero_crossing_save_sample(start, sample_size);
+     chunk_zero_crossing_seen_samples++;
+     return FALSE;
+}
+
+off_t chunk_zero_crossing_any_forward(Chunk *c, StatusBar *bar,off_t samplepos)
+{
+     chunk_zero_crossing_seen_samples = 0;
+     chunk_parse(c,chunk_zero_crossing_any_proc,TRUE,TRUE,DITHER_NONE,bar,
+		     _("Finding zero-crossing"), samplepos, FALSE);
+
+     chunk_zero_crossing_cleanup();
+     return samplepos + chunk_zero_crossing_seen_samples;
+}
+
+off_t chunk_zero_crossing_any_reverse(Chunk *c, StatusBar *bar,off_t samplepos)
+{
+     chunk_zero_crossing_seen_samples = 0;
+     chunk_parse(c,chunk_zero_crossing_any_proc,TRUE,TRUE,DITHER_NONE,bar,
+		     _("Finding zero-crossing"), samplepos, TRUE);
+
+     chunk_zero_crossing_cleanup();
+     return samplepos - chunk_zero_crossing_seen_samples;
+}
+
+static gboolean chunk_zero_crossing_all_proc(void *sample, gint sample_size, 
+				      Chunk *chunk)
+{
+     sample_t *start = (sample_t *)sample;
+     sample_t *end = start + (sample_size/sizeof(sample_t));
+     sample_t *current = start;
+     sample_t *prev = chunk_zero_crossing_saved_sample;
+
+     if(chunk_zero_crossing_seen_samples < 1) {
+          chunk_zero_crossing_init(sample_size);
+          chunk_zero_crossing_save_sample(start, sample_size);
+          chunk_zero_crossing_seen_samples++;
+          return FALSE;
+     }
+
+     while(current < end) {
+
+          if(! chunk_signal_crossed_zero(*prev, *current)) {
+               chunk_zero_crossing_save_sample(start, sample_size);
+               chunk_zero_crossing_seen_samples++;
+               return FALSE;
+          }
+          current++;
+          prev++;
+     }
+     return TRUE;
+}
+
+off_t chunk_zero_crossing_all_forward(Chunk *c, StatusBar *bar,off_t samplepos)
+{
+     chunk_zero_crossing_seen_samples = 0;
+     chunk_parse(c,chunk_zero_crossing_all_proc,TRUE,TRUE,DITHER_NONE,bar,
+		     _("Finding zero-crossing"), samplepos, FALSE);
+
+     chunk_zero_crossing_cleanup();
+     return samplepos + chunk_zero_crossing_seen_samples;
+}
+
+off_t chunk_zero_crossing_all_reverse(Chunk *c, StatusBar *bar,off_t samplepos)
+{
+     chunk_zero_crossing_seen_samples = 0;
+     chunk_parse(c,chunk_zero_crossing_all_proc,TRUE,TRUE,DITHER_NONE,bar,
+		     _("Finding zero-crossing"), samplepos, TRUE);
+
+     chunk_zero_crossing_cleanup();
+
+     return samplepos - chunk_zero_crossing_seen_samples;
+}
+
+/* END zero-crossing search */
 
 static sample_t chunk_amplify_factor;
 

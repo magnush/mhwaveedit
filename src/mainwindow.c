@@ -564,12 +564,12 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 	  case GDK_Left:
 	  case GDK_KP_Left:
 	       document_scroll(w->doc, 
-			       -(w->doc->viewend - w->doc->viewstart)/4);
+			       -(w->doc->viewend - w->doc->viewstart)/MAINWINDOW_SCROLL_DELTA_RATIO);
 	       return TRUE;
 	  case GDK_Right:
 	  case GDK_KP_Right:
 	       document_scroll(w->doc,
-			       (w->doc->viewend - w->doc->viewstart)/4);
+			       (w->doc->viewend - w->doc->viewstart)/MAINWINDOW_SCROLL_DELTA_RATIO);
 	       return TRUE;
 	  case GDK_parenleft:
 	       o = 3*w->doc->chunk->format.samplerate;
@@ -927,6 +927,12 @@ static void edit_selectall(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
      document_set_selection(w->doc,0,w->doc->chunk->length);
+}
+
+static void edit_selectnone(GtkMenuItem *menuitem, gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW(user_data);
+     document_set_selection(w->doc,0,0);
 }
 
 static void view_zoomin(GtkMenuItem *menuitem, gpointer user_data)
@@ -1487,27 +1493,125 @@ static void effects_pipe(GtkMenuItem *menuitem, gpointer user_data)
      mainwindow_show_effect_dialog(MAINWINDOW(user_data),"pipe");
 }
 
-static void cursor_tobeginning(GtkMenuItem *menuitem, gpointer user_data)
+static void cursor_moveto_beginning(GtkMenuItem *menuitem, gpointer user_data)
 {
      document_set_cursor(MAINWINDOW(user_data)->doc,0);
 }
 
-static void cursor_toend(GtkMenuItem *menuitem, gpointer user_data)
+static void cursor_moveto_end(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
      document_set_cursor(w->doc,w->doc->chunk->length);
 }
 
-static void cursor_toselstart(GtkMenuItem *menuitem, gpointer user_data)
+static void cursor_moveto_selstart(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
      document_set_cursor(w->doc,w->doc->selstart);
 }
 
-static void cursor_toselend(GtkMenuItem *menuitem, gpointer user_data)
+static void cursor_moveto_selend(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
      document_set_cursor(w->doc,w->doc->selend);
+}
+
+static void cursor_move_left(GtkMenuItem *menuitem, gpointer user_data)
+{
+     off_t delta;
+     Mainwindow *w = MAINWINDOW(user_data);
+
+     delta =
+      - ((w->doc->viewend - w->doc->viewstart)/MAINWINDOW_NUDGE_DELTA_RATIO);
+
+     if(delta > -1) {
+          delta = -1;
+     }
+
+     document_nudge_cursor(w->doc,delta);
+}
+
+static void cursor_move_right(GtkMenuItem *menuitem, gpointer user_data)
+{
+     off_t delta;
+     Mainwindow *w = MAINWINDOW(user_data);
+
+     delta =
+      ((w->doc->viewend - w->doc->viewstart)/MAINWINDOW_NUDGE_DELTA_RATIO);
+
+     if(delta < 1) {
+          delta = 1;
+     }
+
+     document_nudge_cursor(w->doc,delta);
+}
+
+static void cursor_move_leftsample(GtkMenuItem *menuitem, gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW(user_data);
+     document_nudge_cursor(w->doc,-1);
+}
+
+static void cursor_move_rightsample(GtkMenuItem *menuitem, gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW(user_data);
+     document_nudge_cursor(w->doc,1);
+}
+
+static void cursor_findzerocrossing_leftall(GtkMenuItem *menuitem,
+ gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW(user_data);
+     off_t newpos;
+
+     newpos = chunk_zero_crossing_all_reverse(
+      w->doc->chunk,w->statusbar,w->doc->cursorpos);
+
+     if(newpos >= 0) {
+         document_set_cursor(w->doc,newpos);
+     }
+}
+
+static void cursor_findzerocrossing_rightall(GtkMenuItem *menuitem,
+ gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW(user_data);
+     off_t newpos;
+
+     newpos = chunk_zero_crossing_all_forward(
+      w->doc->chunk,w->statusbar,w->doc->cursorpos);
+
+     if(newpos >= 0) {
+         document_set_cursor(w->doc,newpos);
+     }
+}
+
+static void cursor_findzerocrossing_leftany(GtkMenuItem *menuitem,
+ gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW(user_data);
+     off_t newpos;
+
+     newpos = chunk_zero_crossing_any_reverse(
+      w->doc->chunk,w->statusbar,w->doc->cursorpos);
+
+     if(newpos >= 0) {
+          document_set_cursor(w->doc,newpos);
+     }
+}
+
+static void cursor_findzerocrossing_rightany(GtkMenuItem *menuitem,
+ gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW(user_data);
+     off_t newpos;
+
+     newpos = chunk_zero_crossing_any_forward(
+      w->doc->chunk,w->statusbar,w->doc->cursorpos);
+
+     if(newpos >= 0) {
+          document_set_cursor(w->doc,newpos);
+     }
 }
 
 static Chunk *byteswap_proc(Chunk *chunk, StatusBar *bar, 
@@ -1568,6 +1672,15 @@ static gchar *translate_menu_path(const gchar *path, gpointer func_data)
     return _(path);
 }
 
+static GtkWidget *xgtk_item_factory_get_item(GtkItemFactory *itemf, 
+					     gchar *caption)
+{
+     GtkWidget *w;
+     w = gtk_item_factory_get_item(itemf,caption);
+     g_assert(w != NULL);
+     return w;
+}
+
 static GtkWidget *create_menu(Mainwindow *w)
 {
      guint i,j;
@@ -1593,9 +1706,10 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/Edit/Paste to _new"),NULL,     edit_pastetonew,0, NULL          },
 	  { N_("/Edit/Cr_op"),    NULL,         edit_crop,      0, NULL          },
 	  { N_("/Edit/_Delete"),  "<control>D", edit_delete,    0, NULL          },
-	  { N_("/Edit/Silence selection"),NULL,edit_silence,   0, NULL          },
+	  { N_("/Edit/Silence selection"),NULL,edit_silence,   0, NULL           },
 	  { N_("/Edit/sep2"),     NULL,         NULL,           0, "<Separator>" },
 	  { N_("/Edit/Select _all"),"<control>A",edit_selectall,0, NULL          },
+	  { N_("/Edit/Select none"),NULL,edit_selectnone,0, NULL                 },
 	  { N_("/Edit/sep3"),     NULL,         NULL,           0, "<Separator>" },
 	  { N_("/Edit/Clear clipboard"),NULL,   edit_clearclipboard,0,NULL       },
 	  { N_("/Edit/sep4"),     NULL,         NULL,           0, "<Separator>" },
@@ -1611,20 +1725,35 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/View/_Horizontal zoom"),NULL,  view_horizoom,  0, "<CheckItem>" },
 	  { N_("/View/_Vertical zoom"),NULL,    view_vertzoom,  0, "<CheckItem>" },
 	  { N_("/View/Sp_eed slider"),NULL,     view_speed,     0, "<CheckItem>" },
-	  { N_("/_Cursor"),       NULL,         NULL,           0, "<Branch>" },
+	  { N_("/_Cursor"),       NULL,         NULL,           0, "<Branch>"    },
 	  {N_("/Cursor/Set selection start"),"<control>Q",edit_selstartcursor,0,
 	   NULL},
 	  { N_("/Cursor/Set selection end"),"<control>W",edit_selendcursor,0,NULL},
 	  { N_("/Cursor/sep1"),   NULL,         NULL,           0, "<Separator>" },
-	  {N_("/Cursor/Move to beginning"),"<control>H",cursor_tobeginning,0,
+      { N_("/Cursor/Move to"),   NULL,         NULL,           0, "<Branch>" },
+	  { N_("/Cursor/Move to/Beginning"),"<control>H",cursor_moveto_beginning,0,
 	   NULL},
-	  {N_("/Cursor/Move to end"),"<control>J",cursor_toend, 0, NULL          },
-	  {N_("/Cursor/Move to selection start"),"<control>K",cursor_toselstart,
-	   0,NULL},
-	  {N_("/Cursor/Move to selection end"),"<control>L",cursor_toselend,0,
-	   NULL},
+	  { N_("/Cursor/Move to/End"),"<control>J",cursor_moveto_end, 0, NULL   },
+	  { N_("/Cursor/Move to/Selection start"),"<control>K",
+       cursor_moveto_selstart,0,NULL},
+	  { N_("/Cursor/Move to/Selection end"),"<control>L",
+       cursor_moveto_selend,0,NULL},
+      { N_("/Cursor/Move"),   NULL,         NULL,           0, "<Branch>" },
+	  { N_("/Cursor/Move/Left"),"H",cursor_move_left,0,NULL},
+	  { N_("/Cursor/Move/Right"),"J",cursor_move_right,0,NULL},
+	  { N_("/Cursor/Move/Left sample"),"K",cursor_move_leftsample,0,NULL},
+	  { N_("/Cursor/Move/Right sample"),"L",cursor_move_rightsample,0,NULL},
+      { N_("/Cursor/Find zero-crossing"),NULL,NULL,0,"<Branch>"},
+	  { N_("/Cursor/Find zero-crossing/Left (all channels)"),"Y",
+       cursor_findzerocrossing_leftall,0,NULL},
+	  { N_("/Cursor/Find zero-crossing/Right (all channels)"),"U",
+       cursor_findzerocrossing_rightall,0,NULL},
+	  { N_("/Cursor/Find zero-crossing/Left (any channel)"),"I",
+       cursor_findzerocrossing_leftany,0,NULL},
+	  { N_("/Cursor/Find zero-crossing/Right (any channel)"),"O",
+       cursor_findzerocrossing_rightany,0,NULL},
 	  { N_("/Cursor/sep2"),   NULL,         NULL,           0, "<Separator>" },
-	  {N_("/Cursor/Position cursor..."),"<control>G",edit_positioncursor,0,
+	  { N_("/Cursor/Position cursor..."),"<control>G",edit_positioncursor,0,
 	   NULL},
 	  { N_("/_Play"),         NULL,         NULL,           0, "<Branch>"    },
 	  { N_("/Play/_Play from cursor"),NULL, edit_play,      0, NULL          },
@@ -1632,7 +1761,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/Play/Play se_lection"),NULL,   edit_playselection,0,NULL        },
 	  { N_("/Play/_Stop"),    NULL,         edit_stop,      0, NULL          },
 	  { N_("/Play/sep1"),     NULL,         NULL,           0, "<Separator>" },
-	  { N_("/Play/_Record..."),  "F12",        edit_record,    0, NULL          },
+	  { N_("/Play/_Record..."),  "F12",        edit_record,    0, NULL       },
 	  { N_("/Effec_ts"),      NULL,         NULL,           0, "<Branch>"    },
 	  { N_("/Effects/Fade _in"),NULL,       effects_fadein, 0, NULL          },
 	  { N_("/Effects/Fade o_ut"),NULL,      effects_fadeout,0, NULL          },
@@ -1677,8 +1806,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  "/Edit/Insert silence", 
 	  "/Edit/Select all", "/Cursor", "/View", "/Play/Play from cursor",
 	  "/Play/Play all", "/Play/Stop", "/Effects", 
-	  "/Cursor/Move to beginning", "/Cursor/Move to end", 
-	  "/Cursor/Position cursor...", "/Effects/Normalize",
+	  "/Effects/Normalize",
 	  "/Effects/Effects dialog..."
      };
 
@@ -1686,8 +1814,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  "/Edit/Cut", "/Edit/Copy", "/Edit/Delete", "/Edit/Crop", 
 	  "/Edit/Silence selection",
 	  "/View/Zoom to selection", "/File/Save selection as...",
-	  "/Play/Play selection", "/Cursor/Move to selection start", 
-	  "/Cursor/Move to selection end"
+	  "/Play/Play selection" 
      };
 
      gchar *need_clipboard_names[] = {
@@ -1735,25 +1862,27 @@ static GtkWidget *create_menu(Mainwindow *w)
 
      for (i=0; i<ARRAY_LENGTH(need_chunk_names); i++)
 	  w->need_chunk_items = 
-	       g_list_append(w->need_chunk_items,gtk_item_factory_get_item(
+	       g_list_append(w->need_chunk_items,xgtk_item_factory_get_item(
 				  item_factory,need_chunk_names[i]));
 
      for (i=0; i<ARRAY_LENGTH(need_selection_names); i++)
 	  w->need_selection_items = 
-	       g_list_append(w->need_selection_items,gtk_item_factory_get_item(
-				  item_factory,need_selection_names[i]));
+	       g_list_append(w->need_selection_items,
+			     xgtk_item_factory_get_item(
+				 item_factory,need_selection_names[i]));
 
      for (i=0; i<ARRAY_LENGTH(need_clipboard_names); i++)
 	  w->need_clipboard_items = 
-	       g_list_append(w->need_clipboard_items,gtk_item_factory_get_item(
+	       g_list_append(w->need_clipboard_items,
+			     xgtk_item_factory_get_item(
 				  item_factory,need_clipboard_names[i]));
      
      w->need_undo_items = 
 	  g_list_append(w->need_undo_items,gtk_item_factory_get_item
 			(item_factory,"/Edit/Undo") );
      w->need_redo_items = 
-	  g_list_append(w->need_redo_items,gtk_item_factory_get_item
-			(item_factory,"/Edit/Redo"));
+	  g_list_append(w->need_redo_items,
+			xgtk_item_factory_get_item(item_factory,"/Edit/Redo"));
 
      update_file_recent(w);
 

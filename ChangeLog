@@ -1,5 +1,14 @@
 2006-12-21  Forest Bond  <forest@alittletooquiet.net>
 
+	* src/mainwindow.c: Added Cursor submenus for Move, Move to, and
+	Zero-crossing detection. 
+
+	* src/document.c: Added document_nudge_cursor function.
+
+	* src/chunk.c (chunk_parse): Support parsing samples in reverse
+	and from arbitrary position.
+	Added functions for zero-crossing detection.
+
 	* src/gotodialog.c: Replaced magic numbers by #defines.
 
 2006-12-11  Magnus Hjorth  <magnus.hjorth@home.se>

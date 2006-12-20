@@ -32,6 +32,8 @@
 #define IS_MAINWINDOW(obj) GTK_CHECK_TYPE(obj,mainwindow_get_type())
 
 #define MAINWINDOW_RECENT_MAX 20
+#define MAINWINDOW_SCROLL_DELTA_RATIO 4
+#define MAINWINDOW_NUDGE_DELTA_RATIO 8
 
 typedef struct _Mainwindow {
      GtkWindow window;

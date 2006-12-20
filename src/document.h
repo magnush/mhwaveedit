@@ -184,6 +184,7 @@ void document_set_followmode(Document *d, gboolean followmode);
 
 void document_set_cursor(Document *d, off_t cursorpos);
 
+off_t document_nudge_cursor(Document *d, off_t delta);
 
 void document_set_view(Document *d, off_t viewstart, off_t viewend);
 

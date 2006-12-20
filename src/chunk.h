@@ -353,6 +353,15 @@ Chunk *chunk_convert_channels(Chunk *chunk, guint new_channels,
 Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar);
 
 
+off_t chunk_zero_crossing_any_forward(
+  Chunk *c, StatusBar *bar, off_t cursorpos);
+off_t chunk_zero_crossing_any_reverse(
+  Chunk *c, StatusBar *bar, off_t cursorpos);
+off_t chunk_zero_crossing_all_forward(
+  Chunk *c, StatusBar *bar, off_t cursorpos);
+off_t chunk_zero_crossing_all_reverse(
+  Chunk *c, StatusBar *bar, off_t cursorpos);
+
 
 /* Returns the maximum absolute value of all the samples in the chunk. 
  * Returns negative value if anything failed. */
@@ -459,6 +468,9 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
  *     the same time, if FALSE one channel at a time will be sent.
  *   convert - If TRUE the samples will be sent as sample_t (floating point) 
  *     values, otherwise they will be sent in raw format.
+ *   samplepos - The location within the chunk that parsing should start at.
+ *   reverse - If TRUE, parsing will move backward through the chunk; if FALSE
+ *     parsing will move forward through the chunk.
  *
  *   returns - FALSE on success, TRUE if proc returned TRUE or a read error 
  *     occured.
@@ -466,7 +478,7 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
 
 gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc, gboolean allchannels,
 		     gboolean convert, int dither_mode,
-		     StatusBar *bar, gchar *title);
+		     StatusBar *bar, gchar *title, off_t samplepos, gboolean reverse);
 
 
 

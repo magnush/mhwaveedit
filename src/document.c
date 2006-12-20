@@ -537,14 +537,14 @@ void document_parse(Document *d, chunk_parse_proc proc,
 	 (d->selstart==0 && d->selend >= d->chunk->length)) {
 	  /* procstart(w); */
 	  chunk_parse(d->chunk,proc,allchannels,convert,dither_editing,
-		      d->bar,title);
+		      d->bar,title,0,FALSE);
 	  /* procend(w); */
      } else {
 	  c = chunk_get_part(d->chunk,d->selstart,
 			     d->selend - d->selstart);
 	  /* procstart(w); */
 	  chunk_parse(c,proc,allchannels,convert,dither_editing,
-		      d->bar,title);
+		      d->bar,title,0,FALSE);
 	  /* procend(w); */
 	  gtk_object_sink(GTK_OBJECT(c));
      }
@@ -647,6 +647,24 @@ static void document_set_cursor_main(Document *d, off_t cursorpos,
 void document_set_cursor(Document *d, off_t cursorpos)
 {
      document_set_cursor_main(d,cursorpos,FALSE);
+}
+
+off_t document_nudge_cursor(Document *d, off_t delta)
+{
+     off_t newpos;
+
+     newpos = d->cursorpos + delta;
+     if(newpos > d->chunk->length)
+     {
+          delta = (d->chunk->length) - (d->cursorpos);
+     } else if(newpos < 0) {
+          delta = - (d->cursorpos);
+     }
+
+     newpos = d->cursorpos + delta;
+     document_set_cursor(d,newpos);
+
+     return delta;
 }
 
 void document_set_followmode(Document *d, gboolean mode)
