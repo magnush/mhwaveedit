@@ -1,3 +1,7 @@
+2006-12-21  Forest Bond  <forest@alittletooquiet.net>
+
+	* src/gotodialog.c: Replaced magic numbers by #defines.
+
 2006-12-11  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/document.c (document_apply): Used wrong variable in

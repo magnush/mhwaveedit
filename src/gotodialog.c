@@ -39,18 +39,33 @@ static gboolean goto_dialog_apply(GotoDialog *gd)
 	  if (gtk_toggle_button_get_active(gd->relbuttons[i]))
 	       break;
      switch (i) {
-     case 0: p = 0; break;
-     case 1: p = d->chunk->length; break;
-     case 2: p = d->cursorpos; break;
-     case 3: p = (d->selstart==d->selend)?0:d->selstart; break;
-     case 4: 
+     case GOTO_DIALOG_POS_AFTER_BEG_FILE:
+      p = 0;
+      break;
+     case GOTO_DIALOG_POS_AFTER_END_FILE:
+      p = d->chunk->length;
+      break;
+     case GOTO_DIALOG_POS_AFTER_CURSOR:
+      p = d->cursorpos;
+      break;
+     case GOTO_DIALOG_POS_AFTER_BEG_SEL:
+      p = (d->selstart==d->selend)?0:d->selstart;
+      break;
+     case GOTO_DIALOG_POS_AFTER_END_SEL: 
 	  p = (d->selstart==d->selend)?d->chunk->length:d->selend; 
 	  break;
-     default: g_assert_not_reached();
+     default:
+      g_assert_not_reached();
      }
+
      o = ((float)(d->chunk->format.samplerate))*gd->offset->val;
      q = p+o;
-     if (q>d->chunk->length || q<0) q=(o<0)?0:d->chunk->length;
+
+     if(q > d->chunk->length) {
+          q = d->chunk->length;
+     } else if(q < 0) {
+          q = 0;
+     }
      
      document_set_cursor(d,q);
 
@@ -85,25 +100,31 @@ static void goto_dialog_init(GotoDialog *gd)
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
      c = gtk_label_new(_(" seconds"));
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
+
      b = gtk_radio_button_new_with_label(NULL,_("after beginning of file"));
-     gd->relbuttons[0] = GTK_TOGGLE_BUTTON(b);
+     gd->relbuttons[GOTO_DIALOG_POS_AFTER_BEG_FILE] = GTK_TOGGLE_BUTTON(b);
      gtk_box_pack_start(GTK_BOX(a),b,FALSE,FALSE,0);
+
      b = gtk_radio_button_new_with_label_from_widget(
 	  GTK_RADIO_BUTTON(b),_("after end of file"));
-     gd->relbuttons[1] = GTK_TOGGLE_BUTTON(b);
+     gd->relbuttons[GOTO_DIALOG_POS_AFTER_END_FILE] = GTK_TOGGLE_BUTTON(b);
      gtk_box_pack_start(GTK_BOX(a),b,FALSE,FALSE,0);
+
      b = gtk_radio_button_new_with_label_from_widget(
 	  GTK_RADIO_BUTTON(b),_("after current cursor position"));
-     gd->relbuttons[2] = GTK_TOGGLE_BUTTON(b);
+     gd->relbuttons[GOTO_DIALOG_POS_AFTER_CURSOR] = GTK_TOGGLE_BUTTON(b);
      gtk_box_pack_start(GTK_BOX(a),b,FALSE,FALSE,0);
+
      b = gtk_radio_button_new_with_label_from_widget(
 	  GTK_RADIO_BUTTON(b),_("after selection start"));
-     gd->relbuttons[3] = GTK_TOGGLE_BUTTON(b);
+     gd->relbuttons[GOTO_DIALOG_POS_AFTER_BEG_SEL] = GTK_TOGGLE_BUTTON(b);
      gtk_box_pack_start(GTK_BOX(a),b,FALSE,FALSE,0);
+
      b = gtk_radio_button_new_with_label_from_widget(
 	  GTK_RADIO_BUTTON(b),_("after selection end"));
-     gd->relbuttons[4] = GTK_TOGGLE_BUTTON(b);
+     gd->relbuttons[GOTO_DIALOG_POS_AFTER_END_SEL] = GTK_TOGGLE_BUTTON(b);
      gtk_box_pack_start(GTK_BOX(a),b,FALSE,FALSE,0);
+
      b = gtk_label_new(_("(use a negative number to place the cursor before "
 		       "instead of after the selected point)"));
      gtk_label_set_justify(GTK_LABEL(b),GTK_JUSTIFY_LEFT);

@@ -30,6 +30,12 @@
 #define GOTO_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,goto_dialog_get_type(),GotoDialogClass)
 #define IS_GOTO_DIALOG(obj) GTK_CHECK_TYPE(obj,goto_dialog_get_type())
 
+#define GOTO_DIALOG_POS_AFTER_BEG_FILE 0
+#define GOTO_DIALOG_POS_AFTER_END_FILE 1
+#define GOTO_DIALOG_POS_AFTER_CURSOR 2
+#define GOTO_DIALOG_POS_AFTER_BEG_SEL 3
+#define GOTO_DIALOG_POS_AFTER_END_SEL 4
+
 typedef struct _GotoDialog {
      GtkWindow parent;
      Mainwindow *mw;
