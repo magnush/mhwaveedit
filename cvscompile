@@ -5,7 +5,7 @@
 # Requires autoconf, automake and some other stuff
 
 cd docgen; sh gendocs.sh; cd ..
-aclocal
+aclocal -I m4
 autoheader
 automake
 autoconf
