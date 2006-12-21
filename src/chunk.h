@@ -215,8 +215,8 @@ guint chunk_alive_count(void);
      bar - Status bar to display progress. Must already be in progress mode.
 */
 
-gint chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian, 
-		int dither_mode, StatusBar *bar);
+gboolean chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian, 
+		    int dither_mode, StatusBar *bar);
 
 
 
@@ -501,7 +501,7 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc, gboolean allchannels,
 /* Calls func for each existing chunk. */
 void chunk_foreach(GFunc func, gpointer user_data);
 
-void clipwarn(off_t clipcount);
+gboolean clipwarn(off_t clipcount, gboolean maycancel);
 
 
 #endif

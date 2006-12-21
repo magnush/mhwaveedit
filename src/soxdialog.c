@@ -235,7 +235,10 @@ static Chunk *sox_dialog_apply_proc_main(Chunk *chunk, StatusBar *bar,
      }
      r = pipe_dialog_pipe_chunk(chunk,cmd_buf,FALSE,dither_editing,bar,
 				&clipcount);
-     if (r != NULL) clipwarn(clipcount);
+     if (r != NULL && clipwarn(clipcount,TRUE)) {
+	  gtk_object_sink(GTK_OBJECT(r));
+	  return NULL;
+     }
      return r;
 }
 

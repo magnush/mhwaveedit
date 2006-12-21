@@ -282,8 +282,8 @@ Chunk *chunk_remove_channel(Chunk *chunk, gint channel, StatusBar *bar)
 			       _("Removing channel"));
 }
 
-gint chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian, 
-		int dither_mode, StatusBar *bar)
+gboolean chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian, 
+		    int dither_mode, StatusBar *bar)
 {
      GList *l;
      DataPart *dp;
@@ -293,11 +293,10 @@ gint chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian,
 	  dp = (DataPart *)l->data;
 	  if (datasource_dump(dp->ds,dp->position,dp->length,file,
 			      dither_mode,bar,&clipcount))
-	       return -1;
+	       return TRUE;
 	  l = l->next;
      }
-     clipwarn(clipcount);
-     return (clipcount>0) ? 1 : 0;
+     return clipwarn(clipcount,TRUE);
 }
 
 static gboolean has_fake_pcm(Chunk *c)
@@ -455,8 +454,12 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
      chunk_close(ch);
      ds = tempfile_finished(tmp);
      status_bar_end_progress(bar);
+     if (cbp != NULL) g_free(cbp);
 
-     clipwarn(clipcount);
+     if (clipwarn(clipcount,TRUE)) {
+	  gtk_object_sink(GTK_OBJECT(ds));
+	  return NULL;
+     }
 
      /* Check if the datasources format is the same as the user expects. If 
       * not, convert. */
@@ -583,7 +586,7 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc,
      chunk_close(ch);
      g_free(c);
      status_bar_end_progress(bar);
-     clipwarn(clipcount);
+     clipwarn(clipcount,FALSE);
      return FALSE;
 }
 
@@ -1517,15 +1520,22 @@ Chunk *chunk_convert(Chunk *chunk, Dataformat *new_format,
      return d;
 }
 
-void clipwarn(off_t clipcount)
+gboolean clipwarn(off_t clipcount, gboolean maycancel)
 {
+     gboolean b = FALSE;
      gchar *c;
      if (clipcount > 0) {
 	  if (clipcount > 1000000000)
 	       clipcount = 1000000000;
 	  c = g_strdup_printf(_("The input was clipped %d times during "
 				"processing."),(int)clipcount);
-	  user_warning(c);
+	  if (maycancel)
+	       b = (user_message(c,UM_OKCANCEL) != MR_OK);
+	  else
+	       user_warning(c);
+	  
 	  g_free(c);
      }
+
+     return b;
 }

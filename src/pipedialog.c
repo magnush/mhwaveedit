@@ -63,7 +63,11 @@ static Chunk *pipe_dialog_apply_proc(Chunk *chunk, StatusBar *bar,
      inifile_set_gboolean("PipeDialog_sendWav",sendwav);
      r = pipe_dialog_pipe_chunk(chunk,cmd,sendwav,dither_editing,bar,
 				&clipcount);
-     if (r != NULL) clipwarn(clipcount);
+     if (r != NULL && clipwarn(clipcount,TRUE)) {
+	  gtk_object_sink(GTK_OBJECT(r));
+	  r = NULL;
+     }
+
      return r;
 }
 

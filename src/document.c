@@ -271,7 +271,7 @@ Document *document_new_with_chunk(Chunk *chunk, gchar *sourcename,
 gboolean document_save(Document *d, gchar *filename, gint type_id, 
 		       gboolean use_defs)
 {
-     gint b;
+     gboolean b;
      int i;
      if (d->filename != NULL && !strcmp(filename,d->filename) &&
 	 d->lossy) {
@@ -282,11 +282,9 @@ gboolean document_save(Document *d, gchar *filename, gint type_id,
 	  if (i == MR_CANCEL) return TRUE;
      }
      b = chunk_save(d->chunk,filename,type_id,use_defs,dither_editing,d->bar);
-     if (b >= 0) {
-	  if (b == 0) {
-	       clear_history(d->history_pos);
-	       d->history_pos = NULL;
-	  }
+     if (!b) {
+	  clear_history(d->history_pos);
+	  d->history_pos = NULL;
 	  document_set_filename(d,filename,TRUE);
 	  gtk_signal_emit(GTK_OBJECT(d),
 			  document_signals[STATE_CHANGED_SIGNAL]);
