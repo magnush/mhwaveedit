@@ -774,6 +774,7 @@ Datasource *datasource_convert(Datasource *source, Dataformat *new_format)
      ds = gtk_type_new(datasource_get_type());
      ds->type = DATASOURCE_CONVERT;
      memcpy(&(ds->format),new_format,sizeof(Dataformat));
+     ds->format.samplebytes = ds->format.samplesize * ds->format.channels;
      ds->length = source->length;
      ds->bytes = ds->length * new_format->samplebytes;
      ds->data.clone = source;

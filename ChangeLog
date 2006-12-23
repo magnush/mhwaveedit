@@ -1,3 +1,7 @@
+2006-12-23  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/datasource.c (datasource_convert): Forgot to set samplebytes.
+
 2006-12-22  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/chunk.c (chunk_filter_tofmt): Remember to free the
