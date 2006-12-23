@@ -1,3 +1,13 @@
+2006-12-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_filter_tofmt): Remember to free the
+	convert_back struct.
+
+2006-12-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (clipwarn): Option for displaying a cancel button.
+	(chunk_dump): Changed return type back to gboolean.
+
 2006-12-21  Forest Bond  <forest@alittletooquiet.net>
 
 	* src/mainwindow.c: Added Cursor submenus for Move, Move to, and
