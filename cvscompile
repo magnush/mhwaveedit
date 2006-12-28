@@ -4,7 +4,7 @@
 # Configure options can be given on command line
 # Requires autoconf, automake and some other stuff
 
-cd docgen; sh gendocs.sh; cd ..
+cd docgen; bash gendocs.sh; cd ..
 aclocal -I m4
 autoheader
 automake
