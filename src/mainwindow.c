@@ -1118,6 +1118,11 @@ static void effects_splitchannel(GtkMenuItem *menuitem, gboolean user_data)
      document_update(w->doc, c, 0, 0);
 }
 
+static void effects_mapchannels(GtkMenuItem *menuitem, gpointer user_data)
+{
+     mainwindow_show_effect_dialog(MAINWINDOW(user_data),"mapchannels");
+}
+
 static void edit_stop(GtkMenuItem *menu_item, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
@@ -1774,8 +1779,9 @@ static GtkWidget *create_menu(Mainwindow *w)
 	    NULL},
 	  { N_("/Effects/B_yte swap"),NULL,      effects_byteswap,0,NULL         },
 	  { N_("/Effects/sep2"),  NULL,         NULL,           0, "<Separator>" },
-	  { N_("/Effects/_Mix channels..."),NULL,effects_mixchannels,0,NULL      },
-	  { N_("/Effects/Sp_lit channel..."),NULL,effects_splitchannel,0,NULL    },
+	  { N_("/Effects/_Mix to mono"),NULL,effects_mixchannels,0,NULL      },
+	  { N_("/Effects/Add channe_l"),NULL,effects_splitchannel,0,NULL    },
+	  { N_("/Effects/Ma_p channels..."),NULL,effects_mapchannels,0,NULL },
 	  {N_("/Effects/_Combine channels..."),NULL,effects_combinechannels,0,NULL},
 	  { N_("/Effects/sep3"),  NULL,         NULL,           0, "<Separator>" },
 	  { N_("/Effects/_Speed adjustment..."),NULL,effects_speed, 0, NULL      },

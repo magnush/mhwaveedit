@@ -347,6 +347,20 @@ Chunk *chunk_convert_channels(Chunk *chunk, guint new_channels,
 			      int dither_mode, StatusBar *bar);
 
 
+
+
+/* Creates a new Chunk with a mix of the original chunk's channels.
+ * channels_out determines the number of output channels
+ * map is a (chunk->channels x channels_out)-matrix; 
+ *   If map[src*channels_out + dst], then channel <src> from chunk will be
+ *   copied into channel <dst> of the result. Output channels with no assigned
+ *   inputs will be silent, output channels with more than one assigned input
+ *   will be mixed.
+ */
+Chunk *chunk_remap_channels(Chunk *chunk, int channels_out, gboolean *map, 
+			    int dither_mode, StatusBar *bar);
+
+
 /* Creates a new chunk containing a mix of two chunk's data. The chunks must 
  * have the same format but need not be of the same length. */
 

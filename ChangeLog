@@ -1,3 +1,9 @@
+2006-12-30  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mapchannelsdialog.c: New builtin effect "Map channels"
+
+	* src/int_box.c (intbox_create_scale): Don't show any decimals.
+
 2006-12-23  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/datasource.c (datasource_convert): Forgot to set samplebytes.

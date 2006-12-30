@@ -503,7 +503,7 @@ gchar *channel_name(guint chan, guint total)
      else if (chan == 0) return _("Left");
      else if (chan == 1) return _("Right");
      else {
-	  g_snprintf(buf,sizeof(buf),_("Channel %d"),chan+1);
+	  g_snprintf(buf,sizeof(buf),_("Ch%d"),chan+1);
 	  return buf;
      }
 }

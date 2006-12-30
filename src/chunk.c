@@ -352,6 +352,36 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
 			  Dataformat *tofmt, int dither_mode,
 			  StatusBar *bar, gchar *title)
 {
+     /* This code has to keep track of five different sample formats:
+      *   1) The Chunk's native format (chunk->format)
+      *   2) The processing function's input format (informat)
+      *   3) The processing function's output format (outformat)
+      *   4) The output temporary file's format (outformat or tofmt)
+      *   5) The output Chunk's native format (tofmt)
+      *
+      * These modes are possible:
+      *
+      *   1) Native format all the way
+      *      if must_convert == FALSE and no FP data in chunk
+      *      convert = FALSE, convert_back = FALSE,
+      *      formats (1)=(2)=(3), (4)=(5)
+      *
+      *   2) FP processing with FP tempfiles
+      *      if must_convert == TRUE || FP data in chunk
+      *      convert = TRUE, convert_back = FALSE
+      *      formats (2)=(3)=floating point version of (1)
+      *      format (4)=floating point version of (5)
+      *
+      *   3) FP processing with native tempfiles
+      *      (this mode is only used if the "use FP tempfiles option" is 
+      *      disabled, could cause quality loss)
+      *      if (must_convert == TRUE || FP data in chunk) && 
+      *          !chunk_filter_use_floating_tempfiles,
+      *      convert = TRUE, convert_back = TRUE
+      *      formats (2)=(3)=floating point version of (1),  (4)=(5)
+      */
+
+
      guint proc_size,single_size,full_size;
      gchar buf[8192];
      off_t samplepos=0, samplesleft=chunk->length;
@@ -776,6 +806,139 @@ Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
      return d;
 }
 
+static struct {
+     sample_t *buf;
+     int bufsize;
+     /* (outchannels x inchannels)-matrix */
+     /* Each row has a list of input channel numbers, ending with -1 */
+     int *map; 
+} chunk_remap_channels_data;
+
+static gboolean chunk_remap_channels_mixmode_proc(void *in, 
+						  guint sample_size,
+						  chunk_writeout_func out_func,
+						  WriteoutID id,
+						  Dataformat *informat,
+						  Dataformat *outformat)
+{
+     int samps,i,j,k,l;
+     sample_t *iptr, *optr, s;
+     samps = sample_size / informat->samplebytes;
+
+     /* Make sure we have room in the buffer */
+     if (samps * outformat->samplebytes > chunk_remap_channels_data.bufsize) {
+	  g_free(chunk_remap_channels_data.buf);
+	  chunk_remap_channels_data.buf = 
+	       g_malloc(samps*outformat->samplebytes);
+	  chunk_remap_channels_data.bufsize = samps*outformat->samplebytes;
+     }
+
+     /* Process data */
+     iptr = (sample_t *)in;
+     optr = chunk_remap_channels_data.buf;
+
+     for (i=0; i<samps; i++) {
+	  for (j=0; j<outformat->channels; j++) {
+	       s = 0.0;
+	       for (k=(j*informat->channels); 1; k++) {
+		    l = chunk_remap_channels_data.map[k];
+		    if (l < 0) break;
+		    s += iptr[l];
+	       }
+	       optr[j] = s;
+	  }
+	  iptr += informat->channels;
+	  optr += outformat->channels;
+     }
+
+     return out_func(id, chunk_remap_channels_data.buf, 
+		     samps*outformat->samplebytes);     
+}
+
+static gboolean chunk_remap_channels_rawmode_proc(void *in, 
+						  guint sample_size,
+						  chunk_writeout_func out_func,
+						  WriteoutID id,
+						  Dataformat *informat,
+						  Dataformat *outformat)
+{
+     int samps,ssize=informat->samplesize,i,j,k;
+     char *iptr, *optr;
+
+     /* Make sure we have room in buffer */
+     samps = sample_size / informat->samplebytes;
+     if (samps * outformat->samplebytes > chunk_remap_channels_data.bufsize) {
+	  g_free(chunk_remap_channels_data.buf);
+	  chunk_remap_channels_data.buf = 
+	       g_malloc(samps*outformat->samplebytes);
+	  chunk_remap_channels_data.bufsize = samps*outformat->samplebytes;
+     }
+
+     iptr = (char *)in;
+     optr = (char *)chunk_remap_channels_data.buf;
+
+     /* This could be optimized further (replace memcpy) */
+
+     for (i=0; i<samps; i++) {
+	  for (j=0; j<outformat->channels; j++) {
+	       k = chunk_remap_channels_data.map[j*informat->channels];
+	       if (k >= 0)
+		    memcpy(optr, iptr+k*ssize,ssize);
+	       else
+		    memset(optr, 0, ssize);
+	       optr += ssize;
+	  }
+	  iptr += informat->samplebytes;
+     }
+
+     return out_func(id, chunk_remap_channels_data.buf, 
+		     samps*outformat->samplebytes);
+}
+						  
+Chunk *chunk_remap_channels(Chunk *chunk, int channels_out, gboolean *map, 
+			    int dither_mode, StatusBar *bar)
+{
+     gboolean mixmode;
+     int i,j,k;
+     int channels_in = chunk->format.channels;
+     Dataformat tofmt;
+     Chunk *r;
+     
+     memcpy(&tofmt,&(chunk->format),sizeof(Dataformat));
+     tofmt.channels = channels_out;
+     tofmt.samplebytes = tofmt.channels * tofmt.samplesize;
+
+     chunk_remap_channels_data.buf = NULL;
+     chunk_remap_channels_data.bufsize = 0;
+
+     /* Generate the map */
+     mixmode = FALSE;
+     chunk_remap_channels_data.map = g_malloc(channels_in*channels_out*
+					      sizeof(int));
+     for (i=0; i<channels_out; i++) {
+	  k = 0;
+	  for (j=0; j<channels_in; j++) 
+	       if (map[j*channels_out + i])
+		    chunk_remap_channels_data.map[i*channels_in + (k++)] = j;
+	  chunk_remap_channels_data.map[i*channels_in + k] = -1;
+	  if (k > 1) mixmode = TRUE;
+     }
+
+     if (mixmode) {
+	  r = chunk_filter_tofmt(chunk,chunk_remap_channels_mixmode_proc,
+				 NULL,CHUNK_FILTER_MANY,TRUE,&tofmt,
+				 dither_mode,bar,_("Mixing channels"));
+     } else {
+	  r = chunk_filter_tofmt(chunk,chunk_remap_channels_rawmode_proc,
+				 NULL,CHUNK_FILTER_MANY,FALSE,&tofmt,
+				 dither_mode,bar,_("Mapping channels"));
+	  
+     }
+     
+     g_free(chunk_remap_channels_data.buf);
+     g_free(chunk_remap_channels_data.map);
+     return r;
+}
 
 void chunk_foreach(GFunc func, gpointer user_data)
 {

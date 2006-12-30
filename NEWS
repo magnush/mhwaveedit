@@ -1,6 +1,8 @@
 New features in version 1.4.11:
 
+  * Move cursor to zero-crossing functions added.
   * Combine channels effect bug fixed.
+  * Map channels effect added.
   * Keyboard commands improved.
 
 New features in version 1.4.10:

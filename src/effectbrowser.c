@@ -34,6 +34,7 @@
 #include "documentlist.h"
 #include "um.h"
 #include "gettext.h"
+#include "mapchannelsdialog.h"
 
 struct effect {
      gchar *name;
@@ -71,6 +72,8 @@ void effect_browser_register_default_effects(void)
 				    samplerate_dialog_get_type());
      effect_browser_register_effect("ssize",_("[B] Convert sample format"),
 				    samplesize_dialog_get_type());
+     effect_browser_register_effect("mapchannels",_("[B] Map channels"),
+				    map_channels_dialog_get_type());
      effect_browser_register_effect("combine",_("[B] Combine channels"),
 				    combine_channels_dialog_get_type());
      effect_browser_register_effect("speed",_("[B] Speed"),
