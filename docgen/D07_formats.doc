@@ -1,7 +1,9 @@
 File formats
 
-Even if mhWaveEdit is mainly built for editing wav files, it's also possible to load and save in a few other formats. mhWaveEdit always supports wav and raw files, but if it's compiled with the libsndfile library, mhWaveEdit supports a couple of other formats as well. 
+Even if mhWaveEdit was originally built for editing wav files, it's also possible to load and save in a few other formats. mhWaveEdit always supports wav and raw files, but if it's compiled with the libsndfile library, mhWaveEdit supports a couple of other formats as well. 
 
-To save a file with a different file format, save it under a name that does not end with '.wav'. A few other suffixes are recognized directly (for example '.iff') but if the suffix is not recognized a dialog box will pop up and ask you in what format to save the file.
+To save a file with a different file format, use "Save as..." and choose a format in the file type selection box. 
 
 mhWaveEdit has basic support for mp3 and ogg formats. For this to work you need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg support. If you have these programs, you can open and save mp3/ogg files just like any other file format.
+
+If mplayer is installed, mhwaveedit can open all formats that it supports, for example the soundtrack of a video file. Since mplayer is only a player, these files can not be saved back after editing, you have to save the file into a supported format.

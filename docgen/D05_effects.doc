@@ -6,9 +6,9 @@ mhWaveEdit has a few simple effects, which are available from the 'Effects' menu
 
    This creates a linear fade in or fade out effect.
 
- * Normalize
+ * Normalize, Normalize to...
 
-   This amplifies the sound as much as possible without getting clipping distortion. 
+   This amplifies the sound as much as possible without getting clipping distortion. The "Normalize to..." item lets you specify which level to normalize to.
 
  * Volume adjust/fade...
 
@@ -32,13 +32,17 @@ mhWaveEdit has a few simple effects, which are available from the 'Effects' menu
 
    This "byte swaps" the selected part. It can be used to repair damaged files where the byte order is wrong. Note that if the sound looks alright but plays wrong, you should not use this option, instead you should use the "byte-swap output" option in the Preferences dialog.
 
- * Mix channels...
+ * Mix to mono
 
    This mixes all channels of the file together to a mono sound.
 
- * Split channel...
+ * Add channel
 
    This copies the first channel to a new channel in the sound, converting mono to stereo etc.
+
+ * Map channels...
+   
+   With this effect, you can change the number of channels in the file. You can also rearrange and add (i.e. mix) channels.
 
  * Combine channels...
 
@@ -47,6 +51,11 @@ mhWaveEdit has a few simple effects, which are available from the 'Effects' menu
  * Speed adjustment...
 
    This effect changes the speed of the selection. The tone will change as well.
+ * Pipe through program...
+ 
+   This effect is for advanced users wanting to pipe raw audio data through an external program. The output of the program is read back and replaces the processed part. 
 
-mhWaveEdit supports LADSPA effects and can also make use of most of the SoX utility's effects. All supported effects can be found by choosing the 'Effects...' menu item. 
+mhWaveEdit supports LADSPA effects and can also make use of most of the SoX utility's effects. To find the LADSPA plugins the environment variable LADSPA_PATH must be properly set up. 
+
+All supported effects can be found by choosing the 'Effects...' menu item. The effects are listed with names beginning with [B] for builtin effects, [L] for LADSPA effects, and [S] for SoX effects.
 

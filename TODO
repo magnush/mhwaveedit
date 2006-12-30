@@ -18,6 +18,11 @@ UI stuff:
 * Amplitude scale
 * Preview function in effect browser
 * Clip information dialog box
+* Organising/reordering/sorting the effects in the effects browser
+* Dialog for managing marks
+* Create marks from selection endpoints
+* Reset button for speed/zoom sliders.
+* Support opening files by drag'n'drop.
 
 Editing:
 * Make the insert silence function click-free (keeping the same amplitude
@@ -26,6 +31,8 @@ Editing:
 * Copy/paste between mhwaveedit instances
   * Copy/paste to and from other audio applications
 * Create and edit curves and use them for effect parameters.
+* Remove DC component and center waveform functions.
+* Synchronizing/aligning files
 
 Playback/recording:
 
@@ -36,7 +43,6 @@ Playback/recording:
 * Separating input and output driver where possible.
 * Show remaining possible recording time while recording.
 * Do recording in completely separate thread/process
-* FFT display while playing
 * Place cursor exactly where we stopped on low-latency sound drivers.
 * Record a few seconds "ahead" so you can start recording a bit too
   late without missing anything.
@@ -48,6 +54,7 @@ File formats:
 * Keeping the compressed data as much as possible when editing mp3/ogg
 * Remember mp3/ogg metadata (artist, title etc)
 * A better export function.
+* Store marks and loop points in file.
 
 Other:
 

@@ -25,6 +25,8 @@ Ctrl+H        Position cursor at file start
 Ctrl+J        Position cursor at file end
 Ctrl+K        Position cursor at selection start
 Ctrl+L        Position cursor at selection end
+Y,U           Move cursor to nearest all-channel zero-crossing
+I,O           Move cursor to nearest any-channel zero-crossing
 
 Ctrl+Q        Selection start at cursor
 Ctrl+W        Selection end at cursor
@@ -39,6 +41,8 @@ Arrow keys    Scroll left/right
 ,             Play from cursor pos
 .             Stop
 /             Play selection
-Ctrl+arrow    Nudge playback forward/backward
+H,J           Move cursor (and playback) 1/8 of view
+K,L           Move cursor one sample
+Ctrl+arrow    Move cursor (and playback) half second
 (             Play first 3 seconds of selection
 )             Play last 3 seconds of selection
