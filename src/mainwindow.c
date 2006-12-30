@@ -926,7 +926,10 @@ static void edit_silence(GtkMenuItem *menuitem, gpointer user_data)
 static void edit_selectall(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     document_set_selection(w->doc,0,w->doc->chunk->length);
+     if (w->doc->selstart != 0 || w->doc->selend != w->doc->chunk->length)
+	  document_set_selection(w->doc,0,w->doc->chunk->length);
+     else
+	  document_set_selection(w->doc,0,0);
 }
 
 static void edit_selectnone(GtkMenuItem *menuitem, gpointer user_data)
