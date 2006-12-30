@@ -620,81 +620,35 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc,
      return FALSE;
 }
 
-static gboolean chunk_onechannel_proc(void *in, guint sample_size, 
-				      chunk_writeout_func out_func, 
-				      WriteoutID id, Dataformat *format,
-				      Dataformat *outformat)
-{
-     static int channel_count = 0;
-     static sample_t mixup = 0.0;
-     sample_t s = *((sample_t *)in);
-     mixup += s;
-     channel_count++;
-     if (channel_count == format->channels) {
-	  s = mixup / (sample_t)channel_count;
-	  channel_count = 0;
-	  mixup = 0.0;
-	  return out_func(id,&s,sizeof(s));
-     } else 
-	  return FALSE;
-}
-
 Chunk *chunk_onechannel(Chunk *chunk, int dither_mode, StatusBar *bar)
 {
-     Dataformat fmt;
-     memcpy(&fmt,&(chunk->format),sizeof(Dataformat));
-     fmt.channels = 1;
-     fmt.samplebytes = fmt.samplesize;
-     return chunk_filter_tofmt(chunk,chunk_onechannel_proc,NULL,
-			       CHUNK_FILTER_ONE,TRUE,&fmt,dither_mode,bar,
-			       NULL);
-}
-
-static gint channel_to_copy;
-
-static gboolean chunk_copy_channel_proc(void *in, guint sample_size, 
-					chunk_writeout_func out_func, 
-					WriteoutID id,
-					Dataformat *informat, 
-					Dataformat *outformat)
-{
-     static gint channel_count=0;
-     gint i;
-     i = channel_count;
-     channel_count ++;
-     if (channel_count == informat->channels) channel_count = 0;
-     if (out_func(id,in,sample_size)) return TRUE;
-     if (channel_to_copy==i) return out_func(id,in,sample_size);
-     else return FALSE;
-}
-
-static gboolean chunk_copy_channel_mono_proc(void *in, guint sample_size,
-					     chunk_writeout_func out_func, 
-					     WriteoutID id,
-					     Dataformat *informat, 
-					     Dataformat *outformat)
-{
-     return (out_func(id,in,sample_size) || out_func(id,in,sample_size));
+     gboolean *map;
+     int i;
+     Chunk *r;
+     map = g_malloc(chunk->format.channels * 1 * sizeof(gboolean));
+     for (i=0; i<chunk->format.channels; i++)
+	  map[i] = TRUE;
+     r = chunk_remap_channels(chunk,1,map,dither_mode,bar);
+     g_free(map);
+     return r;
 }
 
 Chunk *chunk_copy_channel(Chunk *chunk, gint channel, int dither_mode, 
 			  StatusBar *bar)
 {
-     Chunk *c;
-     Dataformat fmt;
-     memcpy(&fmt,&(chunk->format),sizeof(Dataformat));
-     fmt.channels ++;
-     fmt.samplebytes = fmt.channels * fmt.samplesize;
-     channel_to_copy = channel;
-     if (chunk->format.channels == 1) 
-	  c = chunk_filter_tofmt(chunk,chunk_copy_channel_mono_proc,NULL,
-				 CHUNK_FILTER_ONE,FALSE,&fmt,dither_mode,bar,
-				 NULL);
-     else 
-	  c = chunk_filter_tofmt(chunk,chunk_copy_channel_proc,NULL,
-				 CHUNK_FILTER_ONE,FALSE,&fmt,dither_mode,bar,
-				 NULL);
-     return c;
+     Chunk *r;
+     gboolean *map;
+     int i;
+
+     map = g_malloc0(chunk->format.channels * (chunk->format.channels+1) * 
+		     sizeof(gboolean));
+     for (i=0; i<chunk->format.channels; i++)
+	  map[i*(chunk->format.channels+1) + i] = TRUE;
+     map[channel*(chunk->format.channels+1) + (chunk->format.channels)] = TRUE;
+     r = chunk_remap_channels(chunk,chunk->format.channels+1,map,dither_mode,
+			      bar);
+     g_free(map);
+     return r;
 }
 
 
