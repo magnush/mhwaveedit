@@ -591,7 +591,7 @@ void get_filename_modify_extension(gchar *new_extension)
      if (d != NULL && (e == NULL || e < d))
 	  *d = 0;
      if (c[0] != 0 && (e == NULL || e[1] != 0)) {
-	  printf("%s\n",c);
+	  /* printf("%s\n",c); */
 	  f = g_strdup_printf("%s%s",c,new_extension);
 	  get_filename_internal_set_name(f);
 	  g_free(f);
