@@ -763,7 +763,7 @@ Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
 static struct {
      sample_t *buf;
      int bufsize;
-     /* (outchannels x inchannels)-matrix */
+     /* (outchannels x (inchannels+1))-matrix */
      /* Each row has a list of input channel numbers, ending with -1 */
      int *map; 
 } chunk_remap_channels_data;
@@ -794,7 +794,7 @@ static gboolean chunk_remap_channels_mixmode_proc(void *in,
      for (i=0; i<samps; i++) {
 	  for (j=0; j<outformat->channels; j++) {
 	       s = 0.0;
-	       for (k=(j*informat->channels); 1; k++) {
+	       for (k=(j*(informat->channels+1)); 1; k++) {
 		    l = chunk_remap_channels_data.map[k];
 		    if (l < 0) break;
 		    s += iptr[l];
@@ -835,7 +835,7 @@ static gboolean chunk_remap_channels_rawmode_proc(void *in,
 
      for (i=0; i<samps; i++) {
 	  for (j=0; j<outformat->channels; j++) {
-	       k = chunk_remap_channels_data.map[j*informat->channels];
+	       k = chunk_remap_channels_data.map[j*(informat->channels+1)];
 	       if (k >= 0)
 		    memcpy(optr, iptr+k*ssize,ssize);
 	       else
@@ -867,14 +867,14 @@ Chunk *chunk_remap_channels(Chunk *chunk, int channels_out, gboolean *map,
 
      /* Generate the map */
      mixmode = FALSE;
-     chunk_remap_channels_data.map = g_malloc(channels_in*channels_out*
+     chunk_remap_channels_data.map = g_malloc((channels_in+1)*channels_out*
 					      sizeof(int));
      for (i=0; i<channels_out; i++) {
 	  k = 0;
 	  for (j=0; j<channels_in; j++) 
 	       if (map[j*channels_out + i])
-		    chunk_remap_channels_data.map[i*channels_in + (k++)] = j;
-	  chunk_remap_channels_data.map[i*channels_in + k] = -1;
+		    chunk_remap_channels_data.map[i*(channels_in+1)+(k++)] = j;
+	  chunk_remap_channels_data.map[i*(channels_in+1) + k] = -1;
 	  if (k > 1) mixmode = TRUE;
      }
 
