@@ -1,3 +1,9 @@
+2007-01-01  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.4.11.
+
+	* src/mainwindow.c (help_about): Updated copyright notice.
+
 2006-12-31  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/chunk.c (chunk_remap_channels): Added room for ending marker
