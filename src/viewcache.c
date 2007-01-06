@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2007, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -173,8 +173,8 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 	  if (highq_spp >= real_spp) highq_spp = 0;
 	  if (!inifile_get_gboolean("drawImprove",TRUE)) highq_spp=lowq_spp;
 
-	  /* Three cases - scrolling, zooming and no overlap at all */
-	  if (chunk_change || 
+	  /* Three cases - scrolling, zooming and no overlap at all */	  
+	  if (chunk_change ||
 	      end_samp <= cache->start || start_samp >= cache->end) {
 
 	       /* No overlap - don't do anything more */
@@ -201,7 +201,13 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 		      k*channels*2*sizeof(sample_t));
 	       o = cache->offsets[j] - new_offsets[i];
 	       for (l=0; l<=xres; l++) new_offsets[l] += o;
-	       memcpy(new_calced+i, cache->calced+j, k);
+	       /* When real_spp < 1.0, we may get errors due to offset rounding
+		* therefore, set the cache status to DIRTY */
+
+	       if (real_spp >= 1.0)
+		    memcpy(new_calced+i, cache->calced+j, k);
+	       else
+		    memset(new_calced+i, CALC_DIRTY, k);
 	       
 	  } else if (end_samp-start_samp > cache->end-cache->start) {
 

@@ -1,3 +1,8 @@
+2007-01-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/viewcache.c (view_cache_update): Fix for scrolling bug when
+	zoomed in to <1 sample-per-pixel.
+
 2007-01-01  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* Released version 1.4.11.
