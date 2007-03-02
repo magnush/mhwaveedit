@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2007, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -93,6 +93,12 @@ int main(int argc, char **argv)
      gboolean ladspa = TRUE;
      gboolean b;
      gchar *c;
+
+     /* Some versions of the aRts C library call g_thread_init internally,
+      * and that confuses GLib2's memory allocation stuff. */
+#ifdef HAVE_GTHREAD
+     g_thread_init(NULL);
+#endif
 
      /* Set default locale */
      setlocale(LC_ALL,"");

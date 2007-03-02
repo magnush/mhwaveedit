@@ -12,4 +12,7 @@ Known bugs in mhWaveEdit:
 
 * Doesn't work properly with Lame version 3.92 and older.
 
+* Can crash when using GTK+ 1.2 and built with aRts driver, due to 
+  linking with both glib 1.2 and 2.x at the same time. 
+
 Report bugs to magnus.hjorth@home.se.

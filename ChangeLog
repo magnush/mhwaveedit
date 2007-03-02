@@ -1,3 +1,12 @@
+2007-03-02  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/main.c (main): Initialize threads if building with gthread
+	library. This is a workaround for aRts library issues.
+
+	* configure.in: Check for gthread library if we are using
+	GTK2. Print warning message if we are compiling with GTK1.2 and
+	the aRts driver.
+
 2007-01-07  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/viewcache.c (view_cache_update): Fix for scrolling bug when
