@@ -1,3 +1,7 @@
+New features in version 1.4.12:
+  * aRts driver bug fixed
+  * Minor bug fixes
+
 New features in version 1.4.11:
 
   * Move cursor to zero-crossing functions added.
