@@ -1,3 +1,8 @@
+2007-03-21  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_convert_samplerate): Forgot to reset conv
+	pointer.
+
 2007-03-02  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/main.c (main): Initialize threads if building with gthread

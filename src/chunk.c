@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005 2006, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2006 2007, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -196,7 +196,10 @@ Chunk *chunk_convert_samplerate(Chunk *chunk, gint samplerate,
 			    dither_mode,
 			    bar, _("Converting samplerate"));
      /* puts("chunk_convert_samplerate: calling rateconv_destroy"); */
-     if (conv != NULL) rateconv_destroy(conv);
+     if (conv != NULL) {
+	  rateconv_destroy(conv);
+	  conv = NULL;
+     }
      return c;
 }
 

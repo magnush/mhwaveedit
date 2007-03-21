@@ -1,4 +1,6 @@
 New features in version 1.4.12:
+
+  * Rate conversion crash fixed
   * aRts driver bug fixed
   * Minor bug fixes
 
