@@ -1,3 +1,7 @@
+2007-03-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/rateconv.c (rateconv_new): Bug in special case inrate==outrate
+
 2007-03-21  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/chunk.c (chunk_convert_samplerate): Forgot to reset conv

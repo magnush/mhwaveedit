@@ -684,8 +684,7 @@ rateconv *rateconv_new(gboolean realtime, const char *driver_id,
      /* If desired sample rate is same as input rate, use the repeat
       * driver, which has special case for this. */
      if (format->samplerate == outrate && !realtime)
-	  return repeat_driver->new_func(repeat_driver,realtime,format,
-					 outrate,dither_mode);
+	  driver_id = "repeat";
 
      l = realtime ? realtime_drivers : drivers;
      for (; l!=NULL; l=l->next) {
