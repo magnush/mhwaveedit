@@ -34,7 +34,7 @@ static guint font_height=0;
 
 enum { VIEW_CHANGED_SIGNAL, SELECTION_CHANGED_SIGNAL, CURSOR_CHANGED_SIGNAL, 
        CHUNK_CHANGED_SIGNAL, DOUBLE_CLICK_SIGNAL, LAST_SIGNAL };
-static gint chunk_view_signals[LAST_SIGNAL] = { 0 };
+static guint chunk_view_signals[LAST_SIGNAL] = { 0 };
 
 static void chunk_view_update_image(ChunkView *view, guint xs, guint xe);
 static void chunk_view_redraw_samples(ChunkView *cv, off_t start, off_t end);

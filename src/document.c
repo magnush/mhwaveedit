@@ -36,7 +36,7 @@ gboolean view_follow_strict_flag;
 
 enum { VIEW_CHANGED_SIGNAL, SELECTION_CHANGED_SIGNAL, CURSOR_CHANGED_SIGNAL,
        STATE_CHANGED_SIGNAL, LAST_SIGNAL };
-static gint document_signals[LAST_SIGNAL] = { 0 };
+static guint document_signals[LAST_SIGNAL] = { 0 };
 
 static GtkObjectClass *parent_class;
 

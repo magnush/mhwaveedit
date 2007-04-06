@@ -35,7 +35,7 @@ static GtkWidgetClass *parent_class;
 static int progress_count = 0;
 
 enum { PROGRESS_BEGIN_SIGNAL, PROGRESS_END_SIGNAL, LAST_SIGNAL };
-static gint status_bar_signals[LAST_SIGNAL] = { 0 };
+static guint status_bar_signals[LAST_SIGNAL] = { 0 };
 
 static void status_bar_expose(GtkWidget *widget, GdkEventExpose *event, 
 			    gpointer user_data)

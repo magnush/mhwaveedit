@@ -57,7 +57,7 @@ static void gtk_marshal_NONE__FLOAT(GtkObject *object, GtkSignalFunc func,
 }
 #endif
 
-static gint floatbox_signals[LAST_SIGNAL] = { 0 };
+static guint floatbox_signals[LAST_SIGNAL] = { 0 };
 
 static void floatbox_update_text(Floatbox *box)
 {

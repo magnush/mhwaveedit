@@ -253,7 +253,7 @@ Chunk *chunk_load_x(gchar *filename, int dither_mode, StatusBar *bar,
      Chunk *chunk;
      gchar *c;
      EFILE *f;
-     struct file_type *ft;
+     struct file_type *ft = NULL;
 
      /* First, see if the file exists */
      if (!file_exists(filename)) {

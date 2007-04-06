@@ -25,7 +25,7 @@
 
 static GtkObjectClass *parent_class;
 enum { CHANGED_SIGNAL, LAST_SIGNAL };
-static gint document_list_signals[LAST_SIGNAL] = { 0 };
+static guint document_list_signals[LAST_SIGNAL] = { 0 };
 static gboolean updating = FALSE;
 
 static void document_list_changed(Combo *combo)

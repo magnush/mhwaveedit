@@ -26,7 +26,7 @@
 
 enum { ITEM_ADDED_SIGNAL, ITEM_REMOVED_SIGNAL, ITEM_NOTIFY_SIGNAL, 
        LAST_SIGNAL };
-static gint list_object_signals[LAST_SIGNAL] = { 0 };
+static guint list_object_signals[LAST_SIGNAL] = { 0 };
 static GtkObjectClass *parent_class;
 
 static void list_object_destroy(GtkObject *obj)

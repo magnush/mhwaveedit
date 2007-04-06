@@ -59,7 +59,7 @@ static void gtk_marshal_NONE__LONG(GtkObject *object, GtkSignalFunc func,
 
 #endif /* GTK 2 */
 
-static gint intbox_signals[LAST_SIGNAL] = { 0 };
+static guint intbox_signals[LAST_SIGNAL] = { 0 };
 
 static void intbox_update_text(Intbox *box)
 {

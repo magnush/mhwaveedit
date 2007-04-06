@@ -1074,7 +1074,8 @@ static void debug_chunkinfo(GtkMenuItem *menuitem, gpointer user_data)
 static void mainwindow_show_effect_dialog(Mainwindow *mw, gchar *effect_name)
 {
      EffectBrowser *eb;
-     eb = EFFECT_BROWSER(effect_browser_new_with_effect(mw->doc,effect_name));
+     eb = EFFECT_BROWSER(effect_browser_new_with_effect(mw->doc,effect_name,
+							'B'));
      gtk_widget_show(GTK_WIDGET(eb));
 }
 
