@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 2004, Magnus Hjorth
+ * Copyright (C) 2003 2004 2007, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -36,50 +36,134 @@
 #include "gettext.h"
 #include "mapchannelsdialog.h"
 
-struct effect {
+struct source {
+     gchar tag;
      gchar *name;
-     gchar *title;
-     GtkType dialog_type;
+     effect_register_rebuild_func rebuild_func;
+     effect_register_get_func get_func;
+     gpointer rebuild_func_data,get_func_data;
+     int is_new;
 };
 
-static GSList *effects = NULL;
-static guint num_effects = 0;
+struct effect {
+     gchar *name,*title,*location,*author,source_tag;
+};
+
+static ListObject *effect_list = NULL;
+static GSList *sources = NULL;
 
 static GSList *geometry_stack = NULL;
 static gboolean geometry_stack_inited = FALSE;
 
 static GtkObjectClass *parent_class;
 
-static void effect_browser_remove_effect(EffectBrowser *eb);
+void effect_register_add_source(gchar *name, gchar tag,
+				effect_register_rebuild_func rebuild_func,
+				gpointer rebuild_func_data,
+				effect_register_get_func get_func,
+				gpointer get_func_data)
+{
+     struct source *s;
+     s = g_malloc(sizeof(*s));
+     s->tag = tag;
+     s->name = name;
+     s->rebuild_func = rebuild_func;
+     s->rebuild_func_data = rebuild_func_data;
+     s->get_func = get_func;
+     s->get_func_data = get_func_data;
+     s->is_new = TRUE;
+     sources = g_slist_append(sources,s);
+}
 
-void effect_browser_register_effect(gchar *name, gchar *title, 
-				    GtkType dialog_type)
+void effect_register_add_effect(gchar source_tag, const gchar *name, 
+				const gchar *title, const gchar *author, 
+				const gchar *location)
 {
      struct effect *e;
      e = g_malloc(sizeof(*e));
+     e->source_tag = source_tag;
      e->name = g_strdup(name);
      e->title = g_strdup(title);
-     e->dialog_type = dialog_type;
-     effects = g_slist_append(effects,e);
-     num_effects ++;
+     e->author = g_strdup(author);
+     e->location = g_strdup(location);
+     list_object_add(effect_list, e);
 }
 
-void effect_browser_register_default_effects(void)
-{     
-     effect_browser_register_effect("volume",_("[B] Volume adjust/fade"),
-				    volume_dialog_get_type());
-     effect_browser_register_effect("srate",_("[B] Convert samplerate"),
-				    samplerate_dialog_get_type());
-     effect_browser_register_effect("ssize",_("[B] Convert sample format"),
-				    samplesize_dialog_get_type());
-     effect_browser_register_effect("mapchannels",_("[B] Map channels"),
-				    map_channels_dialog_get_type());
-     effect_browser_register_effect("combine",_("[B] Combine channels"),
-				    combine_channels_dialog_get_type());
-     effect_browser_register_effect("speed",_("[B] Speed"),
-				    speed_dialog_get_type());
-     effect_browser_register_effect("pipe",_("[B] Pipe through program"),
-				    pipe_dialog_get_type());
+static void builtin_rebuild_func(gchar source_tag, gpointer user_data)
+{
+     gchar *author = _("Built-in");
+     static const gchar loc[] = "";     
+
+     effect_register_add_effect(source_tag,"volume",_("Volume adjust/fade"),
+				author,loc);
+     effect_register_add_effect(source_tag,"srate",_("Convert samplerate"),
+				author,loc);
+     effect_register_add_effect(source_tag,"ssize",_("Convert sample format"),
+				author,loc);
+     effect_register_add_effect(source_tag,"mapchannels",_("Map channels"),
+				author,loc);
+     effect_register_add_effect(source_tag,"combine",_("Combine channels"),
+				author,loc);
+     effect_register_add_effect(source_tag,"speed",_("Speed"),author,loc);
+     effect_register_add_effect(source_tag,"pipe",_("Pipe through program"),
+				author,loc);
+}
+
+static EffectDialog *builtin_get_func(gchar *name, gchar source_tag,
+				      gpointer user_data)
+{
+     GtkType type = -1;
+     if (!strcmp(name,"volume")) type = volume_dialog_get_type();
+     else if (!strcmp(name,"srate")) type = samplerate_dialog_get_type();
+     else if (!strcmp(name,"ssize")) type = samplesize_dialog_get_type();
+     else if (!strcmp(name,"mapchannels")) 
+	  type = map_channels_dialog_get_type();
+     else if (!strcmp(name,"combine")) 
+	  type = combine_channels_dialog_get_type();
+     else if (!strcmp(name,"speed")) type = speed_dialog_get_type();
+     else if (!strcmp(name,"pipe")) type = pipe_dialog_get_type();
+     if (type >= 0) 
+	  return EFFECT_DIALOG(gtk_type_new(type));
+     else
+	  return NULL;
+}
+
+void effect_register_init(void)
+{
+     /* Add built-in effects source */
+     effect_register_add_source("Built-in",'B',builtin_rebuild_func,NULL,
+				builtin_get_func,NULL);
+}
+
+static void effect_register_update_list(void)
+{
+     GSList *s;
+     struct source *src;
+     gboolean b = FALSE;
+     
+     if (effect_list == NULL)
+	  effect_list = list_object_new(FALSE);
+
+     for (s=sources; s!=NULL; s=s->next) {
+	  src = (struct source *)s->data;
+	  if (src -> is_new) {
+	       /* TODO: Cache instead of requesting from source each time */
+	       src->rebuild_func(src->tag, src->rebuild_func_data);
+	       src->is_new = FALSE;
+	       b = TRUE;
+	  }
+     }
+     
+     if (b) list_object_notify(effect_list,NULL);
+}
+
+static void effect_browser_remove_effect(EffectBrowser *eb)
+{
+     if (eb->current_dialog >= 0) 
+	  gtk_container_remove
+	       (GTK_CONTAINER(eb->dialog_container),
+		GTK_WIDGET(eb->dialogs[eb->current_dialog]));
+     eb->current_dialog = -1;
 }
 
 static void effect_browser_destroy(GtkObject *obj)
@@ -87,14 +171,12 @@ static void effect_browser_destroy(GtkObject *obj)
      EffectBrowser *eb = EFFECT_BROWSER(obj);
      guint i;
      effect_browser_remove_effect(eb);
-     eb->current_dialog = -1;
-     if (eb->dialogs != NULL)
-	  for (i=0; i<num_effects; i++) 
-	       if (eb->dialogs[i] != NULL) {
-		    gtk_widget_unref(GTK_WIDGET(eb->dialogs[i]));
-	       }
-     g_free(eb->dialogs);
-     eb->dialogs = NULL;
+     for (i=0; i<EFFECT_BROWSER_CACHE_SIZE; i++) {
+	  if (eb->dialogs[i] != NULL) {
+	       gtk_widget_unref(GTK_WIDGET(eb->dialogs[i]));
+	       eb->dialogs[i] = NULL;
+	  }
+     }
      if (parent_class->destroy) parent_class->destroy(obj);
 }
 
@@ -155,98 +237,160 @@ static void ok_click(GtkWidget *widget, EffectBrowser *eb)
 	  effect_browser_close(eb);
 }
 
-static void effect_browser_remove_effect(EffectBrowser *eb)
+static EffectDialog *get_effect_missing_dialog(gchar *name, gchar source_tag)
 {
-     if (eb->current_dialog >= 0) 
-	  gtk_container_remove
-	       (GTK_CONTAINER(eb->dialog_container),
-		GTK_WIDGET(eb->dialogs[eb->current_dialog]));
+     EffectDialog *ed;
+     GtkWidget *w;
+     ed = gtk_type_new(effect_dialog_get_type());
+     w = gtk_label_new(_("This effect could not be loaded."));
+     gtk_container_add(ed->input_area,w);
+     gtk_widget_show(w);
+     return ed;
 }
 
-static void effect_browser_set_effect_main(EffectBrowser *eb, struct effect *e,
-					   gint i)
+static void effect_browser_set_effect_main(EffectBrowser *eb, struct effect *e)
 {
-     GtkWidget *w;
+     int i;
+     EffectDialog *ed;
+     GSList *s;
+     struct source *src;
+     gchar *c;
+
      effect_browser_remove_effect(eb);
-     eb->current_dialog = i;
-     if (eb->dialogs[i] == NULL) {
-	  w = GTK_WIDGET(gtk_type_new(e->dialog_type));
-	  effect_dialog_setup(EFFECT_DIALOG(w),e->name,(gpointer)eb);
-	  eb->dialogs[i] = EFFECT_DIALOG(w);
-	  gtk_widget_ref(w);
-	  gtk_object_sink(GTK_OBJECT(w));
-	  inifile_set("lastEffect",e->name);
+
+     /* Check dialog cache */
+     for (i=0; i<EFFECT_BROWSER_CACHE_SIZE; i++) {
+	  if (eb->dialog_effects[i] == e) break;
      }
+
+     if (i >= EFFECT_BROWSER_CACHE_SIZE) {
+	  /* Dialog not in cache */
+
+	  /* Make room in top of cache */
+	  for (i=0; i<EFFECT_BROWSER_CACHE_SIZE; i++) {
+	       if (eb->dialog_effects[i] == NULL) break;
+	  }
+	  if (i >= EFFECT_BROWSER_CACHE_SIZE) {
+	       /* No room in cache, throw out last element */
+	       i = EFFECT_BROWSER_CACHE_SIZE-1;
+	       gtk_object_unref(GTK_OBJECT(eb->dialogs[i]));
+	       eb->dialogs[i] = NULL;
+	       eb->dialog_effects[i] = NULL;
+	  }
+	  for (; i>0; i--) {
+	       eb->dialogs[i] = eb->dialogs[i-1];
+	       eb->dialog_effects[i] = eb->dialog_effects[i-1];
+	  }
+
+	  /* Get the new dialog */
+
+	  ed = NULL;
+	  for (s=sources; s!=NULL; s=s->next) {
+	       src = (struct source *)s->data;
+	       if (src->tag == e->source_tag) {
+		    ed = src->get_func(e->name, e->source_tag,
+				       src->get_func_data);
+		    effect_dialog_setup(ed, e->name, eb);
+		    break;
+	       }
+	  }
+
+	  if (ed == NULL)
+	       ed = get_effect_missing_dialog(e->name,e->source_tag);	  
+
+	  g_assert(i == 0);
+	  eb->dialogs[i] = ed;
+	  gtk_object_ref(GTK_OBJECT(ed));
+	  gtk_object_sink(GTK_OBJECT(ed));
+	  eb->dialog_effects[i] = e;
+     }
+
+     eb->current_dialog = i;
+
      gtk_container_add(eb->dialog_container,
 		       GTK_WIDGET(eb->dialogs[i]));
      gtk_widget_show(GTK_WIDGET(eb->dialogs[i]));
+
+     c = g_strdup_printf("%c%s",e->source_tag,e->name);
+     inifile_set("lastEffect",c);
+     g_free(c);
 }
 
-void effect_browser_invalidate_effect(EffectBrowser *eb, gchar *effect_name)
+void effect_browser_invalidate_effect(EffectBrowser *eb, gchar *effect_name, 
+				      gchar source_tag)
 {
-     GSList *sl;
+     gboolean displayed = FALSE;
      struct effect *e;
      gint i=0;
-     sl = effects;
-     while (1) {
-	  g_assert(sl != NULL);
-	  e = (struct effect *)sl->data;
-	  if (!strcmp(e->name,effect_name)) break;
-	  sl=sl->next;
-	  i++;
+
+     /* Search the cache for the effect */
+     for (i=0; i<EFFECT_BROWSER_CACHE_SIZE; i++) {
+	  e = eb->dialog_effects[i];
+	  if (e != NULL && e->source_tag == source_tag && 
+	      !strcmp(e->name, effect_name))
+	       break;
      }
-     if (i == eb->current_dialog) {
-	  effect_browser_remove_effect(eb);
-	  eb->current_dialog = -1;
-	  gtk_widget_unref(GTK_WIDGET(eb->dialogs[i]));
-	  eb->dialogs[i] = NULL;
-	  effect_browser_set_effect_main(eb,e,i);
-     } else if (eb->dialogs[i] != NULL) {
-	  gtk_widget_unref(GTK_WIDGET(eb->dialogs[i]));
-	  eb->dialogs[i] = NULL;
-     }
+
+     if (i >= EFFECT_BROWSER_CACHE_SIZE) return; /* Not found */
+     
+     displayed = (i == eb->current_dialog);
+     if (displayed) effect_browser_remove_effect(eb);
+     gtk_object_unref(GTK_OBJECT(eb->dialogs[i]));
+     eb->dialogs[i] = NULL;
+     eb->dialog_effects[i] = NULL;
+     if (displayed) effect_browser_set_effect_main(eb,e);
 }
 
 static void effect_browser_select_child(GtkList *list, GtkWidget *widget,
 					gpointer user_data)
 {
-     EffectBrowser *eb = EFFECT_BROWSER(user_data);
-     GSList *sl;
-     gint i,j;
-     i = gtk_list_child_position(eb->effect_list,widget);
-     g_assert(i>=0);
-     for (sl=effects,j=i; j>0; j--) {
-	  sl=sl->next;
-	  g_assert(sl!=NULL);
-     }
-     effect_browser_set_effect_main(eb,(struct effect *)(sl->data),i);
+     EffectBrowser *eb = EFFECT_BROWSER(user_data);     
+     struct effect *effect;
+     
+     effect = gtk_object_get_data(GTK_OBJECT(widget),"effectptr");
+     g_assert(effect != NULL);
+     effect_browser_set_effect_main(eb,effect);
+}
+
+static void add_list_item(gpointer item, gpointer user_data)
+{
+     GtkList *l = GTK_LIST(user_data);
+     struct effect *e = (struct effect *)item;
+     gchar *c,*d;
+     GtkWidget *w;
+     c = g_strdup_printf("[%c] %s",e->source_tag,e->title);
+
+     /* Translate here for keeping compatibility with old translations */
+     /* New translations should translate the title without the prefix */
+     if (e->source_tag == 'B' || e->source_tag == 'S') d = _(c); else d = c;
+
+     w = gtk_list_item_new_with_label(d);
+     g_free(c);
+     gtk_object_set_data(GTK_OBJECT(w),"effectptr",e);
+     gtk_container_add(GTK_CONTAINER(l),w);
+     gtk_widget_show(w);
 }
 
 static void effect_browser_init(EffectBrowser *eb)
 {
      GtkWidget *b,*b1,*b1w,*b2,*b21,*b21w,*b22,*b23,*b24,*b241,*b242;
-     GtkWidget *b243,*w;
-     GSList *sl;
+     GtkWidget *b243;
      GtkAccelGroup* ag;
-     struct effect *e;
      gchar *c,*d;
      gint x;
 
      ag = gtk_accel_group_new();
 
-     eb->dialogs = g_malloc0(num_effects * sizeof(eb->dialogs[0]));
+     memset(eb->dialogs,0,sizeof(eb->dialogs));
+     memset(eb->dialog_effects,0,sizeof(eb->dialog_effects));
      eb->current_dialog = -1;
      
      b1w = gtk_list_new();
-     eb->effect_list = GTK_LIST(b1w);
+     eb->list_widget = GTK_LIST(b1w);
      gtk_list_set_selection_mode(GTK_LIST(b1w),GTK_SELECTION_SINGLE);
 
-     for (sl=effects; sl!=NULL; sl=sl->next) {
-	  e = (struct effect *)sl->data;
-	  w = gtk_list_item_new_with_label(e->title);
-	  gtk_container_add(GTK_CONTAINER(b1w),w);
-	  gtk_widget_show(w);
-     }
+     effect_register_update_list();
+     list_object_foreach(effect_list,add_list_item,eb->list_widget);
 
      b1 = gtk_scrolled_window_new(NULL,NULL);
      gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(b1),
@@ -341,15 +485,16 @@ GtkType effect_browser_get_type(void)
 
 GtkWidget *effect_browser_new(Document *doc)
 {
-     return effect_browser_new_with_effect(doc,"volume");
+     return effect_browser_new_with_effect(doc,"volume",'B');
 }
 
-GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect)
+GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect, 
+					  gchar source_tag)
 {
      GtkWidget *w;
      EffectBrowser *eb = 
 	  EFFECT_BROWSER(gtk_type_new(effect_browser_get_type()));
-     gtk_signal_connect(GTK_OBJECT(eb->effect_list),"select_child",
+     gtk_signal_connect(GTK_OBJECT(eb->list_widget),"select_child",
 			(GtkSignalFunc)effect_browser_select_child,eb);
 
      w = document_list_new(doc);
@@ -360,28 +505,43 @@ GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect)
      gtk_box_pack_end(GTK_BOX(eb->mw_list_box),w,FALSE,FALSE,0);
      gtk_widget_show(w);     
 
-     if (effect == NULL) effect = inifile_get("lastEffect","volume");
-     effect_browser_set_effect(eb,effect);
-     if (eb->current_dialog == -1) effect_browser_set_effect(eb,"volume");
+     if (effect == NULL) {
+	  effect = inifile_get("lastEffect","Bvolume");
+	  source_tag = effect[0];
+	  effect++;
+     }
+     effect_browser_set_effect(eb,effect,source_tag);
+     if (eb->current_dialog < 0) effect_browser_set_effect(eb,"volume",'B');
      g_assert(eb->current_dialog >= 0);
      return GTK_WIDGET(eb);
 }
 
-void effect_browser_set_effect(EffectBrowser *eb, gchar *effect)
+void effect_browser_set_effect(EffectBrowser *eb, gchar *effect, 
+			       gchar source_tag)
 {
      struct effect *e;
-     GSList *s;
-     gint i=0;
-
-     s=effects;
-     while (s != NULL) {
-	  e=(struct effect *)s->data;
-	  if (!strcmp(e->name,effect)) break;
-	  s=s->next;
-	  i++;
+     GList *l,*w;
+     gpointer p;
+     
+     for (l=effect_list->list; l!=NULL; l=l->next) {
+	  e = (struct effect *)l->data;
+	  if (e->source_tag == source_tag && !strcmp(e->name, effect)) {
+	       /* Find the list item which points to this effect */
+	       w = gtk_container_get_children(GTK_CONTAINER(eb->list_widget));
+	       for (; w!=NULL; w=w->next) {
+		    p = gtk_object_get_data(GTK_OBJECT(w->data),"effectptr");
+		    g_assert(p != NULL);
+		    if (p == e) {
+			 gtk_list_select_child(eb->list_widget,
+					       GTK_WIDGET(w->data));
+			 return;
+		    }
+	       }
+	       /* Effect exists but not in list, shouldn't happen */
+	       g_assert_not_reached();
+	  }	  
      }
-     if (s != NULL) 
-	  gtk_list_select_item(eb->effect_list,i);
+     /* Effect doesn't exist - do nothing */
 }
 
 void effect_browser_shutdown(void)
@@ -389,3 +549,4 @@ void effect_browser_shutdown(void)
      if (inifile_get_gboolean("useGeometry",FALSE))
 	  geometry_stack_save_to_inifile("effectGeometry",geometry_stack);  
 }
+

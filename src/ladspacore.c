@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 2005, Magnus Hjorth
+ * Copyright (C) 2004 2005 2007, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -44,17 +44,94 @@ static int descriptor_to_index(LADSPA_PortDescriptor pdesc)
      else return -1;
 }
 
-static void scan_directory(gchar *dir)
+static void scan_file(gchar *filename, gchar *basename, gboolean do_check)
+{
+     void *p;
+     LADSPA_Descriptor_Function func;
+     gchar *msg,*c;
+     gint i,j;
+     int k[4];
+     unsigned long l;
+     const LADSPA_Descriptor *desc;
+     LadspaEffect *eff;
+
+     p = dlopen(filename,RTLD_NOW);
+     if (p == NULL) {
+	  console_message(dlerror());
+	  return;
+     }
+     func = dlsym(p,"ladspa_descriptor");
+     if (func == NULL) {	       
+	  msg = g_strdup_printf("%s: ladspa_descriptor: %s",
+				basename,dlerror());
+	  console_message(msg);
+	  g_free(msg);
+	  dlclose(p);
+	  return;
+     }
+     i=0;
+     while (1) {
+     outer:
+	  desc = func(i);
+	  if (desc == NULL) break;	       
+	  c = g_strdup_printf("%ld_%s",(long int)desc->UniqueID,basename);
+	  if (do_check && 
+	      g_hash_table_lookup(effect_list,c) != NULL) {
+	       g_free(c);
+	       i++;
+	       continue;
+	  }
+	  eff = g_malloc0(sizeof(*eff));
+	  eff->id = c;
+	  eff->filename = g_strdup(filename);
+	  eff->effect_number = i++;
+	  eff->name = g_strdup(desc->Name);
+	  eff->maker = g_strdup(desc->Maker);
+	  eff->copyright = g_strdup(desc->Copyright);
+	  for (l=0; l<desc->PortCount; l++) {
+	       j = descriptor_to_index(desc->PortDescriptors[l]);
+	       if (j < 0) {
+		    msg = g_strdup_printf(_("Effect %s contains "
+					    "invalid port %s"),eff->name,
+					  desc->PortNames[l]);
+		    console_message(msg);
+		    g_free(msg);
+		    g_free(eff->id);
+		    g_free(eff->filename);
+		    g_free(eff->name);
+		    g_free(eff->maker);
+		    g_free(eff->copyright);
+		    g_free(eff);
+		    goto outer;
+	       }
+	       eff->numports[j]++;
+	  }
+	  for (j=0; j<4; j++)
+	       if (eff->numports[j] > 0)
+		    eff->ports[j] = g_malloc(eff->numports[j] * 
+					     sizeof(LadspaPort));
+	  k[0] = k[1] = k[2] = k[3] = 0;
+	  for (l=0; l<desc->PortCount; l++) {
+	       j = descriptor_to_index(desc->PortDescriptors[l]);
+	       if (j < 0) continue;
+	       eff->ports[j][k[j]].number = l;
+	       eff->ports[j][k[j]].name = g_strdup(desc->PortNames[l]);
+	       memcpy(&(eff->ports[j][k[j]].prh),
+		      &(desc->PortRangeHints[l]),
+		      sizeof(LADSPA_PortRangeHint));
+	       k[j] ++;
+	  }
+	  g_hash_table_insert(effect_list,eff->id,eff);
+     }
+     dlclose(p);
+}
+
+static void scan_directory(gchar *dir, gpointer dummy)
 {
      DIR *d;
      struct dirent *de;
-     LadspaEffect *eff;
-     int i,j,k[4];
-     unsigned long l;
-     void *p;
+     int i;
      gchar *fn,*msg;
-     const LADSPA_Descriptor *desc;
-     LADSPA_Descriptor_Function func;
      char *cur_lc_numeric;
 
      d = opendir(dir);
@@ -77,71 +154,10 @@ static void scan_directory(gchar *dir)
 	  i = strlen(de->d_name);
 	  if (i<4 || strcmp(de->d_name + i-3, ".so")) continue;
 	  fn = g_strdup_printf("%s/%s",dir,de->d_name);
-	  p = dlopen(fn,RTLD_LAZY);
-	  if (p == NULL) {
-	       console_message(dlerror());
-	       g_free(fn);
-	       continue;
-	  }
-	  func = dlsym(p,"ladspa_descriptor");
-	  if (func == NULL) {	       
-	       msg = g_strdup_printf("%s: ladspa_descriptor: %s",
-				     de->d_name,dlerror());
-	       console_message(msg);
-	       g_free(msg);
-	       dlclose(p);
-	       g_free(fn);
-	       continue;
-	  }
-	  i=0;
-	  while (1) {
-	  outer:
-	       desc = func(i);
-	       if (desc == NULL) break;
-	       eff = g_malloc0(sizeof(*eff));
-	       eff->id = g_strdup_printf("ladspa_%ld",
-					 (long int)desc->UniqueID);
-	       eff->filename = fn;
-	       eff->effect_number = i++;
-	       eff->name = g_strdup_printf("[L] %s",desc->Name);
-	       eff->maker = g_strdup(desc->Maker);
-	       eff->copyright = g_strdup(desc->Copyright);
-	       for (l=0; l<desc->PortCount; l++) {
-		    j = descriptor_to_index(desc->PortDescriptors[l]);
-		    if (j < 0) {
-			 msg = g_strdup_printf(_("Effect %s contains "
-						 "invalid port %s"),eff->name,
-					       desc->PortNames[l]);
-			 console_message(msg);
-			 g_free(msg);
-			 g_free(eff->id);
-			 g_free(eff->filename);
-			 g_free(eff->name);
-			 g_free(eff->maker);
-			 g_free(eff->copyright);
-			 g_free(eff);
-			 goto outer;
-		    }
-		    eff->numports[j]++;
-	       }
-	       for (j=0; j<4; j++)
-		    if (eff->numports[j] > 0)
-			 eff->ports[j] = g_malloc(eff->numports[j] * 
-						  sizeof(LadspaPort));
-	       k[0] = k[1] = k[2] = k[3] = 0;
-	       for (l=0; l<desc->PortCount; l++) {
-		    j = descriptor_to_index(desc->PortDescriptors[l]);
-		    if (j < 0) continue;
-		    eff->ports[j][k[j]].number = l;
-		    eff->ports[j][k[j]].name = g_strdup(desc->PortNames[l]);
-		    memcpy(&(eff->ports[j][k[j]].prh),
-			   &(desc->PortRangeHints[l]),
-			   sizeof(LADSPA_PortRangeHint));
-		    k[j] ++;
-	       }
-	       g_hash_table_insert(effect_list,eff->id,eff);
-	  }
-	  dlclose(p);
+
+	  scan_file(fn,de->d_name,FALSE);
+
+	  g_free(fn);
      }
      closedir(d);
 
@@ -149,11 +165,43 @@ static void scan_directory(gchar *dir)
      setlocale(LC_NUMERIC, cur_lc_numeric);
 }
 
-void ladspa_init(void)
+static gboolean ladspa_cleanup_func(gpointer key, gpointer value, 
+				    gpointer user_data)
 {
-     gchar *p,*c;
+     int i,j;
+     LadspaEffect *eff;
+     eff = (LadspaEffect *)value;
+     g_free(eff->id);
+     g_free(eff->name);
+     g_free(eff->filename);
+     g_free(eff->maker);
+     g_free(eff->copyright);
 
-     effect_list = g_hash_table_new(g_str_hash,g_str_equal);
+     for (i=0; i<4; i++) {
+	  for (j=0; j<eff->numports[i]; j++)
+	       g_free(eff->ports[i][j].name);	  
+	  g_free(eff->ports[i]);
+     }
+
+     g_free(eff);
+     /* eff->id == value, so no need to free value again */
+     return TRUE;
+}
+
+static void ladspa_cleanup(void)
+{
+     if (effect_list == NULL) return;
+     g_hash_table_foreach_remove(effect_list, ladspa_cleanup_func, NULL);
+     g_hash_table_destroy(effect_list);
+     effect_list = NULL;
+}
+
+static void ladspa_path_foreach(void (*function)(gchar *dirname, 
+						 gpointer user_data),
+				gpointer user_data)
+{
+     gchar *p,*c;    
+
      p = getenv("LADSPA_PATH");
      if (p == NULL) {
 	  console_message(_("Environment variable LADSPA_PATH not set.\n"
@@ -163,10 +211,19 @@ void ladspa_init(void)
      p = g_strdup(p);
      c = strtok(p,":");
      while (c != NULL) {
-	  scan_directory(c);
+	  function(c,user_data);
 	  c = strtok(NULL,":");
      }
      free(p);
+
+}
+
+void ladspa_rescan(void)
+{
+     ladspa_cleanup();
+     effect_list = g_hash_table_new(g_str_hash,g_str_equal);
+
+     ladspa_path_foreach(scan_directory,NULL);
 }
 
 static void foreach_func(gpointer key, gpointer value, gpointer user_data)
@@ -180,9 +237,52 @@ void ladspa_foreach_effect(void (*func)(LadspaEffect *eff))
      g_hash_table_foreach(effect_list,foreach_func,func);
 }
 
+void find_effect_func(gchar *dirname, gpointer user_data)
+{
+     gchar *fn = (gchar *)user_data;
+     gchar *c;
+     c = g_strdup_printf("%s/%s",dirname,fn);
+     if (file_exists(c)) 
+	  scan_file(c,fn,TRUE);
+     g_free(c);
+}
+
 LadspaEffect *ladspa_find_effect(gchar *id)
 {
-     return (LadspaEffect *)g_hash_table_lookup(effect_list,id);
+     LadspaEffect *eff;
+     gchar *c,*d,*e;
+     unsigned long unid;
+
+     if (effect_list == NULL) 
+	  effect_list = g_hash_table_new(g_str_hash,g_str_equal);
+     eff = (LadspaEffect *)g_hash_table_lookup(effect_list,id);
+     if (eff != NULL) return eff;
+     
+     /* Parse the ID to get uniqueID and filename */
+     c = g_strdup(id);
+     d = strchr(c,'_');
+     if (d == NULL) {
+	  g_free(c);
+	  return NULL;
+     }
+     *d = 0;
+     d++;
+     /* c should now be UniqueID, d filename. g_free(c) frees both c & d */
+     unid = strtoul(c,&e,10);
+     if (*e != 0) {
+	  g_free(c);
+	  return NULL;
+     }
+     
+     /* Search for the file and add it's effects if found */
+     ladspa_path_foreach(find_effect_func,d);
+     g_free(c);
+
+     /* Try again */
+     eff = (LadspaEffect *)g_hash_table_lookup(effect_list,id);
+     
+     return eff;
+     
 }
 
 static LadspaEffect *processing_effect;

@@ -98,7 +98,7 @@ gboolean ladspa_dialog_apply(EffectDialog *ed)
 	       g_free(c);
 	       return TRUE;
 	  }
-	  c = g_strdup_printf("%s_defaultControl%d",ld->effect->id,i);	  
+	  c = g_strdup_printf("ladspa_%s_defaultControl%d",ld->effect->id,i);
 	  if (is_tb) inifile_set_gboolean(c, f != 0.0);
 	  else inifile_set_gfloat(c, f);
 	  ld->effect->ports[0][i].value = f;
@@ -109,7 +109,7 @@ gboolean ladspa_dialog_apply(EffectDialog *ed)
 
 	       k = combo_selected_index(COMBO(ld->settings[j][i]));
 
-	       d = g_strdup_printf("%s_default%s%d",ld->effect->id,
+	       d = g_strdup_printf("ladspa_%s_default%s%d",ld->effect->id,
 				   (j==2)?"Input":"Output",i);
 	       if (k >= ld->channels) {
 		    ld->effect->ports[j][i].map = -1;
@@ -139,7 +139,7 @@ gboolean ladspa_dialog_apply(EffectDialog *ed)
 	  }
 
      ld->effect->keep = gtk_toggle_button_get_active(ld->keep);
-     c = g_strdup_printf("%s_defaultKeep",ld->effect->id);
+     c = g_strdup_printf("ladspa_%s_defaultKeep",ld->effect->id);
      inifile_set_gboolean(c,ld->effect->keep);
      g_free(c);
      
@@ -163,7 +163,7 @@ static void ladspa_dialog_target_changed(EffectDialog *ed)
      EffectBrowser *eb = EFFECT_BROWSER(ed->eb);
      /* puts("ladspa_dialog_target_changed");      */
      if (ld->channels != eb->dl->format.channels)
-	  effect_browser_invalidate_effect(eb,ld->effect->id);     
+	  effect_browser_invalidate_effect(eb,ld->effect->id,'L');     
 }
 
 void ladspa_dialog_setup(EffectDialog *ed)
@@ -184,7 +184,7 @@ void ladspa_dialog_setup(EffectDialog *ed)
      g_assert(eff != NULL);
      a = gtk_table_new(8,2,FALSE);
      gtk_container_add(ed->input_area, a);
-     b = gtk_label_new(eff->name+4);
+     b = gtk_label_new(eff->name);
      gtk_table_attach(GTK_TABLE(a),b,0,2,0,1,GTK_FILL|GTK_SHRINK,0,0,0);
      gtk_misc_set_alignment(GTK_MISC(b),0.0,0.5);
      ch = g_strdup_printf(_("Author: %s"),eff->maker);
@@ -206,7 +206,7 @@ void ladspa_dialog_setup(EffectDialog *ed)
 	  gtk_container_set_border_width(GTK_CONTAINER(c),4);
 	  for (i=0; i<eff->numports[0]; i++) {
 	       prhd = eff->ports[0][i].prh.HintDescriptor;	       
-	       ch = g_strdup_printf("%s_defaultControl%d",eff->id,i);
+	       ch = g_strdup_printf("ladspa_%s_defaultControl%d",eff->id,i);
 	       if (LADSPA_IS_HINT_TOGGLED(prhd)) {
 		    d=gtk_check_button_new_with_label(eff->ports[0][i].name);
 		    bo = LADSPA_IS_HINT_DEFAULT_1(prhd);
@@ -326,7 +326,7 @@ void ladspa_dialog_setup(EffectDialog *ed)
 	       e = combo_new();
 	       ld->settings[n+2][i] = e;
 	       gtk_box_pack_end(GTK_BOX(d),e,FALSE,FALSE,0);
-	       ch = g_strdup_printf("%s_default%s%d",eff->id,
+	       ch = g_strdup_printf("ladspa_%s_default%s%d",eff->id,
 				    (n==0)?"Input":"Output",i);
 	       j = inifile_get_guint32(ch,i);
 	       g_free(ch);
@@ -340,7 +340,7 @@ void ladspa_dialog_setup(EffectDialog *ed)
      b = gtk_check_button_new_with_label(_("Keep data in unmapped output "
 					 "channels"));
      gtk_table_attach(GTK_TABLE(a),b,0,2,7,8,GTK_FILL,0,0,0);
-     ch = g_strdup_printf("%s_defaultKeep",ld->effect->id);
+     ch = g_strdup_printf("ladspa_%s_defaultKeep",ld->effect->id);
      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(b),
 				  inifile_get_gboolean(ch,TRUE));
      g_free(ch);
@@ -393,15 +393,28 @@ GtkType ladspa_dialog_get_type(void)
 
 static void register_func(LadspaEffect *eff)
 {
-     effect_browser_register_effect(eff->id, eff->name, 
-				    ladspa_dialog_get_type());
+     effect_register_add_effect('L', eff->id, eff->name, eff->maker,
+				eff->filename);
      if (first_effect == NULL) first_effect = eff->id;
+}
+
+static void ladspa_dialog_rebuild(gchar source_tag, gpointer user_data)
+{
+     ladspa_rescan();
+     ladspa_foreach_effect(register_func);
+}
+
+static EffectDialog *ladspa_dialog_get(gchar *name, gchar source_tag,
+				       gpointer user_data)
+{
+     if (ladspa_find_effect(name) == NULL) return NULL;
+     return EFFECT_DIALOG(gtk_type_new(ladspa_dialog_get_type()));
 }
 
 void ladspa_dialog_register(void)
 {
-     ladspa_init();
-     ladspa_foreach_effect(register_func);
+     effect_register_add_source("LADSPA Plugin",'L',ladspa_dialog_rebuild,
+				NULL,ladspa_dialog_get,NULL);
 }
 
 #else /* matches #if defined(HAVE_LADSPA) */

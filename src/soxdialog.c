@@ -49,28 +49,28 @@ static gchar *supported_effects[] = {
 static gboolean sox_support_map[22] = { FALSE };
 
 static gchar *supported_effect_names[] = { 
-     N_("[S] Echo"),
-     N_("[S] Echo sequence"),
-     N_("[S] Reverb"),
-     N_("[S] Chorus"),
-     N_("[S] Flanger"),
-     N_("[S] Phaser"),
-     N_("[S] Compress/Expand"),
-     N_("[S] Pitch adjust"),
-     N_("[S] Time stretch"),
-     N_("[S] DC Shift"),
-     N_("[S] Masking noise"),
-     N_("[S] Reverse"),
-     N_("[S] Earwax"),
-     N_("[S] Vibro"),
-     N_("[S] Lowpass filter (single-pole)"),
-     N_("[S] Highpass filter (single-pole)"),
-     N_("[S] Bandpass filter"),
-     N_("[S] Butterworth lowpass filter"),
-     N_("[S] Butterworth highpass filter"),
-     N_("[S] Butterworth bandpass filter"),
-     N_("[S] Butterworth bandreject filter"),
-     N_("[S] Sinc-windowed filter"),
+     N_("Echo"),
+     N_("Echo sequence"),
+     N_("Reverb"),
+     N_("Chorus"),
+     N_("Flanger"),
+     N_("Phaser"),
+     N_("Compress/Expand"),
+     N_("Pitch adjust"),
+     N_("Time stretch"),
+     N_("DC Shift"),
+     N_("Masking noise"),
+     N_("Reverse"),
+     N_("Earwax"),
+     N_("Vibro"),
+     N_("Lowpass filter (single-pole)"),
+     N_("Highpass filter (single-pole)"),
+     N_("Bandpass filter"),
+     N_("Butterworth lowpass filter"),
+     N_("Butterworth highpass filter"),
+     N_("Butterworth bandpass filter"),
+     N_("Butterworth bandreject filter"),
+     N_("Sinc-windowed filter"),
      NULL 
 };
 
@@ -692,7 +692,7 @@ GtkType sox_dialog_get_type(void)
      return id;
 }
 
-gboolean sox_dialog_register_main(void)
+gboolean sox_dialog_register_main(gchar source_tag)
 {
      int fd[2],fd2[2],i,j,lb_pos=0;
      pid_t p;
@@ -780,17 +780,35 @@ gboolean sox_dialog_register_main(void)
 	       for (s=supported_effects,sn=supported_effect_names,
 			 map=sox_support_map; *s!=NULL; s++,sn++,map++)
 		    if (*map) 
-			 effect_browser_register_effect(*s,_(*sn),
-							sox_dialog_get_type());
+			 effect_register_add_effect(source_tag,*s,_(*sn),
+						    "Chris Bagwell","");
 	  return FALSE;
      }
      return FALSE;
 }
 
+void sox_dialog_rebuild_func(gchar source_tag, gpointer user_data)
+{
+     if (sox_dialog_register_main(source_tag)) 
+	  console_message(_("Sox support couldn't be initialized"));
+}
+
+EffectDialog *sox_dialog_get_func(gchar *name, gchar source_tag, 
+				  gpointer user_data)
+{
+     char **c;
+     gboolean *b;
+     for (c=supported_effects,b=sox_support_map; *c!=NULL; c++,b++) {
+	  if (*b && !strcmp(*c,name)) 
+	       return gtk_type_new(sox_dialog_get_type());
+     }
+     return NULL;
+}
+
 void sox_dialog_register(void)
 {
-     if (sox_dialog_register_main()) 
-	  console_message(_("Sox support couldn't be initialized"));
+     effect_register_add_source("SoX",'S',sox_dialog_rebuild_func,NULL,
+				sox_dialog_get_func,NULL);
 }
 
 gchar *sox_dialog_first_effect(void)

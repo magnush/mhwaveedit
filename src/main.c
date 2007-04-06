@@ -199,7 +199,7 @@ int main(int argc, char **argv)
      set_custom_colors(NULL);
 
      /* Register effects */
-     effect_browser_register_default_effects();
+     effect_register_init();
      if (ladspa) ladspa_dialog_register();
      sox_dialog_register();
 

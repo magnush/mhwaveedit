@@ -72,7 +72,7 @@ static void map_channels_dialog_target_changed(EffectDialog *ed)
      MapChannelsDialog *ccd = MAP_CHANNELS_DIALOG(ed);
      if (ccd->channels_in != EFFECT_BROWSER(ed->eb)->dl->format.channels)
 	  effect_browser_invalidate_effect(EFFECT_BROWSER(ed->eb),
-					   "mapchannels");
+					   "mapchannels",'B');
 }
 
 static void numchannels_changed(Intbox *box, long int val, gpointer user_data)

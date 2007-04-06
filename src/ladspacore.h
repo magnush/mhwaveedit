@@ -63,7 +63,7 @@ typedef struct {
      gboolean keep;
 } LadspaEffect;
 
-void ladspa_init(void);
+void ladspa_rescan(void);
 LadspaEffect *ladspa_find_effect(gchar *id);
 void ladspa_foreach_effect(void (*func)(LadspaEffect *eff));
 /* Note: The parameters to this effect are arranged so this function can be

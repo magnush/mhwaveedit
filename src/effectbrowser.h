@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 2004, Magnus Hjorth
+ * Copyright (C) 2003 2004 2007, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -32,7 +32,7 @@
 #define IS_EFFECT_BROWSER(obj) GTK_CHECK_TYPE(obj,effect_browser_get_type())
 
 
-
+#define EFFECT_BROWSER_CACHE_SIZE 8
 
 typedef struct {    
      GtkWindow window;
@@ -40,10 +40,11 @@ typedef struct {
      DocumentList *dl;
 
      GtkBox *mw_list_box;
-     GtkList *effect_list;
-
-     EffectDialog **dialogs;
+     GtkList *list_widget;
+     
      gint current_dialog;
+     EffectDialog *dialogs[EFFECT_BROWSER_CACHE_SIZE];
+     gpointer dialog_effects[EFFECT_BROWSER_CACHE_SIZE];
 
      GtkContainer *effect_list_container;
      GtkContainer *dialog_container;
@@ -54,17 +55,40 @@ typedef struct {
      GtkWindowClass window_class;
 } EffectBrowserClass;
 
-void effect_browser_register_default_effects(void);
+typedef void (*effect_register_rebuild_func)(gchar source_tag,
+					     gpointer user_data);
+typedef EffectDialog *(*effect_register_get_func)(gchar *name, 
+						  gchar source_tag, 
+						  gpointer user_data);
+
+#define EFFECT_PARAM_TAG 0
+#define EFFECT_PARAM_TITLE 1
+#define EFFECT_PARAM_AUTHOR 2
+#define EFFECT_PARAM_LOCATION 3
+#define EFFECT_PARAM_MAX 3
+
+void effect_register_init(void);
+void effect_register_add_source(gchar *name, gchar tag,
+				effect_register_rebuild_func rebuild_func,
+				gpointer rebuild_func_data,
+				effect_register_get_func get_func,
+				gpointer get_func_data);
+void effect_register_add_effect(gchar source_tag, const gchar *name, 
+				const gchar *title, const gchar *author, 
+				const gchar *location);
+void effect_register_rebuild(void);
+
 
 GtkType effect_browser_get_type(void);
 GtkWidget *effect_browser_new(Document *doc);
-GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect_name);
+GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect_name, 
+					  gchar source_tag);
 
-void effect_browser_set_effect(EffectBrowser *eb, gchar *effect_name);
+void effect_browser_set_effect(EffectBrowser *eb, gchar *effect_name, 
+			       gchar source_tag);
 
-void effect_browser_register_effect(gchar *name, gchar *title, 
-				    GtkType dialog_type);
-void effect_browser_invalidate_effect(EffectBrowser *eb, gchar *effect_name);
+void effect_browser_invalidate_effect(EffectBrowser *eb, gchar *effect_name,
+				      gchar source_tag);
 
 void effect_browser_shutdown(void);
 				    

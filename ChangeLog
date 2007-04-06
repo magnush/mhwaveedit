@@ -1,3 +1,11 @@
+2007-04-07  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectbrowser.c: Large changes to the effect list
+	system. Removed prefix in effect ID, added a separate source ID
+	character instead. Added extra layer of indirection in
+	registration to allow for caching of effect list. Removed hard
+	coupling between GUI list index and effect_list index. 
+
 2007-04-06  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/inifile.c (xisspace): Changed name to avoid clash with libc.

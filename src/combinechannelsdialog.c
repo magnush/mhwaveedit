@@ -72,7 +72,8 @@ static void combine_channels_dialog_target_changed(EffectDialog *ed)
 {
      CombineChannelsDialog *ccd = COMBINE_CHANNELS_DIALOG(ed);
      if (ccd->channels != EFFECT_BROWSER(ed->eb)->dl->format.channels)
-	  effect_browser_invalidate_effect(EFFECT_BROWSER(ed->eb),"combine");
+	  effect_browser_invalidate_effect(EFFECT_BROWSER(ed->eb),"combine",
+					   'B');
 }
 
 static void combine_channels_setup(EffectDialog *ed)
