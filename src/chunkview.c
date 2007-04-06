@@ -722,7 +722,7 @@ static void chunk_view_init(GtkObject *obj)
 #else
 	  PangoLayout *pl;
 	  pl = gtk_widget_create_pango_layout( GTK_WIDGET(obj), "0123456789" );
-	  pango_layout_get_pixel_size(pl, NULL, &font_height);
+	  pango_layout_get_pixel_size(pl, NULL, (gint *)&font_height);
 	  g_object_unref(pl);
 #endif
      }

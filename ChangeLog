@@ -1,3 +1,9 @@
+2007-04-06  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/inifile.c (xisspace): Changed name to avoid clash with libc.
+
+	* src/chunkview.c (chunk_view_init): Avoid compiler warning.
+
 2007-03-24  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/rateconv.c (rateconv_new): Bug in special case inrate==outrate

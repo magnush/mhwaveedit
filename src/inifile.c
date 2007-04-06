@@ -37,14 +37,14 @@ struct inifile_setting {
      gchar *value;
 };
 
-static gboolean isspace(gchar c)
+static gboolean xisspace(gchar c)
 {
      return (c==' ' || c=='\t');
 }
 
 static gchar *skipspace(gchar *c)
 {
-     while (isspace(*c)) c++;
+     while (xisspace(*c)) c++;
      return c;
 }
 
@@ -70,7 +70,7 @@ void inifile_init(void)
 	  /* Ta bort kommentar och avslutande space*/
 	  d = strchr(c,'#');
 	  if (!d) d=strchr(c,0);
-	  while (d>c && isspace(*(d-1))) d--;
+	  while (d>c && xisspace(*(d-1))) d--;
 	  *d = 0;
 
 	  /* Skippa inledande space */
