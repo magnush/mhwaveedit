@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2005 2007, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -24,6 +24,6 @@
 #include <gtk/gtk.h>
 #include "chunk.h"
 
-Dataformat *rawdialog_execute(gchar *filename);
+Dataformat *rawdialog_execute(gchar *filename, gint filesize, guint *offset);
 
 #endif

@@ -58,6 +58,7 @@ struct file_type {
 };
 
 static GList *file_types = NULL;
+static struct file_type *raw_type;
 
 static gboolean wav_check(gchar *filename);
 static Chunk *wav_load(gchar *filename, int dither_mode, StatusBar *bar);
@@ -176,8 +177,8 @@ static void setup_types(void)
 	    t->get_settings = mp3_get_settings;
 	    t->free_settings = g_free;
      }
-     register_file_type(_("Raw PCM data"), ".raw", FALSE,NULL, raw_load, 
-			raw_save, 0);
+     raw_type = register_file_type(_("Raw PCM data"), ".raw", FALSE,NULL, 
+				   raw_load, raw_save, 0);
 }
 
 guint fileformat_count(void)
@@ -244,6 +245,7 @@ static Chunk *chunk_load_main(gchar *filename, int dither_mode, StatusBar *bar,
      chunk = try_mplayer(filename,dither_mode,bar);
      if (chunk != NULL) return chunk;
      /* Use the raw loader */
+     *format = raw_type;
      return raw_load(filename,dither_mode,bar);
 }
 
@@ -624,17 +626,18 @@ static Chunk *raw_load(gchar *filename, int dither_mode, StatusBar *bar)
      Datasource *ds;
      Dataformat *fmt;
      off_t i;
-     fmt = rawdialog_execute(filename);
-     if (!fmt) return NULL;
+     guint offs;
      i = errdlg_filesize(filename);
      if (i==-1) return NULL;
+     fmt = rawdialog_execute(filename,i,&offs);
+     if (!fmt) return NULL;
      ds = (Datasource *)gtk_type_new(datasource_get_type());
      memcpy(&(ds->format),fmt,sizeof(Dataformat));
-     ds->bytes = i;
-     ds->length = i/fmt->samplebytes;
+     ds->bytes = i-offs;
+     ds->length = (i-offs)/fmt->samplebytes;
      ds->type = DATASOURCE_VIRTUAL;
      ds->data.virtual.filename = g_strdup(filename);
-     ds->data.virtual.offset = 0;
+     ds->data.virtual.offset = offs;
      return chunk_new_from_datasource(ds);
 }
 

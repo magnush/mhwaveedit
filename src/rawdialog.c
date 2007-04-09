@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2005 2007, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -32,10 +32,13 @@
 static gboolean ok_flag, destroy_flag;
 static Dataformat fmt;
 static FormatSelector *fs;
+static Intbox *offset_box;
+static gint maxhdrsize;
 
 static void rawdialog_ok(GtkButton *button, gpointer user_data)
 {
-     if (format_selector_check(fs)) {
+     if (format_selector_check(fs) || 
+	 intbox_check_limit(offset_box,0,maxhdrsize,_("header size"))) {
           gtk_signal_emit_stop_by_name(GTK_OBJECT(button),"clicked");
           return;
      }
@@ -48,7 +51,7 @@ static void rawdialog_destroy(GtkObject *object, gpointer user_data)
      destroy_flag = TRUE;
 }
 
-Dataformat *rawdialog_execute(gchar *filename)
+Dataformat *rawdialog_execute(gchar *filename, gint filesize, guint *offset)
 {
      GtkWindow *w;
      GtkWidget *a,*b,*c;
@@ -61,7 +64,8 @@ Dataformat *rawdialog_execute(gchar *filename)
      fmt.samplebytes= fmt.samplesize * fmt.channels;
      fmt.sign = FALSE;
      fmt.bigendian = IS_BIGENDIAN;
-     dataformat_get_from_inifile("rawDialog",TRUE,&fmt);     
+     dataformat_get_from_inifile("rawDialog",TRUE,&fmt);    
+     maxhdrsize = filesize;
      
      w = GTK_WINDOW(gtk_window_new(GTK_WINDOW_DIALOG));
      gtk_window_set_title(w,_("Unknown file format"));
@@ -81,6 +85,13 @@ Dataformat *rawdialog_execute(gchar *filename)
      fs = FORMAT_SELECTOR(b);
      format_selector_set(fs,&fmt);
      gtk_container_add(GTK_CONTAINER(a),b);
+     b = gtk_hbox_new(FALSE,0);
+     gtk_container_add(GTK_CONTAINER(a),b);
+     c = gtk_label_new(_("Header bytes: "));
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
+     c = intbox_new(inifile_get_guint32("rawDialog_offset",0));
+     offset_box = INTBOX(c);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
      b = gtk_hseparator_new();
      gtk_container_add(GTK_CONTAINER(a),b);
      b = gtk_hbutton_box_new();
@@ -103,6 +114,8 @@ Dataformat *rawdialog_execute(gchar *filename)
      
      if (!ok_flag) return NULL;
 
+     *offset = (guint) offset_box->val;
      dataformat_save_to_inifile("rawDialog",&fmt,TRUE);
+     inifile_set_guint32("rawDialog_offset",*offset);
      return &fmt;
 }
