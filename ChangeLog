@@ -1,3 +1,7 @@
+2007-05-07  Magnus Hjorth  <magnus@magnus-desktop>
+
+	* src/dataformat.c: Fix for autoconf upgrade.
+
 2007-04-07  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/effectbrowser.c: Large changes to the effect list
