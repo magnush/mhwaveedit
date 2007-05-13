@@ -645,7 +645,7 @@ static void mainwindow_drag_data_received(GtkWidget *widget,
 					  GtkSelectionData *selection_data, 
 					  guint info, guint t)
 {
-     gchar *c,*d,*e;
+     gchar *c,*d,*e,*f;
      if (selection_data->length > 0) {
 	  
 	  /* Copy and add extra null for safety */
@@ -666,14 +666,19 @@ static void mainwindow_drag_data_received(GtkWidget *widget,
 	       urldecode(e);
 	       
 	       if (!file_exists(e)) {
-		    printf("Silently ignoring non-esisting file: %s\n",e);
+		    f = g_strdup_printf("Silently ignoring non-esisting "
+					"file: %s\n",e);
+		    console_message(f);
+		    g_free(f);
 		    continue;
 	       }
 
 	       mainwindow_open(MAINWINDOW(widget),e);
-	       printf("Dropped: %s\n",e);
+	       /* printf("Dropped: %s\n",e); */
 	       
 	  }
+
+	  g_free(c);
 
      } else
 
