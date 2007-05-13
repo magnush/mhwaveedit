@@ -1,3 +1,7 @@
+2007-05-14  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectbrowser.c: Added support for reordering effects. 
+
 2007-05-13  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/mainwindow.c: Support dropping files to open them.

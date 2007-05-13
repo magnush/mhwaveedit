@@ -41,7 +41,8 @@ typedef struct {
 
      GtkBox *mw_list_box;
      GtkList *list_widget;
-     
+     GtkListItem *list_widget_sel;
+
      gint current_dialog;
      EffectDialog *dialogs[EFFECT_BROWSER_CACHE_SIZE];
      gpointer dialog_effects[EFFECT_BROWSER_CACHE_SIZE];

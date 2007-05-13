@@ -47,6 +47,7 @@ struct source {
 
 struct effect {
      gchar *name,*title,*location,*author,source_tag;
+     gboolean process_tag;
 };
 
 static ListObject *effect_list = NULL;
@@ -350,12 +351,11 @@ static void effect_browser_select_child(GtkList *list, GtkWidget *widget,
      effect = gtk_object_get_data(GTK_OBJECT(widget),"effectptr");
      g_assert(effect != NULL);
      effect_browser_set_effect_main(eb,effect);
+     eb->list_widget_sel = GTK_LIST_ITEM(widget);
 }
 
-static void add_list_item(gpointer item, gpointer user_data)
+static void add_list_item_main(struct effect *e, GtkList *l)
 {
-     GtkList *l = GTK_LIST(user_data);
-     struct effect *e = (struct effect *)item;
      gchar *c,*d;
      GtkWidget *w;
      c = g_strdup_printf("[%c] %s",e->source_tag,e->title);
@@ -371,13 +371,133 @@ static void add_list_item(gpointer item, gpointer user_data)
      gtk_widget_show(w);
 }
 
+static void add_list_item(gpointer item, gpointer user_data)
+{
+     GtkList *l = GTK_LIST(user_data);
+     struct effect *e = (struct effect *)item;
+     add_list_item_main(e,l);
+}
+
+static void save_effect_order(EffectBrowser *eb)
+{
+     GList *l;
+     gint i;
+     gchar *c,*d;
+     struct effect *effect;
+     l = gtk_container_get_children(GTK_CONTAINER(eb->list_widget));
+     for (i=0; l!=NULL; l=l->next,i++) {
+	  c = g_strdup_printf("effectBrowserOrder%d",i);
+	  effect = gtk_object_get_data(GTK_OBJECT(l->data),"effectptr");
+	  d = g_strdup_printf("%c%s",effect->source_tag,effect->name);
+	  inifile_set(c,d);
+	  g_free(c);
+	  g_free(d);
+     }
+     c = g_strdup_printf("effectBrowserOrder%d",i);
+     inifile_set(c,NULL);
+     g_free(c);
+     g_list_free(l);
+}
+
+static void top_click(GtkButton *button, gpointer user_data)
+{
+     EffectBrowser *eb = EFFECT_BROWSER(user_data);
+     GList *l;
+     g_assert(eb->list_widget_sel != NULL);
+     l = g_list_append(NULL, eb->list_widget_sel);
+     gtk_list_remove_items_no_unref(GTK_LIST(eb->list_widget),l);
+     gtk_list_prepend_items(GTK_LIST(eb->list_widget),l);
+     gtk_list_item_select(GTK_LIST_ITEM(eb->list_widget_sel));
+     save_effect_order(eb);
+}
+
+static void bottom_click(GtkButton *button, gpointer user_data)
+{
+     EffectBrowser *eb = EFFECT_BROWSER(user_data);
+     GList *l;
+     g_assert(eb->list_widget_sel != NULL);
+     l = g_list_append(NULL, eb->list_widget_sel);
+     gtk_list_remove_items_no_unref(GTK_LIST(eb->list_widget),l);
+     gtk_list_append_items(GTK_LIST(eb->list_widget),l);
+     gtk_list_item_select(GTK_LIST_ITEM(eb->list_widget_sel));
+     save_effect_order(eb);
+}
+
+static void up_click(GtkButton *button, gpointer user_data)
+{
+     EffectBrowser *eb = EFFECT_BROWSER(user_data);
+     GList *l;
+     gint i;
+     g_assert(eb->list_widget_sel != NULL);
+     i = gtk_list_child_position(GTK_LIST(eb->list_widget),
+				 GTK_WIDGET(eb->list_widget_sel));
+     if (i <= 0) return;
+     l = g_list_append(NULL, eb->list_widget_sel);
+     gtk_list_remove_items_no_unref(GTK_LIST(eb->list_widget),l);
+     gtk_list_insert_items(GTK_LIST(eb->list_widget),l,i-1);
+     gtk_list_item_select(GTK_LIST_ITEM(eb->list_widget_sel));
+     save_effect_order(eb);
+}
+
+static void down_click(GtkButton *button, gpointer user_data)
+{
+     EffectBrowser *eb = EFFECT_BROWSER(user_data);
+     GList *l;
+     gint i;
+     g_assert(eb->list_widget_sel != NULL);
+     i = gtk_list_child_position(GTK_LIST(eb->list_widget),
+				 GTK_WIDGET(eb->list_widget_sel));
+     l = g_list_append(NULL, eb->list_widget_sel);
+     gtk_list_remove_items_no_unref(GTK_LIST(eb->list_widget),l);
+     gtk_list_insert_items(GTK_LIST(eb->list_widget),l,i+1);
+     gtk_list_item_select(GTK_LIST_ITEM(eb->list_widget_sel));
+     save_effect_order(eb);
+}
+
+static void add_list_widget_items(GtkList *list)
+{
+     gint i;
+     gchar *c,*d;
+     GList *l;
+     struct effect *e;
+     if (inifile_get("effectBrowserOrder0",NULL) == NULL) {
+	  list_object_foreach(effect_list,add_list_item,list);
+     } else {
+	  for (l=effect_list->list; l!=NULL; l=l->next) {
+	       e = (struct effect *)l->data;
+	       e->process_tag = FALSE;
+	  }
+	  for (i=0; ; i++) {
+	       c = g_strdup_printf("effectBrowserOrder%d",i);
+	       d = inifile_get(c,NULL);
+	       g_free(c);
+	       if (d == NULL) break;
+	       for (l=effect_list->list; l!=NULL; l=l->next) {
+		    e = (struct effect *)l->data;
+		    if (e->process_tag) continue;
+		    if (e->source_tag != d[0] || strcmp(e->name,d+1)) continue;
+		    add_list_item_main(e,list);
+		    e->process_tag = TRUE;
+		    break;
+	       }
+	  }
+	  for (l=effect_list->list; l!=NULL; l=l->next) {
+	       e = (struct effect *)l->data;
+	       if (!e->process_tag)
+		    add_list_item_main(e,list);
+	  }
+     }
+}
+
 static void effect_browser_init(EffectBrowser *eb)
 {
-     GtkWidget *b,*b1,*b1w,*b2,*b21,*b21w,*b22,*b23,*b24,*b241,*b242;
-     GtkWidget *b243;
+     GtkWidget *b,*b1,*b11,*b11w,*b12,*b121,*b122,*b123,*b124,*b2,*b21;
+     GtkWidget *b21w,*b22,*b23,*b24,*b241,*b242,*b243;
      GtkAccelGroup* ag;
      gchar *c,*d;
      gint x;
+
+     eb->list_widget_sel = NULL;
 
      ag = gtk_accel_group_new();
 
@@ -385,19 +505,60 @@ static void effect_browser_init(EffectBrowser *eb)
      memset(eb->dialog_effects,0,sizeof(eb->dialog_effects));
      eb->current_dialog = -1;
      
-     b1w = gtk_list_new();
-     eb->list_widget = GTK_LIST(b1w);
-     gtk_list_set_selection_mode(GTK_LIST(b1w),GTK_SELECTION_SINGLE);
+     b11w = gtk_list_new();
+     eb->list_widget = GTK_LIST(b11w);
+     gtk_list_set_selection_mode(GTK_LIST(b11w),GTK_SELECTION_SINGLE);
 
      effect_register_update_list();
-     list_object_foreach(effect_list,add_list_item,eb->list_widget);
+     add_list_widget_items(eb->list_widget);
 
-     b1 = gtk_scrolled_window_new(NULL,NULL);
-     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(b1),
+	  
+
+     b11 = gtk_scrolled_window_new(NULL,NULL);
+     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(b11),
 				    GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
-     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(b1),b1w);
-     gtk_widget_set_usize(GTK_WIDGET(b1),150,150);
-     eb->effect_list_container = GTK_CONTAINER(b1);
+     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(b11),b11w);
+     gtk_widget_set_usize(GTK_WIDGET(b11),150,150);
+     eb->effect_list_container = GTK_CONTAINER(b11);
+
+#ifdef GTK_STOCK_GOTO_TOP
+     b121 = gtk_button_new_from_stock(GTK_STOCK_GOTO_TOP);
+#else
+     b121 = gtk_button_new_with_label(_("Top"));
+#endif
+     gtk_signal_connect(GTK_OBJECT(b121),"clicked",
+			GTK_SIGNAL_FUNC(top_click),eb);
+#ifdef GTK_STOCK_GO_UP
+     b122 = gtk_button_new_from_stock(GTK_STOCK_GO_UP);
+#else
+     b122 = gtk_button_new_with_label(_("Up"));
+#endif
+     gtk_signal_connect(GTK_OBJECT(b122),"clicked",
+			GTK_SIGNAL_FUNC(up_click),eb);
+#ifdef GTK_STOCK_GO_DOWN
+     b123 = gtk_button_new_from_stock(GTK_STOCK_GO_DOWN);
+#else
+     b123 = gtk_button_new_with_label(_("Down"));
+#endif
+     gtk_signal_connect(GTK_OBJECT(b123),"clicked",
+			GTK_SIGNAL_FUNC(down_click),eb);
+#ifdef GTK_STOCK_GOTO_BOTTOM
+     b124 = gtk_button_new_from_stock(GTK_STOCK_GOTO_BOTTOM);
+#else
+     b124 = gtk_button_new_with_label(_("Bottom"));
+#endif
+     gtk_signal_connect(GTK_OBJECT(b124),"clicked",
+			GTK_SIGNAL_FUNC(bottom_click),eb);
+
+     b12 = gtk_hbox_new(FALSE,5);
+     gtk_box_pack_start(GTK_BOX(b12),b121,FALSE,FALSE,0);
+     gtk_box_pack_start(GTK_BOX(b12),b122,FALSE,FALSE,0);
+     gtk_box_pack_start(GTK_BOX(b12),b123,FALSE,FALSE,0);
+     gtk_box_pack_start(GTK_BOX(b12),b124,FALSE,FALSE,0);
+
+     b1 = gtk_vbox_new(FALSE,5);
+     gtk_box_pack_start(GTK_BOX(b1),b11,TRUE,TRUE,0);
+     gtk_box_pack_start(GTK_BOX(b1),b12,FALSE,FALSE,0);
 
      b21w = gtk_alignment_new(0.5,0.5,1.0,1.0);
      eb->dialog_container = GTK_CONTAINER(b21w);
@@ -412,16 +573,28 @@ static void effect_browser_init(EffectBrowser *eb)
      b23 = gtk_hbox_new(FALSE,3);
      eb->mw_list_box = GTK_BOX(b23);
 
+#ifdef GTK_STOCK_OK
+     b241 = gtk_button_new_from_stock(GTK_STOCK_OK);
+#else
      b241 = gtk_button_new_with_label(_("OK"));
+#endif
      gtk_widget_add_accelerator (b241, "clicked", ag, GDK_KP_Enter, 0, (GtkAccelFlags) 0);
      gtk_widget_add_accelerator (b241, "clicked", ag, GDK_Return, 0, (GtkAccelFlags) 0);
      gtk_signal_connect(GTK_OBJECT(b241),"clicked",(GtkSignalFunc)ok_click,eb);
 
+#ifdef GTK_STOCK_APPLY
+     b242 = gtk_button_new_from_stock(GTK_STOCK_APPLY);
+#else
      b242 = gtk_button_new_with_label(_("Apply"));
+#endif
      gtk_signal_connect(GTK_OBJECT(b242),"clicked",(GtkSignalFunc)apply_click,
 			eb);
-     
+
+#ifdef GTK_STOCK_CLOSE
+     b243 = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+#else
      b243 = gtk_button_new_with_label(_("Close"));
+#endif
      gtk_widget_add_accelerator (b243, "clicked", ag, GDK_Escape, 0, (GtkAccelFlags) 0);
      gtk_signal_connect_object(GTK_OBJECT(b243),"clicked",
 			       (GtkSignalFunc)effect_browser_close,

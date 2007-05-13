@@ -1,6 +1,7 @@
 New features in version 1.4.12:
 
   * Support opening files via drag'n'drop
+  * Reordering effects in effects browser
   * Rate conversion crash fixed
   * aRts driver bug fixed
   * Minor bug fixes
