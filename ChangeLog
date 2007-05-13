@@ -1,3 +1,9 @@
+2007-05-13  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/mainwindow.c: Support dropping files to open them.
+
+	* src/filetypes.c (chunk_load_main): Fix mplayer loading bug.
+
 2007-05-07  Magnus Hjorth  <magnus@magnus-desktop>
 
 	* src/dataformat.c: Fix for autoconf upgrade.

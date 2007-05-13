@@ -81,6 +81,8 @@ static Chunk *clipboard = NULL;
 gboolean autoplay_mark_flag = FALSE;
 gboolean varispeed_reset_flag = FALSE;
 
+static void mainwindow_set_document(Mainwindow *w, Document *doc, 
+				    gchar *filename);
 static void mainwindow_view_changed(Document *d, gpointer user_data);
 static void mainwindow_selection_changed(Document *d, gpointer user_data);
 static void mainwindow_cursor_changed(Document *d, gboolean rolling, 
@@ -248,6 +250,16 @@ static void typesel_changed(Combo *obj, GtkWidget *user_data)
 	       gtk_widget_set_sensitive(user_data,FALSE);
 	  }
      }
+}
+
+static void mainwindow_open(Mainwindow *w, gchar *filename)
+{
+     Document *doc;
+     doc = document_new_with_file ( filename, w->statusbar );
+     if (doc == NULL) return;
+     mainwindow_set_document ( w, doc, filename );
+     inifile_set("lastOpenFile",filename);
+     recent_file(filename);
 }
 
 static gchar *get_save_filename(gchar *old_filename, gchar *title_text, 
@@ -600,6 +612,74 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
      return GTK_WIDGET_CLASS(parent_class)->key_press_event(widget,event);
 }
 
+static void urldecode(char *str)
+{
+     char *s,*d;
+     int i,j;
+     s = d = str;
+     while (*s != 0) {
+	  if (*s != '%' || s[1] == 0 || s[2] == 0) {
+	       *d = *s;
+	       d ++;
+	       s ++;
+	  } else {
+	       i = hexval(s[1]);
+	       j = hexval(s[2]);
+	       if (i < 0 || j < 0) { 
+		    *d = *s;
+		    d ++;
+		    s ++;
+		    continue;
+	       } 
+	       *d = (char)(i*16+j);
+	       d ++;
+	       s += 3;
+	  }
+	  
+     }
+     *d = 0;
+}
+
+static void mainwindow_drag_data_received(GtkWidget *widget, 
+					  GdkDragContext *dc, gint x, gint y, 
+					  GtkSelectionData *selection_data, 
+					  guint info, guint t)
+{
+     gchar *c,*d,*e;
+     if (selection_data->length > 0) {
+	  
+	  /* Copy and add extra null for safety */
+	  c = g_malloc(selection_data->length+1);
+	  memcpy(c,selection_data->data,selection_data->length);
+	  c[selection_data->length] = 0;
+
+	  gtk_drag_finish(dc, TRUE, FALSE, t);
+	  
+	  /* Split into files */
+	  for (d=strtok(c,"\n\r"); d!=NULL; d=strtok(NULL,"\n\r")) {
+	       e = strchr(d,':');
+	       if (e == NULL) continue;
+	       *e = 0;
+	       if (strcmp(d,"file")) continue;
+	       while (e[1] == '/') e++;
+	       
+	       urldecode(e);
+	       
+	       if (!file_exists(e)) {
+		    printf("Silently ignoring non-esisting file: %s\n",e);
+		    continue;
+	       }
+
+	       mainwindow_open(MAINWINDOW(widget),e);
+	       printf("Dropped: %s\n",e);
+	       
+	  }
+
+     } else
+
+	  gtk_drag_finish(dc, FALSE, FALSE, t);
+}
+
 static void mainwindow_class_init(GtkObjectClass *klass)
 {
      parent_class = gtk_type_class(gtk_window_get_type());
@@ -607,7 +687,8 @@ static void mainwindow_class_init(GtkObjectClass *klass)
      GTK_WIDGET_CLASS(klass)->delete_event = mainwindow_delete_event;
      GTK_WIDGET_CLASS(klass)->realize = mainwindow_realize;
      GTK_WIDGET_CLASS(klass)->key_press_event = mainwindow_keypress;     
-
+     GTK_WIDGET_CLASS(klass)->drag_data_received = 
+	  mainwindow_drag_data_received;
 }
 
 static void mainwindow_set_document(Mainwindow *w, Document *d, 
@@ -660,7 +741,6 @@ void mainwindow_set_speed_sensitive(gboolean sensitive)
 static void file_open(GtkMenuItem *menuitem, gpointer user_data)
 {
      gchar *c;
-     Document *doc;
      Mainwindow *w = MAINWINDOW ( user_data );     
      if (w->doc != NULL && w->doc->filename != NULL)
 	  c = get_filename(w->doc->filename,"*.wav",_("Load File"),FALSE,NULL);
@@ -670,14 +750,7 @@ static void file_open(GtkMenuItem *menuitem, gpointer user_data)
 	  c = get_filename(c,"*.wav", _("Load File"), FALSE, NULL);
      }
      if (!c) return;
-     doc = document_new_with_file ( c, w->statusbar );
-     if (doc == NULL) {
-	  g_free(c);
-	  return;
-     }
-     mainwindow_set_document ( w, doc, c );
-     inifile_set("lastOpenFile",c);
-     recent_file(c);
+     mainwindow_open(w,c);
      g_free(c);
 }
 
@@ -2271,6 +2344,7 @@ static void mainwindow_init(Mainwindow *obj)
      GdkPixmap *p;
      GdkBitmap *mask;
      GtkRequisition req;
+     GtkTargetEntry gte;
 
      if (!window_geometry_stack_inited) {
 	  if (inifile_get_gboolean("useGeometry",FALSE))
@@ -2429,6 +2503,12 @@ static void mainwindow_init(Mainwindow *obj)
 
      if (!geometry_stack_pop(&window_geometry_stack,NULL,GTK_WINDOW(obj)))
 	  gtk_window_set_default_size(GTK_WINDOW(obj),540,230);
+
+     /* Setup drag'n'drop target */
+     gte.target = "text/uri-list";
+     gte.flags = gte.info = 0;
+     gtk_drag_dest_set(GTK_WIDGET(obj), GTK_DEST_DEFAULT_ALL, &gte, 1, 
+		       GDK_ACTION_COPY | GDK_ACTION_MOVE);
 }
 
 guint mainwindow_get_type(void)
