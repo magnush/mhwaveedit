@@ -58,7 +58,7 @@ struct file_type {
 };
 
 static GList *file_types = NULL;
-static struct file_type *raw_type;
+static struct file_type *raw_type,*mplayer_type;
 
 static gboolean wav_check(gchar *filename);
 static Chunk *wav_load(gchar *filename, int dither_mode, StatusBar *bar);
@@ -179,6 +179,8 @@ static void setup_types(void)
      }
      raw_type = register_file_type(_("Raw PCM data"), ".raw", FALSE,NULL, 
 				   raw_load, raw_save, 0);
+     mplayer_type = register_file_type(_("Open with MPlayer"), NULL,TRUE,NULL,
+				       try_mplayer, NULL, 0);
 }
 
 guint fileformat_count(void)
@@ -243,7 +245,10 @@ static Chunk *chunk_load_main(gchar *filename, int dither_mode, StatusBar *bar,
      }
      /* Try mplayer if available */
      chunk = try_mplayer(filename,dither_mode,bar);
-     if (chunk != NULL) return chunk;
+     if (chunk != NULL) {
+	  *format = mplayer_type;
+	  return chunk;
+     }
      /* Use the raw loader */
      *format = raw_type;
      return raw_load(filename,dither_mode,bar);
