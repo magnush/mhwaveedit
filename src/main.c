@@ -366,7 +366,7 @@ GdkGC *get_gc(enum Color c, GtkWidget *w)
      return gc_table[c];
 }
 
-static int hexval(gchar chr)
+int hexval(gchar chr)
 {
      if (chr >= '0' && chr <= '9') return chr-'0';
      else if (chr >= 'a' && chr <= 'f') return chr-'a'+10;

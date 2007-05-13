@@ -106,6 +106,8 @@ gchar *get_home_directory(void);
 
 void do_yield(gboolean may_sleep);
 
+int hexval(gchar chr);
+
 void launch_mixer(void);
 
 GtkLabel *attach_label(gchar *text, GtkWidget *table, guint y, guint x);
