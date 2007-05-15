@@ -8,7 +8,7 @@
 
 	* src/filetypes.c (chunk_load_main): Fix mplayer loading bug.
 
-2007-05-07  Magnus Hjorth  <magnus@magnus-desktop>
+2007-05-07  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/dataformat.c: Fix for autoconf upgrade.
 
