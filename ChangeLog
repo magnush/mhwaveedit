@@ -1,3 +1,8 @@
+2007-05-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectbrowser.c: Added context menu in effect list with
+	commands for moving,sorting and rebuilding the effect list.
+
 2007-05-14  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/effectbrowser.c: Added support for reordering effects. 
