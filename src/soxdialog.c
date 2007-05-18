@@ -699,6 +699,9 @@ gboolean sox_dialog_register_main(gchar source_tag)
      gchar *c,*d,**s,**sn;
      gchar linebuf[4096];
      gboolean *map;
+
+     if (!program_exists("sox")) return FALSE;
+
      /* Run the command 'sox -h' and try to see which effects it
       * supports. */
      i = pipe(fd);
