@@ -18,11 +18,9 @@ UI stuff:
 * Amplitude scale
 * Preview function in effect browser
 * Clip information dialog box
-* Organising/reordering/sorting the effects in the effects browser
 * Dialog for managing marks
 * Create marks from selection endpoints
 * Reset button for speed/zoom sliders.
-* Support opening files by drag'n'drop.
 
 Editing:
 * Make the insert silence function click-free (keeping the same amplitude
