@@ -1,4 +1,12 @@
+2007-05-24  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/effectbrowser.c: Removed the OK button and replaced it with
+	a check box.
+
 2007-05-19  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/soxdialog.c (sox_dialog_register_main): If sox is not in the
+	PATH, just return without any error message.
 
 	* src/effectbrowser.c: Added context menu in effect list with
 	commands for moving,sorting and rebuilding the effect list.

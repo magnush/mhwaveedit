@@ -233,34 +233,34 @@ static void effect_browser_class_init(GtkObjectClass *klass)
      GTK_WIDGET_CLASS(klass)->delete_event = effect_browser_delete_event;
 }
 
-static void apply_click(GtkWidget *widget, EffectBrowser *eb)
-{
-     if (eb->dl->selected == NULL) {
-	  user_error(_("You have no open file to apply the effect to!"));
-	  return;
-     }
-     effect_dialog_apply(eb->dialogs[eb->current_dialog]);     
-     if (!inifile_get_gboolean("mainwinFront",TRUE))
-	  gdk_window_raise(GTK_WIDGET(eb)->window);
-}
-
 static void effect_browser_close(EffectBrowser *eb)
 {
      geom_push(eb);
      gtk_widget_destroy(GTK_WIDGET(eb));
 }
 
-static void ok_click(GtkWidget *widget, EffectBrowser *eb)
+static void apply_click(GtkWidget *widget, EffectBrowser *eb)
 {
+     gboolean ca,b,mwf;
      if (eb->dl->selected == NULL) {
 	  user_error(_("You have no open file to apply the effect to!"));
 	  return;
      }
-     gtk_widget_hide(GTK_WIDGET(eb));
-     if (effect_dialog_apply(eb->dialogs[eb->current_dialog]))
-	  gtk_widget_show(GTK_WIDGET(eb));
-     else
-	  effect_browser_close(eb);
+
+     ca = gtk_toggle_button_get_active(eb->close_after);
+     mwf = inifile_get_gboolean("mainwinFront",TRUE);
+
+     if (ca) gtk_widget_hide(GTK_WIDGET(eb));     
+     
+     b = effect_dialog_apply(eb->dialogs[eb->current_dialog]);
+     
+     if (ca) {
+	  if (b) 
+	       gtk_widget_show(GTK_WIDGET(eb));
+	  else
+	       effect_browser_close(eb);
+     } else if (!mwf)
+	  gdk_window_raise(GTK_WIDGET(eb)->window);
 }
 
 static EffectDialog *get_effect_missing_dialog(gchar *name, gchar source_tag)
@@ -704,7 +704,7 @@ static void list_widget_rebuild(gpointer dummy, gpointer dummy2,
 static void effect_browser_init(EffectBrowser *eb)
 {
      GtkWidget *b,*b1,*b11,*b11w,*b12,*b121,*b122,*b123,*b124,*b2,*b21;
-     GtkWidget *b21w,*b22,*b23,*b24,*b241,*b242,*b243;
+     GtkWidget *b21w,*b22,*b23,*b24,*b25,*b251,*b252;
      GtkAccelGroup* ag;
      gchar *c,*d;
      gint x;
@@ -786,40 +786,37 @@ static void effect_browser_init(EffectBrowser *eb)
      b23 = gtk_hbox_new(FALSE,3);
      eb->mw_list_box = GTK_BOX(b23);
 
-#ifdef GTK_STOCK_OK
-     b241 = gtk_button_new_from_stock(GTK_STOCK_OK);
-#else
-     b241 = gtk_button_new_with_label(_("OK"));
-#endif
-     gtk_widget_add_accelerator (b241, "clicked", ag, GDK_KP_Enter, 0, (GtkAccelFlags) 0);
-     gtk_widget_add_accelerator (b241, "clicked", ag, GDK_Return, 0, (GtkAccelFlags) 0);
-     gtk_signal_connect(GTK_OBJECT(b241),"clicked",(GtkSignalFunc)ok_click,eb);
+     b24 = gtk_check_button_new_with_label(_("Close dialog after applying "
+					     "effect"));
+     eb->close_after = GTK_TOGGLE_BUTTON(b24);
 
 #ifdef GTK_STOCK_APPLY
-     b242 = gtk_button_new_from_stock(GTK_STOCK_APPLY);
+     b251 = gtk_button_new_from_stock(GTK_STOCK_APPLY);
 #else
-     b242 = gtk_button_new_with_label(_("Apply"));
+     b251 = gtk_button_new_with_label(_("Apply"));
 #endif
-     gtk_signal_connect(GTK_OBJECT(b242),"clicked",(GtkSignalFunc)apply_click,
+     gtk_widget_add_accelerator (b251, "clicked", ag, GDK_KP_Enter, 0, (GtkAccelFlags) 0);
+     gtk_widget_add_accelerator (b251, "clicked", ag, GDK_Return, 0, (GtkAccelFlags) 0);
+     gtk_signal_connect(GTK_OBJECT(b251),"clicked",(GtkSignalFunc)apply_click,
 			eb);
 
 #ifdef GTK_STOCK_CLOSE
-     b243 = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+     b252 = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
 #else
-     b243 = gtk_button_new_with_label(_("Close"));
+     b252 = gtk_button_new_with_label(_("Close"));
 #endif
-     gtk_widget_add_accelerator (b243, "clicked", ag, GDK_Escape, 0, (GtkAccelFlags) 0);
-     gtk_signal_connect_object(GTK_OBJECT(b243),"clicked",
+     gtk_widget_add_accelerator (b252, "clicked", ag, GDK_Escape, 0, (GtkAccelFlags) 0);
+     gtk_signal_connect_object(GTK_OBJECT(b252),"clicked",
 			       (GtkSignalFunc)effect_browser_close,
 			       GTK_OBJECT(eb));
 
-     b24 = gtk_hbutton_box_new(); 
-     gtk_box_pack_start(GTK_BOX(b24),b241,FALSE,TRUE,3);
-     gtk_box_pack_start(GTK_BOX(b24),b242,FALSE,TRUE,3);
-     gtk_box_pack_start(GTK_BOX(b24),b243,FALSE,TRUE,3);
+     b25 = gtk_hbutton_box_new(); 
+     gtk_box_pack_start(GTK_BOX(b25),b251,FALSE,TRUE,3);
+     gtk_box_pack_start(GTK_BOX(b25),b252,FALSE,TRUE,3);
 
      b2 = gtk_vbox_new(FALSE,5);     
      gtk_box_pack_start(GTK_BOX(b2),b21,TRUE,TRUE,0);
+     gtk_box_pack_end(GTK_BOX(b2),b25,FALSE,FALSE,0);
      gtk_box_pack_end(GTK_BOX(b2),b24,FALSE,FALSE,0);
      gtk_box_pack_end(GTK_BOX(b2),b23,FALSE,TRUE,0);
      gtk_box_pack_end(GTK_BOX(b2),b22,FALSE,TRUE,0);
@@ -871,11 +868,12 @@ GtkType effect_browser_get_type(void)
 
 GtkWidget *effect_browser_new(Document *doc)
 {
-     return effect_browser_new_with_effect(doc,"volume",'B');
+     return effect_browser_new_with_effect(doc,"volume",'B',FALSE);
 }
 
 GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect, 
-					  gchar source_tag)
+					  gchar source_tag, 
+					  gboolean close_after)
 {
      GtkWidget *w;
      EffectBrowser *eb = 
@@ -899,6 +897,7 @@ GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect,
      effect_browser_set_effect(eb,effect,source_tag);
      if (eb->current_dialog < 0) effect_browser_set_effect(eb,"volume",'B');
      g_assert(eb->current_dialog >= 0);
+     gtk_toggle_button_set_active(eb->close_after,close_after);
      return GTK_WIDGET(eb);
 }
 

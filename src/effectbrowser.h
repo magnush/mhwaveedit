@@ -43,6 +43,8 @@ typedef struct {
      GtkList *list_widget;
      GtkListItem *list_widget_sel,*list_widget_clicked;
 
+     GtkToggleButton *close_after;
+
      gint current_dialog;
      EffectDialog *dialogs[EFFECT_BROWSER_CACHE_SIZE];
      gpointer dialog_effects[EFFECT_BROWSER_CACHE_SIZE];
@@ -83,7 +85,8 @@ void effect_register_rebuild(void);
 GtkType effect_browser_get_type(void);
 GtkWidget *effect_browser_new(Document *doc);
 GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect_name, 
-					  gchar source_tag);
+					  gchar source_tag, 
+					  gboolean close_after);
 
 void effect_browser_set_effect(EffectBrowser *eb, gchar *effect_name, 
 			       gchar source_tag);

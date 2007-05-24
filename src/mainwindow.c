@@ -1153,7 +1153,8 @@ static void mainwindow_show_effect_dialog(Mainwindow *mw, gchar *effect_name)
 {
      EffectBrowser *eb;
      eb = EFFECT_BROWSER(effect_browser_new_with_effect(mw->doc,effect_name,
-							'B'));
+							'B',
+							(effect_name!=NULL)));
      gtk_widget_show(GTK_WIDGET(eb));
 }
 
