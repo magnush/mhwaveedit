@@ -1,5 +1,7 @@
 2007-05-24  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* Released version 1.4.12.
+
 	* src/effectbrowser.c: Removed the OK button and replaced it with
 	a check box.
 
