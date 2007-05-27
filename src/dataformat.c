@@ -329,17 +329,17 @@ static void dither_convert_float(float *indata, char *outdata, int count,
 static void dither_convert_double(double *indata, char *outdata, int count,
 				  convert_function fn, int outdata_ssize)
 {
-     float amp_factor;
-     float databuf[4096];
+     double amp_factor;
+     double databuf[4096];
      int i,j;
      amp_factor = pow(2.0,(double)(1-outdata_ssize*8));
      while (count > 0) {
 	  i = MIN(count,ARRAY_LENGTH(databuf));
-	  memcpy(databuf,indata,count*sizeof(double));
+	  memcpy(databuf,indata,i*sizeof(double));
 	  for (j=0; j<i; j++)
 	       databuf[j] += (((double)(rand()/2 + rand()/2))/
 			      ((double)RAND_MAX)) * amp_factor;
-	  fn(databuf,outdata,count);
+	  fn(databuf,outdata,i);
 	  indata += i;
 	  outdata += outdata_ssize * i;
 	  count -= i;

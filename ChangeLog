@@ -1,3 +1,8 @@
+2007-05-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/dataformat.c (dither_convert_double): Several bugs
+	fixed. Caused practically all double-to-PCM conversions to crash.
+
 2007-05-24  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* Released version 1.4.12.
