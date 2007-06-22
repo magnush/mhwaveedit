@@ -759,14 +759,18 @@ gboolean sox_dialog_register_main(gchar source_tag)
 	  if (c == NULL) {
 	       c = strstr(linebuf,"effects: ");
 	       if (c == NULL) {
-		    console_message(_("Unable to detect supported "
-				      "SoX effects"));
+		    c = strstr(linebuf,"SUPPORTED EFFECTS: ");
+	            if (c == NULL) {
+		          console_message(_("Unable to detect supported "
+			         	      "SoX effects"));
 		    return TRUE;
-	       } else
-		    c += 9;
-	       
+	       	    } else
+		    c += 19;
+		} else
+		c += 9; 
 	  } else
-	       c += 8;
+	    c += 8;
+
 	  d = strchr(c,'\n');
 	  if (d) *d=0;
 	  for (d=strtok(c," "); d!=NULL; d=strtok(NULL," ")) {

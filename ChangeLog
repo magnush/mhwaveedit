@@ -1,3 +1,8 @@
+2007-06-22  Robert Emil Berge  <filoktetes@linuxophic.org>
+
+	* src/soxdialog.c (sox_dialog_register_main): Fix effects
+	detection for SoX v13.
+
 2007-05-27  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/dataformat.c (dither_convert_double): Several bugs
