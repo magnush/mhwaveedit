@@ -1,3 +1,8 @@
+2007-08-22  Alexis Ballier  <aballier@gentoo.org>
+
+	* configure.in: Add check for pkgconfig that is always run so that
+	variables are setup properly.
+
 2007-06-22  Robert Emil Berge  <filoktetes@linuxophic.org>
 
 	* src/soxdialog.c (sox_dialog_register_main): Fix effects
