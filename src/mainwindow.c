@@ -1045,12 +1045,12 @@ static void view_zoomall(GtkMenuItem *menuitem, gpointer user_data)
 #ifdef SHOW_DEBUG_MENU
 static void debug_mark(GtkMenuItem *menuitem, gpointer user_data)
 {
-     MAINWINDOW(user_data)->changed = TRUE;
+     /* MAINWINDOW(user_data)->changed = TRUE; */
 }
 
 static gboolean dummy_proc(void *in, guint sample_size, 
 			   chunk_writeout_func out_func, WriteoutID id,
-			   Chunk *source)
+			   Dataformat *format)
 {
      return out_func(id,in,sample_size);
 }
@@ -1058,7 +1058,7 @@ static gboolean dummy_proc(void *in, guint sample_size,
 static void debug_dummy(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
-     mainwindow_chunk_change(w,chunk_filter(w->view->chunk,dummy_proc,NULL,CHUNK_FILTER_MANY,FALSE,w,"DUMMY"),NULL,0,0,0);
+     document_apply(w->doc,dummy_proc,NULL,CHUNK_FILTER_MANY,FALSE,"DUMMY");
 }
 
 static void checkoc_proc(Chunk *chunk, gpointer user_data)
@@ -1075,14 +1075,22 @@ static void debug_checkoc(GtkMenuItem *menuitem, gpointer user_data)
 
 static void dump_format(Dataformat *df)
 {
-     printf("%dx%d@%dHz %c\n",df->channels,df->samplesize,df->samplerate,
-	    df->sign?'S':'U');
+     printf("%d Channels @ %dHz ",df->channels,df->samplerate);
+     if (df->type == DATAFORMAT_FLOAT) {
+	  if (df->samplesize > sizeof(float)) {
+	       puts("float");
+	  } else
+	       puts("double");
+     } else {
+	  printf("%d%c%c\n",df->samplesize,df->sign?'S':'U',
+		 df->bigendian?'B':'L');
+     }
 }
 
 static void dump_dp(DataPart *dp)
 {
-     printf("        Datasource@%p, L/S=%Ld/%Ld <%s> Format: ",dp->ds,
-	    dp->ds->length,dp->ds->size,dp->ds->fake_pcm?"fake":"pcm");
+     printf("        Datasource@%p, L/S=%Ld/%Ld Format: ",dp->ds,
+	    dp->ds->length,dp->ds->bytes);
      dump_format(&(dp->ds->format));
      printf("        Usage: %Ld + %Ld\n",dp->position,dp->length);
      switch (dp->ds->type) {
@@ -1110,6 +1118,9 @@ static void dump_dp(DataPart *dp)
 		 dp->ds->data.sndfile.filename, dp->ds->data.sndfile.pos,
 		 dp->ds->data.sndfile.raw_readable?'T':'F');
 	  break;
+     case DATASOURCE_REF:
+	  printf("        REF --> %p\n",dp->ds->data.clone);
+	  break;	  
      case DATASOURCE_CLONE:
 	  printf("        CLONE --> %p\n",dp->ds->data.clone);
 	  break;
@@ -1134,12 +1145,22 @@ static void indirect_dump_chunk(Chunk **cp)
 
 static void windowinfo_proc(gpointer item, gpointer user_data)
 {
+     struct HistoryEntry *he;
      Mainwindow *w = MAINWINDOW(item);     
-     printf(_("\nWindow '%s'\n"),w->filename);
+     printf(_("\nWindow '%s'\n"),w->doc->filename);
      puts(_("  Current chunk:"));
-     dump_chunk(w->view->chunk);
+     dump_chunk(w->view->doc->chunk);
      puts(_("  History:"));
-     g_slist_foreach(w->history,(GFunc)indirect_dump_chunk,NULL);
+     he = w->doc->history_pos;
+     if (he == NULL) {
+	  puts("    (empty)");
+     } else {
+	  while (he->prev != NULL) he=he->prev;
+	  while (he != NULL) {
+	       dump_chunk(he->chunk);
+	       he=he->next;
+	  }
+     }
 }
 
 static void debug_chunkinfo(GtkMenuItem *menuitem, gpointer user_data)
@@ -1873,7 +1894,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/Effects/Effects dialog..."),"<control>E",effects_dialog,0,NULL  },
 #ifdef SHOW_DEBUG_MENU
 	  { N_("/Debug"),         NULL,         NULL,           0, "<Branch>"    },
-	  { N_("/Debug/Mark as modified"),NULL, debug_mark,     0, NULL          },
+	  /*	  { N_("/Debug/Mark as modified"),NULL, debug_mark,     0, NULL          }, */
 	  { N_("/Debug/Dummy effect"),NULL,     debug_dummy,    0, NULL          },
 	  { N_("/Debug/Check opencount"),NULL,  debug_checkoc,  0, NULL          },
 	  { N_("/Debug/Dump chunk info"),NULL,  debug_chunkinfo,0, NULL          },
