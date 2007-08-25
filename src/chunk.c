@@ -1206,6 +1206,7 @@ Chunk *chunk_replace_part(Chunk *chunk, off_t start, off_t length, Chunk *new)
      GList *nl=NULL,*l;
      DataPart *dp;
      guint i;
+     g_assert(dataformat_equal(&(chunk->format),&(new->format)));
      for (l=new->parts; l!=NULL; l=l->next)
 	  datapart_list_copy(l,&nl);
      c = chunk_remove_part(chunk,start,length);
@@ -1531,10 +1532,14 @@ Chunk *chunk_interpolate_endpoints(Chunk *chunk, int dither_mode,
 
 Chunk *chunk_byteswap(Chunk *chunk)
 {
+     Chunk *c,*d;
      Dataformat fmt;
      memcpy(&fmt,&(chunk->format),sizeof(Dataformat));
      fmt.bigendian = !fmt.bigendian;
-     return chunk_clone_df(chunk,&fmt);
+     c = chunk_clone_df(chunk,&fmt);
+     d = chunk_convert(c,&(chunk->format),DITHER_UNSPEC,NULL);
+     gtk_object_sink(GTK_OBJECT(c)); 
+     return d;
 }
 
 static gboolean chunk_convert_channels_down_proc(void *in, guint sample_size,

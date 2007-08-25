@@ -555,7 +555,8 @@ gboolean document_apply_cb(Document *d, document_apply_proc proc,
      Chunk *c,*p,*r;
      off_t u,plen,rlen;
      /* Decide if we should filter selection or the whole file */
-     if ((d->selstart == d->selend) ||
+     if ((!selection_only) || 
+	 (d->selstart == d->selend) ||
 	 (d->selstart==0 && d->selend >= d->chunk->length)) {
 	  r = proc( d->chunk, d->bar, user_data );
 	  if (r) { 

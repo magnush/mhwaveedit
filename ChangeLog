@@ -1,3 +1,11 @@
+2007-08-25  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/document.c (document_apply_cb): Forgot to check the
+	selection_only parameter.
+
+	* src/chunk.c (chunk_byteswap): Must add conversion step back to
+	original format.
+
 2007-08-22  Alexis Ballier  <aballier@gentoo.org>
 
 	* configure.in: Add check for pkgconfig that is always run so that
