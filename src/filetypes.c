@@ -532,12 +532,13 @@ static Chunk *wav_load(char *filename, int dither_mode, StatusBar *bar)
 static gboolean wav_save(Chunk *chunk, char *filename, gpointer settings,
 			 struct file_type *type, int dither_mode, 
 			 StatusBar *bar, gboolean *fatal)
-{
+{    
+     Chunk *c;
      EFILE *f;
      Datasource *ds;
      DataPart *dp;
-     Dataformat *fmt;
-     gboolean b;
+     Dataformat *fmt,cfmt;
+     gboolean b,q;
 
      fmt = &(chunk->format);
      
@@ -553,17 +554,34 @@ static gboolean wav_save(Chunk *chunk, char *filename, gpointer settings,
      }
 #endif
 
+     if (fmt->type == DATAFORMAT_PCM) {
+	  /* Check that the sign and endian-ness is correct */
+	  if (fmt->samplesize == 1) q = FALSE;
+	  else q = TRUE;
+	  if (XOR(fmt->sign,q) || fmt->bigendian) {
+	       memcpy(&cfmt,fmt,sizeof(cfmt));
+	       cfmt.sign = q;
+	       cfmt.bigendian = FALSE;
+	       c = chunk_convert(chunk,&cfmt,DITHER_UNSPEC,bar);
+	       b = wav_save(c,filename,settings,type,dither_mode,bar,fatal);
+	       gtk_object_sink(GTK_OBJECT(c));
+	       return b;
+	  }
+     }
+
+     
      if (fmt->type == DATAFORMAT_PCM && fmt->samplesize==1 && fmt->sign) {
-	  user_error(_("8-bit wav-files must be in unsigned format!"));
-	  return TRUE;
+	  /* user_error(_("8-bit wav-files must be in unsigned format!")); */
+	  g_assert_not_reached();
      }
      if (fmt->type == DATAFORMAT_PCM && fmt->samplesize>1 && !fmt->sign) {
-	  user_error(_("16/24/32-bit wav-files must be in signed format!"));
-	  return TRUE;
+	  /*user_error(_("16/24/32-bit wav-files must be in signed format!"));
+	  */
+	  g_assert_not_reached();
      }    
      if (fmt->type == DATAFORMAT_PCM && fmt->bigendian == TRUE) {
-	  user_error(_("wav files must be in little endian format!"));
-	  return TRUE;
+	  /* user_error(_("wav files must be in little endian format!")); */
+	  g_assert_not_reached();
      }
 
      /* Give a warning once if we're saving a file larger than 2GB */

@@ -1,5 +1,8 @@
 2007-08-25  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/filetypes.c (wav_save): Automatically convert if the chunk
+	has wrong sign or endian-ness.
+
 	* src/document.c (document_apply_cb): Forgot to check the
 	selection_only parameter.
 
