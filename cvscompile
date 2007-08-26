@@ -10,4 +10,5 @@ autoheader
 automake
 autoconf
 ./configure $*
+make -C po mhwaveedit.pot-update
 make
