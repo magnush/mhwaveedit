@@ -1,3 +1,7 @@
+2007-08-26  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.4.13.
+
 2007-08-25  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/filetypes.c (wav_save): Automatically convert if the chunk
