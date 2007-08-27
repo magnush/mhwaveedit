@@ -992,7 +992,7 @@ static void edit_delete(GtkMenuItem *menuitem, gpointer user_data)
 
 static Chunk *interp(Chunk *chunk, StatusBar *bar, gpointer user_data)
 {
-  return chunk_interpolate_endpoints(chunk,dither_editing,bar);
+  return chunk_interpolate_endpoints(chunk,TRUE,dither_editing,bar);
 }
 
 static void edit_silence(GtkMenuItem *menuitem, gpointer user_data)

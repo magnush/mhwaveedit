@@ -410,9 +410,13 @@ Chunk *chunk_append(Chunk *first, Chunk *second);
 /* Create a new chunk of the same length and format as the input chunk, 
  * consisting of a linear interpolation between the input chunk's two 
  * endpoints. Returns NULL on failure. 
+ *
+ * If falldown_mode is TRUE and the chunk is long, the endpoints will
+ *be ramped down to zero and the middle part will be constant zero.
  */
 
-Chunk *chunk_interpolate_endpoints(Chunk *chunk, int dither_mode, StatusBar *bar);
+Chunk *chunk_interpolate_endpoints(Chunk *chunk, gboolean falldown_mode,
+				   int dither_mode, StatusBar *bar);
 
 
 

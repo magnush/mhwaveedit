@@ -1,3 +1,8 @@
+2007-08-27  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunk.c (chunk_interpolate_endpoints): For long parts, ramp
+	down the edges to zero.
+
 2007-08-26  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* Released version 1.4.13.

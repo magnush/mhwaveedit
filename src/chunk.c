@@ -1463,50 +1463,43 @@ Chunk *chunk_volume_ramp(Chunk *c, sample_t start_factor, sample_t end_factor,
 			 dither_mode, bar, _("Amplifying"));
 }
 
-Chunk *chunk_interpolate_endpoints(Chunk *chunk, int dither_mode, 
-				   StatusBar *bar)
+Chunk *chunk_new_with_ramp(Dataformat *format, off_t length, 
+			   sample_t *startvals, sample_t *endvals, 
+			   int dither_mode, StatusBar *bar)
 {
 #define BUF_LENGTH 512
-     sample_t startval[8],diffval[8];
-     sample_t *sbuf;
-     off_t ctr=0,length=chunk->length;
-     guint bufctr;
-     guint i;
+     int i,k;
+     sample_t diffval[8], *sbuf;
      sample_t slength = (sample_t)length;
-     guint k,channels=chunk->format.channels;
-     Dataformat fmt;
-     ChunkHandle *ch;
      TempFile tf;
+     off_t ctr = 0;
+     int channels = format->channels;
+     int bufctr;
+     Dataformat fmt;
      Chunk *r,*q;
-     /* get the endpoint values */
-     ch = chunk_open(chunk);
-     if (ch == NULL) return NULL;
-     if (chunk_read_fp(ch,0,startval,dither_mode) || 
-	 chunk_read_fp(ch,length-1,diffval,dither_mode)) { 
-	  chunk_close(ch);
-	  return NULL;
-     }
-     chunk_close(ch);
-     for (k=0;k<channels;k++) {
-	  diffval[k]-=startval[k];
-	  /* printf("%f %f\n",startval[k],diffval[k]); */
-     }
-     /* Prepare processing */
+
+     g_assert(channels <= 8);
+
+     for (i=0; i<channels; i++)
+	  diffval[i] = endvals[i] - startvals[i];
+     
      memcpy(&fmt,&dataformat_sample_t,sizeof(Dataformat));
      fmt.channels = channels;
-     fmt.samplerate = chunk->format.samplerate;
+     fmt.samplerate = format->samplerate;
      fmt.samplebytes = fmt.channels * fmt.samplesize;
      tf = tempfile_init(&fmt,FALSE);
      if (tf == NULL) return NULL;
-     status_bar_begin_progress(bar,chunk->length,NULL);
+
+     status_bar_begin_progress(bar,length,NULL);
      sbuf = g_malloc(BUF_LENGTH*sizeof(sample_t));
+
      /* Output data */
      while (ctr < length) {
 	  bufctr = BUF_LENGTH / channels;
 	  if ((length-ctr) < (off_t)bufctr) bufctr = (guint)(length-ctr);
 	  for (i=0; i<bufctr*channels; i+=channels,ctr++)
 	       for (k=0; k<channels; k++)
-		    sbuf[i+k] = startval[k] + 
+		    sbuf[i+k] = startvals[k] + 
 			 diffval[k]*(((sample_t)ctr)/slength);
 	  if (tempfile_write(tf,sbuf,bufctr*channels*sizeof(sample_t)) ||
 	      status_bar_progress(bar,bufctr)) {
@@ -1520,14 +1513,67 @@ Chunk *chunk_interpolate_endpoints(Chunk *chunk, int dither_mode,
      g_free(sbuf);
      r = tempfile_finished(tf);
      status_bar_end_progress(bar);
-     if (r!=NULL && !dataformat_equal(&(r->format),&(chunk->format))) {
-       q = chunk_convert_sampletype(r,&(chunk->format));
+     if (r!=NULL && !dataformat_equal(&(r->format),format)) {
+       q = chunk_convert_sampletype(r,format);
        gtk_object_sink(GTK_OBJECT(r));
        return q;
      } else 
        return r;
-	  
+     
 #undef BUF_LENGTH
+}
+
+Chunk *chunk_interpolate_endpoints(Chunk *chunk, gboolean falldown_mode, 
+				   int dither_mode, StatusBar *bar)
+{
+     int i;
+     Chunk *start,*mid,*end,*c,*d;
+     ChunkHandle *ch;     
+
+     sample_t startval[8],endval[8],zeroval[8];
+     off_t length = chunk->length;
+
+     /* get the endpoint values */
+     ch = chunk_open(chunk);
+     if (ch == NULL) return NULL;
+     if (chunk_read_fp(ch,0,startval,dither_mode) || 
+	 chunk_read_fp(ch,length-1,endval,dither_mode)) { 
+	  chunk_close(ch);
+	  return NULL;
+     }
+     chunk_close(ch);
+     memset(zeroval,0,sizeof(zeroval));
+
+     /* Length of 0.1 s in samples */
+     i = chunk->format.samplerate / 10;
+     if (i < 1) i=1;
+
+     if (!falldown_mode || chunk->length <= 2*i) {
+	  return chunk_new_with_ramp(&(chunk->format),chunk->length,startval,
+				     endval,dither_mode,bar);
+     } else {
+	  start = chunk_new_with_ramp(&(chunk->format),i,startval,zeroval,
+				      dither_mode,bar);
+	  if (start == NULL) return NULL;
+	  end = chunk_new_with_ramp(&(chunk->format),i,zeroval,endval,
+				    dither_mode,bar);
+	  if (end == NULL) {
+	       gtk_object_sink(GTK_OBJECT(start));
+	       return NULL;
+	  }
+	  mid = chunk_new_empty(&(chunk->format),chunk->length-2*i);
+	  g_assert(mid != NULL);
+	  
+	  c = chunk_append(start,mid);
+	  d = chunk_append(c,end);
+
+	  gtk_object_sink(GTK_OBJECT(start));
+	  gtk_object_sink(GTK_OBJECT(mid));
+	  gtk_object_sink(GTK_OBJECT(end));
+	  gtk_object_sink(GTK_OBJECT(c));
+	  return d;
+	  
+     }
 }
 
 Chunk *chunk_byteswap(Chunk *chunk)
