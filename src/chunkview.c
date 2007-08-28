@@ -668,7 +668,7 @@ gboolean chunk_view_autoscroll(void)
 static gint chunk_view_button_release(GtkWidget *widget, GdkEventButton *event)
 {
      ChunkView *cv = CHUNKVIEW(widget);
-     if (event->button == 2) {
+     if (event->button == 2 && cv->doc != NULL) {
 	  document_play_selection(cv->doc,FALSE,1.0);
      }
      autoscroll = FALSE;

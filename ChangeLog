@@ -1,3 +1,8 @@
+2007-08-28  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (chunk_view_button_release): Fix crash when
+	middle-clicking before any file has been loaded.
+
 2007-08-27  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/chunk.c (chunk_interpolate_endpoints): For long parts, ramp
