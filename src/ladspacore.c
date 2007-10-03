@@ -204,9 +204,10 @@ static void ladspa_path_foreach(void (*function)(gchar *dirname,
 
      p = getenv("LADSPA_PATH");
      if (p == NULL) {
-	  console_message(_("Environment variable LADSPA_PATH not set.\n"
-			    "LADSPA support is disabled."));
-	  return;
+	  p = DEFAULT_LADSPA_PATH;
+	  /* console_message(_("Environment variable LADSPA_PATH not set.\n"
+	     "LADSPA support is disabled."));
+	     return; */
      }
      p = g_strdup(p);
      c = strtok(p,":");

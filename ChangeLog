@@ -1,3 +1,8 @@
+2007-10-03  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/ladspacore.c (ladspa_path_foreach): Use DEFAULT_LADSPA_PATH
+	if environment variable not set.
+
 2007-08-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/chunkview.c (chunk_view_button_release): Fix crash when

@@ -62,11 +62,20 @@ AC_ENABLE_WERROR)
 
 DEFAULT_DRIVER=auto
 AC_ARG_WITH(default-driver,
-[  --with-default-driver=driver Choose default sound driver (one of oss,alsa,
-                                jack,sun,pa,sdl,esound,arts,auto)],
+[  --with-default-driver=driver 
+                           Choose default sound driver (one of oss,alsa,
+                           jack,sun,pa,sdl,esound,arts,auto)],
   DEFAULT_DRIVER=$withval)
 AC_DEFINE_UNQUOTED(DEFAULT_DRIVER,"${DEFAULT_DRIVER}",[Default sound driver])
-                                
+
+DEFAULT_LADSPA_PATH="/usr/lib/ladspa:/usr/local/lib/ladspa"
+AC_ARG_WITH(default-ladspa-path,
+[  --with-default-ladspa-path=path 
+                           Path to use if LADSPA_PATH variable is not set 
+                           (default: "/usr/lib/ladspa:/usr/local/lib/ladspa")],
+DEFAULT_LADSPA_PATH=$withval)
+AC_DEFINE_UNQUOTED(DEFAULT_LADSPA_PATH,"${DEFAULT_LADSPA_PATH}",[Default path for LADSPA plugins])
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_GCC_TRADITIONAL
@@ -463,13 +472,25 @@ echo    "  EsounD:                 $MHW_HAVE_ESOUND"
 echo    "  aRts:                   $MHW_HAVE_ARTSC"
 echo
 echo    "Other settings:"
+
+echo -n "  Default sound driver:   $DEFAULT_DRIVER  "
+if test "x$DEFAULT_DRIVER" = "xauto"; then
+echo -n "(detect at startup)"
+fi
+echo
+
 echo    "  LADSPA Support:         $HAVE_LADSPA"
+if test "x$HAVE_LADSPA" = "xyes"; then
+echo    "    Default plugin path:  $DEFAULT_LADSPA_PATH"
+fi
+
 echo -n "  Floating-point samples: "
 if test "x$MHW_DOUBLE" = "xyes"; then
 	echo "double precision"
 else
 	echo "normal precision"
 fi
+
 echo
 if test "x$USES_GTK2$MHW_HAVE_ARTSC" = "xnoyes"; then
         echo "---------------------------------------------------------------"

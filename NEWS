@@ -1,5 +1,6 @@
 New features in version 1.4.14:
 
+  * Uses a default value if LADSPA_PATH is not set.
   * Bug fixes.
   * Updated translation: de
 
