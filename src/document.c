@@ -297,7 +297,7 @@ void document_play(Document *d, off_t start, off_t end, gboolean loop,
 {     
      off_t ps,pe,pc;
      
-
+     g_assert(d != NULL);
      /* This special if case was introduced to avoid a skipping sound
       * caused by the cursor not matching the actual playing positon when
       * pressing the "play" button and you're already playing. This
@@ -326,11 +326,13 @@ void document_play(Document *d, off_t start, off_t end, gboolean loop,
 
 void document_play_from_cursor(Document *d, gboolean loopmode, gfloat speed)
 {
+     g_assert(d != NULL);
      document_play(d,d->cursorpos,d->chunk->length,loopmode,speed);
 }
 
 void document_play_selection(Document *d, gboolean loopmode, gfloat speed)
 {
+     g_assert(d != NULL);
      if (d->selstart != d->selend)
 	  document_play(d,d->selstart,d->selend,loopmode,speed);
      else
@@ -340,6 +342,7 @@ void document_play_selection(Document *d, gboolean loopmode, gfloat speed)
 void document_stop(Document *d, gboolean do_return)
 {
      off_t o;
+     g_assert(d != NULL);
      if (d != playing_document) return;
      player_stop();
      if (!do_return) {
@@ -674,14 +677,15 @@ void document_set_followmode(Document *d, gboolean mode)
 void document_set_view(Document *d, off_t viewstart, off_t viewend)
 {
      off_t o;
-
+     
      /* puts("document_set_view"); */
      if (viewstart > viewend) {
 	  o = viewstart;
 	  viewstart = viewend;
 	  viewend = o;
      }
-     g_assert(viewstart >= 0 && viewstart < d->chunk->length &&
+     g_assert(viewstart >= 0 && 
+	      (viewstart < d->chunk->length || d->chunk->length == 0) &&
 	      viewend >= 0 && viewend <= d->chunk->length);
      if (d->viewstart != viewstart || d->viewend != viewend) {
 	  d->viewstart = viewstart;

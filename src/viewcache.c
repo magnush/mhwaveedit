@@ -102,8 +102,13 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
      /* if (xres > end_samp-start_samp) xres=end_samp-start_samp; */
      if (readflag) return FALSE;
 
+     /* Special case - empty file */
      if (end_samp == start_samp) {
-	  memset(cache->calced, CALC_UNKNOWN, xres);
+	  if (cache->xres != xres) {
+	       g_free(cache->calced);
+	       cache->calced = g_malloc0(xres);
+	       cache->xres = xres;
+	  }
 	  if (low_updated) {
 	       *low_updated = 0;
 	       *high_updated = xres-1;

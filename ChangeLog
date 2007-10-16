@@ -1,3 +1,11 @@
+2007-10-16  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/chunkview.c (scroll_wheel): Zero-length fix.
+
+	* src/document.c (document_set_view): Zero-length bugfix.
+
+	* src/viewcache.c (view_cache_update): Fix empty file handling.
+
 2007-10-03  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/ladspacore.c (ladspa_path_foreach): Use DEFAULT_LADSPA_PATH
