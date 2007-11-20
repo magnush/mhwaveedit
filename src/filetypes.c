@@ -716,6 +716,7 @@ static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar)
      f.type = DATAFORMAT_PCM;
      f.samplerate = info.samplerate;
      f.channels = info.channels;
+     f.bigendian = IS_BIGENDIAN;
      /* Fix samplesize parameter */
      switch (info.format&SF_FORMAT_SUBMASK) {
      case SF_FORMAT_PCM_U8: f.sign=FALSE;f.samplesize=1;raw_readable=TRUE;break;
