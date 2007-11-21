@@ -1,3 +1,7 @@
+2007-11-22  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.4.14.
+
 2007-11-20  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/filetypes.c (sndfile_load): Forgot to set bigendian flag.

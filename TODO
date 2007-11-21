@@ -21,6 +21,7 @@ UI stuff:
 * Dialog for managing marks
 * Create marks from selection endpoints
 * Reset button for speed/zoom sliders.
+* Tabbed windows with more than one file.
 
 Editing:
 * Make the insert silence function click-free (keeping the same amplitude
@@ -31,6 +32,7 @@ Editing:
 * Create and edit curves and use them for effect parameters.
 * Remove DC component and center waveform functions.
 * Synchronizing/aligning files
+* Apply effects one time for each channel
 
 Playback/recording:
 
