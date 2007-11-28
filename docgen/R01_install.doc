@@ -1,7 +1,7 @@
 Installation
 
- * Unpack the source:                 tar xjf mhwaveedit-1.4.14.tar.bz2
- * Go into the source directory:      cd mhwaveedit-1.4.14
+ * Unpack the source:                 tar xjf mhwaveedit-1.4.15.tar.bz2
+ * Go into the source directory:      cd mhwaveedit-1.4.15
  * Run the configure script:          ./configure
  * Compile the sources:               make
  * Install the program:               su -c "make install"
