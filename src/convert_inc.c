@@ -28,6 +28,9 @@
  * C_PCMxy_FLOAT, C_FLOAT_PCMxy - Conversion routine names
  */
 
+#define CASTU32(x) ((guint32)x)
+#define CASTS32(x) ((gint32)x)
+
 #if IS_BIGENDIAN == TRUE
 
 #define C_PCM16SNE_FLOAT C_PCM16SBE_FLOAT
@@ -50,7 +53,7 @@
 #define C_FLOAT_PCM32SOE C_FLOAT_PCM32SLE
 #define C_FLOAT_PCM32UOE C_FLOAT_PCM32ULE
 
-static void C_PCM24SLE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM24SLE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
      unsigned long l0,l1,l2,m;
      unsigned char *c;
@@ -82,7 +85,7 @@ static void C_PCM24SLE_FLOAT(unsigned long *in, FTYPE *out, int count)
      }
 }
 
-static void C_PCM24SBE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM24SBE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
      unsigned long l0,l1,l2,m;
      unsigned char *c;
@@ -114,7 +117,7 @@ static void C_PCM24SBE_FLOAT(unsigned long *in, FTYPE *out, int count)
      }
 }
 
-static void C_PCM24ULE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM24ULE_FLOAT(guin32 *in, FTYPE *out, int count)
 {
      unsigned long l0,l1,l2,m;
      unsigned char *c;
@@ -141,7 +144,7 @@ static void C_PCM24ULE_FLOAT(unsigned long *in, FTYPE *out, int count)
      }
 }
 
-static void C_PCM24UBE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM24UBE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
      unsigned long l0,l1,l2,m;
      unsigned char *c;
@@ -190,7 +193,7 @@ static void C_PCM24UBE_FLOAT(unsigned long *in, FTYPE *out, int count)
 #define C_FLOAT_PCM32SOE C_FLOAT_PCM32SBE
 #define C_FLOAT_PCM32UOE C_FLOAT_PCM32UBE
 
-static void C_PCM24SLE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM24SLE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
      unsigned long l0,l1,l2,m;
      unsigned char *c;
@@ -222,7 +225,7 @@ static void C_PCM24SLE_FLOAT(unsigned long *in, FTYPE *out, int count)
      }
 }
 
-static void C_PCM24SBE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM24SBE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
      unsigned long l0,l1,l2,m;
      unsigned char *c;
@@ -255,7 +258,7 @@ static void C_PCM24SBE_FLOAT(unsigned long *in, FTYPE *out, int count)
 }
 
 
-static void C_PCM24ULE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM24ULE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
      unsigned long l0,l1,l2,m;
      unsigned char *c;
@@ -282,7 +285,7 @@ static void C_PCM24ULE_FLOAT(unsigned long *in, FTYPE *out, int count)
      }
 }
 
-static void C_PCM24UBE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM24UBE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
      unsigned long l0,l1,l2,m;
      unsigned char *c;
@@ -359,36 +362,42 @@ static void C_PCM16UOE_FLOAT(unsigned short *in, FTYPE *out, int count)
      }
 }
 
-static void C_PCM32SNE_FLOAT(signed long *in, FTYPE *out, int count)
+static void C_PCM32SNE_FLOAT(gint32 *in, FTYPE *out, int count)
 {
      for (; count>0; count--,in++,out++)
 	  *out = (((FTYPE)(*in)) + (FTYPE)0.5) / (FTYPE)2147483647.5;
 }
 
-static void C_PCM32SOE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM32SOE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
-     unsigned long u;
-     signed long i;
+     guint32 u;
+     guint32 x;
+     gint32 i;     
+     g_assert(sizeof(u) == 4 && sizeof(x) == 4 && sizeof(i) == 4);
      for (; count>0; count--,in++,out++) {
 	  u = *in;
-	  i = (u<<24) + ((u<<8) & 0xFF0000) + ((u>>8) & 0xFF00) + (u>>24);
+	  x = (u<<CASTU32(24)) + ((u<<CASTU32(8)) & CASTU32(0xFF0000)) + 
+	       ((u>>CASTU32(8)) & CASTU32(0xFF00)) + (u>>CASTU32(24));
+	  i = (gint32)x;
 	  *out = (((FTYPE)(i)) + (FTYPE)0.5) / (FTYPE)2147483647.5;
      }
 }
 
-static void C_PCM32UNE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM32UNE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
      for (; count>0; count--,in++,out++)
 	  *out = (((FTYPE)(*in)) - (FTYPE)2147483647.5) / (FTYPE)2147483647.5;
 }
 
-static void C_PCM32UOE_FLOAT(unsigned long *in, FTYPE *out, int count)
+static void C_PCM32UOE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
-     unsigned long i;
+     guint32 i,x;
      for (; count>0; count--,in++,out++) {
 	  i = *in;
-	  i = (i<<24) + ((i<<8) & 0xFF0000) + ((i>>8) & 0xFF00) + (i>>24);
-	  *out = (((FTYPE)(i)) - (FTYPE)2147483647.5) / (FTYPE)2147483647.5;
+	  x = (i<<CASTU32(24)) + ((i<<CASTU32(8)) & CASTU32(0xFF0000)) + 
+	       ((i>>CASTU32(8)) & CASTU32(0xFF00)) + (i>>CASTU32(24));
+	       
+	  *out = (((FTYPE)(x)) - (FTYPE)2147483647.5) / (FTYPE)2147483647.5;
      }
 }
 
@@ -494,7 +503,7 @@ static void C_FLOAT_PCM24UBE(FTYPE *in, unsigned char *out, int count)
      }
 }
 
-static void C_FLOAT_PCM32SNE(FTYPE *in, signed long *out, int count)
+static void C_FLOAT_PCM32SNE(FTYPE *in, gint32 *out, int count)
 {
      FTYPE f;
      for (; count>0; count--,in++,out++) {
@@ -505,13 +514,13 @@ static void C_FLOAT_PCM32SNE(FTYPE *in, signed long *out, int count)
      }
 }
 
-static void C_FLOAT_PCM32SOE(FTYPE *in, signed long *out, int count)
+static void C_FLOAT_PCM32SOE(FTYPE *in, gint32 *out, int count)
 {
      C_FLOAT_PCM32SNE(in,out,count);
      byteswap(out,4,count*4);
 }
 
-static void C_FLOAT_PCM32UNE(FTYPE *in, unsigned long *out, int count)
+static void C_FLOAT_PCM32UNE(FTYPE *in, guint32 *out, int count)
 {
      FTYPE f;
      long int l;
@@ -526,7 +535,7 @@ static void C_FLOAT_PCM32UNE(FTYPE *in, unsigned long *out, int count)
      }
 }
 
-static void C_FLOAT_PCM32UOE(FTYPE *in, unsigned long *out, int count)
+static void C_FLOAT_PCM32UOE(FTYPE *in, guint32 *out, int count)
 {
      C_FLOAT_PCM32UNE(in,out,count);
      byteswap(out,4,count*4);
