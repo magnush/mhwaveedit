@@ -1,3 +1,7 @@
+New features in version 1.4.15:
+
+  * Bug fixes for 64-bit platforms
+
 New features in version 1.4.14:
 
   * Improved silence selection function
