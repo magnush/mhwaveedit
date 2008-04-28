@@ -1423,9 +1423,16 @@ static gboolean chunk_amplify_proc(void *in, guint sample_size,
 Chunk *chunk_amplify(Chunk *c, sample_t factor, int dither_mode, 
 		     StatusBar *bar)
 {
+     gchar *s;
+     Chunk *r;
+
+     s = g_strdup_printf(_("Amplifying (by %3.1f%% / %+.1fdB)"),factor*100.0,
+			 20*log10(factor));
      chunk_amplify_factor = factor;
-     return chunk_filter(c,chunk_amplify_proc,NULL,CHUNK_FILTER_MANY,TRUE,
-			 dither_mode,bar,_("Amplifying"));
+     r = chunk_filter(c,chunk_amplify_proc,NULL,CHUNK_FILTER_MANY,TRUE,
+		      dither_mode,bar,s);
+     g_free(s);
+     return r;
 }
 
 static sample_t ramp_start,ramp_diff;
