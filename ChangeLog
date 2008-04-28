@@ -1,5 +1,8 @@
 2008-04-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/mainwindow.c (effects_normalize_proc): Don't continue if the
+	user aborts the peak level search in the normalize to function.
+
 	* src/chunk.c (chunk_amplify): Show amplification amount in
 	progress bar.
 

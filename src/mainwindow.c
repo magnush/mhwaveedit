@@ -1571,7 +1571,7 @@ static Chunk *effects_normalize_proc(Chunk *chunk, StatusBar *bar,
      gfloat *lp = (gfloat *)user_data;
      sample_t level = (lp == NULL) ? 1.0 : *lp;
      s = chunk_peak_level(chunk,bar);
-     if ((s < 0.0 && level >= 1.0) || s == 0.0) return NULL;
+     if (s < 0.0) return NULL;
      c = chunk_amplify(chunk,level/s,dither_editing,bar);
      return c;
 }
