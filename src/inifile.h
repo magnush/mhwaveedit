@@ -75,6 +75,7 @@ gchar *inifile_get(gchar *setting, gchar *defaultValue);
  */
 
 guint32 inifile_get_guint32(gchar *setting, guint32 defaultValue);
+gint32 inifile_get_gint32(gchar *setting, gint32 defaultValue);
 
 /* Same as inifile_get except requires that the value is a boolean value.
  * 'y','yes','1','true','enabled','on' are interpreted as TRUE.
@@ -100,6 +101,7 @@ gfloat inifile_get_gfloat(gchar *setting, gfloat defaultValue);
 
 gboolean inifile_set(gchar *setting, gchar *value);
 gboolean inifile_set_guint32(gchar *setting, guint32 value);
+gboolean inifile_set_gint32(gchar *setting, gint32 value);
 gboolean inifile_set_gboolean(gchar *setting, gboolean value);
 gboolean inifile_set_gfloat(gchar *setting, gfloat value);
 

@@ -1,5 +1,9 @@
 2008-05-01  Magnus Hjorth  <magnus.hjorth@home.se>
 
+	* src/ladspadialog.c (ladspa_dialog_setup): Save the "none"
+	channel selection as number -1, so it is consistent when the
+	number of channels changes.
+
 	* src/configdialog.c: Add option to select format on time scale.
 
 	* src/chunkview.c (draw_timescale): Use find_timescale_points

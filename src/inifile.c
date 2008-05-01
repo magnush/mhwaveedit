@@ -126,6 +126,19 @@ guint32 inifile_get_guint32(gchar *setting, guint32 defaultValue)
      return defaultValue;
 }
 
+gint32 inifile_get_gint32(gchar *setting, gint32 defaultValue)
+{
+     gchar *c,*d;
+     gint32 ui;
+     c = inifile_get(setting, NULL);
+     if (c) {
+	  ui = strtol(c,&d,10);
+	  if (*d==0) return ui;
+	  inifile_set_gint32(setting,defaultValue);
+     }
+     return defaultValue;
+}
+
 gfloat inifile_get_gfloat(gchar *setting, gfloat defaultValue)
 {
      gchar *c,*d;
@@ -186,6 +199,13 @@ gboolean inifile_set_guint32(gchar *setting, guint32 value)
 {
      gchar c[32];
      g_snprintf(c,sizeof(c),"%lu",(unsigned long int)value);
+     return inifile_set(setting,c);
+}
+
+gboolean inifile_set_gint32(gchar *setting, gint32 value)
+{
+     gchar c[32];
+     g_snprintf(c,sizeof(c),"%ld",(signed long int)value);
      return inifile_set(setting,c);
 }
 

@@ -114,7 +114,7 @@ gboolean ladspa_dialog_apply(EffectDialog *ed)
 	       if (k >= ld->channels) {
 		    ld->effect->ports[j][i].map = -1;
 		    ld->effect->ports[j][i].value = 0.0;
-		    inifile_set_guint32(d,9);
+		    inifile_set_gint32(d,-1);
 		    g_free(d);
 		    continue;
 	       }
@@ -171,7 +171,8 @@ void ladspa_dialog_setup(EffectDialog *ed)
      LadspaDialog *ld = LADSPA_DIALOG(ed);
      LadspaEffect *eff;
      GtkWidget *a,*b,*c,*d,*e,*x;
-     guint i,j,k,n;
+     guint i,k,n;
+     gint j;
      float f,u,l;
      GList *li;
      gchar *ch;
@@ -328,8 +329,11 @@ void ladspa_dialog_setup(EffectDialog *ed)
 	       gtk_box_pack_end(GTK_BOX(d),e,FALSE,FALSE,0);
 	       ch = g_strdup_printf("ladspa_%s_default%s%d",eff->id,
 				    (n==0)?"Input":"Output",i);
-	       j = inifile_get_guint32(ch,i);
+	       j = inifile_get_gint32(ch,i);
 	       g_free(ch);
+	       if (j <= -1) 
+		    j = k;
+	       else if (j >= k) j = 0;
 	       combo_set_items(COMBO(e),li,j);
 	  }
      }
