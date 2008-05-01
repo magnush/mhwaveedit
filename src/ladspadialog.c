@@ -171,7 +171,7 @@ void ladspa_dialog_setup(EffectDialog *ed)
      LadspaDialog *ld = LADSPA_DIALOG(ed);
      LadspaEffect *eff;
      GtkWidget *a,*b,*c,*d,*e,*x;
-     guint i,k,n;
+     guint i,k,n,q;
      gint j;
      float f,u,l;
      GList *li;
@@ -328,12 +328,16 @@ void ladspa_dialog_setup(EffectDialog *ed)
 	       ld->settings[n+2][i] = e;
 	       gtk_box_pack_end(GTK_BOX(d),e,FALSE,FALSE,0);
 	       ch = g_strdup_printf("ladspa_%s_default%s%d",eff->id,
-				    (n==0)?"Input":"Output",i);
-	       j = inifile_get_gint32(ch,i);
+				    (n==0)?"Input":"Output",i);	       
+
+	       q = (i < k) ? i : k;	       
+	       j = inifile_get_gint32(ch,q); 
 	       g_free(ch);
 	       if (j <= -1) 
 		    j = k;
-	       else if (j >= k) j = 0;
+	       else if (j >= k) {
+		    j = q;
+	       }
 	       combo_set_items(COMBO(e),li,j);
 	  }
      }
