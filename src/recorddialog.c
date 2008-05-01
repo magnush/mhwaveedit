@@ -211,9 +211,7 @@ static gboolean process_input(RecordDialog *rd, gboolean finish_mode)
      if (rd->tf) {
 	  get_time(rd->current_format->fmt.samplerate,
 		   rd->written_bytes/rd->current_format->fmt.samplebytes,
-		   0,
-		   buf+200);
-	  g_snprintf(buf,200,"%s", buf+200);
+		   0,buf,default_time_mode);
 	  gtk_label_set_text(rd->time_label,buf);
 	  g_snprintf(buf,200,"%" OFF_T_FORMAT "", 
 		     rd->written_bytes);

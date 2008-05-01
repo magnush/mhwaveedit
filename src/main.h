@@ -139,6 +139,14 @@ gchar *channel_format_name(guint chans);
 
 gchar *namepart(gchar *filename);
 
+#define TIMEMODE_REAL    0
+#define TIMEMODE_REALLONG 1
+#define TIMEMODE_SAMPLES 2
+#define TIMEMODE_24FPS 3
+#define TIMEMODE_25FPS 4
+#define TIMEMODE_NTSC 5
+#define TIMEMODE_30FPS 6
+
 /* Determines how long time a certain number of samples represents, and returns
    it as a text string.
 
@@ -152,13 +160,46 @@ gchar *namepart(gchar *filename);
      return value - timebuf
 */
 
-extern guint get_time_mode;
+extern guint default_time_mode;
+extern guint default_timescale_mode;
+
 gchar *get_time(guint32 samplerate, off_t samples, off_t samplemax, 
-		gchar *timebuf);
+		gchar *timebuf, gint timemode);
+/* Returns time always in short format H'MM:SS or MM:SS */
 gchar *get_time_s(guint32 samplerate, off_t samples, off_t samplemax, 
 		  gchar *timebuf);
+/* Returns time always in long time format H'MM:SS.mmmm */
 gchar *get_time_l(guint32 samplerate, off_t samples, off_t samplemax,
 		  gchar *timebuf);
+
+/* Returns time in same format as get_time, but with sub-seconds removed */
+gchar *get_time_head(guint32 samplerate, off_t samples, off_t samplemax,
+		     gchar *timebuf, int timemode);
+/* Returns time in same format as get_time, but with only sub-second part */
+gchar *get_time_tail(guint32 samplerate, off_t samples, off_t samplemax,
+		     gchar *timebuf, int timemode);
+
+/* Find a number of even sample points around start_samp and end_samp 
+ * suitable for marking out on a time scale with major and minor ticks.
+ *
+ * At least two major points are always returned, one before/on start_samp and 
+ * one after/on end_samp.
+ * *npoints and *nminorpoints should be set to the maximum allowed number of 
+ * points, and will be set to the number of stored points on return.
+ * 
+ * Returns a hint on how the text should be drawn:
+ * 0 - Both major and minor points should have text from the get_time_head 
+ *     function.
+ * 1 - Major points should have text from the get_time_head function, and 
+ *     minor points should have text from thh get_time_tail function.
+ */
+guint find_timescale_points(guint32 samplerate, 
+			    off_t start_samp, off_t end_samp, 
+			    off_t *points, int *npoints,
+			    off_t *midpoints, int *nmidpoints,
+			    off_t *minorpoints, int *nminorpoints,
+			    int timemode);
+
 
 /* Converts a string in the form: [H'][MM:]SS[.mmmm] to a seconds value. 
  * Returns negative value if the input is invalid. */

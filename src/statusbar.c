@@ -233,7 +233,8 @@ void status_bar_set_info(StatusBar *sb, off_t cursorpos, gboolean is_rolling,
 	       strcpy(buf,_("Cursor: running"));
 	  else {
 	       strcpy(buf,_("Cursor: "));
-	       get_time(samplerate,cursorpos,maxvalue,buf+strlen(buf));
+	       get_time(samplerate,cursorpos,maxvalue,buf+strlen(buf),
+			default_time_mode);
 	  }
 	  gtk_label_set_text(sb->cursor,buf);
 	  sb->cur = cursorpos;
@@ -247,7 +248,7 @@ void status_bar_set_info(StatusBar *sb, off_t cursorpos, gboolean is_rolling,
 	   * larger values and a LOT of extra margin if using
 	   * 'Samples' display mode (slightly hackish I admit)
 	   */
-	  if (get_time_mode != 2) 
+	  if (default_time_mode != 2) 
 	       p = p + req.width + req.width/4;
 	  else
 	       p = p + req.width + req.width/2;
@@ -255,8 +256,10 @@ void status_bar_set_info(StatusBar *sb, off_t cursorpos, gboolean is_rolling,
      /* Update view info */
      if (vdif || mdif) {
 	  g_snprintf(buf,150,_("View: [ %s - %s ]"),
-		     get_time(samplerate,viewstart,maxvalue,buf+150),
-		     get_time(samplerate,viewend,maxvalue,buf+200));
+		     get_time(samplerate,viewstart,maxvalue,buf+150,
+			      default_time_mode),
+		     get_time(samplerate,viewend,maxvalue,buf+200,
+			      default_time_mode));
 	  gtk_label_set_text(sb->view,buf);
 	  sb->vs = viewstart;
 	  sb->ve = viewend;
@@ -265,7 +268,7 @@ void status_bar_set_info(StatusBar *sb, off_t cursorpos, gboolean is_rolling,
 	  gtk_fixed_move(GTK_FIXED(sb),GTK_WIDGET(sb->view),p,2);
 	  gtk_widget_show(GTK_WIDGET(sb->view));
 	  gtk_widget_size_request(GTK_WIDGET(sb->view),&req);
-	  if (get_time_mode != 2)
+	  if (default_time_mode != 2)
 	       p = p + req.width + 10;
 	  else
 	       p = p + req.width + req.width/4;
@@ -274,9 +277,10 @@ void status_bar_set_info(StatusBar *sb, off_t cursorpos, gboolean is_rolling,
      if (sdif || mdif) {
 	  if (selstart != selend) {
 	       g_snprintf(buf,150,_("Selection: %s+%s"),
-			  get_time(samplerate,selstart,maxvalue,buf+150),
+			  get_time(samplerate,selstart,maxvalue,buf+150,
+				   default_time_mode),
 			  get_time(samplerate,selend-selstart,maxvalue,
-				   buf+200));
+				   buf+200,default_time_mode));
 	       gtk_label_set_text(sb->sel,buf);
 	  } else
 	       gtk_label_set_text(sb->sel,"");

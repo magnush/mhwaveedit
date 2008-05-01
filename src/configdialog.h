@@ -45,7 +45,8 @@ typedef struct {
      GtkToggleButton *driver_autodetect;
      Intbox *recent_files;
      Intbox *view_quality;
-     Combo *time_display,*varispeed_method,*speed_method;
+     Combo *time_display,*time_display_timescale,*varispeed_method,
+	  *speed_method;
      GtkToggleButton *remember_geometry;
      GtkList *tempdirs;
      GtkWidget *selected_tempdir;

@@ -148,6 +148,17 @@ static gint calc_x(ChunkView *cv, off_t sample, off_t width)
      }
 }
 
+static gint calc_x_noclamp(ChunkView *cv, off_t sample, off_t width)
+{
+     Document *d = cv->doc;
+     gfloat f,g;
+
+     f = sample - d->viewstart;
+     g = d->viewend - d->viewstart;
+     return width * (f/g);
+}
+
+
 static void chunk_view_update_image_main(ChunkView *cv, GdkDrawable *image,
 					 guint xs, guint xe)
 {
@@ -259,73 +270,65 @@ static void draw_mark(gchar *label, off_t position, gpointer user_data)
      }
 }
 
-/* Returns: 0 - No bars drawn (too short distance)
- * 1 - Large bars drawn but no text.
- * 2 - Large bars drawn with text or small bars drawn */
-static guint draw_time_bars(ChunkView *view, GdkEventExpose *event, 
-			    gfloat pixelspersec, gfloat secs, 
-			    gboolean wantsmall, gboolean text)
+static void draw_time_bars(ChunkView *view, GdkEventExpose *event, 
+			   off_t *points, int npoints, 
+			   off_t *ignpoints, int nignpoints,
+			   gboolean small, gint text)
 {
-     off_t x;
      char buf[32];
-     gboolean big;
-     gfloat f,g,h,q;
-     gint i;
-     long int mysec;
+     gint c,i,j;
 #if GTK_MAJOR_VERSION == 2
      PangoLayout *pl;
 #endif
      GtkWidget *widget = GTK_WIDGET(view);
      Document *d = view->doc;
-     g = pixelspersec*secs;
-     /* printf("draw_time_bars (pixelspersec=%f,secs=%f,g=%f)\n",pixelspersec,secs,g); */
-     if (g<6.0) return 0;
-big = (!wantsmall && g>65.0);	// was 35.0
-     /* printf("draw_time_bars: text=%d\n",(int)text); */
-     f = (gfloat)d->viewstart / (gfloat)d->chunk->format.samplerate;
-     h = 0.0;
-     /* Avrunda f neråt till närmaste multipel av secs */
-     x = (off_t)(f/secs);
-     q = ((gfloat)x)*secs;
-     h = (q-f)*pixelspersec;
-     f = q;
-     /* Rita */
-     do {
-	  /* printf("draw_time_bars: f=%f, h=%f\n",f,h); */
-	  gdk_draw_line( widget->window, widget->style->white_gc, h, 
-			 widget->allocation.height-font_height-(big?7:3), 
-			 h, widget->allocation.height-font_height);
-	  if (big && text) {
-	       mysec = f;
-	       if (mysec < 60) g_snprintf(buf,sizeof(buf),"%ld", mysec);
-	       else {
-		    if (mysec < 3600) 
-			 g_snprintf(buf,sizeof(buf),"%ld:%02ld", mysec/60, 
-				    mysec%60);
-		    else 
-			 g_snprintf(buf,sizeof(buf),"%ld'%02ld:%02ld", 
-				    mysec/3600, (mysec/60)%60, mysec%60);
-	       }
+     char *s;
+     int ignctr = 0;
+     
+     for (c=0; c<npoints; c++) {
+	  
+	  while (ignctr < nignpoints && ignpoints[ignctr] < points[c])
+	       ignctr++;
+	  if (ignctr < nignpoints && ignpoints[ignctr] == points[c]) 
+	       continue;
 
+	  j = calc_x_noclamp(view, points[c], widget->allocation.width);
+
+	  /* printf("draw_time_bars: f=%f, h=%f\n",f,h); */
+	  gdk_draw_line( widget->window, widget->style->white_gc, j, 
+			 widget->allocation.height-font_height-(small?3:7), 
+			 j, widget->allocation.height-font_height);
+
+	  if (text >= 0) {
+
+	       if (text > 0)
+		    s = get_time_tail(view->doc->chunk->format.samplerate, 
+				      points[c], d->chunk->length,
+				      buf, default_timescale_mode);
+	       else 
+		    s = get_time_head(d->chunk->format.samplerate, 
+				      points[c], d->chunk->length,
+				      buf, default_timescale_mode);
+
+	       if (s == NULL) continue;
+	       
+	       
 #if GTK_MAJOR_VERSION == 1
 	       i = gdk_string_width( widget->style->font, buf ) / 2;
 	       gtk_draw_string( widget->style, widget->window, 
-				GTK_STATE_NORMAL, h-i, 
+				GTK_STATE_NORMAL, j-i, 
 				widget->allocation.height-1, buf );
 #else
+	       /* puts(buf); */
 	       pl = gtk_widget_create_pango_layout( widget, buf );
 	       pango_layout_get_pixel_size(pl, &i, NULL);
 	       gdk_draw_layout( widget->window, widget->style->black_gc,
-				h-i/2, widget->allocation.height-font_height,
+				j-i/2, widget->allocation.height-font_height,
 				pl);
 	       g_object_unref(G_OBJECT(pl));
 #endif
 	  }
-	  h += g;
-	  f += secs;
-     } while (h<event->area.x+event->area.width);
-     /* puts("draw_time_bars_finished"); */
-     return (big)?2:1;
+     } 
 }
 
 static void draw_timescale(ChunkView *view, GdkEventExpose *event, gboolean text)
@@ -333,49 +336,64 @@ static void draw_timescale(ChunkView *view, GdkEventExpose *event, gboolean text
      GtkWidget *widget = GTK_WIDGET(view);
      Document *d = view->doc;
      guint i;
-     gfloat f;
-     /* This table specify at which intervals big or small lines can be 
-      * drawn. */
-     gfloat bigsizes[] = { 1.0, 2.0, 5.0, 10.0, 20.0, 30.0, 
-			   60.0, 120.0, 180.0, 300.0, 600.0, 900.0, 
-			   1500.0, 3000.0 };
-     /* This table is TRUE whenever the entry in the table above is
-      * not an even divisor in the  entry that follows it. */ 
-     gboolean bigskip[] = { FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, 
-			    FALSE, TRUE, TRUE, FALSE, TRUE, TRUE,
-			    FALSE, FALSE };
-     /* This table specifiy smaller intervals where small brs are only 
-      * allowed. */
-     gfloat smallsizes[] = { 0.1, 0.2, 0.5 };
-     /* puts("draw_timescale"); */
-     /* gdk_gc_set_foreground(widget->style->fg_gc[0],color_white()); */
+
+     off_t *points,*midpoints,*minorpoints;
+     int npoints,nmidpoints,nminorpoints;
+
+     guint midtext,minortext;
+
      if (text) gdk_window_clear_area(widget->window, event->area.x, 
 				     view->image_height,event->area.width,
 				     font_height);
+
+
      /* Draw the horizontal line */
      i = widget->allocation.height-font_height;
      gdk_draw_line( widget->window, widget->style->white_gc, event->area.x, 
 		    i, event->area.x+event->area.width-1, i);
      /* pixels/sec */
-     f = (gfloat)(widget->allocation.width * d->chunk->format.samplerate) / 
-	  (gfloat)(d->viewend - d->viewstart); 
-     /* if (f > view->chunk->format.samplerate) 
-	f=view->chunk->format.samplerate; */
-     /* Draw the big bars */
-     
-     for (i=0; i<ARRAY_LENGTH(bigsizes); i++)
-	  switch(draw_time_bars(view,event,f,bigsizes[i],FALSE,text)) {
-	  case 0: break;
-	  case 1: while (bigskip[i]) i++; break;
-	  case 2: goto outer;
-	  }
-outer:
-     for (i=0; i<ARRAY_LENGTH(smallsizes); i++)
-	  if (draw_time_bars(view,event,f,smallsizes[i],TRUE,text)) break;
 
-     
-     /* gdk_gc_set_foreground(widget->style->fg_gc[0],color_black()); */
-     /* puts("draw_timescale finished."); */
+     /* We want at least 40 pixels/major point and 8 pixels/minor point*/
+     npoints = widget->allocation.width / 40 + 1;
+     if (npoints < 3) npoints = 3;
+     nmidpoints = npoints;
+     nminorpoints = widget->allocation.width / 8 + 1;
+     if (nminorpoints < npoints) nminorpoints = npoints;
+     points = g_malloc(npoints * sizeof(off_t));
+     midpoints = g_malloc(nmidpoints * sizeof(off_t));
+     minorpoints = g_malloc(nminorpoints * sizeof(off_t));
+
+     minortext = find_timescale_points(d->chunk->format.samplerate, 
+				       d->viewstart, d->viewend, 
+				       points, &npoints,
+				       midpoints, &nmidpoints,
+				       minorpoints, &nminorpoints,
+				       default_timescale_mode);
+			   
+
+     /* printf("nminorpoints: %d, pixels/minorpoint: %d\n",nminorpoints,
+	widget->allocation.width / nminorpoints); */
+
+     midtext = minortext;
+
+     if (nminorpoints > 0 && 
+	 (widget->allocation.width / nminorpoints) < 40) 
+	  minortext = -1;
+     else
+	  midtext = -1;
+
+     draw_time_bars(view,event,points,npoints,NULL,0,FALSE,text ? 0 : -1);
+
+     if (midtext >= 0) {
+	  draw_time_bars(view,event,midpoints,nmidpoints,points,npoints,FALSE,
+			 text ? midtext : -1);
+     }
+
+     draw_time_bars(view,event,minorpoints,nminorpoints,points,npoints,TRUE,
+		    text ? minortext : -1);
+
+     g_free(points);
+     g_free(minorpoints);
 }
 
 static gint chunk_view_expose(GtkWidget *widget, GdkEventExpose *event)

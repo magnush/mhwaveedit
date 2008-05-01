@@ -95,8 +95,14 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
     inifile_set_gboolean("mainwinFront",
 			 gtk_toggle_button_get_active(cd->mainwin_front));
 
-    get_time_mode = combo_selected_index(cd->time_display);
-    inifile_set_guint32(INI_SETTING_TIME_DISPLAY,get_time_mode);
+    default_time_mode = combo_selected_index(cd->time_display);
+    inifile_set_guint32(INI_SETTING_TIME_DISPLAY,default_time_mode);
+
+    default_time_mode = combo_selected_index(cd->time_display);
+    inifile_set_guint32(INI_SETTING_TIME_DISPLAY,default_time_mode);
+
+    default_timescale_mode = combo_selected_index(cd->time_display_timescale);
+    inifile_set_guint32(INI_SETTING_TIME_DISPLAY_SCALE,default_timescale_mode);
 
     sound_lock_driver = gtk_toggle_button_get_active(cd->sound_lock);
     inifile_set_gboolean("soundLock",sound_lock_driver);
@@ -628,8 +634,19 @@ static void config_dialog_init(ConfigDialog *cd)
     l = g_list_append(l,_("(H')MM:SS.t"));
     l = g_list_append(l,_("(H')MM:SS.mmmm"));
     l = g_list_append(l,translate_strip(N_("TimeDisplay|Samples")));
+    l = g_list_append(l,_("Time Code 24fps"));
+    l = g_list_append(l,_("Time Code 25fps (PAL)"));
+    l = g_list_append(l,_("Time Code 29.97fps (NTSC)"));
+    l = g_list_append(l,_("Time Code 30fps"));
     i = inifile_get_guint32(INI_SETTING_TIME_DISPLAY,0);
     combo_set_items(cd->time_display,l,i);
+
+    w = combo_new();
+    cd->time_display_timescale = COMBO(w);
+    i = inifile_get_guint32(INI_SETTING_TIME_DISPLAY_SCALE,i);
+    combo_set_items(cd->time_display_timescale,l,i);
+
+    g_list_free(l);
 
     w = gtk_check_button_new_with_label("");
     key = gtk_label_parse_uline(GTK_LABEL (GTK_BIN (w)->child), 
@@ -982,16 +999,33 @@ static void config_dialog_init(ConfigDialog *cd)
 
     d = gtk_frame_new(_(" Time format "));
     gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);    
-    f = gtk_hbox_new(FALSE,3);
-    gtk_container_set_border_width(GTK_CONTAINER(f),5);
-    gtk_container_add(GTK_CONTAINER(d),f);
+
+    e = gtk_table_new(2,2,FALSE);
+    gtk_container_set_border_width(GTK_CONTAINER(e),5);
+    gtk_container_add(GTK_CONTAINER(d),e);
+    gtk_table_set_row_spacings(GTK_TABLE(e),4);
+
     g = gtk_label_new("");
     key = gtk_label_parse_uline(GTK_LABEL(g), _("Display t_imes as: "));
-    gtk_box_pack_start(GTK_BOX(f),g,FALSE,FALSE,0);
+    gtk_misc_set_alignment(GTK_MISC(g),0.0,0.5);
+    gtk_table_attach(GTK_TABLE(e),g,0,1,0,1,GTK_FILL,0,0,0);
+
     g = GTK_WIDGET(cd->time_display);
     gtk_widget_add_accelerator(g, "grab_focus", ag, key, GDK_MOD1_MASK, 
 			       (GtkAccelFlags) 0);
-    gtk_box_pack_start(GTK_BOX(f),g,FALSE,FALSE,8);   
+    gtk_table_attach(GTK_TABLE(e),g,1,2,0,1,GTK_FILL|GTK_EXPAND,0,0,0);
+
+
+    g = gtk_label_new("");
+    key = gtk_label_parse_uline(GTK_LABEL(g), _("Times_cale format: "));
+    gtk_misc_set_alignment(GTK_MISC(g),0.0,0.5);
+    gtk_table_attach(GTK_TABLE(e),g,0,1,1,2,GTK_FILL,0,0,0);
+
+    g = GTK_WIDGET(cd->time_display_timescale);
+    gtk_widget_add_accelerator(g, "grab_focus", ag, key, GDK_MOD1_MASK, 
+			       (GtkAccelFlags) 0);
+    gtk_table_attach(GTK_TABLE(e),g,1,2,1,2,GTK_FILL|GTK_EXPAND,0,0,0);
+
 
 
     d = gtk_frame_new(_(" External applications "));

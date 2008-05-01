@@ -49,6 +49,7 @@
 #define INI_SETTING_VIEW_QUALITY_HIGH "viewQualityHigh"
 #define INI_SETTING_VIEW_QUALITY_HIGH_DEFAULT 5000
 #define INI_SETTING_TIME_DISPLAY "timeDisplay"
+#define INI_SETTING_TIME_DISPLAY_SCALE "timeDisplayScale"
 
 /* This function must be called before any other of these functions. It will
  * initialize the inifile system and load the settings file ~/.mhwaveedit/config

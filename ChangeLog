@@ -1,3 +1,12 @@
+2008-05-01  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* src/configdialog.c: Add option to select format on time scale.
+
+	* src/chunkview.c (draw_timescale): Use find_timescale_points
+
+	* src/main.c (get_time): Added support for SMPTE time code format.
+	(find_timescale_points): New algorithm for finding time scale points.
+
 2008-04-28  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/mainwindow.c (effects_normalize_proc): Don't continue if the

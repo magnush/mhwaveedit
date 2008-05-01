@@ -1,6 +1,9 @@
 New features in version 1.4.15:
 
+  * Time format shown on time ruler can now be changed
+  * Support for displating SMPTE-style timecodes
   * Bug fixes for 64-bit platforms
+  * Minor interface improvements
 
 New features in version 1.4.14:
 

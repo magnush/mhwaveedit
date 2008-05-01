@@ -512,7 +512,7 @@ gboolean chunk_parse(Chunk *chunk, chunk_parse_proc proc, gboolean allchannels,
 
 
 
-#define chunk_get_time(c,s,t) get_time((c)->format.samplerate,s,s,t)
+#define chunk_get_time(c,s,t) get_time((c)->format.samplerate,s,s,t,default_time_mode)
 
 
 

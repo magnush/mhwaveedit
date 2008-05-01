@@ -195,6 +195,12 @@ int main(int argc, char **argv)
      mainwindow_objects = list_object_new(FALSE);
      document_objects = list_object_new(FALSE);
 
+     default_time_mode = inifile_get_guint32(INI_SETTING_TIME_DISPLAY,0);
+     if (default_time_mode > 6) default_time_mode = 0;
+     default_timescale_mode = 
+	  inifile_get_guint32(INI_SETTING_TIME_DISPLAY_SCALE,0);
+     if (default_timescale_mode > 6) default_time_mode = 0;
+
      /* Some color related stuff */
      set_custom_colors(NULL);
 
@@ -541,21 +547,24 @@ GtkLabel *attach_label(gchar *text, GtkWidget *table, guint y, guint x)
      return GTK_LABEL(l);
 }
 
-
-static gchar *get_time_m(guint32 samplerate, off_t samples, off_t samplemax, 
-		  gchar *timebuf, gint mode)
+gchar *get_time(guint32 samplerate, off_t samples, off_t samplemax, 
+		gchar *timebuf, gint mode)
 {
      static gchar static_buf[64];
-     gfloat secs;
-     guint32 mins, msecs, hours, maxhours;
+     gfloat secs, ffps, fframes;
+     guint mins, msecs, hours, maxhours, frames, ifps, isecs;
+     guint fptm;
 
      if (samplemax == 0) samplemax = samples;
 
-     if (!timebuf) return get_time(samplerate,samples,samplemax,static_buf);
+     if (!timebuf) 
+	  timebuf = static_buf;
+     
+     if (mode > 6) mode = 0;
 
      if (mode == 2) {
 	  g_snprintf(timebuf,50,"%05" OFF_T_FORMAT,samples);
-     } else {
+     } else if (mode < 2) {
 	  secs = (gfloat) samples / (gfloat) samplerate;
 	  mins = (guint) (secs / 60.0);
 	  hours = mins / 60;
@@ -584,33 +593,340 @@ static gchar *get_time_m(guint32 samplerate, off_t samples, off_t samplemax,
 	       else
 		    g_snprintf(timebuf,50,"%02d:%02d",mins,msecs/1000);
 	  }
+     } else {
+	  secs = (gfloat) samples / (gfloat) samplerate;
+	  
+	  if (mode == 3) { ffps=24.0; ifps=24; }
+	  else if (mode == 4) { ffps=25.0; ifps=25; }
+	  else if (mode == 5) { ffps=30.0*1.000/1.001; ifps=30; }
+	  else { ffps=30.0; ifps=30; }
+
+	  fframes = secs * ffps;
+	  frames = (guint) (secs * ffps);
+
+	  /* Ten-minute units never need to be dropped. */
+	  if (mode == 5) {
+	       fptm = 60*30*10 - 2*9;
+	  } else {
+	       fptm = ifps * 600;
+	  }
+	  mins = 10 * (frames / fptm);
+	  frames = frames % fptm;
+
+	  /* Translate the remaining frames to mins+isecs+frames */
+	  if (mode != 5) {
+	       isecs = frames / ifps;
+	       frames %= ifps;
+	       mins += isecs / 60;
+	       isecs %= 60;
+	  } else {
+	       /* First minute is 60x30 frames */
+	       if (frames >= 60*30) {
+		    mins ++;
+		    frames -= 60*30;
+		    /* Remaining minutes are 60x30-2 frames */
+		    mins += frames / (60*30-2);
+		    frames %= (60*30-2);
+		    /* Skip two frames on the last minute */
+		    frames += 2;
+	       }
+	       isecs = frames / ifps;
+	       frames %= ifps;
+	       g_assert(isecs < 60);	       
+	  }
+
+	  hours = mins / 60;
+	  mins = mins % 60;
+
+	  g_snprintf(timebuf,50,"%02d:%02d:%02d[%02d]", hours, mins, isecs, 
+		     frames);
      }
      return timebuf;
 }
 
-guint get_time_mode = 3;
-
-gchar *get_time(guint32 samplerate, off_t samples, off_t samplemax, 
-		gchar *timebuf)
-{
-
-     if (get_time_mode > 2) {
-	  get_time_mode = inifile_get_guint32(INI_SETTING_TIME_DISPLAY,0);
-	  if (get_time_mode > 2) get_time_mode = 0;
-     }
-     return get_time_m(samplerate,samples,samplemax,timebuf,get_time_mode);
-}
+guint default_time_mode = 100, default_timescale_mode = 100;
 
 gchar *get_time_s(guint32 samplerate, off_t samples, off_t samplemax,
 		  gchar *timebuf)
 {
-     return get_time_m(samplerate,samples,samplemax,timebuf,-1);
+     return get_time(samplerate,samples,samplemax,timebuf,-1);
 }
 
 gchar *get_time_l(guint32 samplerate, off_t samples, off_t samplemax,
 		  gchar *timebuf)
 {
-     return get_time_m(samplerate,samples,samplemax,timebuf,1);
+     return get_time(samplerate,samples,samplemax,timebuf,1);
+}
+
+gchar *get_time_head(guint32 samplerate, off_t samples, off_t samplemax,
+		     gchar *timebuf, gint timemode)
+{
+     switch (timemode) {
+     case TIMEMODE_REAL:
+     case TIMEMODE_REALLONG:
+     case TIMEMODE_24FPS:
+     case TIMEMODE_25FPS:
+     case TIMEMODE_NTSC:
+     case TIMEMODE_30FPS:	  
+     default:
+	  return get_time(samplerate,samples,samplemax,timebuf,-1);
+     case TIMEMODE_SAMPLES:
+	  return get_time(samplerate,samples,samplemax,timebuf,
+			    TIMEMODE_SAMPLES);
+     }
+}
+
+gchar *get_time_tail(guint32 samplerate, off_t samples, off_t samplemax,
+		     gchar *timebuf, gint timemode)
+{
+     
+     off_t frameno;
+     guint i;
+     switch (timemode) {
+     case TIMEMODE_REAL:
+	  return NULL;
+     case TIMEMODE_REALLONG:
+	  i = ((samples % samplerate) * 1000) / samplerate;
+	  g_snprintf(timebuf,50,".%03d",i);
+	  return timebuf;
+     case TIMEMODE_24FPS:
+	  i = ((samples % samplerate) * 24) / samplerate;
+	  g_snprintf(timebuf,50,"[%02d]",i);
+	  return timebuf;
+     case TIMEMODE_25FPS:
+	  i = ((samples % samplerate) * 25) / samplerate;
+	  g_snprintf(timebuf,50,"[%02d]",i);
+	  return timebuf;
+     case TIMEMODE_NTSC:
+	  frameno = (samples * 30 * 1000) / (samplerate * 1001);
+	  /* Remove all 10 minute blocks of 60x30x10-2x9 frames */
+	  i = (guint) (frameno % (60*30*10-2*9));
+	  /* Remove the first minute */
+	  if (i >= 60*30) {
+	       i -= 60*30;
+	       /* Remove subsequent minutes */
+	       i %= 60*30-2;
+	       /* Add drop frame in current minute to count */
+	       i += 2;
+	  }
+	  /* Remove seconds */
+	  i %= 30;
+	  g_snprintf(timebuf,50,"[%02d]",i);
+	  return timebuf;
+     case TIMEMODE_30FPS:	  
+	  i = ((samples % samplerate) * 30) / samplerate;
+	  g_snprintf(timebuf,50,"[%02d]",i);
+	  return timebuf;
+     default:
+     case TIMEMODE_SAMPLES:
+	  return NULL;
+     }     
+}
+
+/* This table specify at which intervals big or small lines can be 
+ * drawn. */
+static const gint bigsizes[] = { 1, 2, 5, 10, 20, 30, 
+				 60, 120, 180, 300, 600, 
+				 900, 1800, 3600, 36000 };
+/* This table is TRUE whenever the entry in the table above is
+ * not an even divisor in the  entry that follows it. */ 
+static const gboolean bigskip[] = { FALSE, TRUE, FALSE, FALSE, TRUE, 
+				    FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, 
+				    TRUE, FALSE, FALSE };
+
+static const gint smallsizes_real[] = { 1000, 100, 10 };
+static const gint smallsizes_24fps[] = { 24, 12, 4 };
+static const gint smallsizes_25fps[] = { 25, 5 };
+static const gint smallsizes_30fps[] = { 30, 10, 5 };
+
+/* Returns:
+ * 0 - Both major and minor points should have text from the get_time_head 
+ *     function.
+ * 1 - Major points should have text from the get_time_head function, and 
+ *     minor points should have text from teh get_time_tail function.
+ */ 
+
+/* Midpoints are generated when there is a minor point scale that has
+ * <= nmidpoints elements, is larger than the scale used for the minor points
+ * and the major points are at the smallest scale. 
+ * Sounds very messy, but it's for making sure that we always have points 
+ * we can draw text on. 
+ * */
+guint find_timescale_points(guint32 samplerate, off_t start_samp, 
+			    off_t end_samp,
+			    off_t *points, int *npoints, 
+			    off_t *midpoints, int *nmidpoints,
+			    off_t *minor_points, int *nminorpoints,
+			    int timemode)
+{
+     guint pctr=0,mpctr=0,midpctr=0;
+     off_t p,q,r,s;
+     int i;
+     const int *ss;
+     int ssl;
+     int max_points = *npoints, max_minorpoints = *nminorpoints;
+     int max_midpoints = *nmidpoints;
+
+     g_assert(max_points > 2); 
+     g_assert(max_minorpoints >= max_points);
+
+     *nmidpoints = 0;
+
+     /* Handle sample-based time */
+     if (timemode == TIMEMODE_SAMPLES) {
+	  
+	  p = 1;
+	  q = start_samp;
+	  r = end_samp;
+	  while (r-q >= (off_t)(max_points-1)) {
+	       q /= 10;
+	       r /= 10;
+	       p *= 10;
+	  }	  
+	  for (s=q; s<=r+1; s++) {
+	       points[pctr++] = s * p;
+	       g_assert(pctr <= max_points);
+	  }	  
+
+	  p = 1;
+	  q = start_samp;
+	  r = end_samp;
+	  while (r-q >= (off_t)(max_minorpoints-1)) {
+	       q /= 10;
+	       r /= 10;
+	       p *= 10;
+	  }	  
+	  for (s=q; s<=r+1; s++) {
+	       minor_points[mpctr++] = s * p;
+	       g_assert(mpctr <= max_minorpoints);
+	  }	  
+	  *npoints = pctr;
+	  *nminorpoints = mpctr;
+	  return 0;
+     }
+
+     /* Handle major points (common between timecode and real time) */
+     i = 0;
+     while (i < (ARRAY_LENGTH(bigsizes)-1) &&
+	    ( (end_samp-start_samp)/(bigsizes[i]*samplerate) > 
+	      (off_t)(max_points-2) ) )
+	  i++;
+     q = start_samp / (bigsizes[i] * samplerate);
+     r = end_samp / (bigsizes[i] * samplerate);
+     /* printf("q = %d, r = %d\n",(int)q,(int)r); */
+     while (1) {
+	  points[pctr++] = (q++) * bigsizes[i] * samplerate;
+	  /* printf("q = %d, pctr = %d, max_points = %d\n",(int)q,(int)pctr,(int)max_points); */
+	  g_assert(pctr <= max_points);
+	  if (q > r) break;
+     }
+     *npoints = pctr;
+
+     /* Handle minor points of >=1s */
+     if (i > 0) {
+	  i--;
+	  while (bigskip[i]) i--;
+	  if ( (end_samp-start_samp) / (bigsizes[i]*samplerate) >= 
+	       (off_t)(max_minorpoints-2)) {
+	       *nminorpoints = 0;
+	       return 0;
+	  }
+	  while (i > 0 &&
+		 ( (end_samp-start_samp)/(bigsizes[i-1]*samplerate) < 
+		   (off_t)(max_minorpoints-2) ) )
+	       i--;
+	  
+	  q = start_samp / (bigsizes[i] * samplerate);
+	  r = end_samp / (bigsizes[i] * samplerate);
+	  for (s=q; s<=r+1; s++) {
+	       minor_points[mpctr++] = s * bigsizes[i] * samplerate;
+	       g_assert(mpctr <= max_minorpoints);
+	  }	  
+	  *nminorpoints = mpctr;
+	  return 0;
+     }
+
+     /* Handle sub-second minor ticks for NTSC timecode */
+     /* This is a special case since NTSC frames are not second-aligned */
+     if (timemode == TIMEMODE_NTSC) {
+	  /* Calculate start and end frame count (rounded down) */
+	  q = (start_samp * 30 * 1000) / (samplerate * 1001);
+	  r = (end_samp * 30 * 1000) / (samplerate * 1001);
+	  
+	  if (r-q >= max_minorpoints) {
+	       *nminorpoints = 0;
+	       return 0;
+	  }
+	  
+	  for (s=q; s<=r; s++) {
+	       /* Convert from frame to sample,  rounding upwards */
+	       minor_points[mpctr++] = 
+		    (s * samplerate * 1001 + 29999) / (30000);
+	  }
+	  *nminorpoints = mpctr;
+	  return 1;
+     }
+     
+     /* Handle sub-second minor ticks, real time or non-NTSC timecode */
+     switch (timemode) {
+     case TIMEMODE_REAL:
+     case TIMEMODE_REALLONG:
+	  ss = smallsizes_real;
+	  ssl = ARRAY_LENGTH(smallsizes_real);
+	  break;
+     case TIMEMODE_24FPS:
+	  ss = smallsizes_24fps;
+	  ssl = ARRAY_LENGTH(smallsizes_24fps);
+	  break;
+     case TIMEMODE_25FPS:
+	  ss = smallsizes_25fps;
+	  ssl = ARRAY_LENGTH(smallsizes_25fps);
+	  break;
+     case TIMEMODE_30FPS:
+	  ss = smallsizes_30fps;
+	  ssl = ARRAY_LENGTH(smallsizes_30fps);
+	  break;
+     default:
+	  g_assert_not_reached();
+     }
+
+     i = 0;
+     while (i < ssl && 
+	    ((end_samp-start_samp)*ss[i])/samplerate >= 
+	    (off_t)(max_minorpoints-2))
+	  i++;
+
+     if (i >= ssl) {
+	  *nminorpoints = 0;
+	  return 0;
+     }
+
+     q = (start_samp*ss[i])/samplerate;
+     r = (end_samp*ss[i])/samplerate;
+     
+     for (s=q; s<=r+1; s++) {
+	  minor_points[mpctr++] = (s * samplerate + ss[i]-1) / ss[i];
+     }
+     *nminorpoints = mpctr;
+
+     /* Generate mid points */
+     do {
+	  i++;
+     } while (i < ssl && 
+	      ((end_samp-start_samp)*ss[i])/samplerate >= 
+	      (off_t)(max_midpoints-2));
+
+     if (i >= ssl) return 1;
+     
+     q = (start_samp*ss[i])/samplerate;
+     r = (end_samp*ss[i])/samplerate;
+     
+     for (s=q; s<=r+1; s++) {
+	  midpoints[midpctr++] = (s * samplerate + ss[i]-1) / ss[i];
+     }
+     *nmidpoints = midpctr;     
+     
+     return 1;
 }
 
 gfloat parse_time(gchar *timestr)
