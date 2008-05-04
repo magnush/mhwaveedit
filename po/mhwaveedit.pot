@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-21 23:48+0200\n"
+"POT-Creation-Date: 2008-05-04 22:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,37 +20,59 @@ msgstr ""
 msgid "Converting samplerate"
 msgstr ""
 
-#: src/chunk.c:221
+#: src/chunk.c:224
 msgid "Adjusting speed"
 msgstr ""
 
-#: src/chunk.c:282
+#: src/chunk.c:285
 msgid "Removing channel"
 msgstr ""
 
-#: src/chunk.c:638
+#: src/chunk.c:692
 msgid "Mixing"
 msgstr ""
 
-#: src/chunk.c:690
+#: src/chunk.c:747
 #, c-format
 msgid "The mixed result was clipped %d times."
 msgstr ""
 
-#: src/chunk.c:1079
+#: src/chunk.c:887
+msgid "Mixing channels"
+msgstr ""
+
+#: src/chunk.c:891
+msgid "Mapping channels"
+msgstr ""
+
+#: src/chunk.c:1272
 msgid "Calculating peak level"
 msgstr ""
 
-#: src/chunk.c:1101 src/chunk.c:1136
+#: src/chunk.c:1343 src/chunk.c:1353 src/chunk.c:1391 src/chunk.c:1401
+msgid "Finding zero-crossing"
+msgstr ""
+
+#: src/chunk.c:1429
+#, c-format
+msgid "Amplifying (by %3.1f%% / %+.1fdB)"
+msgstr ""
+
+#: src/chunk.c:1470
 msgid "Amplifying"
 msgstr ""
 
-#: src/chunk.c:1255
+#: src/chunk.c:1639
 msgid "Removing channels"
 msgstr ""
 
-#: src/chunk.c:1261
+#: src/chunk.c:1645
 msgid "Adding channels"
+msgstr ""
+
+#: src/chunk.c:1708
+#, c-format
+msgid "The input was clipped %d times during processing."
 msgstr ""
 
 #: src/configdialog.c:62
@@ -63,355 +85,375 @@ msgid ""
 "restart the program"
 msgstr ""
 
-#: src/configdialog.c:263
+#: src/configdialog.c:269
 msgid "Colors"
 msgstr ""
 
-#: src/configdialog.c:300
+#: src/configdialog.c:306
 msgid "_Preview"
 msgstr ""
 
-#: src/configdialog.c:307 src/configdialog.c:1064
+#: src/configdialog.c:313 src/configdialog.c:1098
 msgid "_OK"
 msgstr ""
 
-#: src/configdialog.c:325
+#: src/configdialog.c:331
 msgid "_Cancel"
 msgstr ""
 
-#: src/configdialog.c:402
+#: src/configdialog.c:408
 msgid "Browse directory"
 msgstr ""
 
-#: src/configdialog.c:452
+#: src/configdialog.c:458
 msgid "Preferences"
 msgstr ""
 
-#: src/configdialog.c:511
+#: src/configdialog.c:517
 msgid "Show _time scale by default"
 msgstr ""
 
-#: src/configdialog.c:521
+#: src/configdialog.c:527
 msgid "Show _horizontal zoom slider by default"
 msgstr ""
 
-#: src/configdialog.c:531
+#: src/configdialog.c:537
 msgid "Show _vertical zoom slider by default"
 msgstr ""
 
-#: src/configdialog.c:541
+#: src/configdialog.c:547
 msgid "Show _speed slider by default"
 msgstr ""
 
-#: src/configdialog.c:550
+#: src/configdialog.c:556
 msgid "_Settings"
 msgstr ""
 
-#: src/configdialog.c:560
+#: src/configdialog.c:566
 msgid "_Keep sound driver opened (to avoid start/stop clicks)"
 msgstr ""
 
-#: src/configdialog.c:569
+#: src/configdialog.c:575
 msgid "_Byte-swap output (try this if playback sounds horrible)"
 msgstr ""
 
-#: src/configdialog.c:578
+#: src/configdialog.c:584
 msgid "_Update cursor information while playing"
 msgstr ""
 
-#: src/configdialog.c:586
+#: src/configdialog.c:592
 msgid "_Keep cursor in center of view when following playback"
 msgstr ""
 
-#: src/configdialog.c:596
+#: src/configdialog.c:602
 msgid "_Auto-start playback when jumping to mark"
 msgstr ""
 
-#: src/configdialog.c:604
+#: src/configdialog.c:610
 msgid "Enable _variable speed playback"
 msgstr ""
 
-#: src/configdialog.c:613
+#: src/configdialog.c:619
 msgid "Auto-_reset speed"
 msgstr ""
 
-#: src/configdialog.c:620
+#: src/configdialog.c:626
 msgid "Use fast and noisy method"
 msgstr ""
 
-#: src/configdialog.c:628
+#: src/configdialog.c:634
 msgid "(H')MM:SS.t"
 msgstr ""
 
-#: src/configdialog.c:629
+#: src/configdialog.c:635
 msgid "(H')MM:SS.mmmm"
 msgstr ""
 
-#: src/configdialog.c:630
+#: src/configdialog.c:636
 msgid "TimeDisplay|Samples"
 msgstr ""
 
-#: src/configdialog.c:636
+#: src/configdialog.c:637
+msgid "Time Code 24fps"
+msgstr ""
+
+#: src/configdialog.c:638
+msgid "Time Code 25fps (PAL)"
+msgstr ""
+
+#: src/configdialog.c:639
+msgid "Time Code 29.97fps (NTSC)"
+msgstr ""
+
+#: src/configdialog.c:640
+msgid "Time Code 30fps"
+msgstr ""
+
+#: src/configdialog.c:653
 msgid "_Remember window sizes/positions"
 msgstr ""
 
-#: src/configdialog.c:645
+#: src/configdialog.c:662
 msgid "_Draw waveform a second time with improved quality"
 msgstr ""
 
-#: src/configdialog.c:675
+#: src/configdialog.c:692
 msgid "_Remove"
 msgstr ""
 
-#: src/configdialog.c:683
+#: src/configdialog.c:700
 msgid "_Add"
 msgstr ""
 
-#: src/configdialog.c:690
+#: src/configdialog.c:707
 msgid "_Browse..."
 msgstr ""
 
-#: src/configdialog.c:697
+#: src/configdialog.c:714
 msgid "_Up"
 msgstr ""
 
-#: src/configdialog.c:705
+#: src/configdialog.c:722
 msgid "_Down"
 msgstr ""
 
-#: src/configdialog.c:718
+#: src/configdialog.c:735
 msgid "Keep main _window in front after applying effect"
 msgstr ""
 
-#: src/configdialog.c:734
+#: src/configdialog.c:751
 msgid "_Use floating-point temporary files"
 msgstr ""
 
-#: src/configdialog.c:743
+#: src/configdialog.c:760
 msgid "Enable _dithering for editing"
 msgstr ""
 
-#: src/configdialog.c:751
+#: src/configdialog.c:768
 msgid "Enable dithering for _playback"
 msgstr ""
 
-#: src/configdialog.c:759
+#: src/configdialog.c:776
 msgid "Auto dete_ct driver on each start-up"
 msgstr ""
 
-#: src/configdialog.c:782
+#: src/configdialog.c:799
 msgid "Interface"
 msgstr ""
 
-#: src/configdialog.c:783
+#: src/configdialog.c:800
 msgid " Main window "
 msgstr ""
 
-#: src/configdialog.c:794
+#: src/configdialog.c:811
 msgid "Number of recent files in File menu: "
 msgstr ""
 
-#: src/configdialog.c:799
+#: src/configdialog.c:816
 msgid " View "
 msgstr ""
 
-#: src/configdialog.c:810
+#: src/configdialog.c:827
 msgid "Customize co_lors..."
 msgstr ""
 
-#: src/configdialog.c:817
+#: src/configdialog.c:834
 msgid " Window contents "
 msgstr ""
 
-#: src/configdialog.c:834
+#: src/configdialog.c:851
 msgid "Sound"
 msgstr ""
 
-#: src/configdialog.c:835
+#: src/configdialog.c:852
 msgid " Driver options "
 msgstr ""
 
-#: src/configdialog.c:843
+#: src/configdialog.c:860
 msgid "_Driver:"
 msgstr ""
 
-#: src/configdialog.c:858
+#: src/configdialog.c:875
 msgid " Fallback format "
 msgstr ""
 
-#: src/configdialog.c:863
+#: src/configdialog.c:880
 msgid "Sample format to try when the sound file's format isn't supported."
 msgstr ""
 
-#: src/configdialog.c:875
+#: src/configdialog.c:892
 msgid "Playback"
 msgstr ""
 
-#: src/configdialog.c:877
+#: src/configdialog.c:894
 msgid " Playback settings "
 msgstr ""
 
-#: src/configdialog.c:889
+#: src/configdialog.c:906
 msgid " Variable speed "
 msgstr ""
 
-#: src/configdialog.c:904 src/help.c:38
+#: src/configdialog.c:921 src/help.c:38
 msgid "Files"
 msgstr ""
 
-#: src/configdialog.c:906
+#: src/configdialog.c:923
 msgid " Temporary file directories "
 msgstr ""
 
-#: src/configdialog.c:932
+#: src/configdialog.c:949
 msgid " Temporary file settings "
 msgstr ""
 
-#: src/configdialog.c:937
+#: src/configdialog.c:954
 msgid ""
 "To avoid rounding errors when applying more than one effect on the same "
 "data, floating-point temporary files can be used. However, this will "
 "increase disk and CPU usage."
 msgstr ""
 
-#: src/configdialog.c:950 src/help.c:36
+#: src/configdialog.c:967 src/help.c:36
 msgid "Quality"
 msgstr ""
 
-#: src/configdialog.c:952
+#: src/configdialog.c:969
 msgid " Rate conversions "
 msgstr ""
 
-#: src/configdialog.c:959
+#: src/configdialog.c:976
 msgid "Varispeed: "
 msgstr ""
 
-#: src/configdialog.c:960
+#: src/configdialog.c:977
 msgid "Speed effect: "
 msgstr ""
 
-#: src/configdialog.c:967
+#: src/configdialog.c:984
 msgid " Dithering "
 msgstr ""
 
-#: src/configdialog.c:981
+#: src/configdialog.c:998
 msgid "Other"
 msgstr ""
 
-#: src/configdialog.c:983
+#: src/configdialog.c:1000
 msgid " Time format "
 msgstr ""
 
-#: src/configdialog.c:989
+#: src/configdialog.c:1009
 msgid "Display t_imes as: "
 msgstr ""
 
-#: src/configdialog.c:997
+#: src/configdialog.c:1020
+msgid "Times_cale format: "
+msgstr ""
+
+#: src/configdialog.c:1031
 msgid " External applications "
 msgstr ""
 
-#: src/configdialog.c:1005
+#: src/configdialog.c:1039
 msgid "Mi_xer utility: "
 msgstr ""
 
-#: src/configdialog.c:1015
+#: src/configdialog.c:1049
 msgid "Advanced"
 msgstr ""
 
-#: src/configdialog.c:1016
+#: src/configdialog.c:1050
 msgid " Advanced settings "
 msgstr ""
 
-#: src/configdialog.c:1024
+#: src/configdialog.c:1058
 msgid "Disk editing _threshold: "
 msgstr ""
 
-#: src/configdialog.c:1035
+#: src/configdialog.c:1069
 msgid "View _quality:"
 msgstr ""
 
-#: src/configdialog.c:1041
+#: src/configdialog.c:1075
 msgid "samples/pixel"
 msgstr ""
 
-#: src/configdialog.c:1047
+#: src/configdialog.c:1081
 msgid "Output _buffer size:"
 msgstr ""
 
-#: src/configdialog.c:1053
+#: src/configdialog.c:1087
 msgid "bytes"
 msgstr ""
 
-#: src/configdialog.c:1078
+#: src/configdialog.c:1112
 msgid "_Close"
 msgstr ""
 
-#: src/dataformat.c:414
+#: src/dataformat.c:426
 msgid "Floating-point (single)"
 msgstr ""
 
-#: src/dataformat.c:416
+#: src/dataformat.c:428
 msgid "Floating-point (double)"
 msgstr ""
 
-#: src/dataformat.c:418
+#: src/dataformat.c:430
 #, c-format
 msgid "PCM, %d bit, %s %s\n"
 msgstr ""
 
-#: src/dataformat.c:419 src/formatselector.c:91
+#: src/dataformat.c:431 src/formatselector.c:91
 msgid "Signed"
 msgstr ""
 
-#: src/dataformat.c:419 src/formatselector.c:90
+#: src/dataformat.c:431 src/formatselector.c:90
 msgid "Unsigned"
 msgstr ""
 
-#: src/dataformat.c:420
+#: src/dataformat.c:432
 msgid "Big-endian"
 msgstr ""
 
-#: src/dataformat.c:420
+#: src/dataformat.c:432
 msgid "Little-endian"
 msgstr ""
 
-#: src/dataformat.c:467
+#: src/dataformat.c:479
 msgid "Testing ranges..."
 msgstr ""
 
-#: src/dataformat.c:483
+#: src/dataformat.c:495
 msgid "Range test failed for format: "
 msgstr ""
 
-#: src/dataformat.c:491
+#: src/dataformat.c:503
 msgid "Testing all conversions.."
 msgstr ""
 
-#: src/dataformat.c:524
+#: src/dataformat.c:536
 msgid "(expected) "
 msgstr ""
 
-#: src/dataformat.c:525
+#: src/dataformat.c:537
 msgid "Conversion test failed, between: "
 msgstr ""
 
-#: src/dataformat.c:527
+#: src/dataformat.c:539
 msgid "  and: "
 msgstr ""
 
-#: src/dataformat.c:535
+#: src/dataformat.c:547
 msgid "No errors detected!"
 msgstr ""
 
-#: src/dataformat.c:569
+#: src/dataformat.c:581
 msgid "Preparing tests.."
 msgstr ""
 
-#: src/dataformat.c:577
+#: src/dataformat.c:589
 msgid "Running tests.."
 msgstr ""
 
-#: src/dataformat.c:617
+#: src/dataformat.c:629
 #, c-format
 msgid ""
 "\n"
@@ -438,109 +480,178 @@ msgstr ""
 msgid "Error seeking in %s: %s"
 msgstr ""
 
-#: src/effectbrowser.c:68
-msgid "[B] Volume adjust/fade"
+#: src/effectbrowser.c:98
+msgid "Built-in"
 msgstr ""
 
-#: src/effectbrowser.c:70
-msgid "[B] Convert samplerate"
+#: src/effectbrowser.c:101
+msgid "Volume adjust/fade"
 msgstr ""
 
-#: src/effectbrowser.c:72
-msgid "[B] Convert sample format"
+#: src/effectbrowser.c:103
+msgid "Convert samplerate"
 msgstr ""
 
-#: src/effectbrowser.c:74
-msgid "[B] Combine channels"
+#: src/effectbrowser.c:105
+msgid "Convert sample format"
 msgstr ""
 
-#: src/effectbrowser.c:76
-msgid "[B] Speed"
+#: src/effectbrowser.c:107
+msgid "Map channels"
 msgstr ""
 
-#: src/effectbrowser.c:78
-msgid "[B] Pipe through program"
+#: src/effectbrowser.c:109
+msgid "Combine channels"
 msgstr ""
 
-#: src/effectbrowser.c:128 src/effectbrowser.c:145
+#: src/effectbrowser.c:111
+msgid "Speed"
+msgstr ""
+
+#: src/effectbrowser.c:112
+msgid "Pipe through program"
+msgstr ""
+
+#: src/effectbrowser.c:246
 msgid "You have no open file to apply the effect to!"
 msgstr ""
 
-#: src/effectbrowser.c:268 src/filetypes.c:1119 src/gotodialog.c:114
-#: src/mainwindow.c:1292 src/rawdialog.c:88 src/recorddialog.c:369
-#: src/sound-alsalib.c:78 src/sound-esound.c:284 src/sound-jack.c:256
-#: src/sound-oss.c:416 src/um.c:107 src/um.c:140 src/um.c:337 src/um.c:437
-msgid "OK"
+#: src/effectbrowser.c:271
+msgid "This effect could not be loaded."
 msgstr ""
 
-#: src/effectbrowser.c:273 src/gotodialog.c:122
+#: src/effectbrowser.c:578
+msgid "/Move Up"
+msgstr ""
+
+#: src/effectbrowser.c:579
+msgid "/Move Down"
+msgstr ""
+
+#: src/effectbrowser.c:580
+msgid "/Move to Top"
+msgstr ""
+
+#: src/effectbrowser.c:581
+msgid "/Move to Bottom"
+msgstr ""
+
+#: src/effectbrowser.c:583
+msgid "/Sort by Name"
+msgstr ""
+
+#: src/effectbrowser.c:584
+msgid "/Sort by Type"
+msgstr ""
+
+#: src/effectbrowser.c:585
+msgid "/Sort by Location"
+msgstr ""
+
+#: src/effectbrowser.c:586
+msgid "/Sort by Author"
+msgstr ""
+
+#: src/effectbrowser.c:588
+msgid "/Restore Order"
+msgstr ""
+
+#: src/effectbrowser.c:589
+msgid "/Rebuild Effect List"
+msgstr ""
+
+#: src/effectbrowser.c:740
+msgid "Top"
+msgstr ""
+
+#: src/effectbrowser.c:747
+msgid "Up"
+msgstr ""
+
+#: src/effectbrowser.c:754
+msgid "Down"
+msgstr ""
+
+#: src/effectbrowser.c:761
+msgid "Bottom"
+msgstr ""
+
+#: src/effectbrowser.c:789
+msgid "Close dialog after applying effect"
+msgstr ""
+
+#: src/effectbrowser.c:796 src/gotodialog.c:143
 msgid "Apply"
 msgstr ""
 
-#: src/effectbrowser.c:277 src/gotodialog.c:127 src/mainwindow.c:1221
-#: src/pipedialog.c:146 src/recorddialog.c:803 src/sound-esound.c:288
+#: src/effectbrowser.c:806 src/gotodialog.c:148 src/mainwindow.c:1360
+#: src/pipedialog.c:155 src/recorddialog.c:801 src/sound-esound.c:288
 #: src/sound-jack.c:260 src/sound-oss.c:420
 msgid "Close"
 msgstr ""
 
-#: src/effectbrowser.c:298 src/help.c:35
+#: src/effectbrowser.c:828 src/help.c:35
 msgid "Effects"
 msgstr ""
 
-#: src/effectbrowser.c:356
+#: src/effectbrowser.c:888
 msgid "Apply to: "
 msgstr ""
 
-#: src/filetypes.c:101
+#: src/filetypes.c:102
 msgid "putenv failed!"
 msgstr ""
 
-#: src/filetypes.c:111
+#: src/filetypes.c:112
 msgid "unsetenv failed!"
 msgstr ""
 
-#: src/filetypes.c:153
+#: src/filetypes.c:154
 msgid "Microsoft WAV format"
 msgstr ""
 
-#: src/filetypes.c:172
+#: src/filetypes.c:173
 msgid "Ogg Vorbis"
 msgstr ""
 
-#: src/filetypes.c:179
+#: src/filetypes.c:180
 msgid "Raw PCM data"
 msgstr ""
 
-#: src/filetypes.c:260
-#, c-format
-msgid "The file %s does not exist!"
+#: src/filetypes.c:182
+msgid "Open with MPlayer"
 msgstr ""
 
 #: src/filetypes.c:267
 #, c-format
+msgid "The file %s does not exist!"
+msgstr ""
+
+#: src/filetypes.c:274
+#, c-format
 msgid "The file %s is not a regular file!"
 msgstr ""
 
-#: src/filetypes.c:279
+#: src/filetypes.c:286
 msgid "Loading"
 msgstr ""
 
-#: src/filetypes.c:318
+#: src/filetypes.c:325
 #, c-format
 msgid ""
 "The file name '%s' has an extension unknown to the program. Please specify "
 "in which format this file should be saved."
 msgstr ""
 
-#: src/filetypes.c:323
+#: src/filetypes.c:330
 msgid "Unknown file type"
 msgstr ""
 
-#: src/filetypes.c:374
+#: src/filetypes.c:381
 msgid "Saving"
 msgstr ""
 
-#: src/filetypes.c:378
+#: src/filetypes.c:385
 #, c-format
 msgid ""
 "The file %s may be destroyed since the saving failed. Try to free up some "
@@ -548,36 +659,24 @@ msgid ""
 "bad state. "
 msgstr ""
 
-#: src/filetypes.c:442
+#: src/filetypes.c:449
 #, c-format
 msgid "%s is not a valid wav file"
 msgstr ""
 
-#: src/filetypes.c:457
+#: src/filetypes.c:464
 #, c-format
 msgid ""
 "The file %s is a compressed wav file. This program can only work with "
 "uncompressed wav files."
 msgstr ""
 
-#: src/filetypes.c:540
+#: src/filetypes.c:551
 msgid ""
 "On this system, libsndfile is required to save floating-point wav files."
 msgstr ""
 
-#: src/filetypes.c:547
-msgid "8-bit wav-files must be in unsigned format!"
-msgstr ""
-
-#: src/filetypes.c:551
-msgid "16/24/32-bit wav-files must be in signed format!"
-msgstr ""
-
-#: src/filetypes.c:555
-msgid "wav files must be in little endian format!"
-msgstr ""
-
-#: src/filetypes.c:562
+#: src/filetypes.c:590
 msgid ""
 "You are saving a wav file larger than 2048MB. Such large files are non-"
 "standard and may not be readable by all programs.\n"
@@ -585,79 +684,86 @@ msgid ""
 " (this warning will not be displayed again)"
 msgstr ""
 
-#: src/filetypes.c:679 src/filetypes.c:811
+#: src/filetypes.c:710 src/filetypes.c:844
 #, c-format
 msgid "Failed to open '%s'!"
 msgstr ""
 
-#: src/filetypes.c:787
+#: src/filetypes.c:819
 msgid "Invalid sample format or number of channels for this file format"
 msgstr ""
 
-#: src/filetypes.c:840
+#: src/filetypes.c:874
 #, c-format
 msgid "Failed to write to '%s'!"
 msgstr ""
 
-#: src/filetypes.c:907
+#: src/filetypes.c:940
 msgid "Decoding"
 msgstr ""
 
-#: src/filetypes.c:1019
+#: src/filetypes.c:1053
 msgid "Variable bitrate (default)"
 msgstr ""
 
-#: src/filetypes.c:1020
+#: src/filetypes.c:1054
 msgid "Average bitrate"
 msgstr ""
 
-#: src/filetypes.c:1021
+#: src/filetypes.c:1055
 msgid "Constant bitrate"
 msgstr ""
 
-#: src/filetypes.c:1022
+#: src/filetypes.c:1056
 msgid "Custom argument"
 msgstr ""
 
-#: src/filetypes.c:1026
+#: src/filetypes.c:1060
 msgid "Standard (high quality)"
 msgstr ""
 
-#: src/filetypes.c:1027
+#: src/filetypes.c:1061
 msgid "Extreme (higher quality)"
 msgstr ""
 
-#: src/filetypes.c:1028
+#: src/filetypes.c:1062
 msgid "Insane (highest possible quality)"
 msgstr ""
 
-#: src/filetypes.c:1046
+#: src/filetypes.c:1080
 #, c-format
 msgid "%s kbit/s"
 msgstr ""
 
-#: src/filetypes.c:1075
+#: src/filetypes.c:1109
 msgid "MP3 Preferences"
 msgstr ""
 
-#: src/filetypes.c:1086
+#: src/filetypes.c:1120
 msgid "Encoding type: "
 msgstr ""
 
-#: src/filetypes.c:1099
+#: src/filetypes.c:1133
 msgid "Quality: "
 msgstr ""
 
-#: src/filetypes.c:1108
+#: src/filetypes.c:1142
 msgid "Custom argument: "
 msgstr ""
 
-#: src/filetypes.c:1114
+#: src/filetypes.c:1148
 msgid "Use this setting by default"
 msgstr ""
 
-#: src/filetypes.c:1127 src/rawdialog.c:94 src/recorddialog.c:377
-#: src/sound-alsalib.c:82 src/um.c:131 src/um.c:148 src/um.c:342 src/um.c:446
+#: src/filetypes.c:1153 src/gotodialog.c:135 src/mainwindow.c:1431
+#: src/rawdialog.c:99 src/recorddialog.c:367 src/sound-alsalib.c:78
+#: src/sound-esound.c:284 src/sound-jack.c:256 src/sound-oss.c:416
+#: src/um.c:107 src/um.c:140 src/um.c:336 src/um.c:434
+msgid "OK"
+msgstr ""
+
+#: src/filetypes.c:1161 src/rawdialog.c:105 src/recorddialog.c:375
+#: src/sound-alsalib.c:82 src/um.c:131 src/um.c:148 src/um.c:340 src/um.c:443
 msgid "Cancel"
 msgstr ""
 
@@ -727,42 +833,42 @@ msgstr ""
 msgid "sample rate"
 msgstr ""
 
-#: src/gotodialog.c:81
+#: src/gotodialog.c:96
 msgid "Place cursor "
 msgstr ""
 
-#: src/gotodialog.c:86 src/soxdialog.c:491 src/soxdialog.c:496
-#: src/soxdialog.c:526
+#: src/gotodialog.c:101 src/soxdialog.c:518 src/soxdialog.c:523
+#: src/soxdialog.c:553
 msgid " seconds"
 msgstr ""
 
-#: src/gotodialog.c:88
+#: src/gotodialog.c:104
 msgid "after beginning of file"
 msgstr ""
 
-#: src/gotodialog.c:92
+#: src/gotodialog.c:109
 msgid "after end of file"
 msgstr ""
 
-#: src/gotodialog.c:96
+#: src/gotodialog.c:114
 msgid "after current cursor position"
 msgstr ""
 
-#: src/gotodialog.c:100
+#: src/gotodialog.c:119
 msgid "after selection start"
 msgstr ""
 
-#: src/gotodialog.c:104
+#: src/gotodialog.c:124
 msgid "after selection end"
 msgstr ""
 
-#: src/gotodialog.c:107
+#: src/gotodialog.c:128
 msgid ""
 "(use a negative number to place the cursor before instead of after the "
 "selected point)"
 msgstr ""
 
-#: src/gotodialog.c:142
+#: src/gotodialog.c:163
 msgid "Position cursor"
 msgstr ""
 
@@ -983,10 +1089,11 @@ msgid ""
 "\n"
 "   This creates a linear fade in or fade out effect.\n"
 "\n"
-" * Normalize\n"
+" * Normalize, Normalize to...\n"
 "\n"
 "   This amplifies the sound as much as possible without getting clipping "
-"distortion. \n"
+"distortion. The \"Normalize to...\" item lets you specify which level to "
+"normalize to.\n"
 "\n"
 " * Volume adjust/fade...\n"
 "\n"
@@ -1021,14 +1128,19 @@ msgid ""
 "but plays wrong, you should not use this option, instead you should use the "
 "\"byte-swap output\" option in the Preferences dialog.\n"
 "\n"
-" * Mix channels...\n"
+" * Mix to mono\n"
 "\n"
 "   This mixes all channels of the file together to a mono sound.\n"
 "\n"
-" * Split channel...\n"
+" * Add channel\n"
 "\n"
 "   This copies the first channel to a new channel in the sound, converting "
 "mono to stereo etc.\n"
+"\n"
+" * Map channels...\n"
+"   \n"
+"   With this effect, you can change the number of channels in the file. You "
+"can also rearrange and add (i.e. mix) channels.\n"
 "\n"
 " * Combine channels...\n"
 "\n"
@@ -1043,14 +1155,23 @@ msgid ""
 "\n"
 "   This effect changes the speed of the selection. The tone will change as "
 "well.\n"
+" * Pipe through program...\n"
+" \n"
+"   This effect is for advanced users wanting to pipe raw audio data through "
+"an external program. The output of the program is read back and replaces the "
+"processed part. \n"
 "\n"
 "mhWaveEdit supports LADSPA effects and can also make use of most of the SoX "
-"utility's effects. All supported effects can be found by choosing the "
-"'Effects...' menu item. \n"
+"utility's effects. To find the LADSPA plugins the environment variable "
+"LADSPA_PATH must be properly set up. \n"
+"\n"
+"All supported effects can be found by choosing the 'Effects...' menu item. "
+"The effects are listed with names beginning with [B] for builtin effects, "
+"[L] for LADSPA effects, and [S] for SoX effects.\n"
 "\n"
 msgstr ""
 
-#: src/help.c:152
+#: src/help.c:161
 #, no-c-format
 msgid ""
 "\n"
@@ -1083,27 +1204,30 @@ msgid ""
 "processed results to avoid rounding until the file is saved.\n"
 msgstr ""
 
-#: src/help.c:168
+#: src/help.c:177
 #, no-c-format
 msgid ""
 "\n"
-"Even if mhWaveEdit is mainly built for editing wav files, it's also possible "
-"to load and save in a few other formats. mhWaveEdit always supports wav and "
-"raw files, but if it's compiled with the libsndfile library, mhWaveEdit "
-"supports a couple of other formats as well. \n"
+"Even if mhWaveEdit was originally built for editing wav files, it's also "
+"possible to load and save in a few other formats. mhWaveEdit always supports "
+"wav and raw files, but if it's compiled with the libsndfile library, "
+"mhWaveEdit supports a couple of other formats as well. \n"
 "\n"
-"To save a file with a different file format, save it under a name that does "
-"not end with '.wav'. A few other suffixes are recognized directly (for "
-"example '.iff') but if the suffix is not recognized a dialog box will pop up "
-"and ask you in what format to save the file.\n"
+"To save a file with a different file format, use \"Save as...\" and choose a "
+"format in the file type selection box. \n"
 "\n"
 "mhWaveEdit has basic support for mp3 and ogg formats. For this to work you "
 "need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg "
 "support. If you have these programs, you can open and save mp3/ogg files "
 "just like any other file format.\n"
+"\n"
+"If mplayer is installed, mhwaveedit can open all formats that it supports, "
+"for example the soundtrack of a video file. Since mplayer is only a player, "
+"these files can not be saved back after editing, you have to save the file "
+"into a supported format.\n"
 msgstr ""
 
-#: src/help.c:176
+#: src/help.c:187
 #, no-c-format
 msgid ""
 "\n"
@@ -1113,16 +1237,24 @@ msgid ""
 "The configuration file is called config. It can be hand edited, but the "
 "easiest way is through 'Preferences' on the Edit menu.\n"
 "\n"
+"Each mhwaveedit process creates a session file in the .mhwaveedit directory "
+"called mhwaveedit-session-<pid>-<session>-<state>, where <session> is the "
+"session ID number and <state> is a character code showing the state of the "
+"session ('r' for running sessions). \n"
+"\n"
 "Temporary files are by default also stored in the ~/.mhwaveedit directory. "
 "Which directories to use can be set through the preferences dialog. To get "
 "the best performance, you should have one temporary directory for each local "
 "filesystem. The temporary files have names of the form \"mhwaveedit-temp-"
-"<pid>-nnnn\". Do NOT open or remove temporary files with the same pid number "
-"as a currently running mhWaveEdit.\n"
+"<pid>-nnnn-<session>\". Do NOT open or remove temporary files with the same "
+"pid number as a currently running mhWaveEdit.\n"
 "\n"
+"mhWaveEdit checks on startup for leftover temporary files and lets the user "
+"open them. After opening a crashed session, the files can be saved or thrown "
+"away.\n"
 msgstr ""
 
-#: src/help.c:185
+#: src/help.c:199
 #, no-c-format
 msgid ""
 "\n"
@@ -1151,6 +1283,8 @@ msgid ""
 "Ctrl+J        Position cursor at file end\n"
 "Ctrl+K        Position cursor at selection start\n"
 "Ctrl+L        Position cursor at selection end\n"
+"Y,U           Move cursor to nearest all-channel zero-crossing\n"
+"I,O           Move cursor to nearest any-channel zero-crossing\n"
 "\n"
 "Ctrl+Q        Selection start at cursor\n"
 "Ctrl+W        Selection end at cursor\n"
@@ -1165,12 +1299,14 @@ msgid ""
 ",             Play from cursor pos\n"
 ".             Stop\n"
 "/             Play selection\n"
-"Ctrl+arrow    Nudge playback forward/backward\n"
+"H,J           Move cursor (and playback) 1/8 of view\n"
+"K,L           Move cursor one sample\n"
+"Ctrl+arrow    Move cursor (and playback) half second\n"
 "(             Play first 3 seconds of selection\n"
 ")             Play last 3 seconds of selection\n"
 msgstr ""
 
-#: src/help.c:230
+#: src/help.c:248
 #, no-c-format
 msgid ""
 "\n"
@@ -1194,7 +1330,7 @@ msgid ""
 "7. Now you should have a back trace in the file backtrace.txt\n"
 msgstr ""
 
-#: src/help.c:246
+#: src/help.c:264
 #, no-c-format
 msgid ""
 "\n"
@@ -1234,16 +1370,9 @@ msgid ""
 "translations are also appreciated, but they may need to be checked with the "
 "previous translator before including them. \n"
 "\n"
-"Money donations through PayPal are also gratefully accepted. For the "
-"address, see the contact information. Donors of $10 or more will be credited "
-"with the donor's name ($25 for a company name), email and web site as a "
-"sponsor in the AUTHORS file of future releases and also in other places in "
-"the future. Note that any donations are gifts to me (Magnus Hjorth) "
-"personally, not payment for a service of any kind. If you want some other "
-"arrangement, send me an email. \n"
 msgstr ""
 
-#: src/help.c:266
+#: src/help.c:283
 #, no-c-format
 msgid ""
 "\n"
@@ -1273,23 +1402,17 @@ msgstr ""
 msgid "Value for %s must be a number between %ld and %ld"
 msgstr ""
 
-#: src/ladspacore.c:63
-#, c-format
-msgid "Ladspa: Error scanning %s"
-msgstr ""
-
-#: src/ladspacore.c:112
+#: src/ladspacore.c:94
 #, c-format
 msgid "Effect %s contains invalid port %s"
 msgstr ""
 
-#: src/ladspacore.c:159
-msgid ""
-"Environment variable LADSPA_PATH not set.\n"
-"LADSPA support is disabled."
+#: src/ladspacore.c:140
+#, c-format
+msgid "Ladspa: Error scanning %s"
 msgstr ""
 
-#: src/ladspacore.c:307
+#: src/ladspacore.c:409
 #, c-format
 msgid "Applying effect '%s'"
 msgstr ""
@@ -1311,770 +1434,838 @@ msgid ""
 "one output port to each channel."
 msgstr ""
 
-#: src/ladspadialog.c:190
+#: src/ladspadialog.c:191
 #, c-format
 msgid "Author: %s"
 msgstr ""
 
-#: src/ladspadialog.c:195
+#: src/ladspadialog.c:196
 #, c-format
 msgid "Copyright: %s"
 msgstr ""
 
-#: src/ladspadialog.c:202
+#: src/ladspadialog.c:203
 msgid " Input controls "
 msgstr ""
 
-#: src/ladspadialog.c:289
+#: src/ladspadialog.c:290
 msgid " Output controls "
 msgstr ""
 
-#: src/ladspadialog.c:308 src/recorddialog.c:204 src/recorddialog.c:498
+#: src/ladspadialog.c:309 src/recorddialog.c:204 src/recorddialog.c:496
 msgid "None"
 msgstr ""
 
-#: src/ladspadialog.c:316
+#: src/ladspadialog.c:317
 msgid " Input audio "
 msgstr ""
 
-#: src/ladspadialog.c:316
+#: src/ladspadialog.c:317
 msgid " Output audio "
 msgstr ""
 
-#: src/ladspadialog.c:340
+#: src/ladspadialog.c:348
 msgid "Keep data in unmapped output channels"
 msgstr ""
 
-#: src/main.c:128
+#: src/main.c:134
 #, c-format
 msgid "Syntax: %s [files]\n"
 msgstr ""
 
-#: src/main.c:131
+#: src/main.c:137
 msgid "Testing conversion functions:"
 msgstr ""
 
-#: src/main.c:133
+#: src/main.c:139
 msgid "Testing conversion functions finished."
 msgstr ""
 
-#: src/main.c:152
+#: src/main.c:158
 msgid "Expected driver name after --driver option"
 msgstr ""
 
-#: src/main.c:158
+#: src/main.c:164
 #, c-format
 msgid "Unknown option '%s'"
 msgstr ""
 
-#: src/main.c:291
+#: src/main.c:303
 msgid ""
 "Could not find home directory. Using current directory as home directory."
 msgstr ""
 
-#: src/main.c:319
+#: src/main.c:331
 msgid "Black"
 msgstr ""
 
-#: src/main.c:320
+#: src/main.c:332
 msgid "White"
 msgstr ""
 
-#: src/main.c:321
+#: src/main.c:333
 msgid "Background"
 msgstr ""
 
-#: src/main.c:322
+#: src/main.c:334
 msgid "L Waveform"
 msgstr ""
 
-#: src/main.c:323
+#: src/main.c:335
 msgid "R Waveform"
 msgstr ""
 
-#: src/main.c:324
+#: src/main.c:336
 msgid "Cursor"
 msgstr ""
 
-#: src/main.c:325
+#: src/main.c:337
 msgid "Marks"
 msgstr ""
 
-#: src/main.c:326
+#: src/main.c:338
 msgid "Selection"
 msgstr ""
 
-#: src/main.c:327
+#: src/main.c:339
 msgid "Progress bar"
 msgstr ""
 
-#: src/main.c:328
+#: src/main.c:340
 msgid "Zero-level"
 msgstr ""
 
-#: src/main.c:451
+#: src/main.c:463
 #, c-format
 msgid "Error launching mixer: fork: %s"
 msgstr ""
 
-#: src/main.c:502 src/main.c:521
+#: src/main.c:514 src/main.c:533
 msgid "Mono"
 msgstr ""
 
-#: src/main.c:503
+#: src/main.c:515
 msgid "Left"
 msgstr ""
 
-#: src/main.c:504
+#: src/main.c:516
 msgid "Right"
 msgstr ""
 
-#: src/main.c:506
+#: src/main.c:518
 #, c-format
-msgid "Channel %d"
+msgid "Ch%d"
 msgstr ""
 
-#: src/main.c:522
+#: src/main.c:534
 msgid "Stereo"
 msgstr ""
 
-#: src/main.c:524
+#: src/main.c:536
 #, c-format
 msgid "%d channels"
 msgstr ""
 
-#: src/main.c:790
+#: src/main.c:1112
 msgid "Ignoring extreme old window size/position values\n"
 msgstr ""
 
-#: src/mainwindow.c:195
+#: src/mainwindow.c:197
 #, c-format
 msgid "mhWaveEdit: %s (%s): %d Hz, %s"
 msgstr ""
 
-#: src/mainwindow.c:203 src/recorddialog.c:65
+#: src/mainwindow.c:205 src/recorddialog.c:65
 msgid "double"
 msgstr ""
 
-#: src/mainwindow.c:203 src/recorddialog.c:63
+#: src/mainwindow.c:205 src/recorddialog.c:63
 msgid "float"
 msgstr ""
 
-#: src/mainwindow.c:205
+#: src/mainwindow.c:207
 #, c-format
 msgid "mhWaveEdit: %s (%s): %d Hz, %d bit"
 msgstr ""
 
-#: src/mainwindow.c:280
+#: src/mainwindow.c:292
 msgid "Use default settings"
 msgstr ""
 
-#: src/mainwindow.c:284
+#: src/mainwindow.c:296
 msgid "Auto-detect from extension"
 msgstr ""
 
-#: src/mainwindow.c:299
+#: src/mainwindow.c:311
 msgid "File type: "
 msgstr ""
 
-#: src/mainwindow.c:345
+#: src/mainwindow.c:357
 msgid ""
 "The file has not changed since last save. Press OK if you want to save it "
 "anyway?"
 msgstr ""
 
-#: src/mainwindow.c:354
+#: src/mainwindow.c:366
 msgid "Save File"
 msgstr ""
 
-#: src/mainwindow.c:379
+#: src/mainwindow.c:391
 #, c-format
 msgid "Save changes to %s?"
 msgstr ""
 
-#: src/mainwindow.c:642 src/mainwindow.c:646
+#: src/mainwindow.c:751 src/mainwindow.c:755
 msgid "Load File"
 msgstr ""
 
-#: src/mainwindow.c:678
+#: src/mainwindow.c:780
 msgid "Save selection as ..."
 msgstr ""
 
-#: src/mainwindow.c:956
+#: src/mainwindow.c:1067
 #, c-format
 msgid "Chunk %p has opencount=%d\n"
 msgstr ""
 
-#: src/mainwindow.c:1027
+#: src/mainwindow.c:1150
 #, c-format
 msgid ""
 "\n"
 "Window '%s'\n"
 msgstr ""
 
-#: src/mainwindow.c:1028
+#: src/mainwindow.c:1151
 msgid "  Current chunk:"
 msgstr ""
 
-#: src/mainwindow.c:1030
+#: src/mainwindow.c:1153
 msgid "  History:"
 msgstr ""
 
-#: src/mainwindow.c:1074
+#: src/mainwindow.c:1208
 msgid "There already is only one channel!"
 msgstr ""
 
-#: src/mainwindow.c:1152
+#: src/mainwindow.c:1291
 msgid "mhWaveEdit Help"
 msgstr ""
 
-#: src/mainwindow.c:1248
+#: src/mainwindow.c:1387
 msgid "About mhWaveEdit"
 msgstr ""
 
-#: src/mainwindow.c:1260
+#: src/mainwindow.c:1399
 msgid ""
 "Created by Magnus Hjorth (magnus.hjorth@home.se)\n"
-"Copyright 2002-2006, Magnus Hjorth"
+"Copyright 2002-2007, Magnus Hjorth"
 msgstr ""
 
-#: src/mainwindow.c:1267
+#: src/mainwindow.c:1406
 #, c-format
 msgid "Current sound driver: %s"
 msgstr ""
 
-#: src/mainwindow.c:1275
+#: src/mainwindow.c:1414
 #, c-format
 msgid "Compiled %s %s"
 msgstr ""
 
-#: src/mainwindow.c:1281
+#: src/mainwindow.c:1420
 msgid "Uses double-precision math"
 msgstr ""
 
-#: src/mainwindow.c:1288
+#: src/mainwindow.c:1427
 msgid ""
 "Distributed under GNU General Public License.\n"
 "For information, see the file COPYING"
 msgstr ""
 
-#: src/mainwindow.c:1402
+#: src/mainwindow.c:1541
 msgid "Seconds of silence: "
 msgstr ""
 
-#: src/mainwindow.c:1402
+#: src/mainwindow.c:1541
 msgid "Insert Silence"
 msgstr ""
 
-#: src/mainwindow.c:1537
-msgid "/_File"
-msgstr ""
-
-#: src/mainwindow.c:1538
-msgid "/File/_Open..."
-msgstr ""
-
-#: src/mainwindow.c:1539
-msgid "/File/_Save"
-msgstr ""
-
-#: src/mainwindow.c:1540
-msgid "/File/Save _as..."
-msgstr ""
-
-#: src/mainwindow.c:1541
-msgid "/File/Save selection as..."
-msgstr ""
-
-#: src/mainwindow.c:1542
-msgid "/_Edit"
-msgstr ""
-
-#: src/mainwindow.c:1543
-msgid "/Edit/_Undo"
-msgstr ""
-
-#: src/mainwindow.c:1544
-msgid "/Edit/_Redo"
-msgstr ""
-
-#: src/mainwindow.c:1545
-msgid "/Edit/sep1"
-msgstr ""
-
-#: src/mainwindow.c:1546
-msgid "/Edit/Cu_t"
-msgstr ""
-
-#: src/mainwindow.c:1547
-msgid "/Edit/_Copy"
-msgstr ""
-
-#: src/mainwindow.c:1548
-msgid "/Edit/_Paste"
-msgstr ""
-
-#: src/mainwindow.c:1549
-msgid "/Edit/Paste _over"
-msgstr ""
-
-#: src/mainwindow.c:1550
-msgid "/Edit/_Mix paste"
-msgstr ""
-
-#: src/mainwindow.c:1551
-msgid "/Edit/Insert _silence"
-msgstr ""
-
-#: src/mainwindow.c:1552
-msgid "/Edit/Paste to _new"
-msgstr ""
-
-#: src/mainwindow.c:1553
-msgid "/Edit/Cr_op"
-msgstr ""
-
-#: src/mainwindow.c:1554
-msgid "/Edit/_Delete"
-msgstr ""
-
-#: src/mainwindow.c:1555
-msgid "/Edit/Silence selection"
-msgstr ""
-
-#: src/mainwindow.c:1556
-msgid "/Edit/sep2"
-msgstr ""
-
-#: src/mainwindow.c:1557
-msgid "/Edit/Select _all"
-msgstr ""
-
-#: src/mainwindow.c:1558
-msgid "/Edit/sep3"
-msgstr ""
-
-#: src/mainwindow.c:1559
-msgid "/Edit/Clear clipboard"
-msgstr ""
-
-#: src/mainwindow.c:1560
-msgid "/Edit/sep4"
-msgstr ""
-
-#: src/mainwindow.c:1561
-msgid "/Edit/Preferences"
-msgstr ""
-
-#: src/mainwindow.c:1562
-msgid "/_View"
-msgstr ""
-
-#: src/mainwindow.c:1563
-msgid "/View/Zoom _in"
-msgstr ""
-
-#: src/mainwindow.c:1564
-msgid "/View/Zoom _out"
-msgstr ""
-
-#: src/mainwindow.c:1565
-msgid "/View/Zoom to _selection"
-msgstr ""
-
-#: src/mainwindow.c:1566
-msgid "/View/sep1"
-msgstr ""
-
-#: src/mainwindow.c:1567
-msgid "/View/Zoom _all"
-msgstr ""
-
-#: src/mainwindow.c:1568
-msgid "/View/sep2"
-msgstr ""
-
-#: src/mainwindow.c:1569
-msgid "/View/_Time scale"
-msgstr ""
-
-#: src/mainwindow.c:1570
-msgid "/View/_Horizontal zoom"
-msgstr ""
-
-#: src/mainwindow.c:1571
-msgid "/View/_Vertical zoom"
-msgstr ""
-
-#: src/mainwindow.c:1572
-msgid "/View/Sp_eed slider"
-msgstr ""
-
-#: src/mainwindow.c:1573
-msgid "/_Cursor"
-msgstr ""
-
-#: src/mainwindow.c:1574
-msgid "/Cursor/Set selection start"
-msgstr ""
-
-#: src/mainwindow.c:1576
-msgid "/Cursor/Set selection end"
-msgstr ""
-
-#: src/mainwindow.c:1577
-msgid "/Cursor/sep1"
-msgstr ""
-
-#: src/mainwindow.c:1578
-msgid "/Cursor/Move to beginning"
-msgstr ""
-
-#: src/mainwindow.c:1580
-msgid "/Cursor/Move to end"
-msgstr ""
-
-#: src/mainwindow.c:1581
-msgid "/Cursor/Move to selection start"
-msgstr ""
-
-#: src/mainwindow.c:1583
-msgid "/Cursor/Move to selection end"
-msgstr ""
-
-#: src/mainwindow.c:1585
-msgid "/Cursor/sep2"
-msgstr ""
-
-#: src/mainwindow.c:1586
-msgid "/Cursor/Position cursor..."
-msgstr ""
-
-#: src/mainwindow.c:1588
-msgid "/_Play"
-msgstr ""
-
-#: src/mainwindow.c:1589
-msgid "/Play/_Play from cursor"
+#: src/mainwindow.c:1590
+msgid "Level: "
 msgstr ""
 
 #: src/mainwindow.c:1590
-msgid "/Play/Play _all"
+msgid "Normalize to..."
 msgstr ""
 
-#: src/mainwindow.c:1591
-msgid "/Play/Play se_lection"
+#: src/mainwindow.c:1800
+msgid "/_File"
 msgstr ""
 
-#: src/mainwindow.c:1592
-msgid "/Play/_Stop"
+#: src/mainwindow.c:1801
+msgid "/File/_Open..."
 msgstr ""
 
-#: src/mainwindow.c:1593
-msgid "/Play/sep1"
+#: src/mainwindow.c:1802
+msgid "/File/_Save"
 msgstr ""
 
-#: src/mainwindow.c:1594
-msgid "/Play/_Record..."
-msgstr ""
-
-#: src/mainwindow.c:1595
-msgid "/Effec_ts"
-msgstr ""
-
-#: src/mainwindow.c:1596
-msgid "/Effects/Fade _in"
-msgstr ""
-
-#: src/mainwindow.c:1597
-msgid "/Effects/Fade o_ut"
-msgstr ""
-
-#: src/mainwindow.c:1598
-msgid "/Effects/_Normalize"
-msgstr ""
-
-#: src/mainwindow.c:1599
-msgid "/Effects/_Volume adjust (fade)..."
-msgstr ""
-
-#: src/mainwindow.c:1600
-msgid "/Effects/sep1"
-msgstr ""
-
-#: src/mainwindow.c:1601
-msgid "/Effects/Convert sample_rate..."
-msgstr ""
-
-#: src/mainwindow.c:1602
-msgid "/Effects/Convert sample _format..."
-msgstr ""
-
-#: src/mainwindow.c:1604
-msgid "/Effects/B_yte swap"
-msgstr ""
-
-#: src/mainwindow.c:1605
-msgid "/Effects/sep2"
-msgstr ""
-
-#: src/mainwindow.c:1606
-msgid "/Effects/_Mix channels..."
-msgstr ""
-
-#: src/mainwindow.c:1607
-msgid "/Effects/Sp_lit channel..."
-msgstr ""
-
-#: src/mainwindow.c:1608
-msgid "/Effects/_Combine channels..."
-msgstr ""
-
-#: src/mainwindow.c:1609
-msgid "/Effects/sep3"
-msgstr ""
-
-#: src/mainwindow.c:1610
-msgid "/Effects/_Speed adjustment..."
-msgstr ""
-
-#: src/mainwindow.c:1611
-msgid "/Effects/Pipe through program..."
-msgstr ""
-
-#: src/mainwindow.c:1612
-msgid "/Effects/sep4"
-msgstr ""
-
-#: src/mainwindow.c:1613
-msgid "/Effects/Effects dialog..."
-msgstr ""
-
-#: src/mainwindow.c:1615
-msgid "/Debug"
-msgstr ""
-
-#: src/mainwindow.c:1616
-msgid "/Debug/Mark as modified"
-msgstr ""
-
-#: src/mainwindow.c:1617
-msgid "/Debug/Dummy effect"
-msgstr ""
-
-#: src/mainwindow.c:1618
-msgid "/Debug/Check opencount"
-msgstr ""
-
-#: src/mainwindow.c:1619
-msgid "/Debug/Dump chunk info"
-msgstr ""
-
-#: src/mainwindow.c:1621
-msgid "/_Help"
-msgstr ""
-
-#: src/mainwindow.c:1622
-msgid "/Help/_Documentation"
-msgstr ""
-
-#: src/mainwindow.c:1623
-msgid "/Help/_About"
-msgstr ""
-
-#: src/mainwindow.c:1627
-msgid "/File/sep1"
-msgstr ""
-
-#: src/mainwindow.c:1628
-msgid "/File/_Close"
-msgstr ""
-
-#: src/mainwindow.c:1629
-msgid "/File/sep2"
-msgstr ""
-
-#: src/mainwindow.c:1630
-msgid "/File/_Exit"
-msgstr ""
-
-#: src/mainwindow.c:1788
-msgid "Load a file from disk"
-msgstr ""
-
-#: src/mainwindow.c:1795
-msgid "Save the current file to disk"
+#: src/mainwindow.c:1803
+msgid "/File/Save _as..."
 msgstr ""
 
 #: src/mainwindow.c:1804
-msgid "Undo the last change"
+msgid "/File/Save selection as..."
+msgstr ""
+
+#: src/mainwindow.c:1805
+msgid "/_Edit"
+msgstr ""
+
+#: src/mainwindow.c:1806
+msgid "/Edit/_Undo"
+msgstr ""
+
+#: src/mainwindow.c:1807
+msgid "/Edit/_Redo"
+msgstr ""
+
+#: src/mainwindow.c:1808
+msgid "/Edit/sep1"
+msgstr ""
+
+#: src/mainwindow.c:1809
+msgid "/Edit/Cu_t"
+msgstr ""
+
+#: src/mainwindow.c:1810
+msgid "/Edit/_Copy"
+msgstr ""
+
+#: src/mainwindow.c:1811
+msgid "/Edit/_Paste"
 msgstr ""
 
 #: src/mainwindow.c:1812
-msgid "Redo the last undo operation"
+msgid "/Edit/Paste _over"
+msgstr ""
+
+#: src/mainwindow.c:1813
+msgid "/Edit/_Mix paste"
+msgstr ""
+
+#: src/mainwindow.c:1814
+msgid "/Edit/Insert _silence"
+msgstr ""
+
+#: src/mainwindow.c:1815
+msgid "/Edit/Paste to _new"
+msgstr ""
+
+#: src/mainwindow.c:1816
+msgid "/Edit/Cr_op"
+msgstr ""
+
+#: src/mainwindow.c:1817
+msgid "/Edit/_Delete"
+msgstr ""
+
+#: src/mainwindow.c:1818
+msgid "/Edit/Silence selection"
+msgstr ""
+
+#: src/mainwindow.c:1819
+msgid "/Edit/sep2"
+msgstr ""
+
+#: src/mainwindow.c:1820
+msgid "/Edit/Select _all"
+msgstr ""
+
+#: src/mainwindow.c:1821
+msgid "/Edit/Select none"
 msgstr ""
 
 #: src/mainwindow.c:1822
-msgid "Cut out the current selection"
+msgid "/Edit/sep3"
+msgstr ""
+
+#: src/mainwindow.c:1823
+msgid "/Edit/Clear clipboard"
+msgstr ""
+
+#: src/mainwindow.c:1824
+msgid "/Edit/sep4"
+msgstr ""
+
+#: src/mainwindow.c:1825
+msgid "/Edit/Preferences"
+msgstr ""
+
+#: src/mainwindow.c:1826
+msgid "/_View"
+msgstr ""
+
+#: src/mainwindow.c:1827
+msgid "/View/Zoom _in"
+msgstr ""
+
+#: src/mainwindow.c:1828
+msgid "/View/Zoom _out"
+msgstr ""
+
+#: src/mainwindow.c:1829
+msgid "/View/Zoom to _selection"
 msgstr ""
 
 #: src/mainwindow.c:1830
-msgid "Copy the current selection"
+msgid "/View/sep1"
+msgstr ""
+
+#: src/mainwindow.c:1831
+msgid "/View/Zoom _all"
+msgstr ""
+
+#: src/mainwindow.c:1832
+msgid "/View/sep2"
+msgstr ""
+
+#: src/mainwindow.c:1833
+msgid "/View/_Time scale"
+msgstr ""
+
+#: src/mainwindow.c:1834
+msgid "/View/_Horizontal zoom"
+msgstr ""
+
+#: src/mainwindow.c:1835
+msgid "/View/_Vertical zoom"
+msgstr ""
+
+#: src/mainwindow.c:1836
+msgid "/View/Sp_eed slider"
+msgstr ""
+
+#: src/mainwindow.c:1837
+msgid "/_Cursor"
 msgstr ""
 
 #: src/mainwindow.c:1838
-msgid "Paste at cursor position"
+msgid "/Cursor/Set selection start"
+msgstr ""
+
+#: src/mainwindow.c:1840
+msgid "/Cursor/Set selection end"
+msgstr ""
+
+#: src/mainwindow.c:1841
+msgid "/Cursor/sep1"
+msgstr ""
+
+#: src/mainwindow.c:1842
+msgid "/Cursor/Move to"
+msgstr ""
+
+#: src/mainwindow.c:1843
+msgid "/Cursor/Move to/Beginning"
+msgstr ""
+
+#: src/mainwindow.c:1845
+msgid "/Cursor/Move to/End"
 msgstr ""
 
 #: src/mainwindow.c:1846
-msgid "Paste, overwriting the data after the cursor position"
+msgid "/Cursor/Move to/Selection start"
+msgstr ""
+
+#: src/mainwindow.c:1848
+msgid "/Cursor/Move to/Selection end"
+msgstr ""
+
+#: src/mainwindow.c:1850
+msgid "/Cursor/Move"
+msgstr ""
+
+#: src/mainwindow.c:1851
+msgid "/Cursor/Move/Left"
+msgstr ""
+
+#: src/mainwindow.c:1852
+msgid "/Cursor/Move/Right"
+msgstr ""
+
+#: src/mainwindow.c:1853
+msgid "/Cursor/Move/Left sample"
+msgstr ""
+
+#: src/mainwindow.c:1854
+msgid "/Cursor/Move/Right sample"
+msgstr ""
+
+#: src/mainwindow.c:1855
+msgid "/Cursor/Find zero-crossing"
 msgstr ""
 
 #: src/mainwindow.c:1856
-msgid "Delete the selection"
+msgid "/Cursor/Find zero-crossing/Left (all channels)"
+msgstr ""
+
+#: src/mainwindow.c:1858
+msgid "/Cursor/Find zero-crossing/Right (all channels)"
+msgstr ""
+
+#: src/mainwindow.c:1860
+msgid "/Cursor/Find zero-crossing/Left (any channel)"
+msgstr ""
+
+#: src/mainwindow.c:1862
+msgid "/Cursor/Find zero-crossing/Right (any channel)"
+msgstr ""
+
+#: src/mainwindow.c:1864
+msgid "/Cursor/sep2"
 msgstr ""
 
 #: src/mainwindow.c:1865
-msgid "Set selection start to cursor position"
+msgid "/Cursor/Position cursor..."
+msgstr ""
+
+#: src/mainwindow.c:1867
+msgid "/_Play"
+msgstr ""
+
+#: src/mainwindow.c:1868
+msgid "/Play/_Play from cursor"
+msgstr ""
+
+#: src/mainwindow.c:1869
+msgid "/Play/Play _all"
+msgstr ""
+
+#: src/mainwindow.c:1870
+msgid "/Play/Play se_lection"
+msgstr ""
+
+#: src/mainwindow.c:1871
+msgid "/Play/_Stop"
+msgstr ""
+
+#: src/mainwindow.c:1872
+msgid "/Play/sep1"
+msgstr ""
+
+#: src/mainwindow.c:1873
+msgid "/Play/_Record..."
 msgstr ""
 
 #: src/mainwindow.c:1874
-msgid "Set selection end to cursor position"
+msgid "/Effec_ts"
+msgstr ""
+
+#: src/mainwindow.c:1875
+msgid "/Effects/Fade _in"
+msgstr ""
+
+#: src/mainwindow.c:1876
+msgid "/Effects/Fade o_ut"
+msgstr ""
+
+#: src/mainwindow.c:1877
+msgid "/Effects/_Normalize"
+msgstr ""
+
+#: src/mainwindow.c:1878
+msgid "/Effects/Normali_ze to..."
+msgstr ""
+
+#: src/mainwindow.c:1879
+msgid "/Effects/_Volume adjust (fade)..."
+msgstr ""
+
+#: src/mainwindow.c:1880
+msgid "/Effects/sep1"
+msgstr ""
+
+#: src/mainwindow.c:1881
+msgid "/Effects/Convert sample_rate..."
+msgstr ""
+
+#: src/mainwindow.c:1882
+msgid "/Effects/Convert sample _format..."
 msgstr ""
 
 #: src/mainwindow.c:1884
-msgid "Play from cursor position"
+msgid "/Effects/B_yte swap"
+msgstr ""
+
+#: src/mainwindow.c:1885
+msgid "/Effects/sep2"
+msgstr ""
+
+#: src/mainwindow.c:1886
+msgid "/Effects/_Mix to mono"
+msgstr ""
+
+#: src/mainwindow.c:1887
+msgid "/Effects/Add channe_l"
+msgstr ""
+
+#: src/mainwindow.c:1888
+msgid "/Effects/Ma_p channels..."
+msgstr ""
+
+#: src/mainwindow.c:1889
+msgid "/Effects/_Combine channels..."
+msgstr ""
+
+#: src/mainwindow.c:1890
+msgid "/Effects/sep3"
+msgstr ""
+
+#: src/mainwindow.c:1891
+msgid "/Effects/_Speed adjustment..."
+msgstr ""
+
+#: src/mainwindow.c:1892
+msgid "/Effects/Pipe through program..."
 msgstr ""
 
 #: src/mainwindow.c:1893
-msgid "Play selected area"
+msgid "/Effects/sep4"
+msgstr ""
+
+#: src/mainwindow.c:1894
+msgid "/Effects/Effects dialog..."
+msgstr ""
+
+#: src/mainwindow.c:1896
+msgid "/Debug"
+msgstr ""
+
+#: src/mainwindow.c:1898
+msgid "/Debug/Dummy effect"
+msgstr ""
+
+#: src/mainwindow.c:1899
+msgid "/Debug/Check opencount"
+msgstr ""
+
+#: src/mainwindow.c:1900
+msgid "/Debug/Dump chunk info"
 msgstr ""
 
 #: src/mainwindow.c:1902
+msgid "/_Help"
+msgstr ""
+
+#: src/mainwindow.c:1903
+msgid "/Help/_Documentation"
+msgstr ""
+
+#: src/mainwindow.c:1904
+msgid "/Help/_About"
+msgstr ""
+
+#: src/mainwindow.c:1908
+msgid "/File/sep1"
+msgstr ""
+
+#: src/mainwindow.c:1909
+msgid "/File/_Close"
+msgstr ""
+
+#: src/mainwindow.c:1910
+msgid "/File/sep2"
+msgstr ""
+
+#: src/mainwindow.c:1911
+msgid "/File/_Exit"
+msgstr ""
+
+#: src/mainwindow.c:2069
+msgid "Load a file from disk"
+msgstr ""
+
+#: src/mainwindow.c:2076
+msgid "Save the current file to disk"
+msgstr ""
+
+#: src/mainwindow.c:2085
+msgid "Undo the last change"
+msgstr ""
+
+#: src/mainwindow.c:2093
+msgid "Redo the last undo operation"
+msgstr ""
+
+#: src/mainwindow.c:2103
+msgid "Cut out the current selection"
+msgstr ""
+
+#: src/mainwindow.c:2111
+msgid "Copy the current selection"
+msgstr ""
+
+#: src/mainwindow.c:2119
+msgid "Paste at cursor position"
+msgstr ""
+
+#: src/mainwindow.c:2127
+msgid "Paste, overwriting the data after the cursor position"
+msgstr ""
+
+#: src/mainwindow.c:2137
+msgid "Delete the selection"
+msgstr ""
+
+#: src/mainwindow.c:2146
+msgid "Set selection start to cursor position"
+msgstr ""
+
+#: src/mainwindow.c:2155
+msgid "Set selection end to cursor position"
+msgstr ""
+
+#: src/mainwindow.c:2165
+msgid "Play from cursor position"
+msgstr ""
+
+#: src/mainwindow.c:2174
+msgid "Play selected area"
+msgstr ""
+
+#: src/mainwindow.c:2183
 msgid "Stop playing"
 msgstr ""
 
-#: src/mainwindow.c:1912
+#: src/mainwindow.c:2193
 msgid "Loop mode (play over and over)"
 msgstr ""
 
-#: src/mainwindow.c:1922
+#: src/mainwindow.c:2203
 msgid "Follow cursor while playing"
 msgstr ""
 
-#: src/mainwindow.c:1935
+#: src/mainwindow.c:2216
 msgid "Auto return to playback start"
 msgstr ""
 
-#: src/mainwindow.c:1949 src/recorddialog.c:630
+#: src/mainwindow.c:2230 src/recorddialog.c:628
 msgid "Record"
 msgstr ""
 
-#: src/mainwindow.c:1958 src/recorddialog.c:799
+#: src/mainwindow.c:2239 src/recorddialog.c:797
 msgid "Launch mixer"
 msgstr ""
 
-#: src/pipedialog.c:84
+#: src/pipedialog.c:93
 msgid "Command line: "
 msgstr ""
 
-#: src/pipedialog.c:91
+#: src/pipedialog.c:100
 msgid "Send wav header"
 msgstr ""
 
-#: src/pipedialog.c:138
+#: src/pipedialog.c:147
 msgid "Process output"
 msgstr ""
 
-#: src/pipedialog.c:159
+#: src/pipedialog.c:168
 #, c-format
 msgid ""
 "Output from command '%s':\n"
 "\n"
 msgstr ""
 
-#: src/pipedialog.c:181
+#: src/pipedialog.c:190
 #, c-format
 msgid "Could not create pipe: %s"
 msgstr ""
 
-#: src/pipedialog.c:196
+#: src/pipedialog.c:205
 #, c-format
 msgid "Error: fork: %s"
 msgstr ""
 
-#: src/pipedialog.c:247
+#: src/pipedialog.c:256
 msgid "Should not reach this point!"
 msgstr ""
 
-#: src/pipedialog.c:445
+#: src/pipedialog.c:465
 msgid "Command failed without returning any data"
 msgstr ""
 
-#: src/pipedialog.c:456
+#: src/pipedialog.c:475
 #, c-format
 msgid "Error: %s"
 msgstr ""
 
-#: src/player.c:244
+#: src/player.c:245
 msgid "The sound format of this file is not supported for playing."
 msgstr ""
 
-#: src/rateconv.c:92
+#: src/rateconv.c:97
 #, c-format
 msgid "Error initialising sample rate conversion: %s"
 msgstr ""
 
-#: src/rateconv.c:158
+#: src/rateconv.c:162
 #, c-format
 msgid "Error converting samplerate: %s\n"
 msgstr ""
 
-#: src/rateconv.c:197
+#: src/rateconv.c:201
 #, c-format
 msgid "Error changing samplerate conversion ratio: %s\n"
 msgstr ""
 
-#: src/rateconv.c:313
+#: src/rateconv.c:319
 msgid "Unexpected EOF in connection to subprocess"
 msgstr ""
 
-#: src/rateconv.c:317
+#: src/rateconv.c:323
 #, c-format
 msgid "Error writing to subprocess: %s"
 msgstr ""
 
-#: src/rateconv.c:373 src/rateconv.c:395
+#: src/rateconv.c:379 src/rateconv.c:401
 #, c-format
 msgid "Error reading from sub process: %s"
 msgstr ""
 
-#: src/rateconv.c:403
+#: src/rateconv.c:409
 msgid "SoX closed connection too early!"
 msgstr ""
 
-#: src/rateconv.c:591
+#: src/rateconv.c:593
 msgid "(SoX) Simulated analog filtration"
 msgstr ""
 
-#: src/rateconv.c:597
+#: src/rateconv.c:599
 msgid "(SoX) Polyphase interpolation"
 msgstr ""
 
-#: src/rateconv.c:604
+#: src/rateconv.c:606
 msgid "Sample repeat/skip (low quality)"
 msgstr ""
 
-#: src/rawdialog.c:67
+#: src/rawdialog.c:41
+msgid "header size"
+msgstr ""
+
+#: src/rawdialog.c:71
 msgid "Unknown file format"
 msgstr ""
 
-#: src/rawdialog.c:74
+#: src/rawdialog.c:78
 #, c-format
 msgid ""
 "The format of file '%s' could not be recognized.\n"
 "\n"
 "Please specify the sample format below."
+msgstr ""
+
+#: src/rawdialog.c:90
+msgid "Header bytes: "
 msgstr ""
 
 #: src/recorddialog.c:45
@@ -2100,7 +2291,7 @@ msgstr ""
 msgid "Other format..."
 msgstr ""
 
-#: src/recorddialog.c:101 src/recorddialog.c:428 src/recorddialog.c:734
+#: src/recorddialog.c:101 src/recorddialog.c:426 src/recorddialog.c:732
 msgid "(no limit)"
 msgstr ""
 
@@ -2112,132 +2303,132 @@ msgstr ""
 msgid "Heavy"
 msgstr ""
 
-#: src/recorddialog.c:330
+#: src/recorddialog.c:328
 msgid "Custom format"
 msgstr ""
 
-#: src/recorddialog.c:347
+#: src/recorddialog.c:345
 msgid ""
 "The sign and endian-ness can usually be left at their defaults, but should "
 "be changed if you're unable to record or get bad sound."
 msgstr ""
 
-#: src/recorddialog.c:354
+#: src/recorddialog.c:352
 msgid ""
 "To add this format to the presets, enter a name below. Otherwise, leave it "
 "blank."
 msgstr ""
 
-#: src/recorddialog.c:360
+#: src/recorddialog.c:358
 msgid "Name :"
 msgstr ""
 
-#: src/recorddialog.c:411
+#: src/recorddialog.c:409
 msgid ""
 "Invalid time value. Time must be specified in the form (HH')MM:SS(.mmmm)"
 msgstr ""
 
-#: src/recorddialog.c:454 src/recorddialog.c:764
+#: src/recorddialog.c:452 src/recorddialog.c:762
 msgid "Format not selected"
 msgstr ""
 
-#: src/recorddialog.c:460
+#: src/recorddialog.c:458
 msgid "This format is not supported by the input driver!"
 msgstr ""
 
-#: src/recorddialog.c:465
+#: src/recorddialog.c:463
 msgid "Ready for recording"
 msgstr ""
 
-#: src/recorddialog.c:482
+#: src/recorddialog.c:480
 msgid "Peak: "
 msgstr ""
 
-#: src/recorddialog.c:483
+#: src/recorddialog.c:481
 msgid "Peak max: "
 msgstr ""
 
-#: src/recorddialog.c:484
+#: src/recorddialog.c:482
 msgid "RMS: "
 msgstr ""
 
-#: src/recorddialog.c:485
+#: src/recorddialog.c:483
 msgid "Clipping: "
 msgstr ""
 
-#: src/recorddialog.c:559
+#: src/recorddialog.c:557
 msgid "Resume recording"
 msgstr ""
 
-#: src/recorddialog.c:559 src/recorddialog.c:572
+#: src/recorddialog.c:557 src/recorddialog.c:570
 msgid "Pause recording"
 msgstr ""
 
-#: src/recorddialog.c:561
+#: src/recorddialog.c:559
 msgid "RecordStatus|Paused"
 msgstr ""
 
-#: src/recorddialog.c:562 src/recorddialog.c:580
+#: src/recorddialog.c:560 src/recorddialog.c:578
 msgid "RecordStatus|Recording"
 msgstr ""
 
-#: src/recorddialog.c:575
+#: src/recorddialog.c:573
 msgid "Finish"
 msgstr ""
 
-#: src/recorddialog.c:583
+#: src/recorddialog.c:581
 msgid "Overruns: "
 msgstr ""
 
-#: src/recorddialog.c:585
+#: src/recorddialog.c:583
 msgid "Bytes written: "
 msgstr ""
 
-#: src/recorddialog.c:586
+#: src/recorddialog.c:584
 msgid "Auto stop in: "
 msgstr ""
 
-#: src/recorddialog.c:708
+#: src/recorddialog.c:706
 msgid "Recording settings"
 msgstr ""
 
-#: src/recorddialog.c:715
+#: src/recorddialog.c:713
 msgid "Sample format: "
 msgstr ""
 
-#: src/recorddialog.c:732
+#: src/recorddialog.c:730
 msgid "Time limit: "
 msgstr ""
 
-#: src/recorddialog.c:740
+#: src/recorddialog.c:738
 msgid "Disable"
 msgstr ""
 
-#: src/recorddialog.c:746
+#: src/recorddialog.c:744
 msgid "Set"
 msgstr ""
 
-#: src/recorddialog.c:758
+#: src/recorddialog.c:756
 msgid "Input levels"
 msgstr ""
 
-#: src/recorddialog.c:763
+#: src/recorddialog.c:761
 msgid "Recording status: "
 msgstr ""
 
-#: src/recorddialog.c:768
+#: src/recorddialog.c:766
 msgid "Time recorded: "
 msgstr ""
 
-#: src/recorddialog.c:769
+#: src/recorddialog.c:767
 msgid "N/A"
 msgstr ""
 
-#: src/recorddialog.c:782
+#: src/recorddialog.c:780
 msgid "Start recording"
 msgstr ""
 
-#: src/recorddialog.c:793
+#: src/recorddialog.c:791
 msgid "Reset max peaks"
 msgstr ""
 
@@ -2302,11 +2493,11 @@ msgstr ""
 msgid "snd_pcm_hw_params_set_rate failed"
 msgstr ""
 
-#: src/sound-alsalib.c:292 src/sound-alsalib.c:313
+#: src/sound-alsalib.c:295 src/sound-alsalib.c:316
 msgid "<ALSA playback buffer underrun>"
 msgstr ""
 
-#: src/sound-alsalib.c:351
+#: src/sound-alsalib.c:354
 msgid "<ALSA recording buffer overrun>"
 msgstr ""
 
@@ -2533,345 +2724,341 @@ msgid "SunAudio: Error reading from sound device"
 msgstr ""
 
 #: src/soxdialog.c:52
-msgid "[S] Echo"
+msgid "Echo"
 msgstr ""
 
 #: src/soxdialog.c:53
-msgid "[S] Echo sequence"
+msgid "Echo sequence"
 msgstr ""
 
 #: src/soxdialog.c:54
-msgid "[S] Reverb"
+msgid "Reverb"
 msgstr ""
 
 #: src/soxdialog.c:55
-msgid "[S] Chorus"
+msgid "Chorus"
 msgstr ""
 
 #: src/soxdialog.c:56
-msgid "[S] Flanger"
+msgid "Flanger"
 msgstr ""
 
 #: src/soxdialog.c:57
-msgid "[S] Phaser"
+msgid "Phaser"
 msgstr ""
 
 #: src/soxdialog.c:58
-msgid "[S] Compress/Expand"
+msgid "Compress/Expand"
 msgstr ""
 
 #: src/soxdialog.c:59
-msgid "[S] Pitch adjust"
+msgid "Pitch adjust"
 msgstr ""
 
 #: src/soxdialog.c:60
-msgid "[S] Time stretch"
+msgid "Time stretch"
 msgstr ""
 
 #: src/soxdialog.c:61
-msgid "[S] DC Shift"
+msgid "DC Shift"
 msgstr ""
 
 #: src/soxdialog.c:62
-msgid "[S] Masking noise"
+msgid "Masking noise"
 msgstr ""
 
 #: src/soxdialog.c:63
-msgid "[S] Reverse"
+msgid "Reverse"
 msgstr ""
 
 #: src/soxdialog.c:64
-msgid "[S] Earwax"
+msgid "Earwax"
 msgstr ""
 
 #: src/soxdialog.c:65
-msgid "[S] Vibro"
+msgid "Vibro"
 msgstr ""
 
 #: src/soxdialog.c:66
-msgid "[S] Lowpass filter (single-pole)"
+msgid "Lowpass filter (single-pole)"
 msgstr ""
 
 #: src/soxdialog.c:67
-msgid "[S] Highpass filter (single-pole)"
+msgid "Highpass filter (single-pole)"
 msgstr ""
 
 #: src/soxdialog.c:68
-msgid "[S] Bandpass filter"
+msgid "Bandpass filter"
 msgstr ""
 
 #: src/soxdialog.c:69
-msgid "[S] Butterworth lowpass filter"
+msgid "Butterworth lowpass filter"
 msgstr ""
 
 #: src/soxdialog.c:70
-msgid "[S] Butterworth highpass filter"
+msgid "Butterworth highpass filter"
 msgstr ""
 
 #: src/soxdialog.c:71
-msgid "[S] Butterworth bandpass filter"
+msgid "Butterworth bandpass filter"
 msgstr ""
 
 #: src/soxdialog.c:72
-msgid "[S] Butterworth bandreject filter"
+msgid "Butterworth bandreject filter"
 msgstr ""
 
 #: src/soxdialog.c:73
-msgid "[S] Sinc-windowed filter"
+msgid "Sinc-windowed filter"
 msgstr ""
 
-#: src/soxdialog.c:247
-msgid "SoX only supports 8, 16 and 32-bit sample sizes"
-msgstr ""
-
-#: src/soxdialog.c:273
+#: src/soxdialog.c:300
 msgid "Frequency: "
 msgstr ""
 
-#: src/soxdialog.c:278 src/soxdialog.c:285 src/soxdialog.c:444
-#: src/soxdialog.c:446
+#: src/soxdialog.c:305 src/soxdialog.c:312 src/soxdialog.c:471
+#: src/soxdialog.c:473
 msgid "Hz"
 msgstr ""
 
-#: src/soxdialog.c:288
+#: src/soxdialog.c:315
 msgid "Noise mode"
 msgstr ""
 
-#: src/soxdialog.c:348
+#: src/soxdialog.c:375
 msgid "Reverb time: "
 msgstr ""
 
-#: src/soxdialog.c:353
+#: src/soxdialog.c:380
 msgid "ms"
 msgstr ""
 
-#: src/soxdialog.c:358
+#: src/soxdialog.c:385
 msgid "Delay (ms)  "
 msgstr ""
 
-#: src/soxdialog.c:361
+#: src/soxdialog.c:388
 msgid "Decay  "
 msgstr ""
 
-#: src/soxdialog.c:365
+#: src/soxdialog.c:392
 msgid "Speed (Hz)  "
 msgstr ""
 
-#: src/soxdialog.c:369
+#: src/soxdialog.c:396
 msgid "Depth (ms)  "
 msgstr ""
 
-#: src/soxdialog.c:373
+#: src/soxdialog.c:400
 msgid "Modulation  "
 msgstr ""
 
-#: src/soxdialog.c:376
+#: src/soxdialog.c:403
 msgid "Modulation|Sinusoidal"
 msgstr ""
 
-#: src/soxdialog.c:377
+#: src/soxdialog.c:404
 msgid "Modulation|Triangular"
 msgstr ""
 
-#: src/soxdialog.c:390
+#: src/soxdialog.c:417
 msgid "(Lines with delay=0 will be ignored.)"
 msgstr ""
 
-#: src/soxdialog.c:409 src/soxdialog.c:411 src/soxdialog.c:415
-#: src/soxdialog.c:417 src/soxdialog.c:419
+#: src/soxdialog.c:436 src/soxdialog.c:438 src/soxdialog.c:442
+#: src/soxdialog.c:444 src/soxdialog.c:446
 msgid "Input gain: "
 msgstr ""
 
-#: src/soxdialog.c:413
+#: src/soxdialog.c:440
 msgid "Output gain: "
 msgstr ""
 
-#: src/soxdialog.c:425
+#: src/soxdialog.c:452
 msgid "Width: "
 msgstr ""
 
-#: src/soxdialog.c:431 src/soxdialog.c:433
+#: src/soxdialog.c:458 src/soxdialog.c:460
 msgid "Bandwidth: "
 msgstr ""
 
-#: src/soxdialog.c:442
+#: src/soxdialog.c:469
 msgid "Filter type: "
 msgstr ""
 
-#: src/soxdialog.c:443
+#: src/soxdialog.c:470
 msgid "Low 6dB corner: "
 msgstr ""
 
-#: src/soxdialog.c:445
+#: src/soxdialog.c:472
 msgid "High 6db corner: "
 msgstr ""
 
-#: src/soxdialog.c:447
+#: src/soxdialog.c:474
 msgid "Window length: "
 msgstr ""
 
-#: src/soxdialog.c:448
+#: src/soxdialog.c:475
 msgid "samples"
 msgstr ""
 
-#: src/soxdialog.c:449
+#: src/soxdialog.c:476
 msgid "Beta"
 msgstr ""
 
-#: src/soxdialog.c:452
+#: src/soxdialog.c:479
 msgid "Lowpass"
 msgstr ""
 
-#: src/soxdialog.c:453
+#: src/soxdialog.c:480
 msgid "Highpass"
 msgstr ""
 
-#: src/soxdialog.c:454
+#: src/soxdialog.c:481
 msgid "Bandpass"
 msgstr ""
 
-#: src/soxdialog.c:487
+#: src/soxdialog.c:514
 msgid "Attack integration time: "
 msgstr ""
 
-#: src/soxdialog.c:492
+#: src/soxdialog.c:519
 msgid "Decay integration time: "
 msgstr ""
 
-#: src/soxdialog.c:499
+#: src/soxdialog.c:526
 msgid "Input level (dB)"
 msgstr ""
 
-#: src/soxdialog.c:500
+#: src/soxdialog.c:527
 msgid "Output level (dB)"
 msgstr ""
 
-#: src/soxdialog.c:513
+#: src/soxdialog.c:540
 msgid "Post-processing gain: "
 msgstr ""
 
-#: src/soxdialog.c:517
+#: src/soxdialog.c:544
 msgid " dB"
 msgstr ""
 
-#: src/soxdialog.c:518
+#: src/soxdialog.c:545
 msgid "Initial volume: "
 msgstr ""
 
-#: src/soxdialog.c:522
+#: src/soxdialog.c:549
 msgid "Delay time: "
 msgstr ""
 
-#: src/soxdialog.c:531
+#: src/soxdialog.c:558
 msgid "Shift amount: "
 msgstr ""
 
-#: src/soxdialog.c:535
+#: src/soxdialog.c:562
 msgid "Peak limiter"
 msgstr ""
 
-#: src/soxdialog.c:539
+#: src/soxdialog.c:566
 msgid "Limiter gain: "
 msgstr ""
 
-#: src/soxdialog.c:552
+#: src/soxdialog.c:579
 msgid "Amount: "
 msgstr ""
 
-#: src/soxdialog.c:553
+#: src/soxdialog.c:580
 msgid " cents"
 msgstr ""
 
-#: src/soxdialog.c:554
+#: src/soxdialog.c:581
 msgid "Window width: "
 msgstr ""
 
-#: src/soxdialog.c:555 src/soxdialog.c:586
+#: src/soxdialog.c:582 src/soxdialog.c:613
 msgid " ms"
 msgstr ""
 
-#: src/soxdialog.c:556
+#: src/soxdialog.c:583
 msgid "Interpolation: "
 msgstr ""
 
-#: src/soxdialog.c:557
+#: src/soxdialog.c:584
 msgid "Fade: "
 msgstr ""
 
-#: src/soxdialog.c:566
+#: src/soxdialog.c:593
 msgid "Interpolation|Cubic"
 msgstr ""
 
-#: src/soxdialog.c:567
+#: src/soxdialog.c:594
 msgid "Interpolation|Linear"
 msgstr ""
 
-#: src/soxdialog.c:573
+#: src/soxdialog.c:600
 msgid "Fade|Cos"
 msgstr ""
 
-#: src/soxdialog.c:574
+#: src/soxdialog.c:601
 msgid "Fade|Hamming"
 msgstr ""
 
-#: src/soxdialog.c:575
+#: src/soxdialog.c:602
 msgid "Fade|Linear"
 msgstr ""
 
-#: src/soxdialog.c:576
+#: src/soxdialog.c:603
 msgid "Fade|Trapezoid"
 msgstr ""
 
-#: src/soxdialog.c:584
+#: src/soxdialog.c:611
 msgid "Factor: "
 msgstr ""
 
-#: src/soxdialog.c:585
+#: src/soxdialog.c:612
 msgid "Window size: "
 msgstr ""
 
-#: src/soxdialog.c:597
+#: src/soxdialog.c:624
 msgid "Speed: "
 msgstr ""
 
-#: src/soxdialog.c:598
+#: src/soxdialog.c:625
 msgid " Hz"
 msgstr ""
 
-#: src/soxdialog.c:599
+#: src/soxdialog.c:626
 msgid "Depth: "
 msgstr ""
 
-#: src/soxdialog.c:610
+#: src/soxdialog.c:637
 msgid "This effect has no options."
 msgstr ""
 
-#: src/soxdialog.c:679
+#: src/soxdialog.c:710
 msgid "Error creating pipe"
 msgstr ""
 
-#: src/soxdialog.c:684
+#: src/soxdialog.c:717
 msgid "Couldn't fork"
 msgstr ""
 
-#: src/soxdialog.c:692
+#: src/soxdialog.c:732
 #, c-format
 msgid "Error running 'sox -h': %s\n"
 msgstr ""
 
-#: src/soxdialog.c:694
+#: src/soxdialog.c:734
 msgid "Should not reach this point"
 msgstr ""
 
-#: src/soxdialog.c:704
+#: src/soxdialog.c:749
 msgid "Error reading sox output"
 msgstr ""
 
-#: src/soxdialog.c:715
+#: src/soxdialog.c:764
 msgid "Unable to detect supported SoX effects"
 msgstr ""
 
-#: src/soxdialog.c:745
+#: src/soxdialog.c:800
 msgid "Sox support couldn't be initialized"
 msgstr ""
 
@@ -2891,21 +3078,21 @@ msgstr ""
 msgid "Cursor: "
 msgstr ""
 
-#: src/statusbar.c:257
+#: src/statusbar.c:258
 #, c-format
 msgid "View: [ %s - %s ]"
 msgstr ""
 
-#: src/statusbar.c:276
+#: src/statusbar.c:279
 #, c-format
 msgid "Selection: %s+%s"
 msgstr ""
 
-#: src/statusbar.c:298
+#: src/statusbar.c:302
 msgid "Processing data"
 msgstr ""
 
-#: src/statusbar.c:300
+#: src/statusbar.c:304
 #, c-format
 msgid "%s... (Press ESC to cancel)"
 msgstr ""
@@ -2931,11 +3118,11 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: src/um.c:311
+#: src/um.c:316
 msgid "Input"
 msgstr ""
 
-#: src/um.c:401
+#: src/um.c:398
 msgid "Choice"
 msgstr ""
 
@@ -2966,20 +3153,20 @@ msgid ""
 "to a quality loss, also for the unmodified parts of the file."
 msgstr ""
 
-#: src/session.c:83
+#: src/session.c:84
 msgid "Error opening session directory"
 msgstr ""
 
-#: src/session.c:100 src/session.c:160
+#: src/session.c:101 src/session.c:161
 #, c-format
 msgid "%s: Wrong file type"
 msgstr ""
 
-#: src/session.c:232
+#: src/session.c:236
 msgid "Could not create session file"
 msgstr ""
 
-#: src/session.c:274
+#: src/session.c:278
 msgid ""
 "The files that belonged to the crashed session have been recovered. Any "
 "files that are not saved will be removed permanently.\n"
@@ -2987,40 +3174,60 @@ msgid ""
 "(This notice is only shown once)"
 msgstr ""
 
-#: src/session.c:324
+#: src/session.c:328
 msgid "Suspended"
 msgstr ""
 
-#: src/session.c:324 src/session.c:325
+#: src/session.c:328 src/session.c:329
 msgid "Crash"
 msgstr ""
 
-#: src/session.c:325
+#: src/session.c:329
 msgid "Left files"
 msgstr ""
 
-#: src/session.c:334
+#: src/session.c:338
 #, c-format
 msgid "%s on %s(%d files, %ld bytes)"
 msgstr ""
 
-#: src/session.c:351
+#: src/session.c:355
 msgid "Sessions"
 msgstr ""
 
-#: src/session.c:361
+#: src/session.c:365
 msgid ""
 "Earlier sessions were found. Choose one to resume or start a new session."
 msgstr ""
 
-#: src/session.c:380
+#: src/session.c:384
 msgid "Resume selected"
 msgstr ""
 
-#: src/session.c:390
+#: src/session.c:394
 msgid "Start new session"
 msgstr ""
 
-#: src/session.c:396
+#: src/session.c:400
 msgid "Exit"
+msgstr ""
+
+#: src/mapchannelsdialog.c:116
+msgid "This effect applies to the whole file, not just the selection"
+msgstr ""
+
+#: src/mapchannelsdialog.c:123
+msgid "Output channels: "
+msgstr ""
+
+#: src/mapchannelsdialog.c:130
+msgid "Map"
+msgstr ""
+
+#: src/mapchannelsdialog.c:137
+msgid "Source"
+msgstr ""
+
+#: src/mapchannelsdialog.c:139
+msgid "Destination"
 msgstr ""

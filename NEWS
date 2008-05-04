@@ -4,6 +4,7 @@ New features in version 1.4.15:
   * Support for displating SMPTE-style timecodes
   * Bug fixes for 64-bit platforms
   * Minor interface improvements
+  * Added desktop entry
 
 New features in version 1.4.14:
 

@@ -1,4 +1,4 @@
-SUBDIRS = m4 po src
+SUBDIRS = m4 po src share
 
 CLEANFILES = *~ core core.*
 

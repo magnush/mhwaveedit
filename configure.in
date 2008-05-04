@@ -438,7 +438,7 @@ AC_FUNC_STAT
 AC_FUNC_STRTOD
 
 dnl Write output
-AC_CONFIG_FILES([Makefile src/Makefile po/Makefile.in m4/Makefile ])
+AC_CONFIG_FILES([Makefile src/Makefile po/Makefile.in m4/Makefile share/Makefile ])
 AC_OUTPUT
 
 dnl Display configuration
