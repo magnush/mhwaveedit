@@ -198,7 +198,7 @@ int main(int argc, char **argv)
      default_time_mode = inifile_get_guint32(INI_SETTING_TIME_DISPLAY,0);
      if (default_time_mode > 6) default_time_mode = 0;
      default_timescale_mode = 
-	  inifile_get_guint32(INI_SETTING_TIME_DISPLAY_SCALE,0);
+	  inifile_get_guint32(INI_SETTING_TIME_DISPLAY_SCALE,1);
      if (default_timescale_mode > 6) default_time_mode = 0;
 
      /* Some color related stuff */
