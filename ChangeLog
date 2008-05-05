@@ -1,3 +1,7 @@
+2008-05-05  Magnus Hjorth  <magnus.hjorth@home.se>
+
+	* Released version 1.4.15.
+
 2008-05-04  Magnus Hjorth  <magnus.hjorth@home.se>
 
 	* src/main.c (main): Change default time scale format to HH:SS.mmmm
