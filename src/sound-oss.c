@@ -105,13 +105,13 @@ static int oss_errdlg_ioctl(int filedes, int cmd, void *arg)
      return i;
 }
 
-static gboolean oss_try_format(Dataformat *format, gboolean input)
+static gint oss_try_format(Dataformat *format, gboolean input)
 {
      gchar *fname;
      int i,j;
      /* For now, we just refuse floating-point format. We should probably 
       * use a fallback format instead */
-     if (format->type == DATAFORMAT_FLOAT) return TRUE;
+     if (format->type == DATAFORMAT_FLOAT) return -1;
      /* Determine the right format */
      oss_samplesize = format->samplesize;
      switch (oss_samplesize) {
@@ -126,20 +126,20 @@ static gboolean oss_try_format(Dataformat *format, gboolean input)
 	  break;
      case 3:
      case 4:
-	  if (!format->sign) return TRUE;
+	  if (!format->sign) return -1;
 	  /* This is really hairy, but the AFMT_S32-constants don't seem to be 
 	   * defined in all soundcard.h files */
 	  if (format->bigendian) {
 #ifdef AFMT_S32_BE
 	       oss_format = AFMT_S32_BE;
 #else
-	       return TRUE;
+	       return -1;
 #endif
 	  } else {
 #ifdef AFMT_S32_LE
 	  oss_format = AFMT_S32_LE;
 #else
-	  return TRUE;
+	  return -1;
 #endif
 	  }
 	  break;
@@ -149,15 +149,15 @@ static gboolean oss_try_format(Dataformat *format, gboolean input)
      /* Open the file */
      fname = inifile_get(OSS_PCMFILE,OSS_PCMFILE_DEFAULT);
      oss_fd = oss_errdlg_open(fname, input ? O_RDONLY : O_WRONLY);
-     if (oss_fd == -1) return TRUE;
+     if (oss_fd == -1) return +1;
      /* Try to set the format */
      j = oss_format;
      i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_SETFMT, &j);
-     if (i == -1 || j != oss_format) { close(oss_fd); oss_fd=-1; return TRUE; }
+     if (i == -1 || j != oss_format) { close(oss_fd); oss_fd=-1; return -1; }
      /* Try to set the number of channels */
      j = oss_channels = format->channels;
      i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_CHANNELS, &j);
-     if (i==-1 || j != oss_channels) { close(oss_fd); oss_fd=-1; return TRUE; }
+     if (i==-1 || j != oss_channels) { close(oss_fd); oss_fd=-1; return -1; }
      /* Try to set the sample rate */
      j = oss_samplerate = format->samplerate;
      i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_SPEED, &j);
@@ -165,21 +165,20 @@ static gboolean oss_try_format(Dataformat *format, gboolean input)
      /* Currently tolerates 5% difference between requested/received samplerate
       */
      if (i==-1 || abs(j-oss_samplerate) > oss_samplerate/20) {
-	  close(oss_fd); oss_fd=-1; return TRUE;
+	  close(oss_fd); oss_fd=-1; return -1;
      }
      /* Everything went well! */
-     return FALSE;
+     return 0;
 }
 
 static gint oss_output_select_format(Dataformat *format, gboolean silent)
 {
-     if (oss_try_format(format,FALSE)) return -1;
-     return 0;
+     return oss_try_format(format,FALSE);
 }
 
 static gint oss_input_select_format(Dataformat *format, gboolean silent)
 {     
-     return oss_try_format(format,TRUE) ? -1 : 0;
+     return oss_try_format(format,TRUE);
 }
 
 static int oss_errdlg_write(int fd, gchar *buffer, size_t size)
