@@ -88,7 +88,8 @@ static void alsa_show_preferences(void)
 }
 
 static gboolean alsa_open_rw(snd_pcm_t **handp, Dataformat *fmtp, 
-			     gchar *devini, snd_pcm_stream_t str)
+			     gchar *devini, snd_pcm_stream_t str,
+			     gboolean silent)
 {
      int i;
      gchar *c,*devname;
@@ -97,14 +98,16 @@ static gboolean alsa_open_rw(snd_pcm_t **handp, Dataformat *fmtp,
 	  i = snd_pcm_open(handp,devname,str,
 			   SND_PCM_NONBLOCK);
 	  if (i<0) {
-	       c = g_strdup_printf((str == SND_PCM_STREAM_CAPTURE)?
-		                   _("Error opening ALSA device '%s' "
-				     "for recording: %s"):
-		                   _("Error opening ALSA device '%s' "
-				     "for playback: %s"), devname,
-				   snd_strerror(i));
-	       user_error(c);
-	       g_free(c);
+	       if (!silent) {
+		    c = g_strdup_printf((str == SND_PCM_STREAM_CAPTURE)?
+					_("Error opening ALSA device '%s' "
+					  "for recording: %s"):
+					_("Error opening ALSA device '%s' "
+					  "for playback: %s"), devname,
+					snd_strerror(i));
+		    user_error(c);
+		    g_free(c);
+	       }
 	       return TRUE;
 	  }
 	  memset(fmtp,0,sizeof(*fmtp));
@@ -112,16 +115,16 @@ static gboolean alsa_open_rw(snd_pcm_t **handp, Dataformat *fmtp,
      return FALSE;
 }
 
-static gboolean alsa_open_write(void)
+static gboolean alsa_open_write(gboolean silent)
 {
      return alsa_open_rw(&(alsa_data.whand),&(alsa_data.wfmt),
-			 "ALSAPlayDevice",SND_PCM_STREAM_PLAYBACK);
+			 "ALSAPlayDevice",SND_PCM_STREAM_PLAYBACK,silent);
 }
 
-static gboolean alsa_open_read(void)
+static gboolean alsa_open_read(gboolean silent)
 {
      return alsa_open_rw(&(alsa_data.rhand),&(alsa_data.rfmt),
-			 "ALSARecDevice",SND_PCM_STREAM_CAPTURE);
+			 "ALSARecDevice",SND_PCM_STREAM_CAPTURE,silent);
 }
 
 static snd_pcm_format_t alsa_get_format(Dataformat *format)
@@ -236,7 +239,7 @@ static gboolean alsa_set_read_format(Dataformat *format)
 static gint alsa_output_select_format(Dataformat *format, gboolean silent)
 {
      /* signal(SIGPIPE,SIG_IGN); */
-     if (alsa_open_write()) return -1;
+     if (alsa_open_write(silent)) return silent?-1:+1;
      if (alsa_set_write_format(format)) { 
 	  snd_pcm_close(alsa_data.whand);
 	  alsa_data.whand = NULL;
@@ -247,7 +250,7 @@ static gint alsa_output_select_format(Dataformat *format, gboolean silent)
 
 static gint alsa_input_select_format(Dataformat *format, gboolean silent)
 {
-     if (alsa_open_read()) return -1;
+     if (alsa_open_read(silent)) return silent?-1:+1;
      if (alsa_set_read_format(format)) {
 	  snd_pcm_close(alsa_data.rhand);
 	  alsa_data.rhand = NULL;
