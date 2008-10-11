@@ -44,7 +44,8 @@
 #include "main.h"
 #include "gettext.h"
 
-#define OSS_PCMFILE "OSSdevice"
+#define OSS_PCMFILE_PLAYBACK "OSSdevice"
+#define OSS_PCMFILE_RECORD "OSSRecDevice"
 
 #ifdef __OpenBSD__
 #define OSS_PCMFILE_DEFAULT "/dev/audio"
@@ -147,7 +148,9 @@ static gint oss_try_format(Dataformat *format, gboolean input)
 	  g_assert_not_reached();
      }
      /* Open the file */
-     fname = inifile_get(OSS_PCMFILE,OSS_PCMFILE_DEFAULT);
+     fname = inifile_get(OSS_PCMFILE_PLAYBACK,OSS_PCMFILE_DEFAULT);
+     if (input)
+	  fname = inifile_get(OSS_PCMFILE_RECORD, fname);
      oss_fd = oss_errdlg_open(fname, input ? O_RDONLY : O_WRONLY);
      if (oss_fd == -1) return +1;
      /* Try to set the format */
@@ -367,13 +370,17 @@ static void oss_input_store(Ringbuf *buffer)
 
 struct oss_prefdlg { 
      GtkWindow *wnd; 
-     GtkEntry *pcmdev; 
+     GtkEntry *pcmdev_playback;
+     GtkEntry *pcmdev_record;
      GtkToggleButton *noselect;
 };
 
 static void oss_preferences_ok(GtkButton *button, struct oss_prefdlg *pd)
 {
-     inifile_set(OSS_PCMFILE,(char *)gtk_entry_get_text(pd->pcmdev));
+     inifile_set(OSS_PCMFILE_PLAYBACK,
+		 (char *)gtk_entry_get_text(pd->pcmdev_playback));
+     inifile_set(OSS_PCMFILE_RECORD,
+		 (char *)gtk_entry_get_text(pd->pcmdev_record));
      oss_noselect = gtk_toggle_button_get_active(pd->noselect);
      inifile_set_gboolean(OSS_NOSELECT,oss_noselect);
      gtk_widget_destroy(GTK_WIDGET(pd->wnd));
@@ -383,6 +390,7 @@ static void oss_preferences(void)
 {
      GtkWidget *a,*b,*c,*d;
      struct oss_prefdlg *pd;
+     gchar *q;
      pd = g_malloc(sizeof(struct oss_prefdlg));
      a = gtk_window_new(GTK_WINDOW_DIALOG);     
      gtk_window_set_modal(GTK_WINDOW(a),TRUE);
@@ -396,12 +404,21 @@ static void oss_preferences(void)
      gtk_container_add(GTK_CONTAINER(a),b);
      c = gtk_hbox_new(FALSE,3);
      gtk_container_add(GTK_CONTAINER(b),c);
-     d = gtk_label_new(_("Sound device file:"));
+     d = gtk_label_new(_("Playback device file:"));
      gtk_container_add(GTK_CONTAINER(c),d);
      d = gtk_entry_new();
-     gtk_entry_set_text(GTK_ENTRY(d),inifile_get(OSS_PCMFILE,OSS_PCMFILE_DEFAULT));
+     q = inifile_get(OSS_PCMFILE_PLAYBACK,OSS_PCMFILE_DEFAULT);
+     gtk_entry_set_text(GTK_ENTRY(d),q);
      gtk_container_add(GTK_CONTAINER(c),d);
-     pd->pcmdev = GTK_ENTRY(d);
+     pd->pcmdev_playback = GTK_ENTRY(d);
+     c = gtk_hbox_new(FALSE,3);
+     gtk_container_add(GTK_CONTAINER(b),c);
+     d = gtk_label_new(_("Playback device file:"));
+     gtk_container_add(GTK_CONTAINER(c),d);
+     d = gtk_entry_new();
+     gtk_entry_set_text(GTK_ENTRY(d),inifile_get(OSS_PCMFILE_RECORD,q));
+     gtk_container_add(GTK_CONTAINER(c),d);
+     pd->pcmdev_record = GTK_ENTRY(d);
      c = gtk_check_button_new_with_label(_("Avoid select calls (try this if "
 					 "recording locks up)"));
      gtk_container_add(GTK_CONTAINER(b),c);
