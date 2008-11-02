@@ -359,8 +359,10 @@ gchar *user_input(gchar *label, gchar *title, gchar *defvalue,
 static gboolean user_input_float_validator(gchar *c)
 {
      gchar *d;
-     strtod(c,&d);
-     return (*d == 0);
+     double dbl;
+     errno = 0;
+     dbl = strtod(c,&d);
+     return (errno == 0 && *d == 0);
 }
 
 gboolean user_input_float(gchar *label, gchar *title, gfloat defvalue, 
