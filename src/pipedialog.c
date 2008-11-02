@@ -183,6 +183,7 @@ gpointer pipe_dialog_open_pipe(gchar *command, int *fds, gboolean open_out)
      pid_t p;
      gchar *c;
      char *argv[4];
+     int i;
      
      /* Create pipes */
      if (pipe(cmd_in)==-1 || (open_out && pipe(cmd_out)==-1) || 
@@ -237,10 +238,11 @@ gpointer pipe_dialog_open_pipe(gchar *command, int *fds, gboolean open_out)
 	  close(cmd_err[1]);
 	  /* Synchronize */
 	  if (open_out) {
-	       read(0,&syncbyte,1);
-	       g_assert(syncbyte == 0xAB);
+	       i = read(0,&syncbyte,1);
+	       g_assert(i == 1 && syncbyte == 0xAB);
 	       syncbyte = 0xCD;
-	       write(1,&syncbyte,1);
+	       i = write(1,&syncbyte,1);
+	       g_assert(i == 1);
 	  }
 	  /* Execute subprocess */
 	  argv[0] = "sh";
@@ -267,9 +269,10 @@ gpointer pipe_dialog_open_pipe(gchar *command, int *fds, gboolean open_out)
      /* synchronize to child */
      if (open_out) {
 	  syncbyte = 0xAB;
-	  write(cmd_in[1],&syncbyte,1);
-	  read(cmd_out[0],&syncbyte,1);
-	  g_assert(syncbyte == 0xCD);
+	  i = write(cmd_in[1],&syncbyte,1);
+	  g_assert(i == 1);
+	  i = read(cmd_out[0],&syncbyte,1);
+	  g_assert(i == 1 && syncbyte == 0xCD);
      }
 
      pd = g_malloc(sizeof(*pd));
