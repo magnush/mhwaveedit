@@ -217,7 +217,7 @@ static int showdlg(GtkMessageType mt, GtkButtonsType bt, char *msg,
 	  console_message(msg);
 	  return MR_OK;
      }
-     w = gtk_message_dialog_new(NULL,GTK_DIALOG_MODAL,mt,bt,msg);
+     w = gtk_message_dialog_new(NULL,GTK_DIALOG_MODAL,mt,bt,"%s",msg);
      if (bt == GTK_BUTTONS_NONE)
 	  gtk_dialog_add_buttons(GTK_DIALOG(w),GTK_STOCK_YES,GTK_RESPONSE_YES,
 				 GTK_STOCK_NO,GTK_RESPONSE_NO,GTK_STOCK_CANCEL,
