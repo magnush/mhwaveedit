@@ -468,6 +468,7 @@ static void do_play(Mainwindow *w, off_t start, off_t end, gboolean loop)
 	  gtk_adjustment_set_value(w->speed_adj,-1.0);
      }
      document_play(w->doc, start, end, loop, -w->speed_adj->value);
+     update_desc(w);
 }
 
 
