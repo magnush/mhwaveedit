@@ -26,6 +26,7 @@
 #include "main.h"
 #include "um.h"
 #include "gettext.h"
+#include "mainloop.h"
 
 gboolean output_byteswap_flag;
 static gchar *output_byteswap_buffer=NULL;
@@ -320,6 +321,10 @@ void sound_init(void)
      }
 
      drivers[current_driver].init(FALSE);
+
+     /* Add sound_poll to main loop */
+     mainloop_constant_source_add((constsource_cb)sound_poll,NULL,FALSE);
+
 }
 
 static void delayed_output_stop(void)

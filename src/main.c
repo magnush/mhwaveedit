@@ -68,6 +68,18 @@ const char *strip_context(const char *s)
      return s;
 }
 
+static int idle_work(gpointer csource, gpointer user_data)
+{
+     if (!idle_work_flag) {
+	  idle_work_flag = TRUE;
+	  return 1;
+     }     
+     if (status_bar_progress_count() > 0) return 1;
+     document_update_cursors();
+     if (chunk_view_autoscroll() || mainwindow_update_caches()) return 1;
+     return -1;
+}
+
 int main(int argc, char **argv)
 {
      int i;
@@ -207,6 +219,8 @@ int main(int argc, char **argv)
 
      /* gtk_idle_add(idle_work,NULL); */
 
+     /* Add low priority idle function */
+     mainloop_constant_source_add(idle_work,NULL,TRUE);
 
      /* Run it! */
      while (!quitflag)

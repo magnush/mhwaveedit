@@ -92,6 +92,9 @@ extern gboolean quality_mode;
 
 extern gchar *driver_option;
 
+extern gboolean idle_work_flag;
+
+
 /* Various functions */
 
 void byteswap(void *buffer, int element_size, int buffer_size);

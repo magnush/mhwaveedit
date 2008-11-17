@@ -310,7 +310,7 @@ static void mainloop_io_source_disable_main(struct io_source *src)
 
 void mainloop(void)
 {
-     static guint player_count=0;
+     static guint const_highprio_idle_count=0;
      struct constant_source *csrc;
      gint i,j;
      GList *l;
@@ -324,10 +324,8 @@ void mainloop(void)
 	       if (j > i) i = j;
 	  }
      }
-     j = sound_poll();
-     if (j > 0) { player_count=0; return; }
-     if (j > i) i = j;
-     player_count++;
+     if (i > 0) { const_highprio_idle_count=0; return; }
+     const_highprio_idle_count++;
      if (gtk_events_pending()) {
 	  gtk_main_iteration();
 	  return;
@@ -346,13 +344,9 @@ void mainloop(void)
 	  }
      }
 
-     if (status_bar_progress_count()>0) return;
-     document_update_cursors();
-     if (chunk_view_autoscroll()) return;
-     if (mainwindow_update_caches()) return;
      if (i < 0) {
 	  gtk_main_iteration();
-     } else if (i >= 0 && player_count > 10)
+     } else if (i >= 0 && const_highprio_idle_count > 10)
 	  do_yield(TRUE);
 }
 

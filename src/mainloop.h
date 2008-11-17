@@ -23,8 +23,6 @@
 
 #include <gtk/gtk.h>
 
-extern gboolean idle_work_flag;
-
 void mainloop(void);
 
 typedef void (*iosource_cb)(gpointer iosource, int fd, gushort revents, 
