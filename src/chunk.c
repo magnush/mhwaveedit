@@ -992,13 +992,19 @@ guint chunk_read_array(ChunkHandle *handle, off_t sampleno,
      GList *l;     
      DataPart *dp;
      guint r=0,i,j;
+     guint sb = handle->format.samplebytes;
      off_t o;
-     for (l=handle->parts;l!=NULL;l=l->next) {
+
+     /* Loop until we have collected enough data or reached EOF
+      * The condition size >= sb handles the case size is not an even
+      * multiple of the number of sample bytes (24-bit data usually) */
+     
+     for (l=handle->parts; l!=NULL && size>=sb; l=l->next) {
 	  dp = (DataPart *)l->data;
 	  if (dp->length > sampleno) {
 	       /* Calculate required size if it's larger than we need. */
 	       o = dp->length - sampleno;	       
-	       o *= (off_t)(handle->format.samplebytes);
+	       o *= (off_t)sb;
 	       if (o < (off_t)size) j = (guint)o;
 	       else j = size;
 	       /* Read data. */
@@ -1010,7 +1016,6 @@ guint chunk_read_array(ChunkHandle *handle, off_t sampleno,
 	       sampleno = 0;
 	       size -= i;
 	       buffer = ((gchar *)buffer) + i;
-	       if (size==0 || l->next==NULL) return r;
 	  } else
 	       sampleno -= dp->length;
      }
