@@ -112,7 +112,7 @@ void launch_mixer(void);
 
 GtkLabel *attach_label(gchar *text, GtkWidget *table, guint y, guint x);
 
-void mainloop(gboolean force_sleep);
+void mainloop(void);
 extern gboolean idle_work_flag;
 
 enum Color { 

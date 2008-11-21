@@ -388,7 +388,7 @@ gchar *get_filename(gchar *current_name, gchar *filemask, gchar *title_text,
 
 
      get_filename_quitflag=FALSE;
-     while (!get_filename_quitflag) mainloop(TRUE);
+     while (!get_filename_quitflag) mainloop();
      if (get_filename_result != NULL)
 	  cleanup_filename(get_filename_result);
      return get_filename_result;     
@@ -444,7 +444,7 @@ gchar *get_directory(gchar *current_name, gchar *title_text)
      gtk_widget_show(GTK_WIDGET(f));
 
      get_filename_quitflag=FALSE;
-     while (!get_filename_quitflag) mainloop(TRUE);
+     while (!get_filename_quitflag) mainloop();
      if (get_filename_result != NULL) cleanup_filename(get_filename_result);
      return get_filename_result;     
      
@@ -548,7 +548,7 @@ static gchar *get_filename_main(gchar *current_name, gchar *title_text,
      gtk_signal_connect(GTK_OBJECT(fc),"response",GTK_SIGNAL_FUNC(response),
 			&sr);
      gtk_widget_show(w);
-     while (!sr.responded) mainloop(TRUE); 
+     while (!sr.responded) mainloop(); 
      c = NULL;
      if (sr.r == GTK_RESPONSE_ACCEPT) 
 	  c = gtk_file_chooser_get_filename(fc);

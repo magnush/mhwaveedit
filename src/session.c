@@ -410,7 +410,7 @@ gboolean session_dialog(void)
 
      destroy_flag = resume_click_flag = FALSE;
      gtk_widget_show_all(a);
-     while (!destroy_flag) mainloop(TRUE);
+     while (!destroy_flag) mainloop();
 
      if (!resume_click_flag) return FALSE;
 

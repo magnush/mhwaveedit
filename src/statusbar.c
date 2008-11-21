@@ -342,7 +342,7 @@ gboolean status_bar_progress(StatusBar *sb, off_t progress)
      }
      sb->bar_width = bw;
      idle_work_flag = FALSE;
-     while (!idle_work_flag) mainloop(FALSE);
+     while (!idle_work_flag) mainloop();
      return sb->progress_break;
 }
 

@@ -110,7 +110,7 @@ Dataformat *rawdialog_execute(gchar *filename, gint filesize, guint *offset)
      ok_flag = destroy_flag = FALSE;
      
      gtk_widget_show_all(GTK_WIDGET(w));
-     while (!destroy_flag) mainloop(TRUE);
+     while (!destroy_flag) mainloop();
      
      if (!ok_flag) return NULL;
 

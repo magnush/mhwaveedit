@@ -158,7 +158,7 @@ int do_user_message(char *msg, int type, gboolean block)
      if (block) {
 	  user_message_flag++;
 	  while (wnd)
-	       mainloop(TRUE);
+	       mainloop();
 	  user_message_flag--;
 	  // puts("Out!");
 	  return modal_result;
@@ -233,7 +233,7 @@ static int showdlg(GtkMessageType mt, GtkButtonsType bt, char *msg,
      gtk_widget_show(w);
      if (block)
 	  while (!responded)
-	       mainloop(TRUE);
+	       mainloop();
      else
 	  return MR_OK;
      if (r != GTK_RESPONSE_DELETE_EVENT) gtk_widget_destroy(w);
@@ -351,7 +351,7 @@ gchar *user_input(gchar *label, gchar *title, gchar *defvalue,
      modal_result = MR_CANCEL;
      user_input_quitflag = FALSE;
      while (!user_input_quitflag)
-	  mainloop(TRUE);
+	  mainloop();
      if (modal_result == MR_CANCEL) return NULL;
      else return uid.result;
 }
@@ -458,7 +458,7 @@ gint user_choice(gchar **choices, guint def, gchar *windowtitle,
 
      user_input_quitflag = FALSE;
      while (!user_input_quitflag)
-	  mainloop(TRUE);
+	  mainloop();
      
      g_assert(modal_result==MR_OK || allow_cancel);
 

@@ -68,7 +68,7 @@ const char *strip_context(const char *s)
      return s;
 }
 
-void mainloop(gboolean force_sleep)
+void mainloop(void)
 {
      static guint player_count=0;
      if (player_work()) { player_count=0; return; }
@@ -77,11 +77,14 @@ void mainloop(gboolean force_sleep)
 	  gtk_main_iteration();
 	  return;
      }
-     idle_work_flag = TRUE;
-     if (status_bar_progress_count()>0 && !force_sleep) return;
+     if (!idle_work_flag) {
+	  idle_work_flag = TRUE;
+	  return;
+     }
+     if (status_bar_progress_count()>0) return;
      document_update_cursors();
-     if (chunk_view_autoscroll() && !force_sleep) return;
-     if (mainwindow_update_caches() && !force_sleep) return;
+     if (chunk_view_autoscroll()) return;
+     if (mainwindow_update_caches()) return;
      if (player_count > 10)
 	  do_yield(TRUE);
 }
@@ -228,7 +231,7 @@ int main(int argc, char **argv)
 
      /* Run it! */
      while (!quitflag)
-	  mainloop(FALSE);
+	  mainloop();
 
 
 

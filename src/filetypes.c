@@ -939,7 +939,7 @@ static Chunk *run_decoder(gchar *filename, gchar *tempname, gchar *progname,
      else o *= 20;
      status_bar_begin_progress(bar,o,_("Decoding"));
      while (1) {
-	  mainloop(TRUE);
+	  mainloop();
 	  /* See if the child has exited */
 	  q = waitpid(p,NULL,WNOHANG);
 	  if (q == p) break;
@@ -1182,7 +1182,7 @@ static gpointer mp3_get_settings(void)
 	  gtk_entry_set_text(mp3_get_settings_data.arg_entry, custom_arg);
 
      while (!mp3_get_settings_data.destroyed_flag)
-	  mainloop(TRUE);
+	  mainloop();
 
      if (mp3_get_settings_data.ok_flag) {
 	  i = combo_selected_index(mp3_get_settings_data.type_combo);
