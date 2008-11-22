@@ -21,8 +21,36 @@
 #ifndef MAINLOOP_H_INCLUDED
 #define MAINLOOP_H_INCLUDED
 
+#include <gtk/gtk.h>
+
 extern gboolean idle_work_flag;
 
 void mainloop(void);
+
+typedef void (*iosource_cb)(gpointer iosource, int fd, gushort revents, 
+			    gpointer user_data);
+typedef void (*timesource_cb)(gpointer timesource, GTimeVal *current_time, 
+			      gpointer user_data);
+/* Return value:
+ * <0: May sleep
+ * 0:  Execute other event sources but do not sleep
+ * >0: Do not execute any other event sources 
+ */
+typedef int (*constsource_cb)(gpointer csource, gpointer user_data);
+
+gpointer mainloop_io_source_add(int fd, gushort events, iosource_cb cb, 
+				gpointer user_data);
+void mainloop_io_source_enable(gpointer iosource, gboolean enable);
+void mainloop_io_source_free(gpointer iosource);
+
+gpointer mainloop_time_source_add(GTimeVal *tv, timesource_cb cb,
+				  gpointer user_data);
+void mainloop_time_source_restart(gpointer timesource, GTimeVal *new_tv);
+void mainloop_time_source_free(gpointer timesource);
+
+gpointer mainloop_constant_source_add(constsource_cb cb, gpointer user_data, 
+				      gboolean lowprio);
+void mainloop_constant_source_enable(gpointer constsource, gboolean enable);
+void mainloop_constant_source_free(gpointer constsource);
 
 #endif
