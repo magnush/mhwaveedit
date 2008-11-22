@@ -31,7 +31,7 @@
 #include "inifile.h"
 #include "rawdialog.h"
 #include "pipedialog.h"
-#include "main.h"
+#include "mainloop.h"
 #include "filetypes.h"
 #include "tempfile.h"
 #include "combo.h"

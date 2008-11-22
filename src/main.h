@@ -112,9 +112,6 @@ void launch_mixer(void);
 
 GtkLabel *attach_label(gchar *text, GtkWidget *table, guint y, guint x);
 
-void mainloop(void);
-extern gboolean idle_work_flag;
-
 enum Color { 
      BLACK=0, WHITE, BACKGROUND, WAVE1, WAVE2, CURSOR, MARK, SELECTION, 
      PROGRESS, BARS, LAST_COLOR

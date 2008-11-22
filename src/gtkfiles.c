@@ -30,6 +30,7 @@
 #include "um.h"
 #include "gtkfiles.h"
 #include "main.h"
+#include "mainloop.h"
 #include "inifile.h"
 #include "gettext.h"
 

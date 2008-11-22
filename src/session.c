@@ -34,6 +34,7 @@
 #include "tempfile.h"
 #include "gettext.h"
 #include "document.h"
+#include "mainloop.h"
 
 #define SESSION_RUNNING 0
 #define SESSION_SUSPENDED 1

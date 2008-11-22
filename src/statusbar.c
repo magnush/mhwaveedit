@@ -24,7 +24,7 @@
 #include <stdio.h>
 
 #include "statusbar.h"
-#include "main.h"
+#include "mainloop.h"
 #include "gettext.h"
 
 #define LEFT_MARGIN 4

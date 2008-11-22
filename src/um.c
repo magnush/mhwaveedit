@@ -28,6 +28,7 @@
 #include <gtk/gtk.h>
 #include "um.h"
 #include "main.h"
+#include "mainloop.h"
 #include "gettext.h"
 
 gboolean um_use_gtk = FALSE;

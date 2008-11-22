@@ -32,6 +32,7 @@
 #include "int_box.h"
 #include "formatselector.h"
 #include "gettext.h"
+#include "mainloop.h"
 
 struct {
      GtkWindow *wnd;

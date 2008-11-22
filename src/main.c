@@ -30,6 +30,7 @@
 #include <locale.h>
 #include <signal.h>
 #include <gtk/gtk.h>
+#include "mainloop.h"
 #include "mainwindow.h"
 #include "datasource.h"
 #include "player.h"
@@ -50,7 +51,6 @@
 #endif
 
 GdkPixmap *icon = NULL;
-gboolean idle_work_flag;
 gboolean quitflag;
 gboolean quality_mode = TRUE;
 gchar *driver_option = NULL;
@@ -66,31 +66,6 @@ const char *strip_context(const char *s)
 	  if (c != NULL) return c+1;
      } 
      return s;
-}
-
-void mainloop(void)
-{
-     static guint player_count=0;
-     gint i;
-     i = sound_poll();
-     if (i > 0) { player_count=0; return; }
-     player_count++;
-     if (gtk_events_pending()) {
-	  gtk_main_iteration();
-	  return;
-     }
-     if (!idle_work_flag) {
-	  idle_work_flag = TRUE;
-	  return;
-     }
-     if (status_bar_progress_count()>0) return;
-     document_update_cursors();
-     if (chunk_view_autoscroll()) return;
-     if (mainwindow_update_caches()) return;
-     if (i < 0) {
-	  gtk_main_iteration();
-     } else if (i >= 0 && player_count > 10)
-	  do_yield(TRUE);
 }
 
 int main(int argc, char **argv)

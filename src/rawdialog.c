@@ -28,6 +28,7 @@
 #include "int_box.h"
 #include "main.h"
 #include "gettext.h"
+#include "mainloop.h"
 
 static gboolean ok_flag, destroy_flag;
 static Dataformat fmt;
