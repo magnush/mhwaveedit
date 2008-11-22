@@ -87,7 +87,9 @@ void mainloop(void)
      document_update_cursors();
      if (chunk_view_autoscroll()) return;
      if (mainwindow_update_caches()) return;
-     if (player_count > 10)
+     if (i < 0) {
+	  gtk_main_iteration();
+     } else if (i >= 0 && player_count > 10)
 	  do_yield(TRUE);
 }
 
