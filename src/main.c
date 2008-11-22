@@ -71,7 +71,9 @@ const char *strip_context(const char *s)
 void mainloop(void)
 {
      static guint player_count=0;
-     if (player_work()) { player_count=0; return; }
+     gint i;
+     i = sound_poll();
+     if (i > 0) { player_count=0; return; }
      player_count++;
      if (gtk_events_pending()) {
 	  gtk_main_iteration();

@@ -46,6 +46,7 @@ static char *choose_format_string = N_("Choose a sample format");
 
 static GtkObjectClass *parent_class;
 static gboolean record_dialog_stopflag = FALSE;
+static RecordDialog *current_dialog;
 
 static void reset_peaks(GtkButton *button, gpointer user_data)
 {
@@ -101,7 +102,7 @@ static void set_limit_label(RecordDialog *rd)
 	  gtk_label_set_text(rd->limit_label,_("(no limit)"));
 }
 
-static gboolean process_input(RecordDialog *rd, gboolean finish_mode)
+static gboolean process_input(RecordDialog *rd)
 {
      guint32 x,y;
      gchar buf[4096]; 
@@ -109,8 +110,9 @@ static gboolean process_input(RecordDialog *rd, gboolean finish_mode)
      sample_t peak,rms,avg,*sp,*sq,s,pmax;
      guint32 clip_amount,clip_size;
      int i;
+     gboolean finish_mode = record_dialog_stopflag;
 
-     if (rd->current_format == NULL || record_dialog_stopflag) return FALSE;
+     if (rd->current_format == NULL) return FALSE;
      /* Read input */
      input_store(rd->databuf);
 
@@ -232,6 +234,11 @@ static gboolean process_input(RecordDialog *rd, gboolean finish_mode)
 
      }
      return TRUE;
+}
+
+void input_ready_func(void)
+{
+     process_input(current_dialog);
 }
 
 static void record_dialog_format_changed(Combo *combo, gpointer user_data)
@@ -453,7 +460,7 @@ static gboolean record_dialog_set_format(RecordDialog *rd, RecordFormat *rf)
      gtk_widget_set_sensitive(rd->record_button,FALSE);
      gtk_widget_set_sensitive(rd->reset_button,FALSE);
 
-     i = input_select_format(&(rf->fmt),FALSE);
+     i = input_select_format(&(rf->fmt),FALSE,input_ready_func);
      if (i < 0) {
 	  user_error(_("This format is not supported by the input driver!"));
 	  return TRUE;
@@ -877,19 +884,16 @@ Chunk *record_dialog_execute(void)
 
      rd = RECORD_DIALOG(gtk_type_new(record_dialog_get_type()));
      record_dialog_stopflag = FALSE;
+     current_dialog = rd;
      gtk_widget_show(GTK_WIDGET(rd));
      while (!record_dialog_stopflag) {
-	  process_input(rd,FALSE);
-	  while (gtk_events_pending()) 
-	       gtk_main_iteration();
-	  check_format_change(rd);	  
-	  if (!record_dialog_stopflag && !process_input(rd,FALSE)) 
-	       do_yield(TRUE);
+	  mainloop();
+	  check_format_change(rd); 
      }
      if (rd->tf != NULL) {
 	  input_stop_hint();
 	  i = 0; /* Just to avoid infinite loops */
-	  while (process_input(rd,TRUE) && i<128) { i++; }
+	  while (process_input(rd) && i<128) { i++; }
 	  input_stop();
 	  ds = tempfile_finished(rd->tf);
 	  gtk_widget_destroy(GTK_WIDGET(rd));

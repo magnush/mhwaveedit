@@ -33,6 +33,7 @@ static guint output_byteswap_bufsize=0;
 gboolean sound_lock_driver;
 static gboolean sound_delayed_quit=FALSE;
 static Dataformat playing_format;
+static GVoidFunc output_ready_func=NULL,input_ready_func=NULL;
 
 #ifdef HAVE_ALSALIB
   #include "sound-alsalib.c"
@@ -333,7 +334,23 @@ void sound_quit(void)
      drivers[current_driver].quit();
 }
 
-gint output_select_format(Dataformat *format, gboolean silent)
+gboolean sound_poll(void)
+{
+     if (output_ready_func != NULL && output_want_data()) {
+	  output_ready_func();
+	  return 1;
+     }
+     if (input_ready_func != NULL) {
+	  input_ready_func();
+	  return 0;
+     }
+     if (output_ready_func==NULL && input_ready_func==NULL)
+	  return -1;
+     return 0;
+}
+
+gint output_select_format(Dataformat *format, gboolean silent, 
+			  GVoidFunc ready_func)
 {
      gint i;
      if (sound_delayed_quit) {
@@ -344,8 +361,10 @@ gint output_select_format(Dataformat *format, gboolean silent)
 	  else delayed_output_stop();
      }     
      i = drivers[current_driver].output_select_format(format,silent);
-     if (i == 0) 
+     if (i == 0) {
 	  memcpy(&playing_format,format,sizeof(Dataformat));
+	  output_ready_func = ready_func;
+     }
      return i;
 }
 
@@ -356,14 +375,20 @@ gboolean input_supported(void)
 	  FALSE;
 }
 
-gint input_select_format(Dataformat *format, gboolean silent)
+gint input_select_format(Dataformat *format, gboolean silent, 
+			 GVoidFunc ready_func)
 {
+     gint i;
      if (sound_delayed_quit) delayed_output_stop();
-     return drivers[current_driver].input_select_format(format,silent);
+     i = drivers[current_driver].input_select_format(format,silent);
+     if (i == 0)
+	  input_ready_func = ready_func;     
+     return i;
 }
 
 gboolean output_stop(gboolean must_flush)
 {
+     output_ready_func = NULL;
      if (sound_lock_driver) {
 	  if (must_flush)
 	       while (output_play(NULL,0) > 0) { }
@@ -408,6 +433,7 @@ void input_stop(void)
 {
      if (!sound_delayed_quit) 
      	  drivers[current_driver].input_stop();
+     input_ready_func = NULL;
 }
 
 void input_store(Ringbuf *buffer)

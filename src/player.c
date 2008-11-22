@@ -202,7 +202,7 @@ static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos,
      if (spos == epos) return TRUE;
      true_speed = file_speed;
      memcpy(&fmt,&(chk->format),sizeof(Dataformat));
-     i = output_select_format(&(chk->format),silent);
+     i = output_select_format(&(chk->format),silent,(GVoidFunc)player_work);
      if (i != 0) {	  
 	  if (silent) {
 	       if (!output_suggest_format(&(chk->format),&fmt))
@@ -230,7 +230,7 @@ static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos,
 			      ((float)fmt.samplerate);
 		    }
 		    /* Select the format with different sample rate */
-		    i = output_select_format(&fmt,FALSE);
+		    i = output_select_format(&fmt,FALSE,(GVoidFunc)player_work);
 		    if (i < 0) 
 			 return player_play_main(chk,spos,epos,lp,FALSE);
 		    else if (i > 0)
