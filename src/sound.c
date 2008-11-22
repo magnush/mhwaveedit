@@ -35,6 +35,7 @@ gboolean sound_lock_driver;
 static gboolean sound_delayed_quit=FALSE;
 static Dataformat playing_format;
 static GVoidFunc output_ready_func=NULL,input_ready_func=NULL;
+static char zerobuf[1024];
 
 #ifdef HAVE_ALSALIB
   #include "sound-alsalib.c"
@@ -83,15 +84,18 @@ struct sound_driver {
      gboolean (*init)(gboolean silent);
      void (*quit)(void);
 
-     gint (*output_select_format)(Dataformat *format, gboolean silent);
+     gint (*output_select_format)(Dataformat *format, gboolean silent, 
+				  GVoidFunc ready_func);
      gboolean (*output_want_data)(void);
      guint (*output_play)(gchar *buffer, guint bufsize);
      gboolean (*output_stop)(gboolean);
      void (*output_clear_buffers)(void);
      gboolean (*output_suggest_format)(Dataformat *format, Dataformat *result);
+     gboolean (*driver_needs_polling)(void);
 
      gboolean (*input_supported)(void);
-     gint (*input_select_format)(Dataformat *format, gboolean silent);
+     gint (*input_select_format)(Dataformat *format, gboolean silent, 
+				 GVoidFunc ready_func);
      void (*input_store)(Ringbuf *buffer);
      void (*input_stop)(void);   
      void (*input_stop_hint)(void);
@@ -104,7 +108,7 @@ static struct sound_driver drivers[] = {
      { "Open Sound System", "oss", oss_preferences, oss_init, oss_quit, 
        oss_output_select_format,
        oss_output_want_data, oss_output_play, oss_output_stop, 
-       oss_output_clear_buffers,NULL,
+       oss_output_clear_buffers,NULL,NULL,
        input_supported_true, oss_input_select_format,
        oss_input_store, oss_input_stop },
 #endif
@@ -113,7 +117,7 @@ static struct sound_driver drivers[] = {
      { "ALSA", "alsa", alsa_show_preferences, alsa_init, alsa_quit, 
        alsa_output_select_format,
        alsa_output_want_data, alsa_output_play, alsa_output_stop, 
-       alsa_output_clear_buffers,NULL,
+       alsa_output_clear_buffers,NULL,NULL,
        input_supported_true,  
        alsa_input_select_format, alsa_input_store, alsa_input_stop,
        alsa_input_stop_hint,alsa_input_overrun_count },     
@@ -123,7 +127,7 @@ static struct sound_driver drivers[] = {
      { "JACK", "jack", mhjack_preferences, mhjack_init, mhjack_quit, 
        mhjack_output_select_format,
        mhjack_output_want_data, mhjack_output_play, mhjack_output_stop, 
-       mhjack_clear_buffers, mhjack_output_suggest_format,
+       mhjack_clear_buffers, mhjack_output_suggest_format,NULL,
        input_supported_true,  
        mhjack_input_select_format, mhjack_input_store, mhjack_input_stop,
        mhjack_input_stop, mhjack_get_xrun_count },
@@ -134,7 +138,7 @@ static struct sound_driver drivers[] = {
        sunaud_output_select_format, sunaud_output_want_data,
        sunaud_output_play, sunaud_output_stop,
        sunaud_output_clear_buffers,
-       sunaud_output_suggest_format,
+       sunaud_output_suggest_format, NULL, 
        input_supported_true,sunaud_input_select_format,sunaud_input_store,
        sunaud_input_stop,NULL,sunaud_input_overrun_count },
 #endif
@@ -145,7 +149,7 @@ static struct sound_driver drivers[] = {
        portaudio_output_want_data, portaudio_output_play, 
        portaudio_output_stop,
        portaudio_output_clear_buffers, 
-       NULL,
+       NULL, NULL,
        portaudio_input_supported,  
        portaudio_input_select_format, portaudio_input_store, 
        portaudio_input_stop, NULL, portaudio_input_overrun_count }, 
@@ -155,7 +159,7 @@ static struct sound_driver drivers[] = {
      { N_("SDL (output only)"), "sdl", NULL, sdl_init, sdl_quit, 
        sdl_output_select_format, 
        sdl_output_want_data, sdl_output_play, sdl_output_stop, 
-       sdl_output_clear_buffers, NULL,
+       sdl_output_clear_buffers, NULL, NULL,
        NULL, NULL, NULL, NULL, NULL },
 #endif
 
@@ -164,7 +168,7 @@ static struct sound_driver drivers[] = {
      { "ESound", "esound", esound_preferences, esound_init, esound_quit,
        esound_output_select_format, 
        esound_output_want_data, esound_output_play, esound_output_stop,
-       esound_output_clear_buffers, NULL, 
+       esound_output_clear_buffers, NULL, NULL,
        input_supported_true,  
        esound_input_select_format, esound_input_store, esound_input_stop },
 
@@ -175,7 +179,7 @@ static struct sound_driver drivers[] = {
      { "aRts", "arts", NULL, mharts_init, mharts_quit,
        mharts_output_select_format, 
        mharts_output_want_data, mharts_output_play, mharts_output_stop,
-       mharts_output_clear_buffers, mharts_output_suggest_format, 
+       mharts_output_clear_buffers, mharts_output_suggest_format, NULL,
        input_supported_true,  
        mharts_input_select_format, mharts_input_store, mharts_input_stop },
 
@@ -184,7 +188,7 @@ static struct sound_driver drivers[] = {
      { N_("Dummy (no sound)"), "dummy", NULL, dummy_init, dummy_quit,
        dummy_output_select_format, 
        dummy_output_want_data, dummy_output_play, dummy_output_stop,
-       dummy_output_clear_buffers, NULL,
+       dummy_output_clear_buffers, NULL, NULL,
        dummy_input_supported,
        dummy_input_select_format, dummy_input_store, dummy_input_stop }
 
@@ -341,17 +345,42 @@ void sound_quit(void)
 
 gboolean sound_poll(void)
 {
+     int i=0;
+
+     if (drivers[current_driver].driver_needs_polling!=NULL &&
+	 !drivers[current_driver].driver_needs_polling() )
+	  return -1;
+
+     if (output_ready_func==NULL && input_ready_func==NULL)
+	  return -1;
+
      if (output_ready_func != NULL && output_want_data()) {
 	  output_ready_func();
-	  return 1;
+	  i=1;
      }
      if (input_ready_func != NULL) {
 	  input_ready_func();
-	  return 0;
+	  i=0;
      }
-     if (output_ready_func==NULL && input_ready_func==NULL)
-	  return -1;
-     return 0;
+
+     return i;
+}
+
+/* We need to filter the output ready event if delayed stop mode is enabled */
+static void sound_output_ready_func(void)
+{
+     guint u;
+     if (sound_delayed_quit) {
+	  do {
+	       u = output_play(zerobuf,
+			       sizeof(zerobuf)-
+			       (sizeof(zerobuf)%playing_format.samplebytes));
+	  } while (u > 0);
+     } else if (output_ready_func != NULL && output_want_data()) {
+	  output_ready_func();
+     } else if (output_ready_func != NULL) {
+	  puts("output_ready_func called but !output_want_data");
+     }
 }
 
 gint output_select_format(Dataformat *format, gboolean silent, 
@@ -361,11 +390,13 @@ gint output_select_format(Dataformat *format, gboolean silent,
      if (sound_delayed_quit) {
 	  if (dataformat_equal(format,&playing_format)) {
 	       sound_delayed_quit = FALSE;
+	       output_ready_func = ready_func;
 	       return FALSE;
 	  }
 	  else delayed_output_stop();
      }     
-     i = drivers[current_driver].output_select_format(format,silent);
+     i = drivers[current_driver].output_select_format(format,silent,
+						      sound_output_ready_func);
      if (i == 0) {
 	  memcpy(&playing_format,format,sizeof(Dataformat));
 	  output_ready_func = ready_func;
@@ -385,7 +416,7 @@ gint input_select_format(Dataformat *format, gboolean silent,
 {
      gint i;
      if (sound_delayed_quit) delayed_output_stop();
-     i = drivers[current_driver].input_select_format(format,silent);
+     i = drivers[current_driver].input_select_format(format,silent,ready_func);
      if (i == 0)
 	  input_ready_func = ready_func;     
      return i;
@@ -398,7 +429,7 @@ gboolean output_stop(gboolean must_flush)
 	  if (must_flush)
 	       while (output_play(NULL,0) > 0) { }
 	  else
-	       output_clear_buffers();	  
+	       output_clear_buffers();    
 	  sound_delayed_quit=TRUE;
 	  return must_flush;
      } else {

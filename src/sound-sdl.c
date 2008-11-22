@@ -59,7 +59,8 @@ static void sdl_output_callback(void *userdata, Uint8 *stream, int len)
      if (ui < len) memset(stream+ui, 0, len-ui);
 }
 
-static gint sdl_output_select_format(Dataformat *format, gboolean silent)
+static gint sdl_output_select_format(Dataformat *format, gboolean silent,
+				     GVoidFunc ready_func)
 {
      gchar *c;
      SDL_AudioSpec desired;

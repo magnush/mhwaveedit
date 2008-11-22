@@ -174,12 +174,14 @@ static gint oss_try_format(Dataformat *format, gboolean input)
      return 0;
 }
 
-static gint oss_output_select_format(Dataformat *format, gboolean silent)
+static gint oss_output_select_format(Dataformat *format, gboolean silent,
+				     GVoidFunc ready_func)
 {
      return oss_try_format(format,FALSE);
 }
 
-static gint oss_input_select_format(Dataformat *format, gboolean silent)
+static gint oss_input_select_format(Dataformat *format, gboolean silent,
+				    GVoidFunc ready_func)
 {     
      return oss_try_format(format,TRUE);
 }

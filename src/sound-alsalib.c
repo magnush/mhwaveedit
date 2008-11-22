@@ -236,7 +236,8 @@ static gboolean alsa_set_read_format(Dataformat *format)
      return alsa_set_format(format,&(alsa_data.rfmt),&(alsa_data.rhand),FALSE);
 }
 
-static gint alsa_output_select_format(Dataformat *format, gboolean silent)
+static gint alsa_output_select_format(Dataformat *format, gboolean silent,
+				      GVoidFunc ready_func)
 {
      /* signal(SIGPIPE,SIG_IGN); */
      if (alsa_open_write(silent)) return silent?-1:+1;
@@ -248,7 +249,8 @@ static gint alsa_output_select_format(Dataformat *format, gboolean silent)
      return 0;
 }
 
-static gint alsa_input_select_format(Dataformat *format, gboolean silent)
+static gint alsa_input_select_format(Dataformat *format, gboolean silent, 
+				     GVoidFunc ready_func)
 {
      if (alsa_open_read(silent)) return silent?-1:+1;
      if (alsa_set_read_format(format)) {
