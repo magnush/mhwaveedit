@@ -26,10 +26,14 @@ static struct {
      Dataformat wfmt,rfmt;
      gboolean draining,draining_done;     
      int overrun_count;
+     gpointer *iosources;
+     int n_iosources;
+     gboolean use_mainloop;
 } alsa_data = { 0 };
 
 static gboolean alsa_init(gboolean silent)
 {     
+     alsa_data.use_mainloop = inifile_get_gboolean("ALSAEventDriven",TRUE);
      /* We assume that if you have alsa-lib, you're using the ALSA kernel 
       * drivers. */
      return TRUE;
@@ -43,16 +47,21 @@ static void alsa_prefs_ok(GtkButton *button, gpointer user_data)
 {
      GtkWidget *w = GTK_WIDGET(user_data);
      GtkWidget *ep,*er;
+     GtkToggleButton *tb;
      ep = gtk_object_get_data(GTK_OBJECT(w),"playentry");
      er = gtk_object_get_data(GTK_OBJECT(w),"recentry");
+     tb = gtk_object_get_data(GTK_OBJECT(w),"eventtb");
+     alsa_data.use_mainloop = gtk_toggle_button_get_active(tb);
      inifile_set("ALSAPlayDevice",(gchar *)gtk_entry_get_text(GTK_ENTRY(ep)));
      inifile_set("ALSARecDevice",(gchar *)gtk_entry_get_text(GTK_ENTRY(er)));
+     inifile_set_gboolean("ALSAEventDriven",alsa_data.use_mainloop);
      gtk_widget_destroy(w);
 }
 
 static void alsa_show_preferences(void)
 {
      GtkWidget *a,*b,*c,*d;
+     alsa_init(TRUE); /* Read config */
      a = gtk_window_new(GTK_WINDOW_DIALOG);
      gtk_window_set_title(GTK_WINDOW(a),_("ALSA Preferences"));
      gtk_window_set_modal(GTK_WINDOW(a),TRUE);
@@ -60,7 +69,7 @@ static void alsa_show_preferences(void)
      gtk_container_set_border_width(GTK_CONTAINER(a),5);
      gtk_signal_connect(GTK_OBJECT(a),"delete_event",
 			GTK_SIGNAL_FUNC(gtk_false),NULL);
-     b = gtk_table_new(3,2,FALSE);
+     b = gtk_table_new(4,2,FALSE);
      gtk_container_add(GTK_CONTAINER(a),b);
      attach_label(_("Playback device: "),b,0,0);
      c = gtk_entry_new();
@@ -72,8 +81,12 @@ static void alsa_show_preferences(void)
      gtk_entry_set_text(GTK_ENTRY(c),inifile_get("ALSARecDevice","hw"));
      gtk_table_attach(GTK_TABLE(b),c,1,2,1,2,GTK_EXPAND|GTK_FILL,0,5,5);
      gtk_object_set_data(GTK_OBJECT(a),"recentry",c);
+     c = gtk_check_button_new_with_label(_("Event driven I/O"));
+     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(c),alsa_data.use_mainloop);
+     gtk_table_attach(GTK_TABLE(b),c,0,2,2,3,GTK_EXPAND|GTK_FILL,0,5,5);
+     gtk_object_set_data(GTK_OBJECT(a),"eventtb",c);     
      c = gtk_hbutton_box_new();
-     gtk_table_attach(GTK_TABLE(b),c,0,2,2,3,GTK_EXPAND|GTK_FILL,
+     gtk_table_attach(GTK_TABLE(b),c,0,2,3,4,GTK_EXPAND|GTK_FILL,
 		      GTK_EXPAND|GTK_FILL,0,5);
      d = gtk_button_new_with_label(_("OK"));
      gtk_signal_connect(GTK_OBJECT(d),"clicked",GTK_SIGNAL_FUNC(alsa_prefs_ok),
@@ -168,11 +181,14 @@ static snd_pcm_format_t alsa_get_format(Dataformat *format)
 }
 
 static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
-				snd_pcm_t **handp,gboolean playback)
+				snd_pcm_t **handp,gboolean playback, 
+				GVoidFunc ready_func)
 {     
      snd_pcm_hw_params_t *par;
      int i;
      snd_pcm_uframes_t uf;
+     int fd_count;
+     struct pollfd *fds;
      if (dataformat_equal(fmtp,format)) return FALSE;
      snd_pcm_hw_params_malloc(&par);
      snd_pcm_hw_params_any(*handp,par);
@@ -220,20 +236,45 @@ static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
 	  printf("snd_pcm_hw_params: %s\n",snd_strerror(i));
 	  memset(fmtp,0,sizeof(*fmtp));
 	  return TRUE;
-     } else {
-	  memcpy(fmtp,format,sizeof(*fmtp));
-	  return FALSE;
      }
+
+     memcpy(fmtp,format,sizeof(*fmtp));
+
+     if (alsa_data.use_mainloop) {
+	  fd_count = snd_pcm_poll_descriptors_count(*handp);
+	  fds = g_malloc(fd_count*sizeof(*fds));
+	  fd_count = snd_pcm_poll_descriptors(*handp,fds,fd_count*sizeof(*fds));
+	  g_assert(alsa_data.iosources == NULL);
+	  alsa_data.n_iosources = fd_count;
+	  alsa_data.iosources = g_malloc(alsa_data.n_iosources * sizeof(gpointer));
+	  for (i=0; i<fd_count; i++) {
+	       /* printf("adding io source, fd=%d, events=%d\n",fds[i].fd,fds[i].events); */
+	       alsa_data.iosources[i] = 
+		    mainloop_io_source_add(fds[i].fd, fds[i].events, 
+					   (iosource_cb)ready_func, NULL);
+	       /* mainloop_io_source_enable(alsa_data.iosources[i],FALSE); */
+	  }
+	  g_free(fds);
+     }
+
+     return FALSE;
 }
 
-static gboolean alsa_set_write_format(Dataformat *format)
+static gboolean alsa_needs_polling(void)
 {
-     return alsa_set_format(format,&(alsa_data.wfmt),&(alsa_data.whand),TRUE);
+     return !alsa_data.use_mainloop;
 }
 
-static gboolean alsa_set_read_format(Dataformat *format)
+static gboolean alsa_set_write_format(Dataformat *format, GVoidFunc ready_func)
 {
-     return alsa_set_format(format,&(alsa_data.rfmt),&(alsa_data.rhand),FALSE);
+     return alsa_set_format(format,&(alsa_data.wfmt),&(alsa_data.whand),TRUE,
+			    ready_func);
+}
+
+static gboolean alsa_set_read_format(Dataformat *format, GVoidFunc ready_func)
+{
+     return alsa_set_format(format,&(alsa_data.rfmt),&(alsa_data.rhand),FALSE,
+			    ready_func);
 }
 
 static gint alsa_output_select_format(Dataformat *format, gboolean silent,
@@ -241,7 +282,7 @@ static gint alsa_output_select_format(Dataformat *format, gboolean silent,
 {
      /* signal(SIGPIPE,SIG_IGN); */
      if (alsa_open_write(silent)) return silent?-1:+1;
-     if (alsa_set_write_format(format)) { 
+     if (alsa_set_write_format(format,ready_func)) { 
 	  snd_pcm_close(alsa_data.whand);
 	  alsa_data.whand = NULL;
 	  return -1;
@@ -253,7 +294,7 @@ static gint alsa_input_select_format(Dataformat *format, gboolean silent,
 				     GVoidFunc ready_func)
 {
      if (alsa_open_read(silent)) return silent?-1:+1;
-     if (alsa_set_read_format(format)) {
+     if (alsa_set_read_format(format,ready_func)) {
 	  snd_pcm_close(alsa_data.rhand);
 	  alsa_data.rhand = NULL;
 	  return -1;
@@ -262,8 +303,20 @@ static gint alsa_input_select_format(Dataformat *format, gboolean silent,
      return 0;
 }
 
+static void alsa_stop_iosource(void)
+{
+     int i;
+     if (alsa_data.iosources != NULL) {
+	  for (i=0; i<alsa_data.n_iosources; i++)
+	       mainloop_io_source_free(alsa_data.iosources[i]);
+	  g_free(alsa_data.iosources);
+	  alsa_data.iosources = NULL;
+     }
+}
+
 static gboolean alsa_output_stop(gboolean must_flush)
 {
+     alsa_stop_iosource();
      if (alsa_data.whand != NULL) {
 	  if (must_flush)
 	       snd_pcm_drain(alsa_data.whand);
@@ -277,6 +330,7 @@ static gboolean alsa_output_stop(gboolean must_flush)
 
 static void alsa_input_stop(void)
 {
+     alsa_stop_iosource();
      if (alsa_data.rhand != NULL) {
 	  snd_pcm_close(alsa_data.rhand);
 	  alsa_data.rhand = NULL;
@@ -304,7 +358,8 @@ static gboolean alsa_output_want_data(void)
 	  printf("snd_pcm_avail_update: %s\n",snd_strerror(s));
 	  return FALSE;
      }
-     return (s > alsa_data.wfmt.samplerate / 250);
+     /* return (s > alsa_data.wfmt.samplerate / 250); */
+     return (s > 0);
 }
 
 static guint alsa_output_play(gchar *buffer, guint bufsize)

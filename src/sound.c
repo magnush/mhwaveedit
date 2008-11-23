@@ -117,7 +117,7 @@ static struct sound_driver drivers[] = {
      { "ALSA", "alsa", alsa_show_preferences, alsa_init, alsa_quit, 
        alsa_output_select_format,
        alsa_output_want_data, alsa_output_play, alsa_output_stop, 
-       alsa_output_clear_buffers,NULL,NULL,
+       alsa_output_clear_buffers,NULL,alsa_needs_polling,
        input_supported_true,  
        alsa_input_select_format, alsa_input_store, alsa_input_stop,
        alsa_input_stop_hint,alsa_input_overrun_count },     
