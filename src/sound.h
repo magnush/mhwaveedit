@@ -128,6 +128,14 @@ void sound_init(void);
  * ------------------------------------- */
 
 
+/* For sound drivers that need periodic polling, this function checks for 
+ * readiness and calls the appropriate callbacks 
+ * Returns -1 if polling again periodically is not needed,
+ * 0 if no work was done
+ * +1 if work was done.  */
+
+gint sound_poll(void);
+
 /* Sound module cleanup.
  * Changes state to state 5 (Quitted)
  */
@@ -139,9 +147,11 @@ void sound_quit(void);
  * If the format isn't supported by the driver, the function does nothing and 
  * returns <0 if no message displayed or >0 if message was displayed. 
  * Changes state to state 3 (Playing) and returns FALSE if successful
+ * ready_func will be called whenever new data can be written.
  */
 
-gint output_select_format(Dataformat *format, gboolean silent);
+gint output_select_format(Dataformat *format, gboolean silent, 
+			  GVoidFunc ready_func);
 
 
 /* Suggest a format to use for playing back data of the input format.
@@ -164,10 +174,16 @@ gboolean input_supported(void);
 /* Select which format to record and setup recording.
  * If the format isn't supported by the driver, the function does nothing and 
  * returns <0 if no message displayed or >0 if message was displayed. 
- * Changes state to state 4 (Recording) and returns FALSE if successful.
+ * Changes state to state 4 (Recording) and returns FALSE if successful. 
+ * ready_func will be called when there is new data available. 
+ *
+ * On some drivers, ready_func may not be called until one call to input_store
+ * has been made. Therefore, you should make sure to call input_store
+ * once after this call succeeded.
  */
 
-gint input_select_format(Dataformat *format, gboolean silent);
+gint input_select_format(Dataformat *format, gboolean silent, 
+			 GVoidFunc ready_func);
 
 
 

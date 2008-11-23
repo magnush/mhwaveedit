@@ -485,7 +485,8 @@ static void mhjack_quit(void)
 
 /* Output */
 
-static gint mhjack_output_select_format(Dataformat *format, gboolean silent)
+static gint mhjack_output_select_format(Dataformat *format, gboolean silent,
+					GVoidFunc ready_func)
 {
      if (format->type != DATAFORMAT_FLOAT ||
 	 format->samplesize != sizeof(float))
@@ -670,14 +671,15 @@ static int mhjack_get_xrun_count(void)
      return mhjack.xrun_count;
 }
 
-static gint mhjack_input_select_format(Dataformat *format, gboolean silent)
+static gint mhjack_input_select_format(Dataformat *format, gboolean silent,
+				       GVoidFunc ready_func)
 {
      gchar *c;
      mhjack_connect(silent);
      if (!mhjack.is_activated) return silent ? -1 : +1;
      
      if (format->samplerate != jack_get_sample_rate(mhjack.myself) ||
-	 (mhjack_output_select_format(format,TRUE))) {
+	 (mhjack_output_select_format(format,TRUE,ready_func))) {
 	  if (!silent) {
 	       c = g_strdup_printf(_("With JACK, the only supported recording "
 				   "format is "

@@ -57,7 +57,8 @@ static void dummy_quit(void)
      dummy_data.state = 5;
 }
 
-static gint dummy_output_select_format(Dataformat *format, gboolean silent)
+static gint dummy_output_select_format(Dataformat *format, gboolean silent,
+				       GVoidFunc ready_func)
 {
      g_assert(dummy_data.state == 2);
      dummy_data.state = 3;
@@ -89,7 +90,8 @@ static gboolean dummy_input_supported(void)
      return TRUE;
 }
 
-static gint dummy_input_select_format(Dataformat *format, gboolean silent)
+static gint dummy_input_select_format(Dataformat *format, gboolean silent,
+				      GVoidFunc ready_func)
 {
      g_assert(dummy_data.state == 2);
      if (format->samplerate < 100000 && format->samplerate > 0) return -1;

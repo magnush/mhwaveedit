@@ -24,7 +24,7 @@
 #include <stdio.h>
 
 #include "statusbar.h"
-#include "main.h"
+#include "mainloop.h"
 #include "gettext.h"
 
 #define LEFT_MARGIN 4
@@ -342,7 +342,7 @@ gboolean status_bar_progress(StatusBar *sb, off_t progress)
      }
      sb->bar_width = bw;
      idle_work_flag = FALSE;
-     while (!idle_work_flag) mainloop(FALSE);
+     while (!idle_work_flag) mainloop();
      return sb->progress_break;
 }
 

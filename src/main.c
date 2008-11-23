@@ -30,6 +30,7 @@
 #include <locale.h>
 #include <signal.h>
 #include <gtk/gtk.h>
+#include "mainloop.h"
 #include "mainwindow.h"
 #include "datasource.h"
 #include "player.h"
@@ -50,7 +51,6 @@
 #endif
 
 GdkPixmap *icon = NULL;
-gboolean idle_work_flag;
 gboolean quitflag;
 gboolean quality_mode = TRUE;
 gchar *driver_option = NULL;
@@ -68,22 +68,16 @@ const char *strip_context(const char *s)
      return s;
 }
 
-void mainloop(gboolean force_sleep)
+static int idle_work(gpointer csource, gpointer user_data)
 {
-     static guint player_count=0;
-     if (player_work()) { player_count=0; return; }
-     player_count++;
-     if (gtk_events_pending()) {
-	  gtk_main_iteration();
-	  return;
-     }
-     idle_work_flag = TRUE;
-     if (status_bar_progress_count()>0 && !force_sleep) return;
+     if (!idle_work_flag) {
+	  idle_work_flag = TRUE;
+	  return 1;
+     }     
+     if (status_bar_progress_count() > 0) return 1;
      document_update_cursors();
-     if (chunk_view_autoscroll() && !force_sleep) return;
-     if (mainwindow_update_caches() && !force_sleep) return;
-     if (player_count > 10)
-	  do_yield(TRUE);
+     if (chunk_view_autoscroll() || mainwindow_update_caches()) return 1;
+     return -1;
 }
 
 int main(int argc, char **argv)
@@ -225,10 +219,12 @@ int main(int argc, char **argv)
 
      /* gtk_idle_add(idle_work,NULL); */
 
+     /* Add low priority idle function */
+     mainloop_constant_source_add(idle_work,NULL,TRUE);
 
      /* Run it! */
      while (!quitflag)
-	  mainloop(FALSE);
+	  mainloop();
 
 
 
