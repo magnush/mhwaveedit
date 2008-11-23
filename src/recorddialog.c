@@ -524,6 +524,11 @@ static gboolean record_dialog_set_format(RecordDialog *rd, RecordFormat *rf)
      rd->analysis_samples = rf->fmt.channels * rf->fmt.samplerate / 10;
      rd->analysis_buf = g_malloc(rd->analysis_bytes);
      rd->analysis_sbuf = g_malloc(sizeof(sample_t) * rd->analysis_samples); 
+
+     /* Call process_input manually one time here
+      * (required for some sound drivers to start recording) */
+     process_input(rd);
+
      return FALSE;
 }
 

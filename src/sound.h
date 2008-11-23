@@ -176,6 +176,10 @@ gboolean input_supported(void);
  * returns <0 if no message displayed or >0 if message was displayed. 
  * Changes state to state 4 (Recording) and returns FALSE if successful. 
  * ready_func will be called when there is new data available. 
+ *
+ * On some drivers, ready_func may not be called until one call to input_store
+ * has been made. Therefore, you should make sure to call input_store
+ * once after this call succeeded.
  */
 
 gint input_select_format(Dataformat *format, gboolean silent, 
