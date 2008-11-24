@@ -80,12 +80,12 @@ static void oss_quit(void)
      ringbuf_free(oss_output_buffer);
 }
 
-static int oss_errdlg_open(char *filename, int flags)
+static int oss_errdlg_open(char *filename, int flags, gboolean silent)
 {
      int fd;
      gchar *c;
      fd = open(filename,flags);
-     if (fd == -1) {
+     if (fd == -1 && !silent) {
 	  c = g_strdup_printf(_("Could not open '%s': %s"),filename,strerror(errno));
 	  user_error(c);
 	  g_free(c);
@@ -93,12 +93,12 @@ static int oss_errdlg_open(char *filename, int flags)
      return fd;
 }
 
-static int oss_errdlg_ioctl(int filedes, int cmd, void *arg)
+static int oss_errdlg_ioctl(int filedes, int cmd, void *arg, gboolean silent)
 {
      int i;
      gchar *c;
      i = ioctl(filedes,cmd,arg);
-     if (i == -1 && errno != EPIPE) {
+     if (i == -1 && errno != EPIPE && !silent) {
 	  c = g_strdup_printf(_("Error in sound driver: ioctl failed: %s"),strerror(errno));
 	  user_error(c);
 	  g_free(c);
@@ -106,7 +106,7 @@ static int oss_errdlg_ioctl(int filedes, int cmd, void *arg)
      return i;
 }
 
-static gint oss_try_format(Dataformat *format, gboolean input)
+static gint oss_try_format(Dataformat *format, gboolean input, gboolean silent)
 {
      gchar *fname;
      int i,j;
@@ -151,24 +151,34 @@ static gint oss_try_format(Dataformat *format, gboolean input)
      fname = inifile_get(OSS_PCMFILE_PLAYBACK,OSS_PCMFILE_DEFAULT);
      if (input)
 	  fname = inifile_get(OSS_PCMFILE_RECORD, fname);
-     oss_fd = oss_errdlg_open(fname, input ? O_RDONLY : O_WRONLY);
-     if (oss_fd == -1) return +1;
+     oss_fd = oss_errdlg_open(fname, input ? O_RDONLY : O_WRONLY, silent);
+     if (oss_fd == -1) return silent?-1:+1;
      /* Try to set the format */
      j = oss_format;
-     i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_SETFMT, &j);
-     if (i == -1 || j != oss_format) { close(oss_fd); oss_fd=-1; return -1; }
+     i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_SETFMT, &j, silent);
+     if (i == -1 || j != oss_format) { 
+	  close(oss_fd); 
+	  oss_fd=-1; 
+	  return (i != -1 || silent)?-1:+1; 
+     }
      /* Try to set the number of channels */
      j = oss_channels = format->channels;
-     i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_CHANNELS, &j);
-     if (i==-1 || j != oss_channels) { close(oss_fd); oss_fd=-1; return -1; }
+     i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_CHANNELS, &j, silent);
+     if (i==-1 || j != oss_channels) { 
+	  close(oss_fd); 
+	  oss_fd=-1; 
+	  return (i != -1 || silent)?-1:+1; 
+     }
      /* Try to set the sample rate */
      j = oss_samplerate = format->samplerate;
-     i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_SPEED, &j);
+     i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_SPEED, &j, silent);
      /* FIXME: Variable tolerance (esp. for input) */
      /* Currently tolerates 5% difference between requested/received samplerate
       */
      if (i==-1 || abs(j-oss_samplerate) > oss_samplerate/20) {
-	  close(oss_fd); oss_fd=-1; return -1;
+	  close(oss_fd); 
+	  oss_fd=-1; 
+	  return (i != -1 || silent)?-1:+1;
      }
      /* Everything went well! */
      return 0;
@@ -177,13 +187,13 @@ static gint oss_try_format(Dataformat *format, gboolean input)
 static gint oss_output_select_format(Dataformat *format, gboolean silent,
 				     GVoidFunc ready_func)
 {
-     return oss_try_format(format,FALSE);
+     return oss_try_format(format,FALSE,silent);
 }
 
 static gint oss_input_select_format(Dataformat *format, gboolean silent,
 				    GVoidFunc ready_func)
 {     
-     return oss_try_format(format,TRUE);
+     return oss_try_format(format,TRUE,silent);
 }
 
 static int oss_errdlg_write(int fd, gchar *buffer, size_t size)
@@ -237,7 +247,7 @@ static void oss_output_flush(void)
      }
 #ifdef SNDCTL_DSP_GETOSPACE
      /* Now do an ioctl call to check the number of writable bytes */
-     i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_GETOSPACE, &info);
+     i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_GETOSPACE, &info, TRUE);
      if (i == -1 && errno == EPIPE) {
 	  /* This is a workaround for a bug in ALSA 0.9.6 OSS emulation, where
 	   * this call can return "broken pipe", especially after a 
@@ -355,7 +365,7 @@ static void oss_input_store(Ringbuf *buffer)
 #ifdef SNDCTL_DSP_GETISPACE
      /* Now do an ioctl call to check the number of readable bytes */
      /* Note: It seems as ALSA 0.9's OSS emulation returns 0 for this call... */
-     i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_GETISPACE, &info);
+     i = oss_errdlg_ioctl(oss_fd, SNDCTL_DSP_GETISPACE, &info, TRUE);
      if (i > 0 && i < u) u=i;
      else u = MIN(u,oss_samplesize*oss_channels*oss_samplerate/50);
 #else
