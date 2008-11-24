@@ -69,6 +69,10 @@ static char zerobuf[1024];
 #include "sound-artsc.c"
 #endif
 
+#ifdef HAVE_PULSEAUDIO
+#include "sound-pulse.c"
+#endif
+
 #include "sound-dummy.c"
 
 static GList *input_supported_true(gboolean *complete)
@@ -186,6 +190,18 @@ static struct sound_driver drivers[] = {
 
 #endif
 
+#ifdef HAVE_PULSEAUDIO
+
+     { "PulseAudio", "pulse", NULL, pulse_init, pulse_quit, 
+       pulse_output_select_format, pulse_output_want_data, pulse_output_play,
+       pulse_output_stop, pulse_output_clear_buffers, NULL, 
+       pulse_needs_polling, 
+       NULL,
+       NULL,NULL,NULL,NULL,NULL
+     },
+       
+#endif
+
      { N_("Dummy (no sound)"), "dummy", NULL, dummy_init, dummy_quit,
        dummy_output_select_format, 
        dummy_output_want_data, dummy_output_play, dummy_output_stop,
@@ -201,7 +217,7 @@ static guint current_driver = 0;
 
 static gchar *autodetect_order[] = { 
      /* Sound servers. These must auto-detect properly */
-     "jack", "esound", "arts", 
+     "jack", "pulse", "esound", "arts", 
      /* "Direct" API:s that don't auto-detect properly. 
       * If compiled in they probably work. */
      "alsa", "sun", 

@@ -271,6 +271,28 @@ if test "x$MHW_HAVE_JACK" = "xyes" ; then
 	AC_DEFINE(HAVE_JACK,[],[Enable JACK sound driver])
 fi
 
+dnl Check for PulseAudio
+
+MHW_HAVE_PULSE=no
+MHW_SKIP_PULSETEST=no
+
+AC_DEFUN([AC_WITHOUT_PULSE],[
+	if test "x$withval" = "xno" ; then
+	   MHW_SKIP_PULSETEST='yes'
+	fi
+])
+
+AC_ARG_WITH(pulse,[  --without-pulse          Don't compile PulseAudio driver],AC_WITHOUT_JACK)
+
+if test "x$MHW_SKIP_PULSETEST" = "xno"
+then
+	PKG_CHECK_MODULES(PULSE,libpulse >= 0.9.10,MHW_HAVE_PULSE=yes,MHW_HAVE_PULSE=no)
+fi
+
+if test "x$MHW_HAVE_PULSE" = "xyes" ; then
+	AC_DEFINE(HAVE_PULSEAUDIO,[],[Enable PulseAudio sound driver])
+fi
+
 dnl Check for Esound
 
 MHW_HAVE_ESOUND=yes
@@ -470,6 +492,7 @@ echo    "  PortAudio:              $MHW_HAVE_PORTAUDIO"
 echo    "  SDL:                    $MHW_HAVE_SDL"
 echo    "  EsounD:                 $MHW_HAVE_ESOUND"
 echo    "  aRts:                   $MHW_HAVE_ARTSC"
+echo    "  PulseAudio:             $MHW_HAVE_PULSE"
 echo
 echo    "Other settings:"
 
