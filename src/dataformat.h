@@ -48,7 +48,7 @@ typedef struct {
 extern Dataformat dataformat_sample_t;
 extern Dataformat dataformat_single;
 
-extern gboolean ieee_le_compatible;
+extern gboolean ieee_le_compatible,ieee_be_compatible;
 
 #define FORMAT_IS_SAMPLET(fmtp) ((fmtp)->type == DATAFORMAT_FLOAT && (fmtp)->samplesize == sizeof(sample_t))
 
