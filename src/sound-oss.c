@@ -425,7 +425,7 @@ static void oss_preferences(void)
      pd->pcmdev_playback = GTK_ENTRY(d);
      c = gtk_hbox_new(FALSE,3);
      gtk_container_add(GTK_CONTAINER(b),c);
-     d = gtk_label_new(_("Playback device file:"));
+     d = gtk_label_new(_("Recording device file:"));
      gtk_container_add(GTK_CONTAINER(c),d);
      d = gtk_entry_new();
      gtk_entry_set_text(GTK_ENTRY(d),inifile_get(OSS_PCMFILE_RECORD,q));
