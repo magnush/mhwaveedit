@@ -396,12 +396,14 @@ gint output_select_format(Dataformat *format, gboolean silent,
 	  }
 	  else delayed_output_stop();
      }     
+
+     /* Set up the variables before calling output_select_format, in
+      * case the ready callback is called immediately */
+     memcpy(&playing_format,format,sizeof(Dataformat));
+     output_ready_func = ready_func;
+
      i = drivers[current_driver].output_select_format(format,silent,
 						      sound_output_ready_func);
-     if (i == 0) {
-	  memcpy(&playing_format,format,sizeof(Dataformat));
-	  output_ready_func = ready_func;
-     }
      return i;
 }
 
