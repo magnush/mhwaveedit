@@ -288,7 +288,7 @@ struct {
      pa_stream *stream;
      pa_stream_state_t stream_state;
      gboolean clear_flag;
-
+     gboolean flush_state; /* 0 = no flush requested yet, 1 = waiting, 2 = done */
      gboolean recursing_mainloop;
 
 } pulse_data = { 0 };
@@ -312,13 +312,16 @@ static void pulse_context_state_cb(pa_context *c, void *userdata)
 static gboolean pulse_connect(gboolean autospawn, gboolean silent)
 {
      gchar *c;
+     int i;
      if (pulse_data.ctx != NULL) return TRUE;
      pulse_data.ctx = pa_context_new(pulse_api(),"mhwaveedit");
+     g_assert(pulse_data.ctx != NULL);
      pulse_data.ctx_state = PA_CONTEXT_UNCONNECTED;
      pa_context_set_state_callback(pulse_data.ctx,pulse_context_state_cb,
 				   NULL);
-     pa_context_connect(pulse_data.ctx, NULL,
-			autospawn?0:PA_CONTEXT_NOAUTOSPAWN, NULL);
+     i = pa_context_connect(pulse_data.ctx, NULL,
+			    autospawn?0:PA_CONTEXT_NOAUTOSPAWN, NULL);
+     g_assert(i == 0 || pulse_data.ctx == NULL);
 
      while (pulse_data.ctx_state != PA_CONTEXT_READY &&
 	    pulse_data.ctx_state != PA_CONTEXT_FAILED &&
@@ -395,6 +398,7 @@ static gint pulse_output_select_format(Dataformat *format, gboolean silent,
 {
      pa_sample_spec ss;
      gchar *c;
+     int i;
 
      printf("pulse_output_select_format, silent==%d\n",silent);
      if (format_to_pulse(format,&ss)) return -1;
@@ -404,14 +408,16 @@ static gint pulse_output_select_format(Dataformat *format, gboolean silent,
      g_assert(pulse_data.stream == NULL);
      pulse_data.stream_state = PA_STREAM_UNCONNECTED;
      pulse_data.stream = pa_stream_new(pulse_data.ctx, "p", &ss, NULL);
+     g_assert(pulse_data.stream != NULL);
      pa_stream_set_state_callback(pulse_data.stream, pulse_stream_state_cb,
 				  NULL);
 
      pa_stream_set_write_callback(pulse_data.stream,
 				  (pa_stream_request_cb_t)ready_func,NULL);
 
-
-     pa_stream_connect_playback(pulse_data.stream,NULL,NULL,0,NULL,NULL);
+     i = pa_stream_connect_playback(pulse_data.stream,NULL,NULL,0,NULL,NULL);
+     
+     g_assert(i == 0 || pulse_data.stream == NULL);
 
      pulse_data.recursing_mainloop = TRUE;
      while (pulse_data.stream_state != PA_STREAM_READY &&
@@ -442,12 +448,57 @@ static gboolean pulse_output_want_data(void)
      return (s > 0);
 }
 
+static void pulse_flush_success_cb(pa_stream *s, int success, void *userdata)
+{
+     gchar *c;
+     if (!success) {
+	  c = g_strdup_printf(_("Failed to drain stream: %s"),
+			      pa_strerror(pa_context_errno(pulse_data.ctx)));
+	  user_error(c);
+	  g_free(c);
+     }
+     puts("pulse_flush_success_cb");
+     pulse_data.flush_state = 2;
+}
+
+static void pulse_flush_start(void)
+{
+     pa_operation *o;
+
+     if (pulse_data.flush_state != 0) return;
+     pulse_data.flush_state = 1;
+     o = pa_stream_drain(pulse_data.stream, pulse_flush_success_cb, 
+			 NULL);
+     g_assert(o != NULL);
+     pa_operation_unref(o);
+}
+
+static gboolean pulse_flush_done(void)
+{
+     return (pulse_data.flush_state == 2);
+}
+
+static gboolean pulse_flush_in_progress(void)
+{
+     return (pulse_data.flush_state == 1);
+}
+
 static guint pulse_output_play(gchar *buffer, guint bufsize)
 {
+     int i;
      if (pulse_data.stream == NULL) return 0;
-     pa_stream_write(pulse_data.stream, buffer, bufsize, NULL, 0, 
-		     pulse_data.clear_flag?PA_SEEK_ABSOLUTE:PA_SEEK_RELATIVE);
+     if (buffer == NULL) {
+	  g_assert(bufsize == 0);
+	  pulse_flush_start();
+	  return pulse_flush_done()?0:1;
+     }
+     i = pa_stream_write(pulse_data.stream, buffer, bufsize, NULL, 0, 
+			 pulse_data.clear_flag?
+			 PA_SEEK_ABSOLUTE:PA_SEEK_RELATIVE);
+     g_assert(i == 0);
      pulse_data.clear_flag = FALSE;
+     if (pulse_data.flush_state == 2)
+	  pulse_data.flush_state = 0;
      return bufsize;
 }
 
@@ -458,12 +509,31 @@ static void pulse_output_clear_buffers(void)
 
 static gboolean pulse_output_stop(gboolean must_flush)
 {
-     if (pulse_data.stream != NULL)
+     puts("pulse_output_stop");
+     if (pulse_data.stream != NULL) {
+	  if (must_flush || pulse_flush_in_progress()) {
+
+	       pulse_flush_start();
+
+	       pulse_data.recursing_mainloop = TRUE;
+	       while (!pulse_flush_done())
+		    mainloop();
+	       pulse_data.recursing_mainloop = FALSE;
+	  }
+	  pulse_data.flush_state = 0;
+	  
 	  pa_stream_disconnect(pulse_data.stream);
+	  pulse_data.recursing_mainloop = TRUE;
+	  while (pulse_data.stream != NULL)
+	       mainloop();
+	  pulse_data.recursing_mainloop = FALSE;
+
+     }
      return FALSE;
 }
 
 static gboolean pulse_needs_polling(void)
 {     
-     return !pulse_data.recursing_mainloop && pulse_output_want_data();
+     return !pulse_data.recursing_mainloop && !pulse_flush_in_progress() && 
+	  pulse_output_want_data();
 }
