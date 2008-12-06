@@ -287,7 +287,7 @@ struct {
      int ctx_errno;
      pa_stream *stream;
      pa_stream_state_t stream_state;
-     gboolean flush_flag;
+     gboolean clear_flag;
 
      gboolean recursing_mainloop;
 
@@ -446,14 +446,14 @@ static guint pulse_output_play(gchar *buffer, guint bufsize)
 {
      if (pulse_data.stream == NULL) return 0;
      pa_stream_write(pulse_data.stream, buffer, bufsize, NULL, 0, 
-		     pulse_data.flush_flag?PA_SEEK_ABSOLUTE:PA_SEEK_RELATIVE);
-     pulse_data.flush_flag = FALSE;
+		     pulse_data.clear_flag?PA_SEEK_ABSOLUTE:PA_SEEK_RELATIVE);
+     pulse_data.clear_flag = FALSE;
      return bufsize;
 }
 
 static void pulse_output_clear_buffers(void)
 {
-     pulse_data.flush_flag = TRUE;
+     pulse_data.clear_flag = TRUE;
 }
 
 static gboolean pulse_output_stop(gboolean must_flush)
