@@ -47,7 +47,56 @@ struct pulse_api_defer_event {
      void *userdata;
 };
 
+struct pulse_api_userdata {
+     gpointer *sources;
+     int sources_cap;
+     int sources_len;
+};
+
 static pa_mainloop_api *pulse_api(void);
+
+static void pulse_api_list_sources(struct pulse_api_userdata *ud)
+{
+     int i;
+     printf("sources: ");
+     for (i=0; i<ud->sources_len; i++)
+	  printf("%p ",ud->sources[i]);
+     puts("");
+}
+
+static void pulse_api_source_added(gpointer src, struct pa_mainloop_api *api)
+{     
+     struct pulse_api_userdata *ud = (struct pulse_api_userdata *)api->userdata;
+
+     printf("pulse_api_source_added: %p\n",src);
+     if (ud->sources_cap == ud->sources_len) {
+	  if (ud->sources_cap == 0)
+	       ud->sources_cap = 1;
+	  else
+	       ud->sources_cap *= 2;	  
+	  ud->sources = g_realloc(ud->sources,
+				  ud->sources_cap*sizeof(ud->sources[0]));
+     }
+     ud->sources[ud->sources_len++] = src;
+
+     pulse_api_list_sources(ud);
+
+}
+
+static void pulse_api_source_removed(gpointer src, struct pa_mainloop_api *api)
+{
+     struct pulse_api_userdata *ud = (struct pulse_api_userdata *)api->userdata;
+     int i;
+     printf("pulse_api_source_removed: %p\n",src);
+     for (i=0; i<ud->sources_len; i++)
+	  if (ud->sources[i] == src) 
+	       break;
+     for (; i+1<ud->sources_len; i++)
+	  ud->sources[i] = ud->sources[i+1];
+     ud->sources_len--;
+
+     pulse_api_list_sources(ud);
+}
 
 static int pa_to_poll(pa_io_event_flags_t events)
 {
@@ -93,6 +142,7 @@ static pa_io_event *pulse_api_io_new(pa_mainloop_api *a, int fd,
      e->destroy_cb = NULL;
      e->iosource = mainloop_io_source_add(fd, pa_to_poll(events),
 					  pulse_api_io_cb, e);
+     pulse_api_source_added(e->iosource,a);
      return (pa_io_event *)e;     
 }
 
@@ -108,9 +158,11 @@ static void pulse_api_io_enable(pa_io_event *e, pa_io_event_flags_t events)
 	  mainloop_io_source_enable(es->iosource,TRUE);
      } else {
 	  mainloop_io_source_free(es->iosource);
+	  pulse_api_source_removed(es->iosource,pulse_api());
 	  es->events = events;
 	  es->iosource = mainloop_io_source_add(es->fd,pa_to_poll(events),
 						pulse_api_io_cb, es);
+	  pulse_api_source_added(es->iosource,pulse_api());
      }
 }
 
@@ -119,7 +171,9 @@ static void pulse_api_io_free(pa_io_event *e)
      struct pulse_api_io_event *es = (struct pulse_api_io_event *)e;
      /* printf("Removing IO event (fd %d)\n",es->fd); */
      mainloop_io_source_free(es->iosource);
+     pulse_api_source_removed(es->iosource, pulse_api());
      if (es->destroy_cb) es->destroy_cb(pulse_api(),e,es->userdata);
+     
      g_free(es);
 }
 
@@ -164,6 +218,7 @@ static pa_time_event *pulse_api_time_new(pa_mainloop_api *a,
      gtv.tv_sec = tv->tv_sec;
      gtv.tv_usec = tv->tv_usec;
      es->timesource = mainloop_time_source_add(&gtv,pa_api_time_new_cb,es);
+     pulse_api_source_added(es->timesource, a);
      return (pa_time_event *)es;
 }
 
@@ -189,6 +244,7 @@ static void pulse_api_time_free(pa_time_event *e)
      /* puts("Removing time event"); */
      mainloop_time_source_free(es->timesource);
      if (es->destroy_cb) es->destroy_cb(pulse_api(),e,es->userdata);
+     pulse_api_source_removed(es->timesource, pulse_api());
      g_free(es);
 }
 
@@ -220,6 +276,7 @@ static pa_defer_event *pulse_api_defer_new(pa_mainloop_api *a,
      es->userdata = userdata;
      es->constsource = mainloop_constant_source_add(pulse_api_defer_new_cb,
 						    es, FALSE);
+     pulse_api_source_added(es->constsource,a);
      return (pa_defer_event *)es;
 }
 
@@ -236,6 +293,7 @@ static void pulse_api_defer_free(pa_defer_event *e)
      /* puts("Removing defer event"); */
      mainloop_constant_source_free(es->constsource);
      if (es->destroy_cb) es->destroy_cb(pulse_api(),e,es->userdata);
+     pulse_api_source_removed(es->constsource,pulse_api());
      g_free(es);
 }
 
@@ -254,6 +312,7 @@ static pa_mainloop_api *pulse_api(void)
 {
      static gboolean api_setup = FALSE;
      static struct pa_mainloop_api api;
+     struct pulse_api_userdata *ud;
 
      if (!api_setup) {
 	  api.io_new = pulse_api_io_new;
@@ -270,10 +329,27 @@ static pa_mainloop_api *pulse_api(void)
 	  api.defer_set_destroy = pulse_api_defer_set_destroy;
 	  api.quit = pulse_api_quit;
 
+	  ud = g_malloc0(sizeof(*ud));
+	  api.userdata = ud;
+
 	  api_setup = TRUE;
      }
 
      return &api;
+}
+
+static void pulse_api_block(void)
+{
+     gpointer *srcp;
+     struct pulse_api_userdata *ud = 
+	  (struct pulse_api_userdata *)(pulse_api()->userdata);
+     puts("pulse_api_block");
+     pulse_api_list_sources(ud);
+
+     srcp = g_malloc(ud->sources_len * sizeof(ud->sources[0]));
+     memcpy(srcp,ud->sources,ud->sources_len*sizeof(ud->sources[0]));
+     mainloop_recurse_on(srcp, ud->sources_len);
+     g_free(srcp);
 }
 
 
@@ -326,7 +402,7 @@ static gboolean pulse_connect(gboolean autospawn, gboolean silent)
      while (pulse_data.ctx_state != PA_CONTEXT_READY &&
 	    pulse_data.ctx_state != PA_CONTEXT_FAILED &&
 	    pulse_data.ctx_state != PA_CONTEXT_TERMINATED)
-	  mainloop();
+	  pulse_api_block();
 
      if (!silent && pulse_data.ctx_state != PA_CONTEXT_READY) {
 	  c = g_strdup_printf(_("Connection to PulseAudio server failed: %s"),
@@ -423,7 +499,7 @@ static gint pulse_output_select_format(Dataformat *format, gboolean silent,
      while (pulse_data.stream_state != PA_STREAM_READY &&
 	    pulse_data.stream_state != PA_STREAM_FAILED &&
 	    pulse_data.stream_state != PA_STREAM_TERMINATED)
-	  mainloop();
+	  pulse_api_block();
      pulse_data.recursing_mainloop = FALSE;
 
      if (!silent && pulse_data.stream_state != PA_STREAM_READY) {
@@ -465,6 +541,7 @@ static void pulse_flush_start(void)
 {
      pa_operation *o;
 
+     puts("pulse_flush_start");
      if (pulse_data.flush_state != 0) return;
      pulse_data.flush_state = 1;
      o = pa_stream_drain(pulse_data.stream, pulse_flush_success_cb, 
@@ -517,7 +594,7 @@ static gboolean pulse_output_stop(gboolean must_flush)
 
 	       pulse_data.recursing_mainloop = TRUE;
 	       while (!pulse_flush_done())
-		    mainloop();
+		    pulse_api_block();
 	       pulse_data.recursing_mainloop = FALSE;
 	  }
 	  pulse_data.flush_state = 0;
@@ -525,7 +602,7 @@ static gboolean pulse_output_stop(gboolean must_flush)
 	  pa_stream_disconnect(pulse_data.stream);
 	  pulse_data.recursing_mainloop = TRUE;
 	  while (pulse_data.stream != NULL)
-	       mainloop();
+	       pulse_api_block();
 	  pulse_data.recursing_mainloop = FALSE;
 
      }
