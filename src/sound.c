@@ -344,6 +344,8 @@ void sound_quit(void)
      drivers[current_driver].quit();
 }
 
+static void sound_output_ready_func(void);
+
 gboolean sound_poll(void)
 {
      int i=0;
@@ -355,8 +357,9 @@ gboolean sound_poll(void)
      if (output_ready_func==NULL && input_ready_func==NULL)
 	  return -1;
 
-     if (output_ready_func != NULL && output_want_data()) {
-	  output_ready_func();
+     if ((output_ready_func!=NULL || sound_delayed_quit) && 
+	 output_want_data()) {
+	  sound_output_ready_func();
 	  i=1;
      }
      if (input_ready_func != NULL) {
@@ -372,11 +375,11 @@ static void sound_output_ready_func(void)
 {
      guint u;
      if (sound_delayed_quit) {
-	  do {
+	  while (output_want_data()) {
 	       u = output_play(zerobuf,
 			       sizeof(zerobuf)-
 			       (sizeof(zerobuf)%playing_format.samplebytes));
-	  } while (u > 0);
+	  }
      } else if (output_ready_func != NULL && output_want_data()) {
 	  output_ready_func();
      } else if (output_ready_func != NULL) {
