@@ -92,8 +92,6 @@ void chunk_view_set_timescale(ChunkView *cv, gboolean scale_visible);
 
 gboolean chunk_view_update_cache(ChunkView *cv);
 
-gboolean chunk_view_autoscroll(void);
-
 void chunk_view_force_repaint(ChunkView *cv);
 
 void chunk_view_use_backing_pixmap(ChunkView *cv, gboolean use_pixmap);
