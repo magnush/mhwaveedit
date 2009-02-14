@@ -169,7 +169,10 @@ gboolean output_suggest_format(Dataformat *format, Dataformat *result);
 gboolean input_supported(void);
 
 
+/* Returns a list of supported input formats. *complete is set to true if
+ * these are the only formats supported. */
 
+GList *input_supported_formats(gboolean *complete);
 
 /* Select which format to record and setup recording.
  * If the format isn't supported by the driver, the function does nothing and 
