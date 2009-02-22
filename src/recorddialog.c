@@ -754,7 +754,8 @@ static gboolean record_dialog_set_format(RecordDialog *rd)
 
 static void check_format_change(RecordDialog *rd)
 {
-     if (!rd->format_changed || combo_mouse_pressed(rd->format_combo)) return;
+     if (!rd->format_changed)
+	  return;
 
      rd->format_changed = FALSE;
      record_dialog_set_format(rd);

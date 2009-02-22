@@ -43,12 +43,27 @@ static void combo_class_init(GtkObjectClass *klass)
 }
 
 
+static void hide_popup(GtkWidget *widget, Combo *combo)
+{
+     int i = combo->next_chosen_index;
+     if (i >= 0) {
+	  combo->next_chosen_index = -1;
+	  combo_set_selection(combo,i);
+     }
+}
+
 static void list_select_child(GtkList *list, GtkWidget *child, 
 			      gpointer user_data)
 {
-     Combo *combo = COMBO(user_data);     
+     Combo *combo = COMBO(user_data);          
+     int idx;
      if (updating_flag) return;
-     combo->chosen_index = gtk_list_child_position(list,child);
+     idx = gtk_list_child_position(list,child);
+     if (GTK_WIDGET_VISIBLE(GTK_COMBO(combo)->popwin)) {
+	  combo->next_chosen_index = idx;
+	  return;
+     }
+     combo->chosen_index = idx;
      gtk_signal_emit(GTK_OBJECT(combo),combo_signals[CHANGED_SIGNAL]);
 }
 
@@ -74,11 +89,14 @@ static void combo_init(GtkObject *obj)
 {
      GtkCombo *cbo = GTK_COMBO(obj);
      COMBO(obj)->chosen_index = 0;
+     COMBO(obj)->next_chosen_index = -1;
      gtk_editable_set_editable(GTK_EDITABLE(cbo->entry),FALSE);     
      gtk_signal_connect(GTK_OBJECT(cbo->list),"select_child",list_select_child,
 			obj);
      gtk_signal_connect(GTK_OBJECT(cbo->list),"motion-notify-event",
 			GTK_SIGNAL_FUNC(list_motion_notify),obj);
+     gtk_signal_connect_after(GTK_OBJECT(GTK_COMBO(cbo)->popwin),"hide",
+			      GTK_SIGNAL_FUNC(hide_popup),cbo);
 }
 
 void combo_set_items(Combo *combo, GList *item_strings, int default_index)
@@ -117,11 +135,6 @@ void combo_remove_item(Combo *combo, int item_index)
      gtk_list_clear_items(GTK_LIST(GTK_COMBO(combo)->list),item_index,
 			  item_index+1);
      if (item_index < combo->chosen_index) combo->chosen_index--;
-}
-
-gboolean combo_mouse_pressed(Combo *combo)
-{
-     return GTK_WIDGET_VISIBLE(GTK_COMBO(combo)->popwin);
 }
 
 #else
