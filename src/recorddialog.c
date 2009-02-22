@@ -463,6 +463,34 @@ static void other_dialog_select_child(GtkList *list, GtkWidget *widget,
      gtk_entry_set_text(other_dialog.name_entry, rf->name);
 }
 
+static void other_dialog_preset_item_added(ListObject *lo, RecordFormat *rf,
+					   gpointer user_data)
+{
+     GtkWidget *a;
+     a = gtk_list_item_new_with_label(rf->name);
+     gtk_container_add(GTK_CONTAINER(other_dialog.preset_list),a);
+     gtk_object_set_data(GTK_OBJECT(a),"fmt",rf);
+     gtk_widget_show(a);
+}
+
+static void other_dialog_preset_item_removed(ListObject *lo, gpointer item,
+					     gpointer user_data)
+{
+     GList *l;
+     gpointer p;
+     l = gtk_container_get_children(GTK_CONTAINER(other_dialog.preset_list));
+     for (; l!=NULL; l=l->next) {
+	  p = gtk_object_get_data(GTK_OBJECT(l->data),"fmt");
+	  if (p == item) {
+	       gtk_container_remove(GTK_CONTAINER(other_dialog.preset_list),
+				    GTK_WIDGET(l->data));
+	       break;
+	  }
+     }
+     g_list_free(l);
+		    
+}
+
 static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
 {
      GtkWidget *a,*b,*c,*d,*e,*f,*item;
@@ -492,7 +520,14 @@ static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
 
      other_dialog.preset_list = GTK_LIST(gtk_list_new());
      item = other_dialog_build_preset_list(rd);
-     
+     gtk_signal_connect_while_alive
+	  (GTK_OBJECT(preset_list),"item_added",
+	   GTK_SIGNAL_FUNC(other_dialog_preset_item_added),other_dialog.wnd,
+	   GTK_OBJECT(other_dialog.wnd));
+     gtk_signal_connect_while_alive
+	  (GTK_OBJECT(preset_list),"item_removed",
+	   GTK_SIGNAL_FUNC(other_dialog_preset_item_removed),other_dialog.wnd,
+	   GTK_OBJECT(other_dialog.wnd));
 
      a = GTK_WIDGET(other_dialog.wnd);
      gtk_container_set_border_width(GTK_CONTAINER(a),10);
