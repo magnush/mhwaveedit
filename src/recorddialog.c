@@ -828,6 +828,8 @@ void record_dialog_init(RecordDialog *obj)
      GtkRequisition req;  
      gchar limitbuf[64];
      gchar *s1;
+     GList *dp;
+     gboolean complete;
 
      ag = gtk_accel_group_new();
 
@@ -858,7 +860,10 @@ void record_dialog_init(RecordDialog *obj)
 
 
      build_preset_list();
-
+     dp = input_supported_formats(&complete);
+     obj->driver_presets = list_object_new_from_list(dp,FALSE);
+     gtk_object_ref(GTK_OBJECT(obj->driver_presets));
+     gtk_object_sink(GTK_OBJECT(obj->driver_presets));
 
      /* Add components */
      a = gtk_vbox_new(FALSE,10);
@@ -873,7 +878,8 @@ void record_dialog_init(RecordDialog *obj)
      e = gtk_label_new(_("Sample format: "));
      gtk_box_pack_start(GTK_BOX(d),e,FALSE,FALSE,0);
 
-     e = record_format_combo_new(preset_list,list_object_new(FALSE),TRUE);
+     e = record_format_combo_new(complete ? list_object_new(FALSE):preset_list,
+				 obj->driver_presets, !complete);
      gtk_box_pack_start(GTK_BOX(d),e,TRUE,TRUE,0);
      obj->format_combo = RECORD_FORMAT_COMBO(e);
      gtk_signal_connect(GTK_OBJECT(e),"format_changed",
@@ -982,6 +988,12 @@ static void record_dialog_destroy(GtkObject *obj)
      g_free(rd->analysis_sbuf);
      rd->analysis_sbuf = NULL;
      parent_class->destroy(obj);
+     if (rd->driver_presets != NULL) {
+	  list_object_foreach(rd->driver_presets, (GFunc)g_free, NULL);
+	  list_object_clear(rd->driver_presets, FALSE);
+	  gtk_object_unref(GTK_OBJECT(rd->driver_presets));
+	  rd->driver_presets = NULL;
+     }
 }
 
 static void record_dialog_class_init(GtkObjectClass *klass)

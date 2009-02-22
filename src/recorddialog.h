@@ -49,6 +49,7 @@ typedef struct {
      GtkWidget *record_button,*reset_button,*close_button;     
 
      Dataformat *current_format;
+     ListObject *driver_presets;
      gboolean limit_record;
      GtkEntry *limit_entry;
      GtkLabel *limit_set_label;
