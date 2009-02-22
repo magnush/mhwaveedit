@@ -56,6 +56,10 @@ GtkType list_object_get_type(void);
  *         if the list just contains GtkObjects  */
 ListObject *list_object_new(gboolean do_ref);
 
+/* Creates a new ListObject from an existing list. The list is "taken over"
+ * by the new object so it should not be changed or freed afterwards. */
+ListObject *list_object_new_from_list(GList *l, gboolean do_ref);
+
 /* Adds ptr to the list. */
 void list_object_add(ListObject *lo, gpointer ptr);
 
