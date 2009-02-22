@@ -129,7 +129,7 @@ static struct sound_driver drivers[] = {
        mhjack_output_select_format,
        mhjack_output_want_data, mhjack_output_play, mhjack_output_stop, 
        mhjack_clear_buffers, mhjack_output_suggest_format,NULL,
-       input_supported_true,  
+       mhjack_input_supported_formats,  
        mhjack_input_select_format, mhjack_input_store, mhjack_input_stop,
        mhjack_input_stop, mhjack_get_xrun_count },
 #endif
