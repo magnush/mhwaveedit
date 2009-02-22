@@ -34,11 +34,14 @@
 #include "gettext.h"
 #include "mainloop.h"
 
-struct {
+static struct {
      GtkWindow *wnd;
      FormatSelector *fs;
      GtkEntry *name_entry;
      int old_choice;
+     GtkList *preset_list;
+     GtkLabel *set_button_label;
+     GtkButton *set_button_button;
 } other_dialog;
 
 static gboolean record_dialog_set_format(RecordDialog *rd);
@@ -168,6 +171,20 @@ static void set_preset(gchar *name, Dataformat *fmt)
 
      if (l != NULL)
 	  list_object_notify(preset_list,rf);
+}
+
+static gboolean compare_preset(gchar *name, Dataformat *fmt)
+{
+     GList *l;
+     RecordFormat *rf;
+     l = preset_list->list;
+     while (l != NULL) {
+	  rf = (RecordFormat *)(l->data);
+	  if (!strcmp(rf->name,name))
+	       return dataformat_equal(&(rf->fmt),fmt);
+	  l = l->next;
+     } 	 
+     return FALSE;
 }
 
 static void reset_peaks(GtkButton *button, gpointer user_data)
@@ -333,37 +350,53 @@ static void record_dialog_format_changed(Combo *combo, gpointer user_data)
      RECORD_DIALOG(user_data)->format_changed = TRUE;
 }
 
+static gchar *other_dialog_get_name(void)
+{
+     gchar *c,*d;
+     c = (gchar *)gtk_entry_get_text(other_dialog.name_entry);
+     while (*c == ' ') c++; /* Skip beginning spaces */
+     if (*c == 0) return NULL;
+     c = g_strdup(c);
+     /* Trim ending spaces */
+     d = strchr(c,0);
+     d--;
+     while (*d == ' ') { *d = 0; d--; }
+     return c;
+}
+
 static void other_dialog_ok(GtkButton *button, gpointer user_data)
 {    
      RecordDialog *rd = RECORD_DIALOG(user_data);
-     gchar *c,*name;
      Dataformat df;
-     gboolean b;
+     gchar *c;
 
      if (format_selector_check(other_dialog.fs)) return;
 
      format_selector_get(other_dialog.fs,&df);
-     c = (gchar *)gtk_entry_get_text(other_dialog.name_entry);
-     while (*c == ' ') c++; /* Skip beginning spaces */
-     if (*c != 0) {	  
-	  name = g_strdup(c);
-	  /* Trim ending spaces */
-	  c = strchr(name,0);
-	  c--;
-	  while (*c == ' ') { *c = 0; c--; }
-     } else
-	  name = NULL;
-     
-     if (name != NULL) {
-	  set_preset(name,&df);
-	  b = record_format_combo_set_named_preset(rd->format_combo,name);
-	  g_assert(b);
-	  g_free(name);
-     } else {
+
+     c = other_dialog_get_name();
+     if (c != NULL && compare_preset(c,&df))
+	  record_format_combo_set_named_preset(rd->format_combo,c);
+     else
 	  record_format_combo_set_format(rd->format_combo,&df);
-     }
-          
-     gtk_widget_destroy(GTK_WIDGET(other_dialog.wnd));
+     g_free(c);
+}
+
+static void other_dialog_addpreset(GtkButton *button, gpointer user_data)
+{
+     gchar *name;
+     Dataformat df;
+
+     if (format_selector_check(other_dialog.fs)) return;
+     format_selector_get(other_dialog.fs,&df);
+
+     name = other_dialog_get_name();
+     g_assert(name != NULL);
+     
+     set_preset(name,&df);
+     /* b = record_format_combo_set_named_preset(rd->format_combo,name);
+	g_assert(b); */
+     g_free(name);
 }
 
 static gboolean other_dialog_delete(GtkWidget *widget, GdkEvent *event,
@@ -372,51 +405,142 @@ static gboolean other_dialog_delete(GtkWidget *widget, GdkEvent *event,
      return FALSE;
 }
 
+static void other_dialog_name_changed(GtkEditable *editable, 
+				      gpointer user_data)
+{
+     gchar *c;
+     GList *l;
+     RecordFormat *rf;
+     
+     c = other_dialog_get_name();
+     for (l=preset_list->list; l!=NULL; l=l->next) {
+	  rf = (RecordFormat *)(l->data);
+	  if (rf->name != NULL && c != NULL && !strcmp(rf->name,c))
+	       break;
+     }
+     if (l != NULL) {
+	  gtk_label_set_text(other_dialog.set_button_label,
+			     "Update preset");
+	  gtk_widget_set_sensitive(GTK_WIDGET(other_dialog.set_button_button),
+				   TRUE);
+     } else if (c != NULL) {
+	  gtk_label_set_text(other_dialog.set_button_label,
+			     "Add preset");
+	  gtk_widget_set_sensitive(GTK_WIDGET(other_dialog.set_button_button),
+				   TRUE);
+     } else {
+	  gtk_widget_set_sensitive(GTK_WIDGET(other_dialog.set_button_button),
+				   FALSE);
+     }
+     g_free(c);
+}
+
+static GtkWidget *other_dialog_build_preset_list(RecordDialog *rd)
+{
+     GtkWidget *a,*x=NULL;
+     GList *l;
+     RecordFormat *rf;
+     gchar *n;
+     n = record_format_combo_get_preset_name(rd->format_combo);
+     for (l=preset_list->list; l!=NULL; l=l->next) {
+	  rf = (RecordFormat *)(l->data);
+	  if (rf->name == NULL) continue;
+	  a = gtk_list_item_new_with_label(rf->name);
+	  gtk_container_add(GTK_CONTAINER(other_dialog.preset_list),a);
+	  gtk_object_set_data(GTK_OBJECT(a),"fmt",rf);
+	  if (n != NULL && rf->name != NULL && !strcmp(n,rf->name))
+	       x = a;
+     }
+     return x;
+}
+
+static void other_dialog_select_child(GtkList *list, GtkWidget *widget, 
+				      gpointer user_data)
+{
+     RecordFormat *rf;
+     rf = gtk_object_get_data(GTK_OBJECT(widget),"fmt");
+     format_selector_set(other_dialog.fs, &(rf->fmt));
+     gtk_entry_set_text(other_dialog.name_entry, rf->name);
+}
+
 static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
 {
-     GtkWidget *a,*b,*c,*d;
+     GtkWidget *a,*b,*c,*d,*e,*f,*item;
      GtkAccelGroup* ag;
+     GtkRequisition req;
+#if GTK_MAJOR_VERSION > 1
+     static GtkWindowGroup *wg = NULL;
+#endif     
      
+    
      ag = gtk_accel_group_new();
-     a = gtk_window_new(GTK_WINDOW_DIALOG);
-     gtk_window_set_title(GTK_WINDOW(a),_("Custom format"));
-     gtk_window_set_modal(GTK_WINDOW(a),TRUE);
-     gtk_window_set_transient_for(GTK_WINDOW(a),GTK_WINDOW(rd));
-     gtk_window_set_policy(GTK_WINDOW(a),FALSE,FALSE,TRUE);
+
+     other_dialog.wnd = GTK_WINDOW(gtk_window_new(GTK_WINDOW_DIALOG));
+     gtk_window_set_title(other_dialog.wnd,_("Custom format"));
+#if GTK_MAJOR_VERSION < 2
+     gtk_window_set_modal(other_dialog.wnd,TRUE);
+#else
+     if (wg == NULL) wg = gtk_window_group_new();
+     gtk_window_group_add_window(wg,other_dialog.wnd);
+#endif
+     gtk_window_set_transient_for(other_dialog.wnd,GTK_WINDOW(rd));
+     gtk_window_set_policy(other_dialog.wnd,FALSE,FALSE,TRUE);
+
+     other_dialog.fs = FORMAT_SELECTOR(format_selector_new(TRUE));
+
+     other_dialog.name_entry = GTK_ENTRY(gtk_entry_new());
+
+     other_dialog.preset_list = GTK_LIST(gtk_list_new());
+     item = other_dialog_build_preset_list(rd);
+     
+
+     a = GTK_WIDGET(other_dialog.wnd);
      gtk_container_set_border_width(GTK_CONTAINER(a),10);
      gtk_signal_connect(GTK_OBJECT(a),"delete_event",
 			GTK_SIGNAL_FUNC(other_dialog_delete),NULL);
-     other_dialog.wnd = GTK_WINDOW(a);
      b = gtk_vbox_new(FALSE,6);
      gtk_container_add(GTK_CONTAINER(a),b);
-     c = format_selector_new(TRUE);
+     c = gtk_hbox_new(FALSE,6);
      gtk_container_add(GTK_CONTAINER(b),c);
-     other_dialog.fs = FORMAT_SELECTOR(c);
-     c = gtk_hseparator_new();
-     gtk_container_add(GTK_CONTAINER(b),c);
-     c = gtk_label_new(_("The sign and endian-ness can usually be left at their "
+     d = gtk_vbox_new(FALSE,6);
+     gtk_container_add(GTK_CONTAINER(c),d);
+     e = GTK_WIDGET(other_dialog.fs);
+     gtk_container_add(GTK_CONTAINER(d),e);
+     e = gtk_hseparator_new();
+     gtk_container_add(GTK_CONTAINER(d),e);
+     e = gtk_label_new(_("The sign and endian-ness can usually be left at their "
 		       "defaults, but should be changed if you're unable to "
 		       "record or get bad sound."));
-     gtk_label_set_line_wrap(GTK_LABEL(c),TRUE);
-     gtk_container_add(GTK_CONTAINER(b),c);
-     c = gtk_hseparator_new();
-     gtk_container_add(GTK_CONTAINER(b),c);
+     gtk_label_set_line_wrap(GTK_LABEL(e),TRUE);
+     gtk_container_add(GTK_CONTAINER(d),e);
+     e = gtk_hseparator_new();
+     gtk_container_add(GTK_CONTAINER(d),e);
+     /*
      c = gtk_label_new(_("To add this format to the presets, enter a name "
 		       "below. Otherwise, leave it blank."));
      gtk_label_set_line_wrap(GTK_LABEL(c),TRUE);     
      gtk_container_add(GTK_CONTAINER(b),c);
-     c = gtk_hbox_new(FALSE,4);
-     gtk_container_add(GTK_CONTAINER(b),c);
-     d = gtk_label_new(_("Name :"));
+     */
+     e = gtk_hbox_new(FALSE,4);
+     gtk_container_add(GTK_CONTAINER(d),e);
+     f = gtk_label_new(_("Name :"));
+     gtk_container_add(GTK_CONTAINER(e),f);
+     f = GTK_WIDGET(other_dialog.name_entry);
+     gtk_container_add(GTK_CONTAINER(e),f);
+     d = gtk_vseparator_new();
      gtk_container_add(GTK_CONTAINER(c),d);
-     d = gtk_entry_new();
+     d = gtk_vbox_new(FALSE,6);
      gtk_container_add(GTK_CONTAINER(c),d);
-     other_dialog.name_entry = GTK_ENTRY(d);
+     e = gtk_label_new(_("Presets:"));
+     gtk_box_pack_start(GTK_BOX(d),e,FALSE,FALSE,0);
+
+     e = GTK_WIDGET(other_dialog.preset_list);
+     gtk_box_pack_start(GTK_BOX(d),e,TRUE,TRUE,0);
      c = gtk_hseparator_new();
      gtk_container_add(GTK_CONTAINER(b),c);
      c = gtk_hbutton_box_new();
      gtk_container_add(GTK_CONTAINER(b),c);
-     d = gtk_button_new_with_label(_("OK"));
+     d = gtk_button_new_with_label(_("Set format"));
      gtk_widget_add_accelerator (d, "clicked", ag, GDK_KP_Enter, 0, 
 				 (GtkAccelFlags) 0);
      gtk_widget_add_accelerator (d, "clicked", ag, GDK_Return, 0, 
@@ -424,7 +548,16 @@ static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
      gtk_container_add(GTK_CONTAINER(c),d);
      gtk_signal_connect(GTK_OBJECT(d),"clicked",
 			GTK_SIGNAL_FUNC(other_dialog_ok),rd);
-     d = gtk_button_new_with_label(_("Cancel"));
+     d = gtk_button_new_with_label(_("Add/Update preset"));
+     gtk_widget_set_sensitive(d,FALSE);
+     gtk_widget_size_request(d,&req);
+     gtk_widget_set_size_request(d,req.width,req.height);
+     gtk_container_add(GTK_CONTAINER(c),d);
+     gtk_signal_connect(GTK_OBJECT(d),"clicked",
+			GTK_SIGNAL_FUNC(other_dialog_addpreset),rd);
+     other_dialog.set_button_button = GTK_BUTTON(d);
+     other_dialog.set_button_label = GTK_LABEL(gtk_bin_get_child(GTK_BIN(d)));
+     d = gtk_button_new_with_label(_("Close"));
      gtk_widget_add_accelerator (d, "clicked", ag, GDK_Escape, 0, 
 				 (GtkAccelFlags) 0);
      gtk_container_add(GTK_CONTAINER(c),d );
@@ -433,6 +566,15 @@ static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
 			       GTK_OBJECT(a));
      gtk_widget_show_all(a);
      gtk_window_add_accel_group(GTK_WINDOW (a), ag);
+
+     gtk_signal_connect(GTK_OBJECT(other_dialog.wnd),"delete_event",
+			GTK_SIGNAL_FUNC(other_dialog_delete),NULL);
+     gtk_signal_connect(GTK_OBJECT(other_dialog.preset_list),"select_child",
+			GTK_SIGNAL_FUNC(other_dialog_select_child),rd);
+     gtk_signal_connect(GTK_OBJECT(other_dialog.name_entry),"changed",
+			GTK_SIGNAL_FUNC(other_dialog_name_changed),rd);
+
+     if (item != NULL) gtk_list_select_child(other_dialog.preset_list,item);
 }
 
 static void update_limit(RecordDialog *rd)
