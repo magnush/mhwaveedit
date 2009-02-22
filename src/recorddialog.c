@@ -787,8 +787,13 @@ static void record_dialog_start(GtkButton *button, gpointer user_data)
      inifile_set_gfloat( "limitSecs",rd->limit_seconds);
 
      c = record_format_combo_get_preset_name(rd->format_combo);
-     if (c != NULL)
-	  inifile_set("lastRecordFormat",c);
+     inifile_set("lastRecordFormat",c);
+     if (c == NULL) {
+	  dataformat_save_to_inifile("lastRecordFormat",
+				     record_format_combo_get_format
+				     (rd->format_combo), TRUE);
+     }
+
      gtk_widget_set_sensitive(GTK_WIDGET(rd->format_combo),FALSE);
      gtk_label_set_text(GTK_LABEL(GTK_BIN(rd->record_button)->child),
 			_("Pause recording"));
@@ -830,6 +835,7 @@ void record_dialog_init(RecordDialog *obj)
      gchar *s1;
      GList *dp;
      gboolean complete;
+     Dataformat df;
 
      ag = gtk_accel_group_new();
 
@@ -974,8 +980,12 @@ void record_dialog_init(RecordDialog *obj)
 
      /* Set the last used format */
      s1 = inifile_get("lastRecordFormat",NULL);
-     if (s1 != NULL) 
+     if (s1 != NULL) {	  
 	  record_format_combo_set_named_preset(obj->format_combo,s1);
+     } else {
+	  if (dataformat_get_from_inifile("lastRecordFormat",TRUE,&df))
+	       record_format_combo_set_format(obj->format_combo,&df);
+     }
 }
 
 static void record_dialog_destroy(GtkObject *obj)
