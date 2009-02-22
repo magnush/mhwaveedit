@@ -575,6 +575,10 @@ static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
 			GTK_SIGNAL_FUNC(other_dialog_name_changed),rd);
 
      if (item != NULL) gtk_list_select_child(other_dialog.preset_list,item);
+
+     gtk_signal_connect_object_while_alive(GTK_OBJECT(rd),"destroy",
+					   GTK_SIGNAL_FUNC(gtk_widget_destroy),
+					   GTK_OBJECT(other_dialog.wnd));
 }
 
 static void update_limit(RecordDialog *rd)
