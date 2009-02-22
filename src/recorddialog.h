@@ -30,37 +30,25 @@
 #include "ringbuf.h"
 #include "tempfile.h"
 #include "combo.h"
+#include "recordformatcombo.h"
 
 #define RECORD_DIALOG(obj) GTK_CHECK_CAST(obj, record_dialog_get_type(), RecordDialog)
 #define RECORD_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,record_dialog_get_type(),RecordDialogClass)
 #define IS_RECORD_DIALOG(obj) GTK_CHECK_TYPE(obj, record_dialog_get_type())
-
-typedef struct {
-     gint num;
-     gchar *name;
-     Dataformat fmt;
-} RecordFormat;
 
 
 typedef struct {
 
      GtkWindow window;
 
-     GList *formats;
-     GList *format_strings;
-     /* This string is set for a custom format that is not saved under a name.
-      * build_format_string will place it last in the format combo */
-     Combo *format_combo;
-     /* If this is TRUE, the element 0 in the format_combo is the 
-      * "Please choose a format" string */
-     gboolean format_combo_fresh;
+     RecordFormatCombo *format_combo;
      gboolean format_changed;
      GtkBin *vu_frame;
      GtkLabel *status_label,*time_label,*overruns_label,*overruns_title;
      GtkLabel *bytes_label,*bytes_text_label,*limit_label,*limit_text_label;
      GtkWidget *record_button,*reset_button,*close_button;     
 
-     RecordFormat *current_format;
+     Dataformat *current_format;
      gboolean limit_record;
      GtkEntry *limit_entry;
      GtkLabel *limit_set_label;

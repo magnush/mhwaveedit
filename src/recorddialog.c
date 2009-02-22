@@ -41,611 +41,22 @@ struct {
      int old_choice;
 } other_dialog;
 
-static gboolean record_dialog_set_format(RecordDialog *rd, RecordFormat *rf);
-
-static char *choose_format_string = N_("Choose a sample format");
+static gboolean record_dialog_set_format(RecordDialog *rd);
 
 static GtkObjectClass *parent_class;
 static gboolean record_dialog_stopflag = FALSE;
 static RecordDialog *current_dialog;
 
-static void reset_peaks(GtkButton *button, gpointer user_data)
+static ListObject *preset_list = NULL;
+
+static void build_preset_list(void)
 {
-	int i;
-	RecordDialog *rd = RECORD_DIALOG(user_data);
-	for (i=0; i<8; i++) rd->maxpeak_values[i] = 0.0;
-}
-
-static gchar *rf_string(RecordFormat *rf)
-{
-     gchar *c,*d;
-     if (rf->fmt.type == DATAFORMAT_PCM)
-	  c = g_strdup_printf(_("%d-bit"),rf->fmt.samplesize*8);
-     else if (rf->fmt.samplesize == sizeof(float))
-	  c = g_strdup(_("float"));
-     else
-	  c = g_strdup(_("double"));
-     if (rf->name)
-	  d = g_strdup_printf(_("%s (%s %s %d Hz)"),rf->name,
-			      channel_format_name(rf->fmt.channels),
-			      c,rf->fmt.samplerate);
-     else 
-	  d = g_strdup_printf(_("%s %s %d Hz"),
-			      channel_format_name(rf->fmt.channels),
-			      c,rf->fmt.samplerate);
-     g_free(c);
-     return d;
-}
-
-static void build_combo_strings(RecordDialog *obj)
-{
-     GList *l = NULL, *l2;
-     l = g_list_append(l,g_strdup(_(choose_format_string)));
-     for (l2 = obj->formats; l2 != NULL; l2 = l2->next) 
-	  l = g_list_append(l,rf_string((RecordFormat *)(l2->data)));
-     l = g_list_append(l,g_strdup(_("Other format...")));
-     if (obj->format_strings) {
-	  g_list_foreach(obj->format_strings,(GFunc)g_free,NULL);
-	  g_list_free(obj->format_strings);	  
-     }
-     obj->format_strings = l;
-}
-
-static void set_limit_label(RecordDialog *rd)
-{
-     gchar buf[64];
-     if (rd->limit_record) {
-	  get_time_s(rd->current_format->fmt.samplerate,
-		     (rd->limit_bytes-rd->written_bytes) /
-		     rd->current_format->fmt.samplebytes, 0, buf);
-	  gtk_label_set_text(rd->limit_label,buf);	 
-     } else
-	  gtk_label_set_text(rd->limit_label,_("(no limit)"));
-}
-
-static gboolean process_input(RecordDialog *rd)
-{
-     guint32 x,y;
-     gchar buf[4096]; 
-     guint c,d,e;
-     sample_t peak,rms,avg,*sp,*sq,s,pmax;
-     guint32 clip_amount,clip_size;
-     int i;
-     gboolean finish_mode = record_dialog_stopflag;
-
-     if (rd->current_format == NULL) return FALSE;
-     /* Read input */
-     input_store(rd->databuf);
-
-     x = ringbuf_available(rd->databuf);
-     /* Round to even samples */
-     x -= x % rd->current_format->fmt.samplebytes;
-     /* If we have <0.1 s of data, wait for more. */
-     if ((x < rd->analysis_bytes && !finish_mode) || x==0) return FALSE;
-     /* Send data older than 0.1s straight into the tempfile if we have one */
-     if (!finish_mode)
-	  x -= rd->analysis_bytes;
-     while (x > 0) {
-	  y = ringbuf_dequeue(rd->databuf,buf,MIN(x,sizeof(buf)));
-	  if (rd->tf != NULL && !rd->paused) {
-	       if (tempfile_write(rd->tf,buf,y)) {
-		    record_dialog_stopflag = TRUE;
-		    return FALSE;
-	       }
-	       rd->written_bytes += y;
-	       if ( (rd->limit_record) && 
-		    (rd->written_bytes >= rd->limit_bytes) ) {
-		    record_dialog_stopflag = TRUE;
-		    return TRUE;
-	       }
-	  }
-	  x -= y;
-     }
-     if (finish_mode) return TRUE;
-     /* Analyse data */
-     y = ringbuf_dequeue(rd->databuf,rd->analysis_buf,rd->analysis_bytes);
-     g_assert(y == rd->analysis_bytes);
-     /* First write out the raw data to disk */
-     if (rd->tf != NULL && !rd->paused) {
-	  if (tempfile_write(rd->tf,rd->analysis_buf,y)) {
-	       record_dialog_stopflag = TRUE;
-	       return FALSE;
-	  }
-	  rd->written_bytes += y;
-	  if ( (rd->limit_record) && (rd->written_bytes >= rd->limit_bytes) )
-	       record_dialog_stopflag = TRUE;
-     }
-     convert_array(rd->analysis_buf,&(rd->current_format->fmt),
-		   rd->analysis_sbuf,&dataformat_sample_t,
-		   rd->analysis_samples, DITHER_NONE);
-     /* Calculate statistics */
-     sq = &(rd->analysis_sbuf[rd->analysis_samples]);
-     d = rd->current_format->fmt.channels;
-     for (c=0; c<d; c++) {
-	  peak = rms = avg = 0.0;
-	  clip_size = clip_amount = 0;
-	  sp = &(rd->analysis_sbuf[c]);
-	  for (; sp<sq; sp+=d) {
-	       s = *sp;
-	       avg += s;
-	       s = fabs(s);
-	       if (s > peak) peak = s;
-	       rms += s*s;
-	       *sp = s; /* Save the abs value for clipping calculation */
-	  }
-	  avg /= ((sample_t)rd->analysis_samples);
-	  rms = sqrt((rms)/ ((sample_t)rd->analysis_samples) - avg*avg);
-	  pmax = maximum_float_value(&(rd->current_format->fmt));
-	  /* Since the conversion routines were changed for 1.2.9, this
-	   * algo can give false alarms, but only when you're _very_ near 
-	   * clipping. */
-	  if (peak >= pmax) {
-	       /* Calculate clipping amount and size */
-	       sp = &(rd->analysis_sbuf[c]);
-	       while (1) {
-		    for (; sp<sq; sp+=d)
-			 if (*sp >= pmax) break;
-		    if (sp >= sq) break;
-		    for (e=0; sp<sq && *sp>=pmax; e++,sp+=d) { }
-		    clip_amount ++;
-		    clip_size += e*e;
-	       }	       
-	  }
-	  /* Set the labels and VU meters */
-	  vu_meter_set_value(rd->meters[c],(float)peak);
-	  g_snprintf(buf,sizeof(buf),"%.5f",(float)peak);
-	  gtk_label_set_text(rd->peak_labels[c],buf);
-	  if (((float)peak) > rd->maxpeak_values[c] )
-	  {
-	  	rd->maxpeak_values[c] = (float)peak;
-		gtk_label_set_text(rd->maxpeak_labels[c],buf);
-	  }
-	  g_snprintf(buf,sizeof(buf),"%.5f",(float)rms);
-	  gtk_label_set_text(rd->rms_labels[c],buf);
-	  /* This probably needs some tweaking but has to do for now. */
-	  if (clip_amount == 0) 
-	       gtk_label_set_text(rd->clip_labels[c],_("None"));
-	  else if (((float)clip_size)/((float)clip_amount) < 2.0
-		   || (clip_size < rd->analysis_samples / (d * 100)))
-	       gtk_label_set_text(rd->clip_labels[c],_("Mild"));
-	  else 
-	       gtk_label_set_text(rd->clip_labels[c],_("Heavy"));
-     }
-     if (rd->tf) {
-	  get_time(rd->current_format->fmt.samplerate,
-		   rd->written_bytes/rd->current_format->fmt.samplebytes,
-		   0,buf,default_time_mode);
-	  gtk_label_set_text(rd->time_label,buf);
-	  g_snprintf(buf,200,"%" OFF_T_FORMAT "", 
-		     rd->written_bytes);
-	  gtk_label_set_text(rd->bytes_label,buf);
-	  get_time_s(rd->current_format->fmt.samplerate,
-		     rd->written_bytes/rd->current_format->fmt.samplebytes,
-		     0, buf);
-	  if ( strcmp(buf, GTK_WINDOW(rd)->title) ) {
-	       gtk_window_set_title(GTK_WINDOW(rd),buf);
-	       /* Also update the remaining time here */
-	       set_limit_label(rd);
-	  }
-	  i = input_overrun_count();
-	  if (i>=0) {
-	       g_snprintf(buf,sizeof(buf),"%d",i-rd->overruns_before_start);
-	       gtk_label_set_text(rd->overruns_label,buf);
-	  }
-
-     }
-     return TRUE;
-}
-
-void input_ready_func(void)
-{
-     process_input(current_dialog);
-}
-
-static void record_dialog_format_changed(Combo *combo, gpointer user_data)
-{
-     gchar *c;
-     c = combo_selected_string(combo);
-     if (strcmp(c,_(choose_format_string)))
-	  RECORD_DIALOG(user_data)->format_changed = TRUE;
-     g_free(c);
-}
-
-static void other_dialog_ok(GtkButton *button, gpointer user_data)
-{    
-     RecordDialog *rd = RECORD_DIALOG(user_data);
-     RecordFormat *rf,*rf2;
-     static RecordFormat srf;
-     gchar *c,*d;
-     guint i;
-     GList *l;
-
-     if (format_selector_check(other_dialog.fs)) return;
-
-     format_selector_get(other_dialog.fs,&(srf.fmt));
-     c = (gchar *)gtk_entry_get_text(other_dialog.name_entry);
-     while (*c == ' ') c++; /* Skip beginning spaces */
-     if (*c != 0) {	  
-	  srf.name = g_strdup(c);
-	  /* Trim ending spaces */
-	  c = strchr(c,0);
-	  c--;
-	  while (*c == ' ') { *c = 0; c--; }
-     } else
-	  srf.name = NULL;
-     srf.num = 0;
-
-     rf = g_malloc(sizeof(*rf));
-     memcpy(rf,&srf,sizeof(*rf));
-
-     if (srf.name != NULL) {
-	  /* If there is an old format with the same name, remove its name and
-	   * give the new format the same number */
-	  /* Otherwise, set the number to one higher than the
-	   * currently highest used number. */
-	  i = 0;
-	  l = rd->formats;
-	  while (l != NULL) {
-	       rf2 = (RecordFormat *)(l->data);
-	       if (!strcmp(rf2->name,srf.name)) {
-		    g_free(rf2->name);
-		    rf2->name = NULL;
-		    rf->num = rf2->num;
-		    break;
-	       }
-	       if (rf2->num > i) i = rf2->num;
-	       l = l->next;
-	  } 	  
-	  if (l == NULL) rf->num = i+1;
-	  c = g_strdup_printf("recordFormat%d",rf->num);
-	  d = g_strdup_printf("%s_Name",c);
-	  inifile_set(d,rf->name);
-	  dataformat_save_to_inifile(c,&(srf.fmt),TRUE);
-	  g_free(d);
-	  g_free(c);
-     }
-
-     rd->formats = g_list_append(rd->formats,rf);
-     build_combo_strings(rd);
-     combo_set_items(rd->format_combo,rd->format_strings,
-		     g_list_length(rd->format_strings)-2);     
-     combo_remove_item(rd->format_combo,0);
-     rd->format_combo_fresh = FALSE;
-
-     gtk_widget_destroy(GTK_WIDGET(other_dialog.wnd));
-}
-
-static gboolean other_dialog_delete(GtkWidget *widget, GdkEvent *event,
-				    gpointer user_data)
-{
-     return FALSE;
-}
-
-static void restore_choice(RecordDialog *rd) 
-{
-     combo_set_selection(rd->format_combo, other_dialog.old_choice);
-}
-
-static void other_format_dialog(RecordDialog *rd)
-{
-     GtkWidget *a,*b,*c,*d;
-     GtkAccelGroup* ag;
-     
-     ag = gtk_accel_group_new();
-     a = gtk_window_new(GTK_WINDOW_DIALOG);
-     gtk_window_set_title(GTK_WINDOW(a),_("Custom format"));
-     gtk_window_set_modal(GTK_WINDOW(a),TRUE);
-     gtk_window_set_transient_for(GTK_WINDOW(a),GTK_WINDOW(rd));
-     gtk_window_set_policy(GTK_WINDOW(a),FALSE,FALSE,TRUE);
-     gtk_container_set_border_width(GTK_CONTAINER(a),10);
-     gtk_signal_connect_object(GTK_OBJECT(a),"delete_event",
-			       GTK_SIGNAL_FUNC(restore_choice),GTK_OBJECT(rd));
-     gtk_signal_connect(GTK_OBJECT(a),"delete_event",
-			GTK_SIGNAL_FUNC(other_dialog_delete),NULL);
-     other_dialog.wnd = GTK_WINDOW(a);
-     b = gtk_vbox_new(FALSE,6);
-     gtk_container_add(GTK_CONTAINER(a),b);
-     c = format_selector_new(TRUE);
-     gtk_container_add(GTK_CONTAINER(b),c);
-     other_dialog.fs = FORMAT_SELECTOR(c);
-     c = gtk_hseparator_new();
-     gtk_container_add(GTK_CONTAINER(b),c);
-     c = gtk_label_new(_("The sign and endian-ness can usually be left at their "
-		       "defaults, but should be changed if you're unable to "
-		       "record or get bad sound."));
-     gtk_label_set_line_wrap(GTK_LABEL(c),TRUE);
-     gtk_container_add(GTK_CONTAINER(b),c);
-     c = gtk_hseparator_new();
-     gtk_container_add(GTK_CONTAINER(b),c);
-     c = gtk_label_new(_("To add this format to the presets, enter a name "
-		       "below. Otherwise, leave it blank."));
-     gtk_label_set_line_wrap(GTK_LABEL(c),TRUE);     
-     gtk_container_add(GTK_CONTAINER(b),c);
-     c = gtk_hbox_new(FALSE,4);
-     gtk_container_add(GTK_CONTAINER(b),c);
-     d = gtk_label_new(_("Name :"));
-     gtk_container_add(GTK_CONTAINER(c),d);
-     d = gtk_entry_new();
-     gtk_container_add(GTK_CONTAINER(c),d);
-     other_dialog.name_entry = GTK_ENTRY(d);
-     c = gtk_hseparator_new();
-     gtk_container_add(GTK_CONTAINER(b),c);
-     c = gtk_hbutton_box_new();
-     gtk_container_add(GTK_CONTAINER(b),c);
-     d = gtk_button_new_with_label(_("OK"));
-     gtk_widget_add_accelerator (d, "clicked", ag, GDK_KP_Enter, 0, 
-				 (GtkAccelFlags) 0);
-     gtk_widget_add_accelerator (d, "clicked", ag, GDK_Return, 0, 
-				 (GtkAccelFlags) 0);
-     gtk_container_add(GTK_CONTAINER(c),d);
-     gtk_signal_connect(GTK_OBJECT(d),"clicked",
-			GTK_SIGNAL_FUNC(other_dialog_ok),rd);
-     d = gtk_button_new_with_label(_("Cancel"));
-     gtk_widget_add_accelerator (d, "clicked", ag, GDK_Escape, 0, 
-				 (GtkAccelFlags) 0);
-     gtk_container_add(GTK_CONTAINER(c),d );
-     gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
-			       GTK_SIGNAL_FUNC(restore_choice),
-			       GTK_OBJECT(rd));
-     gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
-			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
-			       GTK_OBJECT(a));
-     gtk_widget_show_all(a);
-     gtk_window_add_accel_group(GTK_WINDOW (a), ag);
-}
-
-static void update_limit(RecordDialog *rd)
-{
-     gdouble d;
-     if (rd->tf == NULL) return;
-     d = (gdouble)rd->limit_seconds;
-     d *= (gdouble)(rd->current_format->fmt.samplerate);
-     d *= (gdouble)(rd->current_format->fmt.samplebytes);
-     rd->limit_bytes = (off_t)d;
-     set_limit_label(rd);
-}
-
-static void set_time_limit(GtkButton *button, gpointer user_data)
-{
-     gfloat f;
-     gchar buf[64];
-     RecordDialog *rd = RECORD_DIALOG(user_data);
-     
-     f = parse_time((gchar *)gtk_entry_get_text(rd->limit_entry));
-
-     if (f < 0.0) {
-	  popup_error(_("Invalid time value. Time must be specified in the form"
-		      " (HH')MM:SS(.mmmm)"));
-	  return;
-     }
-     
-     rd->limit_record = TRUE;
-     rd->limit_seconds = f;
-     get_time_l(1000,(off_t)(f*1000.0),(off_t)(f*1000.0),buf);
-     gtk_label_set_text(rd->limit_set_label, buf);
-     gtk_widget_set_sensitive(GTK_WIDGET(rd->disable_limit_button),TRUE);
-     update_limit(rd);
-}
-
-static void disable_time_limit(GtkButton *button, gpointer user_data)
-{
-     RecordDialog *rd = RECORD_DIALOG(user_data);
-     rd->limit_record = FALSE;
-     gtk_label_set_text(rd->limit_set_label,_("(no limit)"));
-     gtk_widget_set_sensitive(GTK_WIDGET(rd->disable_limit_button),FALSE);     
-}
-
-static gboolean record_dialog_set_format(RecordDialog *rd, RecordFormat *rf)
-{
-     GtkWidget *a,*b;
-     gint i;
-
-     /* printf("record_dialog_set_format: %s fresh=%d\n",rf->name,
-	rd->format_combo_fresh); */
-     input_stop();
-     rd->current_format = NULL;
-     if (rd->vu_frame->child != NULL)
-	  gtk_container_remove(GTK_CONTAINER(rd->vu_frame),
-			       rd->vu_frame->child);
-     g_free(rd->peak_labels);
-     g_free(rd->maxpeak_labels);
-     g_free(rd->rms_labels);
-     g_free(rd->clip_labels);
-     g_free(rd->meters);
-     rd->peak_labels = NULL;
-     rd->maxpeak_labels = NULL;
-     rd->rms_labels = NULL;
-     rd->clip_labels = NULL;
-     rd->meters = NULL;
-     gtk_label_set_text(rd->status_label,_("Format not selected"));
-     gtk_widget_set_sensitive(rd->record_button,FALSE);
-     gtk_widget_set_sensitive(rd->reset_button,FALSE);
-
-     i = input_select_format(&(rf->fmt),FALSE,input_ready_func);
-     if (i < 0) {
-	  user_error(_("This format is not supported by the input driver!"));
-	  return TRUE;
-     } else if (i > 0)
-	  return TRUE;
-
-     gtk_label_set_text(rd->status_label,_("Ready for recording"));
-     rd->current_format = rf;
-     if (rd->format_combo_fresh) {
-	  combo_remove_item(rd->format_combo,0);
-	  rd->format_combo_fresh = FALSE;
-     }
-     other_dialog.old_choice = combo_selected_index(rd->format_combo);
-     rd->peak_labels = g_malloc(rf->fmt.channels*sizeof(GtkLabel *));
-     rd->maxpeak_labels = g_malloc(rf->fmt.channels*sizeof(GtkLabel *));
-     rd->clip_labels = g_malloc(rf->fmt.channels*sizeof(GtkLabel *));
-     rd->rms_labels = g_malloc(rf->fmt.channels*sizeof(GtkLabel *));
-     rd->meters = g_malloc(rf->fmt.channels*sizeof(VuMeter *));
-     memset(rd->maxpeak_values,0,sizeof(rd->maxpeak_values));
-     a = gtk_table_new(6*((rf->fmt.channels+1)/2),4,FALSE);
-     gtk_container_set_border_width(GTK_CONTAINER(a),4);
-     
-     for (i=0; i*2<rf->fmt.channels; i++) {
-	  attach_label(_("Peak: "),a,i*6+2,0);
-	  attach_label(_("Peak max: "),a,i*6+3,0);
-	  attach_label(_("RMS: "),a,i*6+4,0);
-	  attach_label(_("Clipping: "),a,i*6+5,0);	  
-     }
-     for (i=0; i<rf->fmt.channels; i++) {
-	  b = gtk_label_new(channel_name(i,rf->fmt.channels));
-	  gtk_table_attach(GTK_TABLE(a),b,(i&1)+1,(i&1)+2,(i/2)*6+0,(i/2)*6+1,
-			   0,0,0,0);
-	  b = vu_meter_new(0.0);
-	  rd->meters[i] = VU_METER(b);
-	  gtk_table_attach(GTK_TABLE(a),b,(i&1)+1,(i&1)+2,(i/2)*6+1,(i/2)*6+2,
-			   0,0,0,0);	  
-	  rd->peak_labels[i] = attach_label("",a,(i/2)*6+2,(i&1)+1);
-	  rd->maxpeak_labels[i] = attach_label("",a,(i/2)*6+3,(i&1)+1);
-	  rd->rms_labels[i] = attach_label("",a,(i/2)*6+4,(i&1)+1);
-	  rd->clip_labels[i] = attach_label(_("None"),a,(i/2)*6+5,(i&1)+1);
-     }
-
-     gtk_table_set_col_spacings(GTK_TABLE(a),5);
-     gtk_table_set_row_spacings(GTK_TABLE(a),3);
-     gtk_container_add(GTK_CONTAINER(rd->vu_frame),a);
-     gtk_widget_show_all(a);
-
-     gtk_widget_set_sensitive(rd->record_button,TRUE);
-     gtk_widget_set_sensitive(rd->reset_button,TRUE);
-
-     /* Create a 2 second ring buffer */
-     if (rd->databuf != NULL) {
-	  ringbuf_free(rd->databuf);
-	  g_free(rd->analysis_buf);
-	  g_free(rd->analysis_sbuf);
-     }
-     rd->databuf = ringbuf_new(2*rf->fmt.samplebytes*rf->fmt.samplerate);
-     /* Do analysis on 0.1 s parts. */
-     rd->analysis_bytes = rf->fmt.samplebytes * rf->fmt.samplerate / 10;
-     rd->analysis_samples = rf->fmt.channels * rf->fmt.samplerate / 10;
-     rd->analysis_buf = g_malloc(rd->analysis_bytes);
-     rd->analysis_sbuf = g_malloc(sizeof(sample_t) * rd->analysis_samples); 
-
-     /* Call process_input manually one time here
-      * (required for some sound drivers to start recording) */
-     process_input(rd);
-
-     return FALSE;
-}
-
-static void check_format_change(RecordDialog *rd)
-{
-     gchar *c;
-     GList *l,*l2;
-     
-     if (!rd->format_changed || combo_mouse_pressed(rd->format_combo)) return;
-
-     rd->format_changed = FALSE;
-     c = combo_selected_string(rd->format_combo);
-     l=rd->formats;
-     l2=rd->format_strings->next;
-     for (; l!=NULL; l=l->next,l2=l2->next)
-	  if (!strcmp(l2->data,c)) break;
-     g_free(c);
-     if (l == NULL) 
-	  other_format_dialog(rd);
-     else
-	  record_dialog_set_format(rd,(RecordFormat *)(l->data));     
-}
-
-static void record_dialog_start(GtkButton *button, gpointer user_data)
-{
-     RecordDialog *rd = RECORD_DIALOG(user_data);
-     GtkRequisition req;
-     int i;
-
-     if (rd->tf != NULL) {
-	  /* This is a hack to prevent the window from resizing when we 
-	   * change the button's caption */
-	  gtk_widget_size_request(rd->record_button,&req);
-	  gtk_widget_set_usize(rd->record_button,req.width,req.height);
-
-	  /* Toggle pause mode */
-	  rd->paused = !rd->paused;	  
-	  gtk_label_set_text(GTK_LABEL(GTK_BIN(rd->record_button)->child),
-			     rd->paused?_("Resume recording"):_("Pause recording"));
-	  gtk_label_set_text(rd->status_label,rd->paused?
-			     translate_strip(N_("RecordStatus|Paused")):
-			     translate_strip(N_("RecordStatus|Recording")));
-	  return;
-     }
-
-     inifile_set_gboolean("limitRecord",rd->limit_record);
-     inifile_set_gfloat( "limitSecs",rd->limit_seconds);
-     if (rd->current_format->name != NULL)
-	  inifile_set("lastRecordFormat",rd->current_format->name);
-     gtk_widget_set_sensitive(GTK_WIDGET(rd->format_combo),FALSE);
-     gtk_label_set_text(GTK_LABEL(GTK_BIN(rd->record_button)->child),
-			_("Pause recording"));
-     rd->paused = FALSE;
-     gtk_label_set_text(GTK_LABEL(GTK_BIN(rd->close_button)->child),
-			_("Finish"));
-     rd->tf = tempfile_init(&(rd->current_format->fmt),TRUE);
-     rd->written_bytes = 0;
-     i = input_overrun_count();
-     gtk_label_set_text(rd->status_label,
-			translate_strip(N_("RecordStatus|Recording")));
-     if (i>-1) {
-	  rd->overruns_before_start = i;
-	  gtk_label_set_text(rd->overruns_title,_("Overruns: "));
-     }
-     gtk_label_set_text(rd->bytes_text_label,_("Bytes written: "));
-     gtk_label_set_text(rd->limit_text_label,_("Auto stop in: "));
-     update_limit(rd);
-}
-
-static void record_dialog_close(GtkButton *button, gpointer user_data)
-{
-     record_dialog_stopflag = TRUE;
-}
-
-static gboolean record_dialog_delete_event(GtkWidget *widget, GdkEvent *event,
-					   gpointer user_data)
-{
-     record_dialog_stopflag = TRUE;
-     return TRUE;
-}
-
-void record_dialog_init(RecordDialog *obj)
-{
-     GtkWidget *a,*b,*c,*d,*e;
-     GtkAccelGroup* ag;
-     GtkRequisition req;  
-     GList *l2 = NULL;
-     RecordFormat *rf;
-     guint i;
      gchar *s1,*s2,*s3,*s4,*s5,*s6;
-     gchar limitbuf[64];
+     GList *l2 = NULL;
+     int i;
+     RecordFormat *rf;
 
-     ag = gtk_accel_group_new();
-
-     obj->format_changed = FALSE;
-     obj->current_format = NULL;
-     obj->databuf = NULL;
-     obj->meters = NULL;
-     obj->peak_labels = obj->maxpeak_labels = obj->clip_labels = NULL;
-     obj->rms_labels = NULL;
-     obj->tf = NULL;
-     obj->written_bytes = 0;
-     obj->analysis_buf = NULL;
-     obj->analysis_sbuf = NULL;
-     obj->limit_record = inifile_get_gboolean("limitRecord",FALSE);
-     obj->limit_seconds = inifile_get_gfloat("limitSecs",3600.0);
-     if (obj->limit_seconds < 0.0) obj->limit_seconds = 3600.0;
-     get_time_l(1000,(off_t)(obj->limit_seconds*1000.0),0,limitbuf);
-
-     gtk_window_set_title(GTK_WINDOW(obj),_("Record"));
-     gtk_window_set_modal(GTK_WINDOW(obj),TRUE);
-     gtk_window_set_default_size(GTK_WINDOW(obj),320,400);
-     gtk_window_set_position(GTK_WINDOW(obj),GTK_WIN_POS_CENTER);
-     gtk_container_set_border_width(GTK_CONTAINER(obj),10);
-
-     gtk_signal_connect(GTK_OBJECT(obj),"delete_event",
-			GTK_SIGNAL_FUNC(record_dialog_delete_event),NULL);
+     if (preset_list != NULL) return;
 
      /* Build format list */
      /* Support reading both old and new style formats */
@@ -710,7 +121,562 @@ void record_dialog_init(RecordDialog *obj)
 	       l2 = g_list_append(l2,rf);
 	  }
      }
-     obj->formats = l2;
+     
+     preset_list = list_object_new_from_list(l2,FALSE);
+     gtk_object_ref(GTK_OBJECT(preset_list));
+}
+
+static void set_preset(gchar *name, Dataformat *fmt)
+{
+     RecordFormat *rf;
+     int i;
+     gchar *c,*d;
+     GList *l;
+
+     g_assert(name != NULL);
+
+     /* If there is an old format with the same name, update it.
+      * Otherwise, set the number to one higher than the
+      * currently highest used number. */
+     i = 0;
+     l = preset_list->list;
+     while (l != NULL) {
+	  rf = (RecordFormat *)(l->data);
+	  if (!strcmp(rf->name,name)) {
+	       if (dataformat_equal(&(rf->fmt),fmt)) return;
+	       memcpy(&(rf->fmt),fmt,sizeof(Dataformat));
+	       break;;
+	  }
+	  if (rf->num > i) i = rf->num;
+	  l = l->next;
+     } 	  
+
+     if (l == NULL) {
+	  rf = g_malloc(sizeof(*rf));
+	  rf->name = g_strdup(name);
+	  rf->fmt = *fmt;
+	  rf->num = i+1;
+	  list_object_add(preset_list, rf);
+     }
+	  
+     c = g_strdup_printf("recordFormat%d",rf->num);
+     d = g_strdup_printf("%s_Name",c);
+     inifile_set(d,rf->name);
+     dataformat_save_to_inifile(c,fmt,TRUE);
+     g_free(d);
+     g_free(c);
+
+     if (l != NULL)
+	  list_object_notify(preset_list,rf);
+}
+
+static void reset_peaks(GtkButton *button, gpointer user_data)
+{
+	int i;
+	RecordDialog *rd = RECORD_DIALOG(user_data);
+	for (i=0; i<8; i++) rd->maxpeak_values[i] = 0.0;
+}
+
+static void set_limit_label(RecordDialog *rd)
+{
+     gchar buf[64];
+     if (rd->limit_record) {
+	  get_time_s(rd->current_format->samplerate,
+		     (rd->limit_bytes-rd->written_bytes) /
+		     rd->current_format->samplebytes, 0, buf);
+	  gtk_label_set_text(rd->limit_label,buf);	 
+     } else
+	  gtk_label_set_text(rd->limit_label,_("(no limit)"));
+}
+
+static gboolean process_input(RecordDialog *rd)
+{
+     guint32 x,y;
+     gchar buf[4096]; 
+     guint c,d,e;
+     sample_t peak,rms,avg,*sp,*sq,s,pmax;
+     guint32 clip_amount,clip_size;
+     int i;
+     gboolean finish_mode = record_dialog_stopflag;
+
+     if (rd->current_format == NULL) return FALSE;
+     /* Read input */
+     input_store(rd->databuf);
+
+     x = ringbuf_available(rd->databuf);
+     /* Round to even samples */
+     x -= x % rd->current_format->samplebytes;
+     /* If we have <0.1 s of data, wait for more. */
+     if ((x < rd->analysis_bytes && !finish_mode) || x==0) return FALSE;
+     /* Send data older than 0.1s straight into the tempfile if we have one */
+     if (!finish_mode)
+	  x -= rd->analysis_bytes;
+     while (x > 0) {
+	  y = ringbuf_dequeue(rd->databuf,buf,MIN(x,sizeof(buf)));
+	  if (rd->tf != NULL && !rd->paused) {
+	       if (tempfile_write(rd->tf,buf,y)) {
+		    record_dialog_stopflag = TRUE;
+		    return FALSE;
+	       }
+	       rd->written_bytes += y;
+	       if ( (rd->limit_record) && 
+		    (rd->written_bytes >= rd->limit_bytes) ) {
+		    record_dialog_stopflag = TRUE;
+		    return TRUE;
+	       }
+	  }
+	  x -= y;
+     }
+     if (finish_mode) return TRUE;
+     /* Analyse data */
+     y = ringbuf_dequeue(rd->databuf,rd->analysis_buf,rd->analysis_bytes);
+     g_assert(y == rd->analysis_bytes);
+     /* First write out the raw data to disk */
+     if (rd->tf != NULL && !rd->paused) {
+	  if (tempfile_write(rd->tf,rd->analysis_buf,y)) {
+	       record_dialog_stopflag = TRUE;
+	       return FALSE;
+	  }
+	  rd->written_bytes += y;
+	  if ( (rd->limit_record) && (rd->written_bytes >= rd->limit_bytes) )
+	       record_dialog_stopflag = TRUE;
+     }
+     convert_array(rd->analysis_buf,rd->current_format,
+		   rd->analysis_sbuf,&dataformat_sample_t,
+		   rd->analysis_samples, DITHER_NONE);
+     /* Calculate statistics */
+     sq = &(rd->analysis_sbuf[rd->analysis_samples]);
+     d = rd->current_format->channels;
+     for (c=0; c<d; c++) {
+	  peak = rms = avg = 0.0;
+	  clip_size = clip_amount = 0;
+	  sp = &(rd->analysis_sbuf[c]);
+	  for (; sp<sq; sp+=d) {
+	       s = *sp;
+	       avg += s;
+	       s = fabs(s);
+	       if (s > peak) peak = s;
+	       rms += s*s;
+	       *sp = s; /* Save the abs value for clipping calculation */
+	  }
+	  avg /= ((sample_t)rd->analysis_samples);
+	  rms = sqrt((rms)/ ((sample_t)rd->analysis_samples) - avg*avg);
+	  pmax = maximum_float_value(&(rd->current_format->fmt));
+	  /* Since the conversion routines were changed for 1.2.9, this
+	   * algo can give false alarms, but only when you're _very_ near 
+	   * clipping. */
+	  if (peak >= pmax) {
+	       /* Calculate clipping amount and size */
+	       sp = &(rd->analysis_sbuf[c]);
+	       while (1) {
+		    for (; sp<sq; sp+=d)
+			 if (*sp >= pmax) break;
+		    if (sp >= sq) break;
+		    for (e=0; sp<sq && *sp>=pmax; e++,sp+=d) { }
+		    clip_amount ++;
+		    clip_size += e*e;
+	       }	       
+	  }
+	  /* Set the labels and VU meters */
+	  vu_meter_set_value(rd->meters[c],(float)peak);
+	  g_snprintf(buf,sizeof(buf),"%.5f",(float)peak);
+	  gtk_label_set_text(rd->peak_labels[c],buf);
+	  if (((float)peak) > rd->maxpeak_values[c] )
+	  {
+	  	rd->maxpeak_values[c] = (float)peak;
+		gtk_label_set_text(rd->maxpeak_labels[c],buf);
+	  }
+	  g_snprintf(buf,sizeof(buf),"%.5f",(float)rms);
+	  gtk_label_set_text(rd->rms_labels[c],buf);
+	  /* This probably needs some tweaking but has to do for now. */
+	  if (clip_amount == 0) 
+	       gtk_label_set_text(rd->clip_labels[c],_("None"));
+	  else if (((float)clip_size)/((float)clip_amount) < 2.0
+		   || (clip_size < rd->analysis_samples / (d * 100)))
+	       gtk_label_set_text(rd->clip_labels[c],_("Mild"));
+	  else 
+	       gtk_label_set_text(rd->clip_labels[c],_("Heavy"));
+     }
+     if (rd->tf) {
+	  get_time(rd->current_format->samplerate,
+		   rd->written_bytes/rd->current_format->samplebytes,
+		   0,buf,default_time_mode);
+	  gtk_label_set_text(rd->time_label,buf);
+	  g_snprintf(buf,200,"%" OFF_T_FORMAT "", 
+		     rd->written_bytes);
+	  gtk_label_set_text(rd->bytes_label,buf);
+	  get_time_s(rd->current_format->samplerate,
+		     rd->written_bytes/rd->current_format->samplebytes,
+		     0, buf);
+	  if ( strcmp(buf, GTK_WINDOW(rd)->title) ) {
+	       gtk_window_set_title(GTK_WINDOW(rd),buf);
+	       /* Also update the remaining time here */
+	       set_limit_label(rd);
+	  }
+	  i = input_overrun_count();
+	  if (i>=0) {
+	       g_snprintf(buf,sizeof(buf),"%d",i-rd->overruns_before_start);
+	       gtk_label_set_text(rd->overruns_label,buf);
+	  }
+
+     }
+     return TRUE;
+}
+
+void input_ready_func(void)
+{
+     process_input(current_dialog);
+}
+
+static void record_dialog_format_changed(Combo *combo, gpointer user_data)
+{
+     RECORD_DIALOG(user_data)->format_changed = TRUE;
+}
+
+static void other_dialog_ok(GtkButton *button, gpointer user_data)
+{    
+     RecordDialog *rd = RECORD_DIALOG(user_data);
+     gchar *c,*name;
+     Dataformat df;
+     gboolean b;
+
+     if (format_selector_check(other_dialog.fs)) return;
+
+     format_selector_get(other_dialog.fs,&df);
+     c = (gchar *)gtk_entry_get_text(other_dialog.name_entry);
+     while (*c == ' ') c++; /* Skip beginning spaces */
+     if (*c != 0) {	  
+	  name = g_strdup(c);
+	  /* Trim ending spaces */
+	  c = strchr(name,0);
+	  c--;
+	  while (*c == ' ') { *c = 0; c--; }
+     } else
+	  name = NULL;
+     
+     if (name != NULL) {
+	  set_preset(name,&df);
+	  b = record_format_combo_set_named_preset(rd->format_combo,name);
+	  g_assert(b);
+	  g_free(name);
+     } else {
+	  record_format_combo_set_format(rd->format_combo,&df);
+     }
+          
+     gtk_widget_destroy(GTK_WIDGET(other_dialog.wnd));
+}
+
+static gboolean other_dialog_delete(GtkWidget *widget, GdkEvent *event,
+				    gpointer user_data)
+{
+     return FALSE;
+}
+
+static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
+{
+     GtkWidget *a,*b,*c,*d;
+     GtkAccelGroup* ag;
+     
+     ag = gtk_accel_group_new();
+     a = gtk_window_new(GTK_WINDOW_DIALOG);
+     gtk_window_set_title(GTK_WINDOW(a),_("Custom format"));
+     gtk_window_set_modal(GTK_WINDOW(a),TRUE);
+     gtk_window_set_transient_for(GTK_WINDOW(a),GTK_WINDOW(rd));
+     gtk_window_set_policy(GTK_WINDOW(a),FALSE,FALSE,TRUE);
+     gtk_container_set_border_width(GTK_CONTAINER(a),10);
+     gtk_signal_connect(GTK_OBJECT(a),"delete_event",
+			GTK_SIGNAL_FUNC(other_dialog_delete),NULL);
+     other_dialog.wnd = GTK_WINDOW(a);
+     b = gtk_vbox_new(FALSE,6);
+     gtk_container_add(GTK_CONTAINER(a),b);
+     c = format_selector_new(TRUE);
+     gtk_container_add(GTK_CONTAINER(b),c);
+     other_dialog.fs = FORMAT_SELECTOR(c);
+     c = gtk_hseparator_new();
+     gtk_container_add(GTK_CONTAINER(b),c);
+     c = gtk_label_new(_("The sign and endian-ness can usually be left at their "
+		       "defaults, but should be changed if you're unable to "
+		       "record or get bad sound."));
+     gtk_label_set_line_wrap(GTK_LABEL(c),TRUE);
+     gtk_container_add(GTK_CONTAINER(b),c);
+     c = gtk_hseparator_new();
+     gtk_container_add(GTK_CONTAINER(b),c);
+     c = gtk_label_new(_("To add this format to the presets, enter a name "
+		       "below. Otherwise, leave it blank."));
+     gtk_label_set_line_wrap(GTK_LABEL(c),TRUE);     
+     gtk_container_add(GTK_CONTAINER(b),c);
+     c = gtk_hbox_new(FALSE,4);
+     gtk_container_add(GTK_CONTAINER(b),c);
+     d = gtk_label_new(_("Name :"));
+     gtk_container_add(GTK_CONTAINER(c),d);
+     d = gtk_entry_new();
+     gtk_container_add(GTK_CONTAINER(c),d);
+     other_dialog.name_entry = GTK_ENTRY(d);
+     c = gtk_hseparator_new();
+     gtk_container_add(GTK_CONTAINER(b),c);
+     c = gtk_hbutton_box_new();
+     gtk_container_add(GTK_CONTAINER(b),c);
+     d = gtk_button_new_with_label(_("OK"));
+     gtk_widget_add_accelerator (d, "clicked", ag, GDK_KP_Enter, 0, 
+				 (GtkAccelFlags) 0);
+     gtk_widget_add_accelerator (d, "clicked", ag, GDK_Return, 0, 
+				 (GtkAccelFlags) 0);
+     gtk_container_add(GTK_CONTAINER(c),d);
+     gtk_signal_connect(GTK_OBJECT(d),"clicked",
+			GTK_SIGNAL_FUNC(other_dialog_ok),rd);
+     d = gtk_button_new_with_label(_("Cancel"));
+     gtk_widget_add_accelerator (d, "clicked", ag, GDK_Escape, 0, 
+				 (GtkAccelFlags) 0);
+     gtk_container_add(GTK_CONTAINER(c),d );
+     gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
+			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
+			       GTK_OBJECT(a));
+     gtk_widget_show_all(a);
+     gtk_window_add_accel_group(GTK_WINDOW (a), ag);
+}
+
+static void update_limit(RecordDialog *rd)
+{
+     gdouble d;
+     if (rd->tf == NULL) return;
+     d = (gdouble)rd->limit_seconds;
+     d *= (gdouble)(rd->current_format->samplerate);
+     d *= (gdouble)(rd->current_format->samplebytes);
+     rd->limit_bytes = (off_t)d;
+     set_limit_label(rd);
+}
+
+static void set_time_limit(GtkButton *button, gpointer user_data)
+{
+     gfloat f;
+     gchar buf[64];
+     RecordDialog *rd = RECORD_DIALOG(user_data);
+     
+     f = parse_time((gchar *)gtk_entry_get_text(rd->limit_entry));
+
+     if (f < 0.0) {
+	  popup_error(_("Invalid time value. Time must be specified in the form"
+		      " (HH')MM:SS(.mmmm)"));
+	  return;
+     }
+     
+     rd->limit_record = TRUE;
+     rd->limit_seconds = f;
+     get_time_l(1000,(off_t)(f*1000.0),(off_t)(f*1000.0),buf);
+     gtk_label_set_text(rd->limit_set_label, buf);
+     gtk_widget_set_sensitive(GTK_WIDGET(rd->disable_limit_button),TRUE);
+     update_limit(rd);
+}
+
+static void disable_time_limit(GtkButton *button, gpointer user_data)
+{
+     RecordDialog *rd = RECORD_DIALOG(user_data);
+     rd->limit_record = FALSE;
+     gtk_label_set_text(rd->limit_set_label,_("(no limit)"));
+     gtk_widget_set_sensitive(GTK_WIDGET(rd->disable_limit_button),FALSE);     
+}
+
+static gboolean record_dialog_set_format(RecordDialog *rd)
+{
+     Dataformat *df;
+     GtkWidget *a,*b;
+     gint i;
+
+     /* printf("record_dialog_set_format: %s fresh=%d\n",rf->name,
+	rd->format_combo_fresh); */
+     input_stop();
+     rd->current_format = NULL;
+     if (rd->vu_frame->child != NULL)
+	  gtk_container_remove(GTK_CONTAINER(rd->vu_frame),
+			       rd->vu_frame->child);
+     g_free(rd->peak_labels);
+     g_free(rd->maxpeak_labels);
+     g_free(rd->rms_labels);
+     g_free(rd->clip_labels);
+     g_free(rd->meters);
+     rd->peak_labels = NULL;
+     rd->maxpeak_labels = NULL;
+     rd->rms_labels = NULL;
+     rd->clip_labels = NULL;
+     rd->meters = NULL;
+     gtk_label_set_text(rd->status_label,_("Format not selected"));
+     gtk_widget_set_sensitive(rd->record_button,FALSE);
+     gtk_widget_set_sensitive(rd->reset_button,FALSE);
+
+     df = record_format_combo_get_format(rd->format_combo);
+     i = input_select_format(df,FALSE,input_ready_func);
+     if (i < 0) {
+	  user_error(_("This format is not supported by the input driver!"));
+	  return TRUE;
+     } else if (i > 0)
+	  return TRUE;
+
+     gtk_label_set_text(rd->status_label,_("Ready for recording"));
+     record_format_combo_store(rd->format_combo);
+     rd->current_format = &(rd->format_combo->stored_selection_format);
+     rd->peak_labels = g_malloc(df->channels*sizeof(GtkLabel *));
+     rd->maxpeak_labels = g_malloc(df->channels*sizeof(GtkLabel *));
+     rd->clip_labels = g_malloc(df->channels*sizeof(GtkLabel *));
+     rd->rms_labels = g_malloc(df->channels*sizeof(GtkLabel *));
+     rd->meters = g_malloc(df->channels*sizeof(VuMeter *));
+     memset(rd->maxpeak_values,0,sizeof(rd->maxpeak_values));
+     a = gtk_table_new(6*((df->channels+1)/2),4,FALSE);
+     gtk_container_set_border_width(GTK_CONTAINER(a),4);
+     
+     for (i=0; i*2<df->channels; i++) {
+	  attach_label(_("Peak: "),a,i*6+2,0);
+	  attach_label(_("Peak max: "),a,i*6+3,0);
+	  attach_label(_("RMS: "),a,i*6+4,0);
+	  attach_label(_("Clipping: "),a,i*6+5,0);	  
+     }
+     for (i=0; i<df->channels; i++) {
+	  b = gtk_label_new(channel_name(i,df->channels));
+	  gtk_table_attach(GTK_TABLE(a),b,(i&1)+1,(i&1)+2,(i/2)*6+0,(i/2)*6+1,
+			   0,0,0,0);
+	  b = vu_meter_new(0.0);
+	  rd->meters[i] = VU_METER(b);
+	  gtk_table_attach(GTK_TABLE(a),b,(i&1)+1,(i&1)+2,(i/2)*6+1,(i/2)*6+2,
+			   0,0,0,0);	  
+	  rd->peak_labels[i] = attach_label("",a,(i/2)*6+2,(i&1)+1);
+	  rd->maxpeak_labels[i] = attach_label("",a,(i/2)*6+3,(i&1)+1);
+	  rd->rms_labels[i] = attach_label("",a,(i/2)*6+4,(i&1)+1);
+	  rd->clip_labels[i] = attach_label(_("None"),a,(i/2)*6+5,(i&1)+1);
+     }
+
+     gtk_table_set_col_spacings(GTK_TABLE(a),5);
+     gtk_table_set_row_spacings(GTK_TABLE(a),3);
+     gtk_container_add(GTK_CONTAINER(rd->vu_frame),a);
+     gtk_widget_show_all(a);
+
+     gtk_widget_set_sensitive(rd->record_button,TRUE);
+     gtk_widget_set_sensitive(rd->reset_button,TRUE);
+
+     /* Create a 2 second ring buffer */
+     if (rd->databuf != NULL) {
+	  ringbuf_free(rd->databuf);
+	  g_free(rd->analysis_buf);
+	  g_free(rd->analysis_sbuf);
+     }
+     rd->databuf = ringbuf_new(2*df->samplebytes*df->samplerate);
+     /* Do analysis on 0.1 s parts. */
+     rd->analysis_bytes = df->samplebytes * df->samplerate / 10;
+     rd->analysis_samples = df->channels * df->samplerate / 10;
+     rd->analysis_buf = g_malloc(rd->analysis_bytes);
+     rd->analysis_sbuf = g_malloc(sizeof(sample_t) * rd->analysis_samples); 
+
+     /* Call process_input manually one time here
+      * (required for some sound drivers to start recording) */
+     process_input(rd);
+
+     return FALSE;
+}
+
+static void check_format_change(RecordDialog *rd)
+{
+     if (!rd->format_changed || combo_mouse_pressed(rd->format_combo)) return;
+
+     rd->format_changed = FALSE;
+     record_dialog_set_format(rd);
+}
+
+static void record_dialog_start(GtkButton *button, gpointer user_data)
+{
+     RecordDialog *rd = RECORD_DIALOG(user_data);
+     GtkRequisition req;
+     int i;
+     gchar *c;
+
+     if (rd->tf != NULL) {
+	  /* This is a hack to prevent the window from resizing when we 
+	   * change the button's caption */
+	  gtk_widget_size_request(rd->record_button,&req);
+	  gtk_widget_set_usize(rd->record_button,req.width,req.height);
+
+	  /* Toggle pause mode */
+	  rd->paused = !rd->paused;	  
+	  gtk_label_set_text(GTK_LABEL(GTK_BIN(rd->record_button)->child),
+			     rd->paused?_("Resume recording"):_("Pause recording"));
+	  gtk_label_set_text(rd->status_label,rd->paused?
+			     translate_strip(N_("RecordStatus|Paused")):
+			     translate_strip(N_("RecordStatus|Recording")));
+	  return;
+     }
+
+     inifile_set_gboolean("limitRecord",rd->limit_record);
+     inifile_set_gfloat( "limitSecs",rd->limit_seconds);
+
+     c = record_format_combo_get_preset_name(rd->format_combo);
+     if (c != NULL)
+	  inifile_set("lastRecordFormat",c);
+     gtk_widget_set_sensitive(GTK_WIDGET(rd->format_combo),FALSE);
+     gtk_label_set_text(GTK_LABEL(GTK_BIN(rd->record_button)->child),
+			_("Pause recording"));
+     rd->paused = FALSE;
+     gtk_label_set_text(GTK_LABEL(GTK_BIN(rd->close_button)->child),
+			_("Finish"));
+     rd->tf = tempfile_init(rd->current_format,TRUE);
+     rd->written_bytes = 0;
+     i = input_overrun_count();
+     gtk_label_set_text(rd->status_label,
+			translate_strip(N_("RecordStatus|Recording")));
+     if (i>-1) {
+	  rd->overruns_before_start = i;
+	  gtk_label_set_text(rd->overruns_title,_("Overruns: "));
+     }
+     gtk_label_set_text(rd->bytes_text_label,_("Bytes written: "));
+     gtk_label_set_text(rd->limit_text_label,_("Auto stop in: "));
+     update_limit(rd);
+}
+
+static void record_dialog_close(GtkButton *button, gpointer user_data)
+{
+     record_dialog_stopflag = TRUE;
+}
+
+static gboolean record_dialog_delete_event(GtkWidget *widget, GdkEvent *event,
+					   gpointer user_data)
+{
+     record_dialog_stopflag = TRUE;
+     return TRUE;
+}
+
+void record_dialog_init(RecordDialog *obj)
+{
+     GtkWidget *a,*b,*c,*d,*e;
+     GtkAccelGroup* ag;
+     GtkRequisition req;  
+     gchar limitbuf[64];
+     gchar *s1;
+
+     ag = gtk_accel_group_new();
+
+     obj->format_changed = FALSE;
+     obj->current_format = NULL;
+     obj->databuf = NULL;
+     obj->meters = NULL;
+     obj->peak_labels = obj->maxpeak_labels = obj->clip_labels = NULL;
+     obj->rms_labels = NULL;
+     obj->tf = NULL;
+     obj->written_bytes = 0;
+     obj->analysis_buf = NULL;
+     obj->analysis_sbuf = NULL;
+     obj->limit_record = inifile_get_gboolean("limitRecord",FALSE);
+     obj->limit_seconds = inifile_get_gfloat("limitSecs",3600.0);
+     if (obj->limit_seconds < 0.0) obj->limit_seconds = 3600.0;
+     get_time_l(1000,(off_t)(obj->limit_seconds*1000.0),0,limitbuf);
+
+     gtk_window_set_title(GTK_WINDOW(obj),_("Record"));
+     gtk_window_set_modal(GTK_WINDOW(obj),TRUE);
+     gtk_window_set_default_size(GTK_WINDOW(obj),320,400);
+     gtk_window_set_position(GTK_WINDOW(obj),GTK_WIN_POS_CENTER);
+     gtk_container_set_border_width(GTK_CONTAINER(obj),10);
+
+     gtk_signal_connect(GTK_OBJECT(obj),"delete_event",
+			GTK_SIGNAL_FUNC(record_dialog_delete_event),NULL);
+
+
+
+     build_preset_list();
 
 
      /* Add components */
@@ -726,16 +692,13 @@ void record_dialog_init(RecordDialog *obj)
      e = gtk_label_new(_("Sample format: "));
      gtk_box_pack_start(GTK_BOX(d),e,FALSE,FALSE,0);
 
-     e = combo_new();
+     e = record_format_combo_new(preset_list,list_object_new(FALSE),TRUE);
      gtk_box_pack_start(GTK_BOX(d),e,TRUE,TRUE,0);
-     obj->format_combo = COMBO(e);
-     obj->format_combo_fresh = TRUE;
-     obj->format_strings = NULL;
-     other_dialog.old_choice = 0;
-     build_combo_strings(obj);
-     combo_set_items(obj->format_combo,obj->format_strings,0);
-     gtk_signal_connect(GTK_OBJECT(e),"selection_changed",
+     obj->format_combo = RECORD_FORMAT_COMBO(e);
+     gtk_signal_connect(GTK_OBJECT(e),"format_changed",
 			GTK_SIGNAL_FUNC(record_dialog_format_changed),obj);
+     gtk_signal_connect(GTK_OBJECT(e),"format_dialog_request",
+			GTK_SIGNAL_FUNC(other_format_dialog),obj);
 
      d = gtk_hbox_new(FALSE,3);
      gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,6);
@@ -824,33 +787,13 @@ void record_dialog_init(RecordDialog *obj)
 
      /* Set the last used format */
      s1 = inifile_get("lastRecordFormat",NULL);
-     if (s1 != NULL) {
-	  for (l2=obj->formats,i=1; l2!=NULL; l2=l2->next,i++) {
-	       rf = (RecordFormat *)(l2->data);
-	       if (rf->name!=NULL && !strcmp(rf->name,s1)) break;
-	  }     
-	  if (l2!=NULL) combo_set_selection(obj->format_combo,i);
-     }
-}
-
-static void free_format(RecordFormat *rf) {
-     g_free(rf->name);
-     g_free(rf);
+     if (s1 != NULL) 
+	  record_format_combo_set_named_preset(obj->format_combo,s1);
 }
 
 static void record_dialog_destroy(GtkObject *obj)
 {
      RecordDialog *rd = RECORD_DIALOG(obj);
-     if (rd->formats) {
-	  g_list_foreach(rd->formats,(GFunc)free_format,NULL);
-	  g_list_free(rd->formats);
-	  rd->formats = NULL;
-     }
-     if (rd->format_strings) {
-	  g_list_foreach(rd->format_strings,(GFunc)g_free,NULL);
-	  g_list_free(rd->format_strings);
-	  rd->format_strings = NULL;
-     }
      if (rd->databuf) ringbuf_free(rd->databuf);
      rd->databuf = NULL;
      g_free(rd->analysis_buf);
