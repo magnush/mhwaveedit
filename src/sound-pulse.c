@@ -21,6 +21,8 @@
 
 #include <pulse/pulseaudio.h>
 
+#undef MLDEBUG
+
 /* ----------------------- */
 /* Mainloop API */
 
@@ -55,6 +57,7 @@ struct pulse_api_userdata {
 
 static pa_mainloop_api *pulse_api(void);
 
+#ifdef MLDEBUG
 static void pulse_api_list_sources(struct pulse_api_userdata *ud)
 {
      int i;
@@ -63,12 +66,15 @@ static void pulse_api_list_sources(struct pulse_api_userdata *ud)
 	  printf("%p ",ud->sources[i]);
      puts("");
 }
+#endif
 
 static void pulse_api_source_added(gpointer src, struct pa_mainloop_api *api)
 {     
      struct pulse_api_userdata *ud = (struct pulse_api_userdata *)api->userdata;
 
+#ifdef MLDEBUG
      printf("pulse_api_source_added: %p\n",src);
+#endif
      if (ud->sources_cap == ud->sources_len) {
 	  if (ud->sources_cap == 0)
 	       ud->sources_cap = 1;
@@ -78,16 +84,18 @@ static void pulse_api_source_added(gpointer src, struct pa_mainloop_api *api)
 				  ud->sources_cap*sizeof(ud->sources[0]));
      }
      ud->sources[ud->sources_len++] = src;
-
+#ifdef MLDEBUG
      pulse_api_list_sources(ud);
-
+#endif
 }
 
 static void pulse_api_source_removed(gpointer src, struct pa_mainloop_api *api)
 {
      struct pulse_api_userdata *ud = (struct pulse_api_userdata *)api->userdata;
      int i;
+#ifdef MLDEBUG
      printf("pulse_api_source_removed: %p\n",src);
+#endif
      for (i=0; i<ud->sources_len; i++)
 	  if (ud->sources[i] == src) 
 	       break;
@@ -95,7 +103,9 @@ static void pulse_api_source_removed(gpointer src, struct pa_mainloop_api *api)
 	  ud->sources[i] = ud->sources[i+1];
      ud->sources_len--;
 
+#ifdef MLDEBUG
      pulse_api_list_sources(ud);
+#endif
 }
 
 static int pa_to_poll(pa_io_event_flags_t events)
@@ -133,7 +143,9 @@ static pa_io_event *pulse_api_io_new(pa_mainloop_api *a, int fd,
 {
      struct pulse_api_io_event *e;
 
-     /* printf("Adding I/O event, fd=%d, events=%d\n",fd,events); */
+#ifdef MLDEBUG
+     printf("Adding I/O event, fd=%d, events=%d\n",fd,events);
+#endif
      e = g_malloc(sizeof(*e));
      e->userdata = userdata;
      e->fd = fd;
@@ -150,26 +162,19 @@ static void pulse_api_io_enable(pa_io_event *e, pa_io_event_flags_t events)
 {
      struct pulse_api_io_event *es = (struct pulse_api_io_event *)e;
 
-     /* printf("IO event set enable, fd=%d ,events=%d\n",es->fd,events); */
-          
-     if (events == 0) {
-	  mainloop_io_source_enable(es->iosource,FALSE);
-     } else if (events == es->events) {
-	  mainloop_io_source_enable(es->iosource,TRUE);
-     } else {
-	  mainloop_io_source_free(es->iosource);
-	  pulse_api_source_removed(es->iosource,pulse_api());
-	  es->events = events;
-	  es->iosource = mainloop_io_source_add(es->fd,pa_to_poll(events),
-						pulse_api_io_cb, es);
-	  pulse_api_source_added(es->iosource,pulse_api());
-     }
+#ifdef MLDEBUG
+     printf("IO event set enable, fd=%d ,events=%d, es->events=%d\n",
+	    es->fd,events,es->events);
+#endif
+     mainloop_io_source_set_events(es->iosource,pa_to_poll(events));
 }
 
 static void pulse_api_io_free(pa_io_event *e)
 {
      struct pulse_api_io_event *es = (struct pulse_api_io_event *)e;
-     /* printf("Removing IO event (fd %d)\n",es->fd); */
+#ifdef MLDEBUG
+     printf("Removing IO event (fd %d)\n",es->fd);
+#endif
      mainloop_io_source_free(es->iosource);
      pulse_api_source_removed(es->iosource, pulse_api());
      if (es->destroy_cb) es->destroy_cb(pulse_api(),e,es->userdata);
@@ -204,12 +209,13 @@ static pa_time_event *pulse_api_time_new(pa_mainloop_api *a,
      struct pulse_api_time_event *es;
      GTimeVal gtv;
 
-     /*
+#ifdef MLDEBUG
      GTimeVal temp_tv;
 
      g_get_current_time(&temp_tv);     
      printf("Adding time event, triggers in %d s %d us\n",
-	    tv->tv_sec-temp_tv.tv_sec, tv->tv_usec-temp_tv.tv_usec); */
+	    tv->tv_sec-temp_tv.tv_sec, tv->tv_usec-temp_tv.tv_usec);
+#endif
 
      es = g_malloc(sizeof(*es));
      es->cb = cb;
@@ -241,7 +247,9 @@ static void pulse_api_time_restart(pa_time_event *e, const struct timeval *tv)
 static void pulse_api_time_free(pa_time_event *e)
 {
      struct pulse_api_time_event *es = (struct pulse_api_time_event *)e;
-     /* puts("Removing time event"); */
+#ifdef MLDEBUG
+     puts("Removing time event");
+#endif
      mainloop_time_source_free(es->timesource);
      if (es->destroy_cb) es->destroy_cb(pulse_api(),e,es->userdata);
      pulse_api_source_removed(es->timesource, pulse_api());
@@ -258,7 +266,9 @@ static void pulse_api_time_set_destroy(pa_time_event *e,
 static int pulse_api_defer_new_cb(gpointer csource, gpointer user_data)
 {
      struct pulse_api_defer_event *es = user_data;
-     /* puts("Defer event triggered"); */
+#ifdef MLDEBUG
+     puts("Defer event triggered");
+#endif
      es->cb(pulse_api(),(pa_defer_event *)es,es->userdata);
      return 0;
 }
@@ -268,8 +278,10 @@ static pa_defer_event *pulse_api_defer_new(pa_mainloop_api *a,
 					   void *userdata)
 {
      struct pulse_api_defer_event *es;
-     
-     /* puts("Adding defer event"); */
+
+#ifdef MLDEBUG     
+     puts("Adding defer event");
+#endif
      es = g_malloc(sizeof(*es));
      es->cb = cb;
      es->destroy_cb = NULL;
@@ -283,14 +295,18 @@ static pa_defer_event *pulse_api_defer_new(pa_mainloop_api *a,
 static void pulse_api_defer_enable(pa_defer_event *e, int b)
 {
      struct pulse_api_defer_event *es = (struct pulse_api_defer_event *)e;
-     /* printf("Defer event set enabled=%d\n",b); */
+#ifdef MLDEBUG
+     printf("Defer event set enabled=%d\n",b);
+#endif
      mainloop_constant_source_enable(es->constsource, b);
 }
 
 static void pulse_api_defer_free(pa_defer_event *e)
 {
      struct pulse_api_defer_event *es = (struct pulse_api_defer_event *)e;
-     /* puts("Removing defer event"); */
+#ifdef MLDEBUG
+     puts("Removing defer event");
+#endif
      mainloop_constant_source_free(es->constsource);
      if (es->destroy_cb) es->destroy_cb(pulse_api(),e,es->userdata);
      pulse_api_source_removed(es->constsource,pulse_api());
@@ -343,8 +359,10 @@ static void pulse_api_block(void)
      gpointer *srcp;
      struct pulse_api_userdata *ud = 
 	  (struct pulse_api_userdata *)(pulse_api()->userdata);
+#ifdef MLDEBUG
      puts("pulse_api_block");
      pulse_api_list_sources(ud);
+#endif
 
      srcp = g_malloc(ud->sources_len * sizeof(ud->sources[0]));
      memcpy(srcp,ud->sources,ud->sources_len*sizeof(ud->sources[0]));
