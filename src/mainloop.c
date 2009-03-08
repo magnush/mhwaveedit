@@ -536,6 +536,16 @@ void mainloop_io_source_enable(gpointer iosource, gboolean enable)
      }
 }
 
+void mainloop_io_source_set_events(gpointer iosource, gushort new_events)
+{
+     struct io_source *src = (struct io_source *)iosource;
+     src->pfd.events = new_events;
+     if (new_events != 0 && !src->enabled) {
+	  mainloop_io_source_enable_main(src);
+	  src->enabled = TRUE;
+     }
+}
+
 void mainloop_io_source_free(gpointer iosource)
 {
      mainloop_io_source_enable(iosource,FALSE);

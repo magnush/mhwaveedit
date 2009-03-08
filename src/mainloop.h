@@ -39,6 +39,7 @@ typedef int (*constsource_cb)(gpointer csource, gpointer user_data);
 
 gpointer mainloop_io_source_add(int fd, gushort events, iosource_cb cb, 
 				gpointer user_data);
+void mainloop_io_source_set_events(gpointer iosource, gushort new_events);
 void mainloop_io_source_enable(gpointer iosource, gboolean enable);
 void mainloop_io_source_free(gpointer iosource);
 
