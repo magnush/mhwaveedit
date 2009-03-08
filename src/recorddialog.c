@@ -420,12 +420,12 @@ static void other_dialog_name_changed(GtkEditable *editable,
      }
      if (l != NULL) {
 	  gtk_label_set_text(other_dialog.set_button_label,
-			     "Update preset");
+			     _("Update preset"));
 	  gtk_widget_set_sensitive(GTK_WIDGET(other_dialog.set_button_button),
 				   TRUE);
      } else if (c != NULL) {
 	  gtk_label_set_text(other_dialog.set_button_label,
-			     "Add preset");
+			     _("Add preset"));
 	  gtk_widget_set_sensitive(GTK_WIDGET(other_dialog.set_button_button),
 				   TRUE);
      } else {
@@ -512,7 +512,6 @@ static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
      gtk_window_group_add_window(wg,other_dialog.wnd);
 #endif
      gtk_window_set_transient_for(other_dialog.wnd,GTK_WINDOW(rd));
-     gtk_window_set_policy(other_dialog.wnd,FALSE,FALSE,TRUE);
 
      other_dialog.fs = FORMAT_SELECTOR(format_selector_new(TRUE));
 
@@ -538,18 +537,17 @@ static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
      c = gtk_hbox_new(FALSE,6);
      gtk_container_add(GTK_CONTAINER(b),c);
      d = gtk_vbox_new(FALSE,6);
-     gtk_container_add(GTK_CONTAINER(c),d);
+     gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
      e = GTK_WIDGET(other_dialog.fs);
-     gtk_container_add(GTK_CONTAINER(d),e);
+     gtk_box_pack_start(GTK_BOX(d),e,FALSE,FALSE,0);
      e = gtk_hseparator_new();
-     gtk_container_add(GTK_CONTAINER(d),e);
+     gtk_box_pack_start(GTK_BOX(d),e,FALSE,FALSE,0);
      e = gtk_label_new(_("The sign and endian-ness can usually be left at their "
 		       "defaults, but should be changed if you're unable to "
 		       "record or get bad sound."));
      gtk_label_set_line_wrap(GTK_LABEL(e),TRUE);
-     gtk_container_add(GTK_CONTAINER(d),e);
-     e = gtk_hseparator_new();
-     gtk_container_add(GTK_CONTAINER(d),e);
+     gtk_box_pack_start(GTK_BOX(d),e,FALSE,FALSE,0);
+
      /*
      c = gtk_label_new(_("To add this format to the presets, enter a name "
 		       "below. Otherwise, leave it blank."));
@@ -557,24 +555,34 @@ static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
      gtk_container_add(GTK_CONTAINER(b),c);
      */
      e = gtk_hbox_new(FALSE,4);
-     gtk_container_add(GTK_CONTAINER(d),e);
+     gtk_box_pack_end(GTK_BOX(d),e,FALSE,FALSE,0);
      f = gtk_label_new(_("Name :"));
      gtk_container_add(GTK_CONTAINER(e),f);
      f = GTK_WIDGET(other_dialog.name_entry);
      gtk_container_add(GTK_CONTAINER(e),f);
+     e = gtk_hseparator_new();
+     gtk_box_pack_end(GTK_BOX(d),e,FALSE,FALSE,0);
      d = gtk_vseparator_new();
-     gtk_container_add(GTK_CONTAINER(c),d);
+     gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
+
      d = gtk_vbox_new(FALSE,6);
      gtk_container_add(GTK_CONTAINER(c),d);
+
      e = gtk_label_new(_("Presets:"));
      gtk_box_pack_start(GTK_BOX(d),e,FALSE,FALSE,0);
 
-     e = GTK_WIDGET(other_dialog.preset_list);
-     gtk_box_pack_start(GTK_BOX(d),e,TRUE,TRUE,0);
+     e = gtk_scrolled_window_new(NULL,NULL);
+     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(e),GTK_POLICY_NEVER,
+				    GTK_POLICY_AUTOMATIC);
+     gtk_container_add(GTK_CONTAINER(d),e);
+
+     f = GTK_WIDGET(other_dialog.preset_list);
+     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(e),f);
+
      c = gtk_hseparator_new();
-     gtk_container_add(GTK_CONTAINER(b),c);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
      c = gtk_hbutton_box_new();
-     gtk_container_add(GTK_CONTAINER(b),c);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
      d = gtk_button_new_with_label(_("Set format"));
      gtk_widget_add_accelerator (d, "clicked", ag, GDK_KP_Enter, 0, 
 				 (GtkAccelFlags) 0);
