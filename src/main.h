@@ -42,6 +42,8 @@
 #define gtk_style_get_font(style) ((style)->font)
 #define GTK_WIN_POS_CENTER_ON_PARENT GTK_WIN_POS_CENTER
 #define gtk_container_get_children gtk_container_children
+#define gtk_bin_get_child(bin) ((bin)->child)
+#define gtk_widget_set_size_request gtk_widget_set_usize
 #else
 #define GTK_WINDOW_DIALOG GTK_WINDOW_TOPLEVEL
 #define gtk_object_class_add_signals(x,y,z)

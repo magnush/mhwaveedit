@@ -47,7 +47,7 @@
 typedef struct {
      COMBO_PARENT_TYPE parent;
 #ifdef COMBO_OLDSCHOOL
-     int chosen_index;     
+     int chosen_index, next_chosen_index;
 #else
      /* Until GTK+ 2.6 comes out with the
 	gtk_combo_box_get_active_text function, this will have to
@@ -71,11 +71,5 @@ int combo_selected_index(Combo *combo);
 
 /* Result must be freed by caller */
 char *combo_selected_string(Combo *combo);
-
-#ifdef COMBO_OLDSCHOOL
-gboolean combo_mouse_pressed(Combo *combo);
-#else
-#define combo_mouse_pressed(combo) FALSE
-#endif
 
 #endif

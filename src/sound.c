@@ -71,9 +71,10 @@ static char zerobuf[1024];
 
 #include "sound-dummy.c"
 
-static gboolean input_supported_true(void)
+static GList *input_supported_true(gboolean *complete)
 {
-     return TRUE;
+     *complete = FALSE;
+     return NULL;
 }
 
 struct sound_driver {
@@ -93,7 +94,7 @@ struct sound_driver {
      gboolean (*output_suggest_format)(Dataformat *format, Dataformat *result);
      gboolean (*driver_needs_polling)(void);
 
-     gboolean (*input_supported)(void);
+     GList *(*input_supported_formats)(gboolean *complete);
      gint (*input_select_format)(Dataformat *format, gboolean silent, 
 				 GVoidFunc ready_func);
      void (*input_store)(Ringbuf *buffer);
@@ -128,7 +129,7 @@ static struct sound_driver drivers[] = {
        mhjack_output_select_format,
        mhjack_output_want_data, mhjack_output_play, mhjack_output_stop, 
        mhjack_clear_buffers, mhjack_output_suggest_format,NULL,
-       input_supported_true,  
+       mhjack_input_supported_formats,  
        mhjack_input_select_format, mhjack_input_store, mhjack_input_stop,
        mhjack_input_stop, mhjack_get_xrun_count },
 #endif
@@ -150,7 +151,7 @@ static struct sound_driver drivers[] = {
        portaudio_output_stop,
        portaudio_output_clear_buffers, 
        NULL, NULL,
-       portaudio_input_supported,  
+       portaudio_input_supported_formats,  
        portaudio_input_select_format, portaudio_input_store, 
        portaudio_input_stop, NULL, portaudio_input_overrun_count }, 
 #endif
@@ -189,7 +190,7 @@ static struct sound_driver drivers[] = {
        dummy_output_select_format, 
        dummy_output_want_data, dummy_output_play, dummy_output_stop,
        dummy_output_clear_buffers, NULL, NULL,
-       dummy_input_supported,
+       dummy_input_supported_formats,
        dummy_input_select_format, dummy_input_store, dummy_input_stop }
 
 };
@@ -404,11 +405,27 @@ gint output_select_format(Dataformat *format, gboolean silent,
      return i;
 }
 
+GList *input_supported_formats(gboolean *complete)
+{
+     if (drivers[current_driver].input_supported_formats != NULL)
+	  return drivers[current_driver].input_supported_formats(complete);
+     else {
+	  *complete = TRUE;
+	  return NULL;
+     }
+}
+
 gboolean input_supported(void)
 {
-     return drivers[current_driver].input_supported ? 
-	  drivers[current_driver].input_supported() : 
-	  FALSE;
+     gboolean b;
+     GList *l;
+     l = input_supported_formats(&b);
+     if (l != NULL) {
+	  g_list_foreach(l,(GFunc)g_free,NULL);
+	  g_list_free(l);
+	  return TRUE;
+     } else
+	  return !b;     
 }
 
 gint input_select_format(Dataformat *format, gboolean silent, 

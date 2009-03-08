@@ -221,9 +221,10 @@ static guint portaudio_output_play(gchar *buffer, guint bufsize)
      return i;
 }
 
-static gboolean portaudio_input_supported(void)
+static GList *portaudio_input_supported_formats(gboolean *complete)
 {
-     return (portaudio_data.in != paNoDevice);
+     *complete = (portaudio_data.in == paNoDevice);
+     return NULL;
 }
 
 static gboolean portaudio_input_supports_format(Dataformat *format)

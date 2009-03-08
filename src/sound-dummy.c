@@ -84,10 +84,11 @@ static guint dummy_output_play(gchar *buffer, guint bufsize)
      return bufsize;
 }
 
-static gboolean dummy_input_supported(void)
+static GList *dummy_input_supported_formats(gboolean *complete)
 {
      g_assert(dummy_data.state == 2);
-     return TRUE;
+     *complete = FALSE;
+     return NULL;
 }
 
 static gint dummy_input_select_format(Dataformat *format, gboolean silent,

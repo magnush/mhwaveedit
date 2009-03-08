@@ -92,6 +92,18 @@ ListObject *list_object_new(gboolean do_ref)
      return lo;
 }
 
+ListObject *list_object_new_from_list(GList *list, gboolean do_ref)
+{
+     ListObject *lo = gtk_type_new(list_object_get_type());
+     lo->do_ref = do_ref;
+     lo->list = list;
+     if (do_ref) {
+	  g_list_foreach(list,(GFunc)gtk_object_ref,NULL);
+	  g_list_foreach(list,(GFunc)gtk_object_sink,NULL);
+     }
+     return lo;
+}
+
 void list_object_add(ListObject *lo, gpointer ptr)
 {
      lo->list = g_list_append(lo->list, ptr);

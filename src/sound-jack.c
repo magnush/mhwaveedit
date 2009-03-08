@@ -671,6 +671,33 @@ static int mhjack_get_xrun_count(void)
      return mhjack.xrun_count;
 }
 
+static GList *mhjack_input_supported_formats(gboolean *complete)
+{
+     Dataformat *fmt;
+     GList *l = NULL;
+     int i,r;
+
+     if (mhjack.myself == NULL)
+	  mhjack_connect(TRUE);
+     if (mhjack.myself == NULL) {
+	  *complete = TRUE;
+	  return NULL;
+     }
+     
+     r = jack_get_sample_rate(mhjack.myself);
+     for (i=1; i<=mhjack.maxinports; i++) {
+	  fmt = g_malloc(sizeof(*fmt));
+	  fmt->type = DATAFORMAT_FLOAT;
+	  fmt->samplesize = sizeof(float);
+	  fmt->channels = i;
+	  fmt->samplebytes = fmt->samplesize * fmt->channels;
+	  fmt->samplerate = r;
+	  l = g_list_append(l, fmt);
+     }
+     *complete = TRUE;
+     return l;
+}
+
 static gint mhjack_input_select_format(Dataformat *format, gboolean silent,
 				       GVoidFunc ready_func)
 {
