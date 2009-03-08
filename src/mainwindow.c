@@ -2310,8 +2310,15 @@ static void mainwindow_state_changed(Document *d, gpointer user_data)
 static void mainwindow_value_changed(GtkAdjustment *adjustment, 
 				     gpointer user_data)
 {
-     document_set_view( MAINWINDOW(user_data)->doc, adjustment->value, 
-			adjustment->value + adjustment->page_size );
+     Document *d = MAINWINDOW(user_data)->doc;
+     off_t s,e;
+     s = (off_t)adjustment->value;
+     e = (off_t)(adjustment->value + adjustment->page_size);
+     /* Due to rounding, these can become out of range. 
+      * Especially for GTK1 where value and page_size are gfloats */
+     if (s < 0) s = 0;
+     if (e <= s) e = s+1; else if (e > d->chunk->length) e = d->chunk->length;
+     document_set_view(d, s, e);
 }
 
 static void mainwindow_zoom_changed(GtkAdjustment *adjustment, 
