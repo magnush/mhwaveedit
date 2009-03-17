@@ -117,7 +117,7 @@ static void C_PCM24SBE_FLOAT(guint32 *in, FTYPE *out, int count)
      }
 }
 
-static void C_PCM24ULE_FLOAT(guin32 *in, FTYPE *out, int count)
+static void C_PCM24ULE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
      unsigned long l0,l1,l2,m;
      unsigned char *c;
