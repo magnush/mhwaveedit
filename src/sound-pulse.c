@@ -375,12 +375,16 @@ static void pulse_api_block(void)
  *  Driver core
  */
 
-struct {
+static struct {
      pa_context *ctx;
      pa_context_state_t ctx_state;
      int ctx_errno;
      pa_stream *stream;
      pa_stream_state_t stream_state;
+     gboolean record_flag;
+     const char *record_data;
+     size_t record_bytes,record_pos;
+     gint overflow_count,overflow_report_count;
      gboolean clear_flag;
      gboolean flush_state; /* 0 = no flush requested yet, 1 = waiting, 2 = done */
      gboolean recursing_mainloop;
@@ -446,6 +450,10 @@ static void pulse_quit(void)
      }
 }
 
+#if PA_MINOR > 9 || PA_MICRO > 14
+#define HAS_24
+#endif
+
 static gboolean format_to_pulse(Dataformat *format, pa_sample_spec *ss_out)
 {
      pa_sample_format_t sf;
@@ -455,6 +463,10 @@ static gboolean format_to_pulse(Dataformat *format, pa_sample_spec *ss_out)
 	       sf = PA_SAMPLE_U8;
 	  else if (format->samplesize == 2 && format->sign == TRUE)
 	       sf = (format->bigendian)?PA_SAMPLE_S16BE:PA_SAMPLE_S16LE;
+#ifdef HAS24
+	  else if (format->samplesize == 3 && format->sign == TRUE)
+	       sf = (format->bigendian)?PA_SAMPLE_S24BE:PA_SAMPLE_S24LE;
+#endif
 	  else if (format->samplesize == 4 && format->sign == TRUE)
 	       sf = (format->bigendian)?PA_SAMPLE_S32BE:PA_SAMPLE_S32LE;
 	  else
@@ -475,6 +487,66 @@ static gboolean format_to_pulse(Dataformat *format, pa_sample_spec *ss_out)
      return FALSE;
 }
 
+static gboolean pa_format_from_pulse(pa_sample_spec *ss, Dataformat *format_out)
+{
+     Dataformat f;
+     int i = ss->format;
+
+     switch (i) {
+     case PA_SAMPLE_U8:
+     case PA_SAMPLE_S16LE:
+     case PA_SAMPLE_S16BE:
+#ifdef HAS24
+     case PA_SAMPLE_S24LE:
+     case PA_SAMPLE_S24BE:
+     case PA_SAMPLE_S24_32LE:
+     case PA_SAMPLE_S24_32BE:
+#endif
+     case PA_SAMPLE_S32LE:
+     case PA_SAMPLE_S32BE:
+	  f.type = DATAFORMAT_PCM;
+	  if (i == PA_SAMPLE_U8) 
+	       f.samplesize = 1;
+	  else if (i == PA_SAMPLE_S16LE || i == PA_SAMPLE_S16BE) 
+	       f.samplesize = 2;
+#ifdef HAS24
+	  else if (i == PA_SAMPLE_S24LE || i == PA_SAMPLE_S24BE)
+	       f.samplesize = 3;
+#endif
+	  else
+	       f.samplesize = 4;
+	  f.sign = !(i == PA_SAMPLE_U8);
+	  if (i == PA_SAMPLE_S16BE || i == PA_SAMPLE_S32BE
+#ifdef HAS24
+	      || i == PA_SAMPLE_S24BE || i == PA_SAMPLE_S24_32BE
+#endif
+	      )
+	       f.bigendian = TRUE;
+	  else
+	       f.bigendian = FALSE;	  
+	  break;
+     case PA_SAMPLE_FLOAT32LE:
+	  if (!ieee_le_compatible) return TRUE;
+	  f.type = DATAFORMAT_FLOAT;
+	  f.samplesize = 4;
+	  break;
+     case PA_SAMPLE_FLOAT32BE:
+	  if (!ieee_be_compatible) return TRUE;
+	  f.type = DATAFORMAT_FLOAT;
+	  f.samplesize = 4;
+	  break;
+     default:
+	  return TRUE;
+     }
+     f.channels = ss->channels;
+     f.samplebytes = f.samplesize * f.channels;
+     f.samplerate = ss->rate;
+
+     memcpy(format_out,&f,sizeof(Dataformat));
+     return FALSE;
+}
+
+
 static void pulse_stream_state_cb(pa_stream *p, void *userdata)
 {
      g_assert(pulse_data.stream == p);
@@ -487,8 +559,13 @@ static void pulse_stream_state_cb(pa_stream *p, void *userdata)
      }
 }
 
-static gint pulse_output_select_format(Dataformat *format, gboolean silent,
-				       GVoidFunc ready_func)
+static void pulse_overflow_func(pa_stream *p, void *userdata)
+{
+     pulse_data.overflow_count ++;
+}
+
+static gint pulse_select_format_main(Dataformat *format, gboolean record,
+				     gboolean silent, GVoidFunc ready_func)
 {
      pa_sample_spec ss;
      gchar *c;
@@ -500,16 +577,29 @@ static gint pulse_output_select_format(Dataformat *format, gboolean silent,
      if (!pulse_connect(TRUE,silent)) return silent?-1:+1;
      
      g_assert(pulse_data.stream == NULL);
+     pulse_data.record_flag = record;
+     pulse_data.record_data = NULL;
      pulse_data.stream_state = PA_STREAM_UNCONNECTED;
      pulse_data.stream = pa_stream_new(pulse_data.ctx, "p", &ss, NULL);
      g_assert(pulse_data.stream != NULL);
      pa_stream_set_state_callback(pulse_data.stream, pulse_stream_state_cb,
 				  NULL);
+     
+     if (record) {
+	  pa_stream_set_read_callback(pulse_data.stream,
+				      (pa_stream_request_cb_t)ready_func,NULL);
+	  pulse_data.overflow_count = pulse_data.overflow_report_count = 0;
+	  pa_stream_set_overflow_callback(pulse_data.stream,
+					  pulse_overflow_func,NULL);
+     } else
+	  pa_stream_set_write_callback(pulse_data.stream,
+				       (pa_stream_request_cb_t)ready_func,NULL);
 
-     pa_stream_set_write_callback(pulse_data.stream,
-				  (pa_stream_request_cb_t)ready_func,NULL);
-
-     i = pa_stream_connect_playback(pulse_data.stream,NULL,NULL,0,NULL,NULL);
+     if (record)
+	  i = pa_stream_connect_record(pulse_data.stream,NULL,NULL,0);
+     else
+	  i = pa_stream_connect_playback(pulse_data.stream,NULL,NULL,0,NULL,
+					 NULL);     
      
      g_assert(i == 0 || pulse_data.stream == NULL);
 
@@ -531,7 +621,19 @@ static gint pulse_output_select_format(Dataformat *format, gboolean silent,
      if (pulse_data.stream_state != PA_STREAM_READY)
 	  return -1;
           
-     return 0;
+     return 0;     
+}
+
+static gint pulse_output_select_format(Dataformat *format, gboolean silent,
+				       GVoidFunc ready_func)
+{
+     return pulse_select_format_main(format,FALSE,silent,ready_func);
+}
+
+static gint pulse_input_select_format(Dataformat *format, gboolean silent,
+				      GVoidFunc ready_func)
+{
+     return pulse_select_format_main(format,TRUE,silent,ready_func);     
 }
 
 static gboolean pulse_output_want_data(void)
@@ -629,6 +731,120 @@ static gboolean pulse_output_stop(gboolean must_flush)
 
 static gboolean pulse_needs_polling(void)
 {     
-     return !pulse_data.recursing_mainloop && !pulse_flush_in_progress() && 
-	  pulse_output_want_data();
+     if (pulse_data.record_flag)
+	  return !pulse_data.recursing_mainloop && pulse_data.record_data!=NULL;
+     else
+	  return !pulse_data.recursing_mainloop && 
+	       !pulse_flush_in_progress() && pulse_output_want_data();
 }
+
+struct pulse_scb_data {
+     pa_sample_spec ss;
+     gboolean is_set;
+};
+
+static void pulse_source_info_cb(pa_context *c, const pa_source_info *i,
+				 int eol, gpointer userdata)
+{
+     struct pulse_scb_data *dp = (struct pulse_scb_data *)userdata;
+     if (eol) return;
+     memcpy(&(dp->ss),&(i->sample_spec),sizeof(pa_sample_spec));
+     dp->is_set = TRUE;
+}
+				 
+
+static GList *pulse_input_supported_formats(gboolean *complete)
+{
+     pa_operation *p;
+     struct pulse_scb_data d;
+     Dataformat f,*pf;
+
+     if (!pulse_connect(TRUE,TRUE)) {
+	  *complete = TRUE;
+	  return NULL;
+     }
+     d.is_set = FALSE;
+     p = pa_context_get_source_info_by_name(pulse_data.ctx,NULL,
+					    pulse_source_info_cb,&d);
+     while (p != NULL && pa_operation_get_state(p) == PA_OPERATION_RUNNING)
+	  pulse_api_block();
+     if (p != NULL) pa_operation_unref(p);
+
+     if (!d.is_set) {
+	  if (p != NULL) puts("Unexpected p!=NULL");
+	  printf("pa_context_get_source_info_by_name: %s\n",
+		 pa_strerror(pa_context_errno(pulse_data.ctx)));
+	  *complete = TRUE;
+	  return NULL;
+     }
+
+     if (pa_format_from_pulse(&d.ss,&f)) {
+	  printf("Unsupported input format: %s\n",
+		 pa_sample_format_to_string(d.ss.format));
+	  *complete = TRUE;
+	  return NULL;
+     }
+          
+     pf = g_malloc(sizeof(*pf));
+     memcpy(pf,&f,sizeof(Dataformat));
+     *complete = TRUE;
+     return g_list_append(NULL,pf);
+}
+
+static void pulse_input_store(Ringbuf *buf)
+{
+     int i;
+     size_t b;
+
+     if (pulse_data.overflow_report_count > pulse_data.overflow_count) {
+	  console_message("Overrun occured!");
+	  pulse_data.overflow_report_count = pulse_data.overflow_count;
+     }
+
+     if (pulse_data.record_data == NULL) {	  
+	  i = pa_stream_peek(pulse_data.stream, 
+			     (const void **)&pulse_data.record_data,
+			     &pulse_data.record_bytes);
+	  if (i != 0) {
+	       fprintf(stderr,"mhWaveEdit: pa_stream_peek: %s\n",
+		       pa_strerror(pa_context_errno(pulse_data.ctx)));
+	       return;
+	  }
+	  printf("pa_stream_peek: i=%d,data=%p,bytes=%d\n",i,
+		 pulse_data.record_data,pulse_data.record_bytes);
+	  pulse_data.record_pos = 0;
+     }
+     
+     if (pulse_data.record_data == NULL) return;
+
+     b = ringbuf_enqueue(buf,
+			 (gpointer)pulse_data.record_data+pulse_data.record_pos,
+			 pulse_data.record_bytes-pulse_data.record_pos);
+     pulse_data.record_pos += b;
+
+     if (pulse_data.record_pos >= pulse_data.record_bytes) {
+	  g_assert(pulse_data.record_pos == pulse_data.record_bytes);
+	  pa_stream_drop(pulse_data.stream);
+	  pulse_data.record_data = NULL;
+     }
+
+}
+
+static void pulse_input_stop(void)
+{
+     if (pulse_data.stream == NULL) return;
+
+     g_assert(pulse_data.record_flag);
+
+     pa_stream_disconnect(pulse_data.stream);
+     pulse_data.recursing_mainloop = TRUE;
+     while (pulse_data.stream != NULL)
+	  pulse_api_block();
+     pulse_data.recursing_mainloop = FALSE;    
+}
+
+static int pulse_input_overrun_count(void)
+{
+     return pulse_data.overflow_count;
+}
+

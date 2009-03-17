@@ -196,8 +196,9 @@ static struct sound_driver drivers[] = {
        pulse_output_select_format, pulse_output_want_data, pulse_output_play,
        pulse_output_stop, pulse_output_clear_buffers, NULL, 
        pulse_needs_polling, 
-       NULL,
-       NULL,NULL,NULL,NULL,NULL
+       pulse_input_supported_formats,
+       pulse_input_select_format,pulse_input_store,pulse_input_stop,NULL,
+       pulse_input_overrun_count
      },
        
 #endif
