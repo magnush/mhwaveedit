@@ -396,7 +396,7 @@ static void pulse_context_state_cb(pa_context *c, void *userdata)
      g_assert(pulse_data.ctx == c);
 
      pulse_data.ctx_state = pa_context_get_state(c);
-     printf("Context state change to: %d\n",pulse_data.ctx_state);
+     /* printf("Context state change to: %d\n",pulse_data.ctx_state); */
 
      if (pulse_data.ctx_state == PA_CONTEXT_FAILED ||
 	 pulse_data.ctx_state == PA_CONTEXT_TERMINATED) {
@@ -551,7 +551,7 @@ static void pulse_stream_state_cb(pa_stream *p, void *userdata)
 {
      g_assert(pulse_data.stream == p);
      pulse_data.stream_state = pa_stream_get_state(p);
-     printf("Stream state change to: %d\n",pulse_data.stream_state);
+     /* printf("Stream state change to: %d\n",pulse_data.stream_state); */
      if (pulse_data.stream_state == PA_STREAM_FAILED ||
 	 pulse_data.stream_state == PA_STREAM_TERMINATED) {
 	  pa_stream_unref(pulse_data.stream);
@@ -571,7 +571,7 @@ static gint pulse_select_format_main(Dataformat *format, gboolean record,
      gchar *c;
      int i;
 
-     printf("pulse_output_select_format, silent==%d\n",silent);
+     /* printf("pulse_output_select_format, silent==%d\n",silent); */
      if (format_to_pulse(format,&ss)) return -1;
 
      if (!pulse_connect(TRUE,silent)) return silent?-1:+1;
@@ -653,7 +653,7 @@ static void pulse_flush_success_cb(pa_stream *s, int success, void *userdata)
 	  user_error(c);
 	  g_free(c);
      }
-     puts("pulse_flush_success_cb");
+     /* puts("pulse_flush_success_cb"); */
      pulse_data.flush_state = 2;
 }
 
@@ -661,7 +661,7 @@ static void pulse_flush_start(void)
 {
      pa_operation *o;
 
-     puts("pulse_flush_start");
+     /* puts("pulse_flush_start"); */
      if (pulse_data.flush_state != 0) return;
      pulse_data.flush_state = 1;
      o = pa_stream_drain(pulse_data.stream, pulse_flush_success_cb, 
@@ -706,7 +706,7 @@ static void pulse_output_clear_buffers(void)
 
 static gboolean pulse_output_stop(gboolean must_flush)
 {
-     puts("pulse_output_stop");
+     /* puts("pulse_output_stop"); */
      if (pulse_data.stream != NULL) {
 	  if (must_flush || pulse_flush_in_progress()) {
 
@@ -751,7 +751,90 @@ static void pulse_source_info_cb(pa_context *c, const pa_source_info *i,
      memcpy(&(dp->ss),&(i->sample_spec),sizeof(pa_sample_spec));
      dp->is_set = TRUE;
 }
-				 
+
+
+/* PA 0.9.12-? has a bug where passing @DEFAULT_SOURCE@ doesn't work
+ * Perform a quite messy workaround */
+
+#if (PA_MINOR == 9 && PA_MICRO > 11) || PA_MINOR > 9 || PA_MAJOR > 0
+#define DEFAULT_SOURCE_BROKEN
+#endif
+
+#ifdef DEFAULT_SOURCE_BROKEN
+
+static void pulse_output_info_cb(pa_context *c, const pa_source_output_info *i,
+				 int eol, void *userdata)
+{
+     int *idxp = (int *)userdata;
+     if (eol || *idxp >= 0) return;
+     *idxp = i->source;
+}
+
+static int pulse_get_default_source_index(pa_context *c)
+{
+     pa_stream *str;
+     pa_sample_spec ss;
+     int i;
+     pa_stream_state_t state;
+     pa_operation *oper;
+     pa_operation_state_t oper_state;
+     int idx;
+     int srcidx;
+
+     ss.format = PA_SAMPLE_S16LE;
+     ss.rate = 44100;
+     ss.channels = 2;
+     str = pa_stream_new(c,"in_fmt_probe",&ss,NULL);
+     g_assert(str != NULL);
+     i = pa_stream_connect_record(str,NULL,NULL,0);
+     g_assert(i == 0);
+     while (1) {
+	  state = pa_stream_get_state(str);	  
+	  if (state != PA_STREAM_CREATING) break;
+	  pulse_api_block();		  
+     }
+     if (state != PA_STREAM_READY) {
+	  printf("pa_stream_connect_record: %s\n",
+		 pa_strerror(pa_context_errno(c)));
+	  pa_stream_unref(str);
+	  return -1;
+     }
+     idx = pa_stream_get_index(str);
+     /*printf("Calling get_source_output_info_by_index with index %d\n",idx);*/
+     srcidx = -1;
+     oper = pa_context_get_source_output_info(c,idx,
+					      pulse_output_info_cb,
+					      &srcidx);
+     while (1) {
+	  oper_state = pa_operation_get_state(oper);
+	  if (oper_state != PA_OPERATION_RUNNING) break;
+	  pulse_api_block();
+     }
+     if (srcidx < 0)
+	  printf("pa_context_get_output_info_by_name: %s\n",
+		 pa_strerror(pa_context_errno(c)));     
+     pa_operation_unref(oper);
+     pa_stream_disconnect(str);
+     pa_stream_unref(str);
+     return srcidx;
+}
+
+#endif
+
+static pa_operation *pulse_get_default_source_info(pa_context *c, 
+						   pa_source_info_cb_t cb, 
+						   void *userdata)
+{
+#ifdef DEFAULT_SOURCE_BROKEN
+     int i;
+     i = pulse_get_default_source_index(c);     
+     if (i < 0) return NULL;
+     return pa_context_get_source_info_by_index(c,i,cb,userdata);
+#else
+     return pa_context_get_source_info_by_name(c,"@DEFAULT_SOURCE@",cb,
+					       userdata);
+#endif
+}
 
 static GList *pulse_input_supported_formats(gboolean *complete)
 {
@@ -764,15 +847,16 @@ static GList *pulse_input_supported_formats(gboolean *complete)
 	  return NULL;
      }
      d.is_set = FALSE;
-     p = pa_context_get_source_info_by_name(pulse_data.ctx,NULL,
-					    pulse_source_info_cb,&d);
+     p = pulse_get_default_source_info(pulse_data.ctx,
+				       pulse_source_info_cb,&d);
      while (p != NULL && pa_operation_get_state(p) == PA_OPERATION_RUNNING)
 	  pulse_api_block();
      if (p != NULL) pa_operation_unref(p);
 
      if (!d.is_set) {
-	  if (p != NULL) puts("Unexpected p!=NULL");
-	  printf("pa_context_get_source_info_by_name: %s\n",
+	  /* if (p != NULL) puts("Unexpected p!=NULL"); */
+	  
+	  printf("get_default_source_info: %s\n",
 		 pa_strerror(pa_context_errno(pulse_data.ctx)));
 	  *complete = TRUE;
 	  return NULL;
@@ -810,8 +894,10 @@ static void pulse_input_store(Ringbuf *buf)
 		       pa_strerror(pa_context_errno(pulse_data.ctx)));
 	       return;
 	  }
+	  /*
 	  printf("pa_stream_peek: i=%d,data=%p,bytes=%d\n",i,
 		 pulse_data.record_data,pulse_data.record_bytes);
+	  */
 	  pulse_data.record_pos = 0;
      }
      
