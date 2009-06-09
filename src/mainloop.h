@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 void mainloop(void);
+void mainloop_recurse_on(gpointer *sources, int n_sources);
 
 typedef void (*iosource_cb)(gpointer iosource, int fd, gushort revents, 
 			    gpointer user_data);
