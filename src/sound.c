@@ -69,6 +69,10 @@ static char zerobuf[1024];
 #include "sound-artsc.c"
 #endif
 
+#ifdef HAVE_PULSEAUDIO
+#include "sound-pulse.c"
+#endif
+
 #include "sound-dummy.c"
 
 static GList *input_supported_true(gboolean *complete)
@@ -186,6 +190,19 @@ static struct sound_driver drivers[] = {
 
 #endif
 
+#ifdef HAVE_PULSEAUDIO
+
+     { "PulseAudio", "pulse", NULL, pulse_init, pulse_quit, 
+       pulse_output_select_format, pulse_output_want_data, pulse_output_play,
+       pulse_output_stop, pulse_output_clear_buffers, NULL, 
+       pulse_needs_polling, 
+       pulse_input_supported_formats,
+       pulse_input_select_format,pulse_input_store,pulse_input_stop,NULL,
+       pulse_input_overrun_count
+     },
+       
+#endif
+
      { N_("Dummy (no sound)"), "dummy", NULL, dummy_init, dummy_quit,
        dummy_output_select_format, 
        dummy_output_want_data, dummy_output_play, dummy_output_stop,
@@ -201,7 +218,7 @@ static guint current_driver = 0;
 
 static gchar *autodetect_order[] = { 
      /* Sound servers. These must auto-detect properly */
-     "jack", "esound", "arts", 
+     "jack", "pulse", "esound", "arts", 
      /* "Direct" API:s that don't auto-detect properly. 
       * If compiled in they probably work. */
      "alsa", "sun", 
@@ -344,6 +361,8 @@ void sound_quit(void)
      drivers[current_driver].quit();
 }
 
+static void sound_output_ready_func(void);
+
 gboolean sound_poll(void)
 {
      int i=0;
@@ -355,8 +374,9 @@ gboolean sound_poll(void)
      if (output_ready_func==NULL && input_ready_func==NULL)
 	  return -1;
 
-     if (output_ready_func != NULL && output_want_data()) {
-	  output_ready_func();
+     if ((output_ready_func!=NULL || sound_delayed_quit) && 
+	 output_want_data()) {
+	  sound_output_ready_func();
 	  i=1;
      }
      if (input_ready_func != NULL) {
@@ -372,11 +392,11 @@ static void sound_output_ready_func(void)
 {
      guint u;
      if (sound_delayed_quit) {
-	  do {
+	  while (output_want_data()) {
 	       u = output_play(zerobuf,
 			       sizeof(zerobuf)-
 			       (sizeof(zerobuf)%playing_format.samplebytes));
-	  } while (u > 0);
+	  }
      } else if (output_ready_func != NULL && output_want_data()) {
 	  output_ready_func();
      } else if (output_ready_func != NULL) {
@@ -396,12 +416,14 @@ gint output_select_format(Dataformat *format, gboolean silent,
 	  }
 	  else delayed_output_stop();
      }     
+
+     /* Set up the variables before calling output_select_format, in
+      * case the ready callback is called immediately */
+     memcpy(&playing_format,format,sizeof(Dataformat));
+     output_ready_func = ready_func;
+
      i = drivers[current_driver].output_select_format(format,silent,
 						      sound_output_ready_func);
-     if (i == 0) {
-	  memcpy(&playing_format,format,sizeof(Dataformat));
-	  output_ready_func = ready_func;
-     }
      return i;
 }
 

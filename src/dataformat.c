@@ -33,14 +33,17 @@
 #include "gettext.h"
 
 Dataformat dataformat_sample_t,dataformat_single;
-gboolean ieee_le_compatible;
+gboolean ieee_le_compatible,ieee_be_compatible;
 
 void floating_point_check(void)
 {
      char c[4] = { 0, 0, 0xD0, 0xC0 };
+     char d[4] = { 0xC0, 0xD0, 0, 0 };
      float *f;
      f = (float *)c;
      ieee_le_compatible = (*f == -6.5);
+     f = (float *)d;
+     ieee_be_compatible = (*f == -6.5);
 
      dataformat_sample_t.type = DATAFORMAT_FLOAT;
      dataformat_sample_t.samplesize = sizeof(sample_t);
