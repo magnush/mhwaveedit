@@ -31,7 +31,7 @@
 #include "mainloop.h"
 
 static GtkObjectClass *parent_class;
-static guint font_height=0;
+static guint font_height=0,font_width=0;
 
 enum { VIEW_CHANGED_SIGNAL, SELECTION_CHANGED_SIGNAL, CURSOR_CHANGED_SIGNAL, 
        CHUNK_CHANGED_SIGNAL, DOUBLE_CLICK_SIGNAL, LAST_SIGNAL };
@@ -357,8 +357,9 @@ static void draw_timescale(ChunkView *view, GdkEventExpose *event, gboolean text
 		    i, event->area.x+event->area.width-1, i);
      /* pixels/sec */
 
-     /* We want at least 40 pixels/major point and 8 pixels/minor point*/
-     npoints = widget->allocation.width / 40 + 1;
+     /* We want at least font_width pixels/major point 
+      * and 8 pixels/minor point*/
+     npoints = widget->allocation.width / font_width + 1;
      if (npoints < 3) npoints = 3;
      nmidpoints = npoints;
      nminorpoints = widget->allocation.width / 8 + 1;
@@ -374,14 +375,20 @@ static void draw_timescale(ChunkView *view, GdkEventExpose *event, gboolean text
 				       minorpoints, &nminorpoints,
 				       default_timescale_mode);
 			   
-
-     /* printf("nminorpoints: %d, pixels/minorpoint: %d\n",nminorpoints,
-	widget->allocation.width / nminorpoints); */
+     /*
+     printf("npoints: %d, pixels/point: %d\n",npoints,
+	    widget->allocation.width / npoints); 
+     printf("nmidpoints: %d, pixels/midpoint: %d\n",nmidpoints,
+	    (nmidpoints > 0) ? widget->allocation.width / nmidpoints : 0); 
+     printf("nminorpoints: %d, pixels/minorpoint: %d\n",nminorpoints,
+	    (nminorpoints > 0) ? widget->allocation.width / nminorpoints : 0); 
+     printf("font_width: %d\n",font_width);
+     */
 
      midtext = minortext;
 
      if (nminorpoints > 0 && 
-	 (widget->allocation.width / nminorpoints) < 40) 
+	 (widget->allocation.width / nminorpoints) < font_width) 
 	  minortext = -1;
      else
 	  midtext = -1;
@@ -777,10 +784,13 @@ static void chunk_view_init(GtkObject *obj)
 #if GTK_MAJOR_VERSION == 1
 	  font_height = gdk_string_height( GTK_WIDGET(obj)->style->font, 
 					   "0123456789")+3;
+	  font_width = gdk_string_width( GTK_WIDGET(obj)->style->font,
+					 "0123456789")+3;
 #else
 	  PangoLayout *pl;
 	  pl = gtk_widget_create_pango_layout( GTK_WIDGET(obj), "0123456789" );
-	  pango_layout_get_pixel_size(pl, NULL, (gint *)&font_height);
+	  pango_layout_get_pixel_size(pl, (gint *)&font_width, 
+				      (gint *)&font_height);
 	  g_object_unref(pl);
 #endif
      }
