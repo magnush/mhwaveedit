@@ -36,12 +36,14 @@
 #include "document.h"
 #include "mainloop.h"
 
-#define SESSION_RUNNING 0
-#define SESSION_SUSPENDED 1
-#define SESSION_CRASHED 2
-#define SESSION_LEFTOVER 3
-#define SESSION_OLD 4
-#define SESSION_UNKNOWN 5
+/* Session states */
+#define SESSION_RUNNING 0   /* Currently running in another process */
+#define SESSION_SUSPENDED 1 /* Suspended by user */
+#define SESSION_CRASHED 2   /* Crash - session file there but process no 
+			     * longer existing */
+#define SESSION_LEFTOVER 3  /* Temporary files found, but no session file */
+#define SESSION_OLD 4       /* Temporary files from version <1.4.8 found */ 
+#define SESSION_UNKNOWN 5   /* Session either still running or crashed */
 
 struct session {
      int id;
