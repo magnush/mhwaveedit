@@ -293,38 +293,49 @@ void session_quit(void)
 	  
 }
 
-static GtkWidget *resume_button;
-static gboolean destroy_flag = FALSE, resume_click_flag = FALSE;
-static gint resume_index;
+struct session_dialog_data {
+     GtkList *listwid;
+     struct session **listmap;
+     GtkWidget *resume_button;
+     gboolean destroy_flag, resume_click_flag;
+     gint resume_index;
+};
 
-static void session_dialog_destroy(void)
+static void session_dialog_destroy(GtkObject *obj, gpointer user_data)
 {
-     destroy_flag = TRUE;
+     struct session_dialog_data *ddata = 
+	  (struct session_dialog_data *)user_data;
+     ddata->destroy_flag = TRUE;
 }
 
 static void session_dialog_select_child(GtkList *list, GtkWidget *widget, 
 					gpointer user_data)
 {
-     resume_index = gtk_list_child_position(list,widget);
-     gtk_widget_set_sensitive(resume_button,TRUE);
+     struct session_dialog_data *ddata = 
+	  (struct session_dialog_data *)user_data;
+     ddata->resume_index = gtk_list_child_position(list,widget);
+     gtk_widget_set_sensitive(ddata->resume_button,TRUE);
 }
 
 
-static void session_dialog_exit(void)
+static void session_dialog_exit(GtkWidget *widget, gpointer user_data)
 {
      quitflag = TRUE;
 }
 
-static void session_dialog_resume_click(void)
+static void session_dialog_resume_click(GtkWidget *widget, gpointer user_data)
 {
-     resume_click_flag = TRUE;
+     struct session_dialog_data *ddata = 
+	  (struct session_dialog_data *)user_data;
+     ddata->resume_click_flag = TRUE;
 }
 
 gboolean session_dialog(void)
 {
+     struct session_dialog_data ddata;
      GtkWidget *a,*b,*c,*d;
      GList *l = NULL,*m;
-     int *im,i,j;
+     int i;
      struct session *s;
      gchar *ch,*p;
      /* Running and unknown are never shown. Old is also called crash */
@@ -333,8 +344,9 @@ gboolean session_dialog(void)
 
      if (session_list == NULL) return FALSE;
 
-     im = g_malloc(g_list_length(session_list) * sizeof(int));
-     for (m=session_list,i=0,j=0; m!=NULL; m=m->next,j++) {
+     ddata.listmap = g_malloc(g_list_length(session_list) * 
+			      sizeof(struct session *));
+     for (m=session_list,i=0; m!=NULL; m=m->next) {
 	  s = (struct session *) m->data;
 	  if (s->state == SESSION_RUNNING || s->state == SESSION_UNKNOWN)
 	       continue;
@@ -346,11 +358,11 @@ gboolean session_dialog(void)
 	  if (p) *p=' ';
 	  l = g_list_append(l,gtk_list_item_new_with_label(ch));
 	  g_free(ch);
-	  im[i++] = j;
+	  ddata.listmap[i++] = s;
      }
 
      if (l == NULL) {
-	  g_free(im);
+	  g_free(ddata.listmap);
 	  return FALSE;
      }
 
@@ -360,7 +372,7 @@ gboolean session_dialog(void)
      gtk_window_set_default_size(GTK_WINDOW(a),400,200);
      gtk_container_set_border_width(GTK_CONTAINER(a),5);
      gtk_signal_connect(GTK_OBJECT(a),"destroy",
-			GTK_SIGNAL_FUNC(session_dialog_destroy),NULL);
+			GTK_SIGNAL_FUNC(session_dialog_destroy),&ddata);
      
      b = gtk_vbox_new(FALSE,5);
      gtk_container_add(GTK_CONTAINER(a),b);
@@ -378,17 +390,17 @@ gboolean session_dialog(void)
      d = gtk_list_new();
      gtk_list_insert_items(GTK_LIST(d),l,0);
      gtk_signal_connect(GTK_OBJECT(d),"select_child",
-			GTK_SIGNAL_FUNC(session_dialog_select_child),NULL);
+			GTK_SIGNAL_FUNC(session_dialog_select_child),&ddata);
      gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(c),d);
 
      c = gtk_hbutton_box_new();
      gtk_box_pack_end(GTK_BOX(b),c,FALSE,TRUE,0);
 
      d = gtk_button_new_with_label(_("Resume selected"));
-     resume_button = d;
+     ddata.resume_button = d;
      gtk_widget_set_sensitive(d,FALSE);
      gtk_signal_connect(GTK_OBJECT(d),"clicked",
-			GTK_SIGNAL_FUNC(session_dialog_resume_click),NULL);
+			GTK_SIGNAL_FUNC(session_dialog_resume_click),&ddata);
      gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
 			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
 			       (GtkObject *)a);
@@ -402,7 +414,7 @@ gboolean session_dialog(void)
 
      d = gtk_button_new_with_label(_("Exit"));
      gtk_signal_connect(GTK_OBJECT(d),"clicked",
-			GTK_SIGNAL_FUNC(session_dialog_exit),NULL);
+			GTK_SIGNAL_FUNC(session_dialog_exit),&ddata);
      gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
 			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
 			       (GtkObject *)a);
@@ -411,14 +423,13 @@ gboolean session_dialog(void)
      c = gtk_hseparator_new();
      gtk_box_pack_end(GTK_BOX(b),c,FALSE,TRUE,0);
 
-     destroy_flag = resume_click_flag = FALSE;
+     ddata.destroy_flag = ddata.resume_click_flag = FALSE;
      gtk_widget_show_all(a);
-     while (!destroy_flag) mainloop();
+     while (!ddata.destroy_flag) mainloop();
 
-     if (!resume_click_flag) return FALSE;
+     if (!ddata.resume_click_flag) return FALSE;
 
-     session_resume((struct session *)
-		    g_list_nth(session_list,im[resume_index])->data);
+     session_resume(ddata.listmap[ddata.resume_index]);
      return TRUE;
 
 }
