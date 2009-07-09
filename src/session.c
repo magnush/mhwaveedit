@@ -427,9 +427,10 @@ gboolean session_dialog(void)
      gtk_widget_show_all(a);
      while (!ddata.destroy_flag) mainloop();
 
-     if (!ddata.resume_click_flag) return FALSE;
+     if (ddata.resume_click_flag)
+	  session_resume(ddata.listmap[ddata.resume_index]);
 
-     session_resume(ddata.listmap[ddata.resume_index]);
-     return TRUE;
+     g_free(ddata.listmap);
 
+     return ddata.resume_click_flag;
 }
