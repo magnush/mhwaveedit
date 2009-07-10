@@ -199,18 +199,17 @@ void session_init(int *argc, char **argv)
      current_id = highest_id+1;
 
      /* Remove empty sessions unless the session was suspended by user */
-     for (list=session_list; list!=NULL; list=list->next) {
+     for (list=session_list; list!=NULL; list=list2) {
 	  s = (struct session *) list->data;
+	  list2 = list->next;
 	  if (s->state != SESSION_SUSPENDED && s->datafiles == NULL) {
 	       if (s->logfile != NULL) {
 		    xunlink(s->logfile);
 		    g_free(s->logfile);
 	       }
-	       list2 = list->prev;
 	       session_list = g_list_remove(session_list, s);
 	       g_free(s);
 	       if (session_list == NULL) break;
-	       if (list2 != NULL) list = list2; else list = session_list;
 	  }
      }
 
