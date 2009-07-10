@@ -286,6 +286,26 @@ static void session_resume(struct session *s)
      }
 }
 
+static gboolean session_delete(struct session *s)
+{
+     GList *l;
+     gchar *fn;
+     gboolean b;
+
+     for (l=s->datafiles; l!=NULL; l=l->next) {
+	  fn = (gchar *)l->data;
+	  b = xunlink(fn);
+	  if (b) return TRUE;
+     }
+     /* Remove the session. */
+     g_list_foreach(s->datafiles, (GFunc)g_free, NULL);
+     g_list_free(s->datafiles);
+     g_free(s->logfile);
+     session_list = g_list_remove(session_list, s);
+     
+     return FALSE;
+}
+
 void session_quit(void)
 {
      if (current_file != NULL)
@@ -296,7 +316,7 @@ void session_quit(void)
 struct session_dialog_data {
      GtkList *listwid;
      struct session **listmap;
-     GtkWidget *resume_button;
+     GtkWidget *resume_button,*delete_button;
      gboolean destroy_flag, resume_click_flag;
      gint resume_index;
 };
@@ -315,6 +335,7 @@ static void session_dialog_select_child(GtkList *list, GtkWidget *widget,
 	  (struct session_dialog_data *)user_data;
      ddata->resume_index = gtk_list_child_position(list,widget);
      gtk_widget_set_sensitive(ddata->resume_button,TRUE);
+     gtk_widget_set_sensitive(ddata->delete_button,TRUE);     
 }
 
 
@@ -328,6 +349,24 @@ static void session_dialog_resume_click(GtkWidget *widget, gpointer user_data)
      struct session_dialog_data *ddata = 
 	  (struct session_dialog_data *)user_data;
      ddata->resume_click_flag = TRUE;
+}
+
+static void session_dialog_delete_click(GtkWidget *widget, gpointer user_data)
+{
+     struct session_dialog_data *ddata = 
+	  (struct session_dialog_data *)user_data;
+     int i;
+     gboolean b;
+     i = user_message("Delete session?",UM_OKCANCEL);
+     if (i != MR_OK) return;
+     b = session_delete(ddata->listmap[ddata->resume_index]);
+     if (b) return;
+     gtk_list_clear_items(ddata->listwid,ddata->resume_index,
+			  ddata->resume_index+1);
+     for (i=ddata->resume_index; ddata->listmap[i]!=NULL; i++)
+	  ddata->listmap[i] = ddata->listmap[i+1]; 
+     gtk_widget_set_sensitive(ddata->resume_button,FALSE);
+     gtk_widget_set_sensitive(ddata->delete_button,FALSE);     
 }
 
 gboolean session_dialog(void)
@@ -344,7 +383,7 @@ gboolean session_dialog(void)
 
      if (session_list == NULL) return FALSE;
 
-     ddata.listmap = g_malloc(g_list_length(session_list) * 
+     ddata.listmap = g_malloc((g_list_length(session_list)+1) * 
 			      sizeof(struct session *));
      for (m=session_list,i=0; m!=NULL; m=m->next) {
 	  s = (struct session *) m->data;
@@ -360,6 +399,7 @@ gboolean session_dialog(void)
 	  g_free(ch);
 	  ddata.listmap[i++] = s;
      }
+     ddata.listmap[i] = NULL;
 
      if (l == NULL) {
 	  g_free(ddata.listmap);
@@ -388,6 +428,7 @@ gboolean session_dialog(void)
      gtk_box_pack_start(GTK_BOX(b),c,TRUE,TRUE,0);
 
      d = gtk_list_new();
+     ddata.listwid = GTK_LIST(d);
      gtk_list_insert_items(GTK_LIST(d),l,0);
      gtk_signal_connect(GTK_OBJECT(d),"select_child",
 			GTK_SIGNAL_FUNC(session_dialog_select_child),&ddata);
@@ -404,6 +445,13 @@ gboolean session_dialog(void)
      gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
 			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
 			       (GtkObject *)a);
+     gtk_container_add(GTK_CONTAINER(c),d);
+
+     d = gtk_button_new_with_label(_("Delete selected"));
+     ddata.delete_button = d;
+     gtk_widget_set_sensitive(d,FALSE);
+     gtk_signal_connect(GTK_OBJECT(d),"clicked",
+			GTK_SIGNAL_FUNC(session_dialog_delete_click),&ddata);
      gtk_container_add(GTK_CONTAINER(c),d);
 
      d = gtk_button_new_with_label(_("Start new session"));
