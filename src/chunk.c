@@ -820,46 +820,6 @@ static gboolean chunk_remap_channels_mixmode_proc(void *in,
      return out_func(id, chunk_remap_channels_data.buf, 
 		     samps*outformat->samplebytes);     
 }
-
-static gboolean chunk_remap_channels_rawmode_proc(void *in, 
-						  guint sample_size,
-						  chunk_writeout_func out_func,
-						  WriteoutID id,
-						  Dataformat *informat,
-						  Dataformat *outformat)
-{
-     int samps,ssize=informat->samplesize,i,j,k;
-     char *iptr, *optr;
-
-     /* Make sure we have room in buffer */
-     samps = sample_size / informat->samplebytes;
-     if (samps * outformat->samplebytes > chunk_remap_channels_data.bufsize) {
-	  g_free(chunk_remap_channels_data.buf);
-	  chunk_remap_channels_data.buf = 
-	       g_malloc(samps*outformat->samplebytes);
-	  chunk_remap_channels_data.bufsize = samps*outformat->samplebytes;
-     }
-
-     iptr = (char *)in;
-     optr = (char *)chunk_remap_channels_data.buf;
-
-     /* This could be optimized further (replace memcpy) */
-
-     for (i=0; i<samps; i++) {
-	  for (j=0; j<outformat->channels; j++) {
-	       k = chunk_remap_channels_data.map[j*(informat->channels+1)];
-	       if (k >= 0)
-		    memcpy(optr, iptr+k*ssize,ssize);
-	       else
-		    memset(optr, 0, ssize);
-	       optr += ssize;
-	  }
-	  iptr += informat->samplebytes;
-     }
-
-     return out_func(id, chunk_remap_channels_data.buf, 
-		     samps*outformat->samplebytes);
-}
 						  
 Chunk *chunk_remap_channels(Chunk *chunk, int channels_out, gboolean *map, 
 			    int dither_mode, StatusBar *bar)
@@ -869,6 +829,7 @@ Chunk *chunk_remap_channels(Chunk *chunk, int channels_out, gboolean *map,
      int channels_in = chunk->format.channels;
      Dataformat tofmt;
      Chunk *r;
+     int *bigmap,*smallmap;
      
      memcpy(&tofmt,&(chunk->format),sizeof(Dataformat));
      tofmt.channels = channels_out;
@@ -877,32 +838,35 @@ Chunk *chunk_remap_channels(Chunk *chunk, int channels_out, gboolean *map,
      chunk_remap_channels_data.buf = NULL;
      chunk_remap_channels_data.bufsize = 0;
 
-     /* Generate the map */
+     /* Generate the maps */
      mixmode = FALSE;
-     chunk_remap_channels_data.map = g_malloc((channels_in+1)*channels_out*
-					      sizeof(int));
+     bigmap = g_malloc((channels_in+1)*channels_out*sizeof(int));
+     smallmap = g_malloc(channels_out*sizeof(int));
+
      for (i=0; i<channels_out; i++) {
 	  k = 0;
 	  for (j=0; j<channels_in; j++) 
-	       if (map[j*channels_out + i])
-		    chunk_remap_channels_data.map[i*(channels_in+1)+(k++)] = j;
-	  chunk_remap_channels_data.map[i*(channels_in+1) + k] = -1;
+	       if (map[j*channels_out + i]) {
+		    bigmap[i*(channels_in+1)+(k++)] = j;
+		    smallmap[i] = j;
+	       }
+	  bigmap[i*(channels_in+1) + k] = -1;
 	  if (k > 1) mixmode = TRUE;
      }
 
      if (mixmode) {
+	  chunk_remap_channels_data.map = bigmap;
+	  g_free(smallmap);
 	  r = chunk_filter_tofmt(chunk,chunk_remap_channels_mixmode_proc,
 				 NULL,CHUNK_FILTER_MANY,TRUE,&tofmt,
 				 dither_mode,bar,_("Mixing channels"));
+	  g_free(chunk_remap_channels_data.buf);
+	  g_free(chunk_remap_channels_data.map);
      } else {
-	  r = chunk_filter_tofmt(chunk,chunk_remap_channels_rawmode_proc,
-				 NULL,CHUNK_FILTER_MANY,FALSE,&tofmt,
-				 dither_mode,bar,_("Mapping channels"));
-	  
+	  g_free(bigmap);
+	  r = chunk_ds_remap(chunk,channels_out,smallmap);
      }
      
-     g_free(chunk_remap_channels_data.buf);
-     g_free(chunk_remap_channels_data.map);
      return r;
 }
 
