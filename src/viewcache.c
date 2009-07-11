@@ -322,7 +322,9 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 
      /* Special case - zoomed in very far */
      if (real_spp < 1.0) {
-	  k = end_samp - start_samp;
+	  /* Due to rounding, the offsets array can differ from
+	   * start_samp/end_samp by 1 sample. */
+	  k = cache->offsets[xres-1] - cache->offsets[0] + 1;
 	  m = k * channels * sizeof(sample_t);
 	  if (m > sbufsize) {
 	       g_free(sbuf);
@@ -330,14 +332,14 @@ gboolean view_cache_update(ViewCache *cache, Chunk *chunk, off_t start_samp,
 	       sbuf = g_malloc(m);
 	  }
 	  readflag = TRUE;
-	  m = chunk_read_array_fp(cache->handle, start_samp, k, sbuf, 
+	  m = chunk_read_array_fp(cache->handle, cache->offsets[0], k, sbuf, 
 				  DITHER_NONE, NULL);
 	  readflag = FALSE;
-	  
+
 	  for (n=0; n<xres; n++) {
 	       for (l=0; l<channels; l++) {
 		    cache->values[(n*channels+l)*2] = cache->values[(n*channels+l)*2+1] = 
-			 sbuf[(cache->offsets[n] - start_samp)*channels + l];
+			 sbuf[(cache->offsets[n] - cache->offsets[0])*channels + l];
 	       }
 	  }
 
@@ -587,10 +589,10 @@ void view_cache_draw_part(ViewCache *cache, GdkDrawable *d, gint xs, gint xe,
 	       w = cache->values[(i*channels+j)*2+1] * scale;
 	       if (q < -1.0) q = -1.0; else if (q > 1.0) q = 1.0;
 	       if (w < -1.0) w = -1.0; else if (w > 1.0) w = 1.0;
-	       f = q*size+mid;
-	       g = w*size+mid;
-	       min = (gint) f;
-	       max = (gint) g;
+	       f = -q*size+mid;
+	       g = -w*size+mid;
+	       min = (gint) g;
+	       max = (gint) f;
 	       if (haslast) {
 		    if (min > lmax) min = lmax+1;
 		    else if (max < lmin) max = lmin-1;
