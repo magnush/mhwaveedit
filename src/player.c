@@ -205,12 +205,20 @@ static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos,
      i = output_select_format(&(chk->format),silent,(GVoidFunc)player_work);
      if (i != 0) {	  
 	  if (silent) {
-	       if (!output_suggest_format(&(chk->format),&fmt))
+	       if (!output_suggest_format(&(chk->format),&fmt)) {
 		    memcpy(&fmt,&player_fallback_format,sizeof(Dataformat));
+		    fmt.channels = chk->format.channels;
+	       }
 	       
 	       b = !dataformat_samples_equal(&(chk->format),&fmt); 
 	       if (b) {
 		    chk = chunk_convert_sampletype(chk,&fmt);
+		    b = player_play_main(chk,spos,epos,lp,TRUE);
+		    gtk_object_sink(GTK_OBJECT(chk));
+		    return b;
+
+	       } else if (chk->format.channels != fmt.channels) {
+		    chk = chunk_convert_channels(chk,fmt.channels);
 		    b = player_play_main(chk,spos,epos,lp,TRUE);
 		    gtk_object_sink(GTK_OBJECT(chk));
 		    return b;

@@ -34,6 +34,7 @@ static guint output_byteswap_bufsize=0;
 gboolean sound_lock_driver;
 static gboolean sound_delayed_quit=FALSE;
 static Dataformat playing_format;
+gboolean output_stereo_flag;
 static GVoidFunc output_ready_func=NULL,input_ready_func=NULL;
 static char zerobuf[1024];
 
@@ -307,6 +308,7 @@ void sound_init(void)
      int i;
      sound_lock_driver = inifile_get_gboolean("soundLock",FALSE);
      output_byteswap_flag = inifile_get_gboolean("outputByteswap",FALSE);
+     output_stereo_flag = inifile_get_gboolean("outputStereo",FALSE);
      if (driver_option != NULL)
 	  c = driver_option;
      else {
@@ -408,6 +410,9 @@ gint output_select_format(Dataformat *format, gboolean silent,
 			  GVoidFunc ready_func)
 {
      gint i;
+
+     if (output_stereo_flag && format->channels==1) return -1;
+
      if (sound_delayed_quit) {
 	  if (dataformat_equal(format,&playing_format)) {
 	       sound_delayed_quit = FALSE;
@@ -498,6 +503,12 @@ guint output_play(gchar *buffer, guint bufsize)
 
 gboolean output_suggest_format(Dataformat *format, Dataformat *result)
 {
+     if (output_stereo_flag && format->channels==1) {
+	  memcpy(result,format,sizeof(Dataformat));
+	  result->channels = 2;
+	  return TRUE;
+     }
+
      if (drivers[current_driver].output_suggest_format)
 	  return drivers[current_driver].output_suggest_format(format,result);
      else

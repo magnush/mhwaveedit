@@ -47,6 +47,9 @@ extern gboolean sound_lock_driver;
 
 extern gboolean output_byteswap_flag;
 
+/* Flag that will refuse to play mono files and suggest stereo instead */
+
+extern gboolean output_stereo_flag;
 
 /* ---------------------------------
    Functions available in all states 

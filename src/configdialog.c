@@ -113,6 +113,9 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
     output_byteswap_flag = gtk_toggle_button_get_active(cd->output_bswap);
     inifile_set_gboolean("outputByteswap",output_byteswap_flag);
 
+    output_stereo_flag = gtk_toggle_button_get_active(cd->output_stereo);
+    inifile_set_gboolean("outputStereo",output_stereo_flag);
+
     view_follow_strict_flag = 
 	 gtk_toggle_button_get_active(cd->center_cursor);
     inifile_set_gboolean("centerCursor",view_follow_strict_flag);
@@ -580,6 +583,14 @@ static void config_dialog_init(ConfigDialog *cd)
     gtk_toggle_button_set_active(cd->output_bswap,output_byteswap_flag);
 
     w = gtk_check_button_new_with_label("");
+    key = gtk_label_parse_uline(GTK_LABEL(GTK_BIN(w)->child),
+				_("Play _mono files as stereo"));
+    gtk_widget_add_accelerator(w,"clicked",ag,key,GDK_MOD1_MASK,
+			       (GtkAccelFlags)0);
+    cd->output_stereo = GTK_TOGGLE_BUTTON(w);
+    gtk_toggle_button_set_active(cd->output_stereo,output_stereo_flag);
+
+    w = gtk_check_button_new_with_label("");
     key = gtk_label_parse_uline(GTK_LABEL (GTK_BIN (w)->child), 
 				_("_Update cursor information while playing"));
     gtk_widget_add_accelerator (w, "clicked", ag, key, GDK_MOD1_MASK, 
@@ -870,6 +881,8 @@ static void config_dialog_init(ConfigDialog *cd)
     f = GTK_WIDGET(cd->output_bswap);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
     f = GTK_WIDGET(cd->sound_lock);
+    gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
+    f = GTK_WIDGET(cd->output_stereo);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
 
     d = gtk_frame_new(_(" Fallback format "));
