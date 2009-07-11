@@ -549,8 +549,8 @@ void view_cache_draw_part(ViewCache *cache, GdkDrawable *d, gint xs, gint xe,
 
      if (cache->calced == NULL) return;
 
-     if (xs >= cache->chunk->length) return;
-     if (xe >= cache->chunk->length) xe = cache->chunk->length-1;
+     /* if (xs >= cache->chunk->length) return;
+	if (xe >= cache->chunk->length) xe = cache->chunk->length-1; */
 
      size = yres/(2*channels) - 5;
 
