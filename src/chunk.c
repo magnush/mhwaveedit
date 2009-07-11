@@ -258,31 +258,43 @@ Chunk *chunk_convert_sampletype(Chunk *chunk, Dataformat *newtype)
      return r;
 }
 
-static gint channel_to_remove, current_channel;
-
-static gboolean chunk_remove_channel_proc(void *in, guint samplesize, 
-					  chunk_writeout_func out_func, 
-					  WriteoutID id,
-					  Dataformat *format, 
-					  Dataformat *outformat)
+static Chunk *chunk_ds_remap(Chunk *chunk, int new_channels, int *map)
 {
-     guint c = current_channel;
-     current_channel++;
-     if (current_channel == format->channels) current_channel = 0;
-     if (c != channel_to_remove) return out_func(id,in,samplesize);
-     else return FALSE;
+     GList *l;
+     DataPart *dp;
+     Datasource *new_ds;
+     Chunk *new_chunk,*new_chunk_part;
+     Chunk *res = NULL, *c;
+     for (l=chunk->parts; l!=NULL; l=l->next) {
+	  dp = (DataPart *)l->data;
+	  new_ds = datasource_channel_map(dp->ds,new_channels,map);
+	  new_chunk = chunk_new_from_datasource(new_ds);
+	  new_chunk_part = chunk_get_part(new_chunk,dp->position,dp->length);
+	  gtk_object_sink(GTK_OBJECT(new_chunk));
+	  if (res == NULL) {
+	       res = new_chunk_part;
+	  } else {
+	       c = chunk_append(res,new_chunk_part);
+	       gtk_object_sink(GTK_OBJECT(res));
+	       gtk_object_sink(GTK_OBJECT(new_chunk_part));
+	       res = c;
+	  }
+     }
+     g_free(map);
+     return res;
 }
 
 Chunk *chunk_remove_channel(Chunk *chunk, gint channel, StatusBar *bar)
 {
-     Dataformat fmt;
-     channel_to_remove = channel;
-     current_channel = 0;
-     memcpy(&fmt,&(chunk->format),sizeof(Dataformat));
-     fmt.channels --;
-     return chunk_filter_tofmt(chunk,chunk_remove_channel_proc,NULL,
-			       CHUNK_FILTER_ONE,FALSE,&fmt,DITHER_NONE,bar,
-			       _("Removing channel"));
+     int *map,i,new_chans;
+
+     new_chans = chunk->format.channels - 1;
+     map = g_malloc(new_chans * sizeof(int));
+     for (i=0; i<new_chans; i++) {
+	  if (i >= channel) map[i]=i+1;
+	  else map[i]=i;
+     }
+     return chunk_ds_remap(chunk, new_chans, map);
 }
 
 gboolean chunk_dump(Chunk *chunk, EFILE *file, gboolean bigendian, 
@@ -639,19 +651,16 @@ Chunk *chunk_onechannel(Chunk *chunk, int dither_mode, StatusBar *bar)
 Chunk *chunk_copy_channel(Chunk *chunk, gint channel, int dither_mode, 
 			  StatusBar *bar)
 {
-     Chunk *r;
-     gboolean *map;
-     int i;
+     int i,new_chans;
+     int *map;
 
-     map = g_malloc0(chunk->format.channels * (chunk->format.channels+1) * 
-		     sizeof(gboolean));
-     for (i=0; i<chunk->format.channels; i++)
-	  map[i*(chunk->format.channels+1) + i] = TRUE;
-     map[channel*(chunk->format.channels+1) + (chunk->format.channels)] = TRUE;
-     r = chunk_remap_channels(chunk,chunk->format.channels+1,map,dither_mode,
-			      bar);
-     g_free(map);
-     return r;
+     new_chans = chunk->format.channels + 1;
+     map = g_malloc(new_chans * sizeof(int));
+     for (i=0; i<new_chans; i++) {
+	  if (i <= channel) map[i] = i;
+	  else map[i] = i-1;
+     }
+     return chunk_ds_remap(chunk,new_chans,map);
 }
 
 
@@ -1600,55 +1609,15 @@ Chunk *chunk_byteswap(Chunk *chunk)
      return d;
 }
 
-static gboolean chunk_convert_channels_down_proc(void *in, guint sample_size,
-						 chunk_writeout_func out_func,
-						 WriteoutID id, 
-						 Dataformat *informat, 
-						 Dataformat *outformat)
-{
-     return out_func(id,in,outformat->samplebytes);
-}
-
-static guint zero_level_buf_len;
-static gchar zero_level_buf[32];
-
-static gboolean chunk_convert_channels_up_proc(void *in, guint sample_size,
-					       chunk_writeout_func out_func,
-					       WriteoutID id,
-					       Dataformat *informat,
-					       Dataformat *outformat)
-{
-     if (zero_level_buf_len == 0) {
-	  sample_t s[8] = { 0 };
-	  zero_level_buf_len = outformat->samplebytes - informat->samplebytes;
-	  convert_array(s,&dataformat_sample_t,zero_level_buf,outformat,
-			outformat->channels-informat->channels, DITHER_NONE);
-	  /* printf("zero_level_buf_len = %d\n",zero_level_buf_len); */
-     }
-     return (out_func(id,in,informat->samplebytes) || 
-	     out_func(id,zero_level_buf,zero_level_buf_len));
-}
-
 Chunk *chunk_convert_channels(Chunk *chunk, guint new_channels, 
 			      int dither_mode, StatusBar *bar)
 {
-     Dataformat outformat;
+     int *map;
+     int i;
      g_assert(chunk->format.channels != new_channels);
-     memcpy(&outformat,&(chunk->format),sizeof(Dataformat));
-     outformat.channels = new_channels;
-     outformat.samplebytes = outformat.channels * outformat.samplesize;
-     if (new_channels < chunk->format.channels)
-	  return chunk_filter_tofmt(chunk,chunk_convert_channels_down_proc,
-				    NULL,CHUNK_FILTER_FULL,FALSE,&outformat,
-				    dither_mode, 
-				    bar,_("Removing channels"));
-     else {
-	  zero_level_buf_len = 0;
-	  return chunk_filter_tofmt(chunk,chunk_convert_channels_up_proc,
-				    NULL,CHUNK_FILTER_FULL,FALSE,&outformat,
-				    dither_mode, 
-				    bar,_("Adding channels"));
-     }
+     map = g_malloc(new_channels * sizeof(int));
+     for (i=0; i<new_channels; i++) map[i] = i;
+     return chunk_ds_remap(chunk,new_channels,map);
 }
 
 Chunk *chunk_convert(Chunk *chunk, Dataformat *new_format, 

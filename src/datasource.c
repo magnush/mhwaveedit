@@ -105,6 +105,16 @@ static void datasource_clear(Datasource *ds)
 	  if (ds->data.clone) 
 	       gtk_object_unref(GTK_OBJECT(ds->data.clone));
 	  ds->data.clone = NULL;
+	  break;
+
+     case DATASOURCE_CHANMAP:
+	  if (ds->data.chanmap.clone)
+	       gtk_object_unref(GTK_OBJECT(ds->data.chanmap.clone));
+	  if (ds->data.chanmap.map)
+	       g_free(ds->data.chanmap.map);
+	  ds->data.chanmap.clone = NULL;
+	  ds->data.chanmap.map = NULL;
+
      }
      
      ds->type = DATASOURCE_SILENCE;
@@ -176,6 +186,15 @@ static Datasource *datasource_copy(Datasource *orig)
 	  ds->data.clone = orig->data.clone;
 	  gtk_object_ref(GTK_OBJECT(ds->data.clone));
 	  gtk_object_sink(GTK_OBJECT(ds->data.clone));
+	  break;
+     case DATASOURCE_CHANMAP:
+	  ds->data.chanmap.clone = orig->data.chanmap.clone;
+	  gtk_object_ref(GTK_OBJECT(ds->data.chanmap.clone));
+	  gtk_object_sink(GTK_OBJECT(ds->data.chanmap.clone));
+	  ds->data.chanmap.map = g_malloc(ds->format.channels * sizeof(int));
+	  memcpy(ds->data.chanmap.map, orig->data.chanmap.map, 
+		 ds->format.channels*sizeof(int));
+	  break;
      }
      return ds;
 }
@@ -219,6 +238,29 @@ Datasource *datasource_byteswap(Datasource *source)
      ds->data.clone = source;
      gtk_object_ref(GTK_OBJECT(source));
      gtk_object_sink(GTK_OBJECT(source));
+     return ds;
+}
+
+Datasource *datasource_channel_map(Datasource *source, int n_channels,
+				   int *map)
+{
+     Datasource *ds;
+
+     if (source == NULL) return NULL;
+
+     ds = gtk_type_new(datasource_get_type());
+     ds->type = DATASOURCE_CHANMAP;
+     memcpy(&(ds->format),&(source->format),sizeof(Dataformat));
+     ds->format.channels = n_channels;
+     ds->format.samplebytes = ds->format.samplesize * n_channels;
+     ds->length = source->length;
+     ds->bytes = ds->length * ds->format.samplebytes;
+     ds->data.chanmap.clone = source;
+     gtk_object_ref(GTK_OBJECT(source));
+     gtk_object_sink(GTK_OBJECT(source));
+     ds->data.chanmap.map = g_malloc(n_channels * sizeof(int));
+     memcpy(ds->data.chanmap.map, map, n_channels*sizeof(int));
+
      return ds;
 }
 
@@ -355,6 +397,10 @@ gboolean datasource_open(Datasource *ds)
 	  case DATASOURCE_BYTESWAP:	       
 	  case DATASOURCE_CONVERT:
 	       if (datasource_open(ds->data.clone)) return TRUE;
+	       break;
+	  case DATASOURCE_CHANMAP:
+	       if (datasource_open(ds->data.chanmap.clone)) return TRUE;
+	       break;
 	  }     
      ds->opencount ++;
      return FALSE;
@@ -379,6 +425,9 @@ void datasource_close(Datasource *ds)
      case DATASOURCE_BYTESWAP:
      case DATASOURCE_CONVERT:
 	  datasource_close(ds->data.clone);
+	  break;
+     case DATASOURCE_CHANMAP:
+	  datasource_close(ds->data.chanmap.clone);
 	  break;
      }     
 }
@@ -510,13 +559,35 @@ static guint datasource_sndfile_read_array_fp(Datasource *source,
 #endif
 }
 
+static void remap_main(void *source_buf, int item_size, int source_channels,
+		       void *dest_buf, int dest_channels, int *map, int items)
+{
+     int i,j;
+     char *sp,*dp;
+     int dstep,sstep;
+     /* Simplest possible implementation - room for optimization */
+     dstep = item_size*dest_channels;
+     sstep = item_size*source_channels;
+     for (i=0; i<dest_channels; i++) {
+	  dp = ((char *)dest_buf) + i*item_size;
+	  if (map[i] < 0 || map[i] >= source_channels) {
+	       for (j=0; j<items; j++,dp+=dstep)
+		    memset(dp,0,item_size); 	       
+	  } else {
+	       sp = ((char *)source_buf) + map[i]*item_size;
+	       for (j=0; j<items; j++,sp+=sstep,dp+=dstep)
+		    memcpy(dp,sp,item_size);
+	  }
+     }
+}
+
 static guint datasource_read_array_main(Datasource *source, 
 					off_t sampleno, guint size, 
 					gpointer buffer, int dither_mode,
 					off_t *clipcount)
 {
      off_t x;
-     guint u;
+     guint u,s;
      sample_t *c;
      switch (source->type) {
      case DATASOURCE_REAL:
@@ -576,6 +647,20 @@ static guint datasource_read_array_main(Datasource *source,
 	  }
 	  g_free(c);
 	  return u * source->format.samplebytes;
+     case DATASOURCE_CHANMAP:	  
+	  u = (size / source->format.samplebytes) * 
+	       source->data.chanmap.clone->format.samplebytes;
+	  c = g_malloc(u);
+	  u = datasource_read_array_main(source->data.chanmap.clone, sampleno,
+					 u, c, dither_mode,clipcount);
+	  s = u / source->data.chanmap.clone->format.samplebytes;
+	  if (s > 0)
+	       remap_main(c, source->data.chanmap.clone->format.samplesize,
+			  source->data.chanmap.clone->format.channels,
+			  buffer, source->format.channels, 
+			  source->data.chanmap.map, s);
+	  g_free(c);
+	  return s*source->format.samplebytes;
      default:
 	  g_assert_not_reached();
 	  return 0;
@@ -849,6 +934,8 @@ gint datasource_clip_check(Datasource *ds, StatusBar *bar)
      case DATASOURCE_REF:
      case DATASOURCE_CONVERT:
 	  return datasource_clip_check(ds->data.clone,bar);
+     case DATASOURCE_CHANMAP:
+	  return datasource_clip_check(ds->data.chanmap.clone,bar);
      default:
 	  break;
      }

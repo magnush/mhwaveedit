@@ -360,7 +360,6 @@ Chunk *chunk_convert_channels(Chunk *chunk, guint new_channels,
 Chunk *chunk_remap_channels(Chunk *chunk, int channels_out, gboolean *map, 
 			    int dither_mode, StatusBar *bar);
 
-
 /* Creates a new chunk containing a mix of two chunk's data. The chunks must 
  * have the same format but need not be of the same length. */
 

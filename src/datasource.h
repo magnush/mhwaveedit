@@ -73,8 +73,11 @@
  * Floating point requests will be passed on to the referred
  * Datasource, PCM requests will be sent as FP requests and then 
  * automatically converted from the FP data. */
-#define DATASOURCE_CONVERT           9 
-
+#define DATASOURCE_CONVERT           9
+/* Clone of other datasource with channels rearranged. 
+ * Has the sample sample format and rate, but can have different number of 
+ * channels */
+#define DATASOURCE_CHANMAP          10
 
 struct _Datasource;
 
@@ -119,6 +122,13 @@ struct _Datasource {
 	  /* DATASOURCE_CLONE, DATASOURCE_REF, DATASOURCE_CONVERT and 
 	   * DATASOURCE_BYTESWAP */
 	  struct _Datasource *clone;
+
+	  /* DATASOURCE_CHANMAP */
+	  struct {
+	       struct _Datasource *clone;
+	       int *map;
+	  } chanmap;
+
      } data;
 };
 
@@ -155,6 +165,13 @@ Datasource *datasource_byteswap(Datasource *source);
  * be returned when the read_array_fp function is used. source and new must
  * have the same number of channels and samplerate.  */
 Datasource *datasource_convert(Datasource *source, Dataformat *new_format);
+
+/* Returns a Datasource containing the same data as source, but with its 
+ * channels remapped.
+ * n_channels is the number of channels in the new source. 
+ * map should point to an array length n_channels mapping to source channels */
+Datasource *datasource_channel_map(Datasource *source, int n_channels,
+				   int *map);
 
 /* Create a data source from a memory buffer of data. The buffer will be 
  * g_free:d when the data source is destroyed and the data should not be 
