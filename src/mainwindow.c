@@ -900,7 +900,7 @@ static void edit_paste(GtkMenuItem *menu_item, gpointer user_data)
 {
      Chunk *c = clipboard, *nc;
      Mainwindow *w = MAINWINDOW(user_data);
-     off_t cp;
+     off_t cp,cl;
      if (w->doc == NULL) {
 	  mainwindow_set_chunk(w,clipboard,NULL);
 	  return;
@@ -909,22 +909,22 @@ static void edit_paste(GtkMenuItem *menu_item, gpointer user_data)
      if (!dataformat_equal(&(w->doc->chunk->format),&(c->format))) {
 	  c = chunk_convert(c,&(w->doc->chunk->format),dither_editing,
 			    w->statusbar);
-	  if (c == NULL) return;
+	  if (c == NULL) return;	  
      }
-
-     nc = chunk_insert(w->doc->chunk,c,w->doc->cursorpos);
+     cl = c->length;
+     nc = chunk_insert(w->doc->chunk,c,w->doc->cursorpos);     
      gtk_object_sink(GTK_OBJECT(c));
 
      cp = w->doc->cursorpos;
-     document_update(w->doc, nc, cp, clipboard->length);
-     document_set_selection( w->doc, cp, cp + clipboard->length );
+     document_update(w->doc, nc, cp, cl);
+     document_set_selection( w->doc, cp, cp + cl );
 }
 
 static void edit_pasteover(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW(user_data);
      Chunk *c,*d=clipboard;
-     off_t orig_len;
+     off_t orig_len,dl;
      if (w->doc == NULL) {
 	  mainwindow_set_chunk(w,clipboard,NULL);
 	  return;
@@ -935,15 +935,16 @@ static void edit_pasteover(GtkMenuItem *menuitem, gpointer user_data)
 			    w->statusbar);
 	  if (d == NULL) return;
      }
+     dl = d->length;
 
-     orig_len = MIN(w->doc->chunk->length-w->doc->cursorpos, d->length);
+     orig_len = MIN(w->doc->chunk->length-w->doc->cursorpos, dl);
      c = chunk_replace_part(w->doc->chunk, w->doc->cursorpos, 
 			    orig_len, d);
      gtk_object_sink(GTK_OBJECT(d));
 
      document_update(w->doc, c, 0, 0);
      document_set_selection( w->doc, w->doc->cursorpos,
-			     w->doc->cursorpos + clipboard->length );
+			     w->doc->cursorpos + dl );
 }
 
 static void edit_mixpaste(GtkMenuItem *menuitem, gpointer user_data)
