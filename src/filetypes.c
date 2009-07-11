@@ -907,6 +907,11 @@ static gint sndfile_save(Chunk *chunk, gchar *filename, gpointer settings,
 
 /* OGG and MP3 */
 
+int run_decoder_cs(gpointer csource, gpointer user_data)
+{
+     return 0;
+}
+
 static Chunk *run_decoder(gchar *filename, gchar *tempname, gchar *progname, 
 			  gchar **argv, int dither_mode, StatusBar *bar)
 {
@@ -915,7 +920,8 @@ static Chunk *run_decoder(gchar *filename, gchar *tempname, gchar *progname,
      Datasource *ds;
      pid_t p,q;
      gboolean b;
-     off_t o;
+     off_t o;     
+     gpointer cs;
      /* Using oggdec in raw mode to decode to stdout, it seems there is no
       * way to determine the sample rate of the output, so we decode it to a
       * temporary wave file instead */
@@ -938,6 +944,12 @@ static Chunk *run_decoder(gchar *filename, gchar *tempname, gchar *progname,
      if (o<0) o=64*1024*1024;
      else o *= 20;
      status_bar_begin_progress(bar,o,_("Decoding"));
+
+     /* Hack: To avoid the potential race condition between mainloop and waitpid
+      * in this loop, we add a constant event source to make sure the mainloop
+      * never waits indefinitely. */
+     cs = mainloop_constant_source_add(run_decoder_cs,NULL,TRUE);
+
      while (1) {
 	  mainloop();
 	  /* See if the child has exited */
@@ -967,6 +979,7 @@ static Chunk *run_decoder(gchar *filename, gchar *tempname, gchar *progname,
 	  }
      }
      status_bar_end_progress(bar);
+     mainloop_constant_source_free(cs);
      return r;
 }
 
