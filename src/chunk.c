@@ -1573,14 +1573,17 @@ Chunk *chunk_byteswap(Chunk *chunk)
      return d;
 }
 
-Chunk *chunk_convert_channels(Chunk *chunk, guint new_channels, 
-			      int dither_mode, StatusBar *bar)
+Chunk *chunk_convert_channels(Chunk *chunk, guint new_channels)
 {
      int *map;
      int i;
      g_assert(chunk->format.channels != new_channels);
      map = g_malloc(new_channels * sizeof(int));
      for (i=0; i<new_channels; i++) map[i] = i;
+     /* When converting mono files, put mono channel in both left and right. 
+      * This is in most cases what we want. */
+     if (chunk->format.channels==1 && new_channels > 1)
+	  map[1] = 0;
      return chunk_ds_remap(chunk,new_channels,map);
 }
 
@@ -1596,8 +1599,7 @@ Chunk *chunk_convert(Chunk *chunk, Dataformat *new_format,
 	       conv_driver = rateconv_driver_id(FALSE,0);
 	  if (new_format->channels < chunk->format.channels) {
 	       /* First decrease channels, then convert rate */
-	       d = chunk_convert_channels(chunk,new_format->channels,
-					  dither_mode,bar);
+	       d = chunk_convert_channels(chunk,new_format->channels);
 	       if (d == NULL) return NULL;
 	       c = chunk_convert_samplerate(d,new_format->samplerate,
 					    conv_driver,dither_mode,bar);
@@ -1609,8 +1611,7 @@ Chunk *chunk_convert(Chunk *chunk, Dataformat *new_format,
 	       d = chunk_convert_samplerate(chunk,new_format->samplerate,
 					    conv_driver,dither_mode,bar);
 	       if (d == NULL) return NULL;
-	       c = chunk_convert_channels(d,new_format->channels,dither_mode,
-					  bar);
+	       c = chunk_convert_channels(d,new_format->channels);
 	       gtk_object_sink(GTK_OBJECT(d));
 	       if (c == NULL) return NULL;
 
@@ -1622,8 +1623,7 @@ Chunk *chunk_convert(Chunk *chunk, Dataformat *new_format,
 	  }
      } else if (new_format->channels != chunk->format.channels) {
 	  /* Just convert channels */
-	  c = chunk_convert_channels(chunk,new_format->channels,
-				     dither_mode,bar);
+	  c = chunk_convert_channels(chunk,new_format->channels);
 	  if (c == NULL) return NULL;
      } 
 

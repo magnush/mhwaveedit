@@ -343,8 +343,7 @@ Chunk *chunk_onechannel(Chunk *chunk, int dither_mode, StatusBar *bar);
 /* Creates a new Chunk with the original chunk's data, but with the
  * last channels removed or silent channels added so the channel count
  * becomes new_channels */
-Chunk *chunk_convert_channels(Chunk *chunk, guint new_channels, 
-			      int dither_mode, StatusBar *bar);
+Chunk *chunk_convert_channels(Chunk *chunk, guint new_channels);
 
 
 
