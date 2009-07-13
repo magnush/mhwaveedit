@@ -1,3 +1,12 @@
+New features in version 1.4.16:
+
+  * PulseAudio driver added
+  * Alsa driver performance improvements
+  * The "map channels" effect is now instant. 
+  * Added option to play mono files as stereo  
+  * Minor user interface improvements
+  * Bug fixes
+
 New features in version 1.4.15:
 
   * Time format shown on time ruler can now be changed
