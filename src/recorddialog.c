@@ -844,7 +844,7 @@ void record_dialog_init(RecordDialog *obj)
      gchar *s1;
      GList *dp;
      gboolean complete;
-     Dataformat df;
+     Dataformat df,*dfp;
 
      ag = gtk_accel_group_new();
 
@@ -986,6 +986,15 @@ void record_dialog_init(RecordDialog *obj)
 
      gtk_widget_show_all(a);
      gtk_window_add_accel_group(GTK_WINDOW (obj), ag);
+
+     /* Special case: Only one format supported. Choose that format and 
+      * make the format combo insensitive */
+     if (complete && list_object_get_size(obj->driver_presets)==1) {
+	  dfp = (Dataformat *)list_object_get(obj->driver_presets,0);
+	  record_format_combo_set_format(obj->format_combo,dfp);
+	  gtk_widget_set_sensitive(GTK_WIDGET(obj->format_combo),FALSE);
+	  return;
+     } 
 
      /* Set the last used format */
      s1 = inifile_get("lastRecordFormat",NULL);
