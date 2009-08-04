@@ -94,6 +94,9 @@ struct _Datasource {
 
      guint opencount;            /* To keep track of nested open/close calls */
 
+     char *temparea;     /* Temporary area for internal use */
+     int temparea_size;  /* Size of temporary area (bytes) */
+
      gint tag;                   /* Extra field... */
 
      /* Type-specific data */

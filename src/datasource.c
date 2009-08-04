@@ -58,12 +58,14 @@ static void datasource_init(Datasource *obj)
      obj->length = 0;
      obj->bytes = 0;
      obj->opencount = 0;
+     obj->temparea = NULL;
+     obj->temparea_size = 0;
      obj->tag = 0;
 }
 
 static void datasource_clear(Datasource *ds)
 {
-     g_assert(ds->opencount == 0);
+     g_assert(ds->opencount == 0 && ds->temparea == NULL);
 
      switch (ds->type) {
 
@@ -149,6 +151,16 @@ GtkType datasource_get_type(void)
 		id=gtk_type_unique(gtk_object_get_type(),&info);	  
      }
      return id;
+}
+
+static char *datasource_get_temparea(Datasource *ds, int size)
+{
+     if (size > ds->temparea_size) {
+	  g_free(ds->temparea);
+	  ds->temparea = g_malloc(size);
+	  ds->temparea_size = size;
+     }
+     return ds->temparea;
 }
 
 /* Creates a copy of the original datasource
@@ -411,6 +423,13 @@ void datasource_close(Datasource *ds)
      g_assert(ds->opencount != 0);
      ds->opencount --;
      if (ds->opencount > 0) return;
+
+     if (ds->temparea != NULL) {
+	  g_free(ds->temparea);
+	  ds->temparea = NULL;
+	  ds->temparea_size = 0;
+     }
+
      switch (ds->type) {
      case DATASOURCE_VIRTUAL:
      case DATASOURCE_TEMPFILE:
@@ -452,7 +471,7 @@ static guint datasource_clone_read_array(Datasource *source, off_t sampleno,
      orig_adjust = orig_offset % source->data.clone->format.samplebytes;
      /* How much data should we read (should be able to fill buffer) */
      orig_size = size + orig_adjust + source->data.clone->format.samplebytes - 1;
-     p = g_malloc(orig_size);
+     p = datasource_get_temparea(source,orig_size);
      x = datasource_read_array(source->data.clone, orig_sampleno, orig_size, p,
 			       dither_mode,clipcount);
      if (x != 0) {
@@ -460,7 +479,6 @@ static guint datasource_clone_read_array(Datasource *source, off_t sampleno,
 	  memcpy(buffer, p+orig_adjust, size);
 	  x = size;
      }
-     g_free(p);
      return x;			       
 }
 
@@ -635,7 +653,8 @@ static guint datasource_read_array_main(Datasource *source,
 	       return datasource_read_array_fp(source->data.clone,sampleno,u,
 					       buffer,dither_mode,clipcount) *
 		    source->format.samplebytes ;
-	  c = g_malloc(u*sizeof(sample_t)*source->format.channels);
+	  c = (sample_t *)datasource_get_temparea(source, u*sizeof(sample_t)*
+						  source->format.channels);
 	  u = datasource_read_array_fp(source->data.clone, sampleno, u, 
 				       (gpointer)c,dither_mode,clipcount);
 	  if (u > 0) {
@@ -645,12 +664,11 @@ static guint datasource_read_array_main(Datasource *source,
 	       convert_array(c,&dataformat_sample_t,buffer,&(source->format),
 			     u*source->format.channels,dither_mode);
 	  }
-	  g_free(c);
 	  return u * source->format.samplebytes;
      case DATASOURCE_CHANMAP:	  
 	  u = (size / source->format.samplebytes) * 
 	       source->data.chanmap.clone->format.samplebytes;
-	  c = g_malloc(u);
+	  c = (sample_t *)datasource_get_temparea(source,u);
 	  u = datasource_read_array_main(source->data.chanmap.clone, sampleno,
 					 u, c, dither_mode,clipcount);
 	  s = u / source->data.chanmap.clone->format.samplebytes;
@@ -659,7 +677,6 @@ static guint datasource_read_array_main(Datasource *source,
 			  source->data.chanmap.clone->format.channels,
 			  buffer, source->format.channels, 
 			  source->data.chanmap.map, s);
-	  g_free(c);
 	  return s*source->format.samplebytes;
      default:
 	  g_assert_not_reached();
@@ -731,16 +748,14 @@ guint datasource_read_array_fp(Datasource *source, off_t sampleno,
 		    / source->format.samplebytes;
 	       
 	  s = samples * source->format.samplebytes;
-	  p = g_malloc(s);
+	  p = datasource_get_temparea(source,s);
 	  x = datasource_read_array(source,sampleno,s,p,dither_mode,clipcount);
 	  g_assert(x==s || x==0);
 	  if (x==s) {
 	       convert_array(p,&(source->format),buffer,&dataformat_sample_t,
 			     samples*source->format.channels,dither_mode);
-	       g_free(p);
 	       return samples;
 	  }
-	  g_free(p);
 	  return 0;
      }
 }
