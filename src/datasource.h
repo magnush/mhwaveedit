@@ -79,6 +79,11 @@
  * channels */
 #define DATASOURCE_CHANMAP          10
 
+struct temparea {
+     gpointer ptr;
+     int size;
+};
+
 struct _Datasource;
 
 struct _Datasource {
@@ -94,8 +99,8 @@ struct _Datasource {
 
      guint opencount;            /* To keep track of nested open/close calls */
 
-     char *temparea;     /* Temporary area for internal use */
-     int temparea_size;  /* Size of temporary area (bytes) */
+     /* Temporary areas for internal use */
+     struct temparea read_temparea,readfp_temparea;
 
      gint tag;                   /* Extra field... */
 
