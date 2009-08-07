@@ -147,29 +147,43 @@ GtkWidget *document_list_new(Document *chosen)
      return widget;     
 }
 
+struct setup_func_data {
+     GList *lp;
+     Document *first;
+};
+
 static void document_list_setup_func(gpointer item, gpointer user_data)
 {
-     GList **lp = (GList **)user_data;
+     struct setup_func_data *sfdp = (struct setup_func_data *)user_data;
      Document *w = DOCUMENT(item);
-     if (w->titlename != NULL)
-	  *lp = g_list_append(*lp, w->titlename);
+     if (w->titlename != NULL) {
+	  sfdp->lp = g_list_append(sfdp->lp, w->titlename);
+	  if (sfdp->first == NULL) sfdp->first = w;
+     }
 }
 
 void document_list_setup(DocumentList *mwl, Document *chosen)
 {   
-     GList *l = NULL;
      gint i;
+     struct setup_func_data sfd;
      updating = TRUE;     
-     list_object_foreach(document_objects,document_list_setup_func,&l);
-     combo_set_items(COMBO(mwl),l,0);
+
+     sfd.lp = NULL;
+     sfd.first = NULL;
+     list_object_foreach(document_objects,document_list_setup_func,&sfd);
+     combo_set_items(COMBO(mwl),sfd.lp,0);
+
+     if (chosen == NULL) 
+	  chosen = sfd.first;
+
      if (chosen) {
-	  i = g_list_index(l,chosen->titlename);
+	  i = g_list_index(sfd.lp,chosen->titlename);
 	  g_assert(i >= 0);
 	  combo_set_selection(COMBO(mwl),i);
 	  memcpy(&(mwl->format),&(chosen->chunk->format),
 		 sizeof(Dataformat));
 	  mwl->selected = chosen;
      }
-     g_list_free(l);     
+     g_list_free(sfd.lp);     
      updating = FALSE;
 }
