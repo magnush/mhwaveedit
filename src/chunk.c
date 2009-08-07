@@ -844,6 +844,7 @@ Chunk *chunk_remap_channels(Chunk *chunk, int channels_out, gboolean *map,
      smallmap = g_malloc(channels_out*sizeof(int));
 
      for (i=0; i<channels_out; i++) {
+	  smallmap[i] = -1;
 	  k = 0;
 	  for (j=0; j<channels_in; j++) 
 	       if (map[j*channels_out + i]) {
