@@ -54,6 +54,7 @@ typedef struct {
         make do. */ 
      GList *strings;
 #endif
+     int max_request_width;
 } Combo;
 
 typedef struct {
@@ -71,5 +72,7 @@ int combo_selected_index(Combo *combo);
 
 /* Result must be freed by caller */
 char *combo_selected_string(Combo *combo);
+
+void combo_set_max_request_width(Combo *c, int w);
 
 #endif

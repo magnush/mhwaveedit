@@ -28,11 +28,21 @@ static guint combo_signals[LAST_SIGNAL] = { 0 };
 
 static gboolean updating_flag = FALSE;
 
+static GtkObjectClass *parent_class;
+
+static void combo_size_request(GtkWidget *widget, GtkRequisition *req)
+{
+     Combo *obj = COMBO(widget);
+     GTK_WIDGET_CLASS(parent_class)->size_request(widget,req);
+     if (obj->max_request_width >= 0 && req->width > obj->max_request_width)
+	  req->width = obj->max_request_width;
+}
 
 #ifdef COMBO_OLDSCHOOL
 
 static void combo_class_init(GtkObjectClass *klass)
 {
+     parent_class = gtk_type_class(COMBO_PARENT_TYPE_FUNC());
      COMBO_CLASS(klass)->selection_changed = NULL;
      combo_signals[CHANGED_SIGNAL] = 
 	  gtk_signal_new("selection_changed",GTK_RUN_LAST,
@@ -40,6 +50,7 @@ static void combo_class_init(GtkObjectClass *klass)
 			 GTK_SIGNAL_OFFSET(ComboClass,selection_changed),
 			 gtk_marshal_NONE__NONE,GTK_TYPE_NONE,0);
      gtk_object_class_add_signals(klass,combo_signals,LAST_SIGNAL);
+     GTK_WIDGET_CLASS(klass)->size_request = combo_size_request;
 }
 
 
@@ -90,6 +101,7 @@ static void combo_init(GtkObject *obj)
      GtkCombo *cbo = GTK_COMBO(obj);
      COMBO(obj)->chosen_index = 0;
      COMBO(obj)->next_chosen_index = -1;
+     COMBO(obj)->max_request_width = -1;
      gtk_editable_set_editable(GTK_EDITABLE(cbo->entry),FALSE);     
      gtk_signal_connect(GTK_OBJECT(cbo->list),"select_child",list_select_child,
 			obj);
@@ -139,7 +151,6 @@ void combo_remove_item(Combo *combo, int item_index)
 
 #else
 
-static GtkObjectClass *parent_class;
 
 
 static void combo_destroy(GtkObject *obj)
@@ -167,6 +178,7 @@ static void combo_class_init(GtkObjectClass *klass)
      klass->destroy = combo_destroy;
      GTK_COMBO_BOX_CLASS(klass)->changed = combo_changed;
      COMBO_CLASS(klass)->selection_changed = NULL;
+     GTK_WIDGET_CLASS(klass)->size_request = combo_size_request;
      combo_signals[CHANGED_SIGNAL] = 
 	  gtk_signal_new("selection_changed",GTK_RUN_LAST,
 			 GTK_CLASS_TYPE(klass),
@@ -195,6 +207,7 @@ static void combo_init(GtkObject *obj)
                                   NULL);
 
   COMBO(obj)->strings = NULL;     
+  COMBO(obj)->max_request_width = -1;
 }
 
 void combo_set_items(Combo *combo, GList *item_strings, int default_index)
@@ -280,4 +293,9 @@ GtkType combo_get_type(void)
 GtkWidget *combo_new(void)
 {
      return (GtkWidget *)gtk_type_new(combo_get_type());
+}
+
+void combo_set_max_request_width(Combo *c, int width)
+{
+     c->max_request_width = width;
 }

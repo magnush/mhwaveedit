@@ -91,6 +91,7 @@ static void document_list_init(GtkObject *obj)
 {
      DocumentList *mwl = DOCUMENT_LIST(obj);
      /* Most initialization is done in document_list_setup */
+     combo_set_max_request_width(COMBO(obj),350);
      mwl->selected = NULL;
      gtk_signal_connect_while_alive(GTK_OBJECT(document_objects), 
 				    "item_added",
