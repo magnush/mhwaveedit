@@ -21,6 +21,10 @@
 
 #include <pulse/pulseaudio.h>
 
+#ifndef PA_CHECK_VERSION
+#define PA_CHECK_VERSION(a,b,c) (0)
+#endif
+
 #undef MLDEBUG
 
 /* ----------------------- */
