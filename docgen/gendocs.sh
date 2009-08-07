@@ -2,12 +2,13 @@
 
 # Script to generate ../README and ../src/help.c
 # THIS IS A HACK - Run it at your own risk...
+# Must be run under bash in order to work.
 
 # Generate README
 rm -f ../README
 for A in R*.doc D*.doc
 do
-	csplit $A 2
+	csplit --silent $A 2
 	mv xx00 header.tmp
 	mv xx01 contents.tmp
 	tr "A-za-z " - <header.tmp >line.tmp
