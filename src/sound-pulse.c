@@ -450,8 +450,8 @@ static void pulse_quit(void)
      }
 }
 
-#if PA_MINOR > 9 || PA_MICRO > 14
-#define HAS_24
+#if PA_CHECK_VERSION(0,9,15)
+#define HAS24
 #endif
 
 static gboolean format_to_pulse(Dataformat *format, pa_sample_spec *ss_out)
@@ -754,11 +754,13 @@ static void pulse_source_info_cb(pa_context *c, const pa_source_info *i,
 
 
 /* PA 0.9.12-? has a bug where passing @DEFAULT_SOURCE@ doesn't work
- * Perform a quite messy workaround */
+ * Perform a quite messy workaround, ifdef:d with the
+ * DEFUALT_SOURCE_BROKEN macro */
 
-#if (PA_MINOR == 9 && PA_MICRO > 11) || PA_MINOR > 9 || PA_MAJOR > 0
+/* Becuase PA didn't introduce PA_MAJOR/MINOR/MICRO macros until 0.9.15, 
+ * this will have to be done for the older versions as well... */
 #define DEFAULT_SOURCE_BROKEN
-#endif
+
 
 #ifdef DEFAULT_SOURCE_BROKEN
 
