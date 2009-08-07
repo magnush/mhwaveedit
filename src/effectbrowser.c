@@ -35,6 +35,7 @@
 #include "um.h"
 #include "gettext.h"
 #include "mapchannelsdialog.h"
+#include "sandwichdialog.h"
 
 struct source {
      gchar tag;
@@ -108,6 +109,8 @@ static void builtin_rebuild_func(gchar source_tag, gpointer user_data)
 				author,loc);
      effect_register_add_effect(source_tag,"combine",_("Combine channels"),
 				author,loc);
+     effect_register_add_effect(source_tag,"sandwich",
+				_("Add channels from other file"),author,loc);
      effect_register_add_effect(source_tag,"speed",_("Speed"),author,loc);
      effect_register_add_effect(source_tag,"pipe",_("Pipe through program"),
 				author,loc);
@@ -126,6 +129,7 @@ static EffectDialog *builtin_get_func(gchar *name, gchar source_tag,
 	  type = combine_channels_dialog_get_type();
      else if (!strcmp(name,"speed")) type = speed_dialog_get_type();
      else if (!strcmp(name,"pipe")) type = pipe_dialog_get_type();
+     else if (!strcmp(name,"sandwich")) type = sandwich_dialog_get_type();
      if (type >= 0) 
 	  return EFFECT_DIALOG(gtk_type_new(type));
      else

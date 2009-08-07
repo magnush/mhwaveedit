@@ -770,7 +770,225 @@ Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
      gtk_object_sink(GTK_OBJECT(c));
 
      return d;
+#undef BUFLEN
 }
+
+static void sandwich_copy(char *dest_buf, int dest_offset, int dest_item_size,
+			  char *source_buf, int source_item_size, int items)
+{
+     int i;
+     for (i=0; i<items; i++)
+	  memcpy(dest_buf+dest_offset+i*dest_item_size, 
+		 source_buf+i*source_item_size,
+		 source_item_size);
+}
+
+
+static Chunk *chunk_sandwich_main(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
+{
+#define BUFLEN 512
+     off_t u,mixlen;
+     guint chn1,chn2,x,x1,x2;
+     off_t clipcount = 0;
+     char *buf1,*buf2,*outbuf;
+     Dataformat format;
+     Chunk *m;
+     ChunkHandle *ch1, *ch2;
+     TempFile tmp;
+
+     g_assert(dataformat_samples_equal(&(c1->format),&(c2->format)) && 
+	      c1->format.samplerate == c2->format.samplerate);
+
+     /* Number of channels */
+     chn1 = c1->format.channels;
+     chn2 = c2->format.channels;
+
+     /* Number of multi-channel samples to mix */
+     g_assert(c1->length == c2->length);
+     mixlen = c1->length;
+
+     memcpy(&format,&(c1->format),sizeof(Dataformat));
+     format.channels = chn1+chn2;
+     format.samplebytes = format.samplesize * format.channels;
+
+     /* Prepare for processing */
+     ch1 = chunk_open(c1);
+     if ( ch1 == NULL ) return NULL;
+     ch2 = chunk_open(c2);
+     if ( ch2 == NULL ) { chunk_close(ch1); return NULL; }
+     tmp = tempfile_init(&format,FALSE);
+     status_bar_begin_progress(bar, mixlen, _("Combining channels"));
+
+     buf1 = g_malloc(BUFLEN*c1->format.samplebytes);
+     buf2 = g_malloc(BUFLEN*c2->format.samplebytes);
+     outbuf = g_malloc(BUFLEN*format.samplebytes);
+
+     for (u=0; u<mixlen; u+=x) {
+
+	  x = BUFLEN;
+	  if ((off_t)x > (mixlen-u))
+	       x = ((guint)(mixlen-u));
+
+	  x1 = chunk_read_array(ch1,u,x*c1->format.samplebytes,buf1,
+				dither_mode,&clipcount);
+	  x2 = chunk_read_array(ch2,u,x*c2->format.samplebytes,
+				buf2,dither_mode,&clipcount);
+	  
+	  if (x1 == 0 || x2 == 0) {
+	       tempfile_abort(tmp);
+	       chunk_close(ch1);
+	       chunk_close(ch2);
+	       status_bar_end_progress(bar);
+	       g_free(buf1);
+	       g_free(buf2);
+	       g_free(outbuf);
+	       return NULL;
+	  }
+
+	  g_assert(x1 == x*c1->format.samplebytes &&
+		   x2 == x*c2->format.samplebytes);
+	  
+	  /* Combine the data from buf1,buf2 into outbuf */
+	  sandwich_copy(outbuf,0,format.samplebytes,
+			buf1,c1->format.samplebytes, x);
+	  sandwich_copy(outbuf,c1->format.samplebytes,format.samplebytes,
+			buf2,c2->format.samplebytes, x);
+
+	  /* Write outbuf */
+	  if (tempfile_write(tmp,outbuf,x*format.samplebytes)
+	      || status_bar_progress(bar,x)) {
+	       tempfile_abort(tmp);
+	       chunk_close(ch1);
+	       chunk_close(ch2);
+	       status_bar_end_progress(bar);
+	       g_free(buf1);
+	       g_free(buf2);
+	       g_free(outbuf);
+	       return NULL;
+	  }
+     }    
+
+     /* Finish processing */
+     chunk_close(ch1);
+     chunk_close(ch2);
+     m = tempfile_finished(tmp);
+     status_bar_end_progress(bar);
+     g_free(buf1);
+     g_free(buf2);
+     g_free(outbuf);
+     if (!m) return NULL;
+
+     /* Warn if clipping occured */
+     clipwarn(clipcount,FALSE);
+
+     return m;
+#undef BUFLEN
+}
+
+Chunk *chunk_sandwich(Chunk *c1, Chunk *c2, 
+		      off_t c1_align_point, off_t c2_align_point,
+		      off_t *align_point_out, int dither_mode, StatusBar *bar)
+{
+     Chunk *before, *mainpart_c1, *mainpart_c2, *mainpart_sw, *after;
+     Chunk *c,*d,*c1_remap,*c2_remap;
+     int *map1,*map2,outchans,i;
+     int mp_c1_maxlen,mp_c2_maxlen,mp_c1_offset,mp_c2_offset,mp_len;
+     off_t offset;
+
+     offset = c2_align_point-c1_align_point;     
+     outchans = c1->format.channels + c2->format.channels;
+
+     map1 = g_malloc(outchans * sizeof(map1[0]));
+     map2 = g_malloc(outchans * sizeof(map2[0]));
+     for (i=0; i<c1->format.channels; i++) { map1[i]=i; map2[i]=-1; }
+     for (; i<outchans; i++) { map1[i]=-1; map2[i]=i-(c1->format.channels); }
+
+     c1_remap = chunk_ds_remap(c1,outchans,map1);
+     c2_remap = chunk_ds_remap(c2,outchans,map2);
+
+     /* g_free(map1); g_free(map2); Done already by chunk_ds_remap */
+
+     if (offset == 0) {
+	  before = NULL;
+	  mp_c1_maxlen = c1->length;
+	  mp_c1_offset = 0;
+	  mp_c2_maxlen = c2->length;
+	  mp_c2_offset = 0;
+	  *align_point_out = c1_align_point;
+     } else if (offset > 0) {
+	  before = chunk_get_part(c2_remap, 0, offset);
+	  mp_c1_maxlen = c1->length;
+	  mp_c1_offset = 0;
+	  mp_c2_maxlen = c2->length - offset;
+	  mp_c2_offset = offset;
+	  *align_point_out = c2_align_point;
+     } else {
+	  before = chunk_get_part(c1_remap, 0, -offset);
+	  mp_c1_maxlen = c1->length+offset;
+	  mp_c1_offset = -offset;
+	  mp_c2_maxlen = c2->length;
+	  mp_c2_offset = 0;
+	  *align_point_out = c1_align_point;
+     }
+
+     mp_len = MIN(mp_c1_maxlen, mp_c2_maxlen);
+     if (mp_len > 0) {
+	  mainpart_c1 = chunk_get_part(c1, mp_c1_offset, mp_len);
+	  mainpart_c2 = chunk_get_part(c2, mp_c2_offset, mp_len);
+     } else 
+	  mainpart_c1 = mainpart_c2 = NULL;
+
+     if (mp_len < mp_c1_maxlen) {	  
+	  after = chunk_get_part(c1_remap, mp_c1_offset+mp_len, 
+				 mp_c1_maxlen-mp_len);
+     } else if (mp_len < mp_c2_maxlen) {
+	  after = chunk_get_part(c2_remap, mp_c2_offset+mp_len,
+				 mp_c2_maxlen-mp_len);
+     } else {
+	  after = NULL;
+     }
+
+     /* Floating refs: c1_remap,c2_remap,before,after,mainpart_c1,mainpart_c2 */
+     gtk_object_sink(GTK_OBJECT(c1_remap));
+     gtk_object_sink(GTK_OBJECT(c2_remap));
+
+     if (mp_len > 0) {
+	  mainpart_sw = chunk_sandwich_main(mainpart_c1, mainpart_c2, 
+					    dither_mode, bar);
+	  gtk_object_sink(GTK_OBJECT(mainpart_c1));
+	  gtk_object_sink(GTK_OBJECT(mainpart_c2));
+	  if (mainpart_sw == NULL) {
+	       if (before != NULL) gtk_object_sink(GTK_OBJECT(before));
+	       if (after != NULL) gtk_object_sink(GTK_OBJECT(after));
+	       return NULL;
+	  }
+     } else 
+	  mainpart_sw = NULL;
+     
+     /* Floating refs: before,after,mainpart_sw */
+
+     c = before;
+     if (mainpart_sw != NULL) {
+	  if (c != NULL) {
+	       d = chunk_append(c,mainpart_sw);
+	       gtk_object_sink(GTK_OBJECT(c));
+	       gtk_object_sink(GTK_OBJECT(mainpart_sw));
+	       c = d;
+	  } else
+	       c = mainpart_sw;	  
+     }
+     if (after != NULL) {
+	  if (c != NULL) {
+	       d = chunk_append(c,after);
+	       gtk_object_sink(GTK_OBJECT(c));
+	       gtk_object_sink(GTK_OBJECT(after));
+	       c = d;
+	  } else
+	       c = after;
+     }
+     return c;
+}
+
 
 static struct {
      sample_t *buf;

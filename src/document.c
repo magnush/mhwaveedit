@@ -792,7 +792,7 @@ void document_set_mark(Document *d, gchar *label, off_t position)
 		     document_signals[STATE_CHANGED_SIGNAL]);
 }
 
-off_t document_get_mark(Document *d, gchar *label)
+off_t document_get_mark(Document *d, const gchar *label)
 {
      int i;
      for (i=0; i<d->marks.length; i++) {

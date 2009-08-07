@@ -364,6 +364,21 @@ Chunk *chunk_remap_channels(Chunk *chunk, int channels_out, gboolean *map,
 
 Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar);
 
+/* Creates a new Chunk with a channel count of the sum of c1 and c2:s channel
+ * counts, having the data from Chunk c1 in the first channels, and
+ * the data from Chunk c2 in the following channels.
+ *
+ * The data is aligned in time, so that the sample in c1 at
+ * c1_align_point coincides with the sample in c2 at
+ * c2_align_point. The point in the resulting chunk where this sample
+ * exists is stored in *align_point_out. 
+ */
+
+Chunk *chunk_sandwich(Chunk *c1, Chunk *c2, 
+		      off_t c1_align_point, off_t c2_align_point,
+		      off_t *align_point_out, 
+		      int dither_mode, StatusBar *bar);
+
 
 off_t chunk_zero_crossing_any_forward(
   Chunk *c, StatusBar *bar, off_t cursorpos);

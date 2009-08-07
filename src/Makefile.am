@@ -13,7 +13,7 @@ mhwaveedit_SOURCES = chunk.c int_box.c sound.c speeddialog.c              \
 		     tempfile.c listobject.c documentlist.c combo.c       \
 		     rateconv.c dataformat.c rateest.c document.c         \
 		     session.c mapchannelsdialog.c mainloop.c             \
-		     recordformatcombo.c
+		     recordformatcombo.c sandwichdialog.c
 
 INCLUDES = @GTK_CFLAGS@ @SDL_CFLAGS@ @SNDFILE_CFLAGS@ @JACK_CFLAGS@ \
 	   @ESOUND_CFLAGS@ @LIBSAMPLERATE_CFLAGS@ @ARTSC_CFLAGS@    \

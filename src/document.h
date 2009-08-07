@@ -230,7 +230,7 @@ void document_set_mark(Document *d, gchar *label, off_t position);
  * if it doesn't exist.
  */
 
-off_t document_get_mark(Document *d, gchar *label);
+off_t document_get_mark(Document *d, const gchar *label);
 #define DOCUMENT_BAD_MARK ((off_t)-1)
 
 
