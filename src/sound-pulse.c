@@ -740,7 +740,10 @@ static guint pulse_output_play(gchar *buffer, guint bufsize)
 
 static void pulse_output_clear_buffers(void)
 {
-     pulse_data.clear_flag = TRUE;
+     /* pulse_data.clear_flag = TRUE; */
+     pa_operation *p;
+     p = pa_stream_flush(pulse_data.stream, NULL, NULL);
+     pa_operation_unref(p);
 }
 
 static gboolean pulse_output_stop(gboolean must_flush)
