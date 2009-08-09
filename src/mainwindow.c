@@ -1487,6 +1487,11 @@ static void effects_combinechannels(GtkMenuItem *menuitem, gpointer user_data)
      mainwindow_show_effect_dialog(MAINWINDOW(user_data),"combine");
 }
 
+static void effects_sandwich(GtkMenuItem *menuitem, gpointer user_data)
+{
+     mainwindow_show_effect_dialog(MAINWINDOW(user_data),"sandwich");
+}
+
 static void view_timescale(GtkCheckMenuItem *checkmenuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW ( user_data );
@@ -1889,6 +1894,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/Effects/Add channe_l"),NULL,effects_splitchannel,0,NULL    },
 	  { N_("/Effects/Ma_p channels..."),NULL,effects_mapchannels,0,NULL },
 	  {N_("/Effects/_Combine channels..."),NULL,effects_combinechannels,0,NULL},
+	  { N_("/Effects/Add channels from other file..."),NULL,effects_sandwich,0,NULL},
 	  { N_("/Effects/sep3"),  NULL,         NULL,           0, "<Separator>" },
 	  { N_("/Effects/_Speed adjustment..."),NULL,effects_speed, 0, NULL      },
 	  { N_("/Effects/Pipe through program..."),NULL,effects_pipe,0,NULL      },

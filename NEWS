@@ -2,6 +2,8 @@ New features in version 1.4.16:
 
   * PulseAudio driver added
   * Alsa driver performance improvements
+  * New function to add channels from another file 
+    (for merging mono files into stereo etc)
   * The "map channels" effect is now instant. 
   * Added option to play mono files as stereo  
   * Minor user interface improvements
