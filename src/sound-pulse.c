@@ -392,7 +392,8 @@ static struct {
      gboolean clear_flag;
      gboolean flush_state; /* 0 = no flush requested yet, 1 = waiting, 2 = done */
      gboolean recursing_mainloop;
-
+     gpointer ready_constsource;
+     GVoidFunc ready_func;
 } pulse_data = { 0 };
 
 static void pulse_context_state_cb(pa_context *c, void *userdata)
@@ -569,7 +570,9 @@ static void pulse_overflow_func(pa_stream *p, void *userdata)
 }
 
 static gint pulse_select_format_main(Dataformat *format, gboolean record,
-				     gboolean silent, GVoidFunc ready_func)
+				     gboolean silent, 
+				     pa_stream_request_cb_t ready_func, 
+				     gpointer rf_userdata)
 {
      pa_sample_spec ss;
      gchar *c;
@@ -590,14 +593,13 @@ static gint pulse_select_format_main(Dataformat *format, gboolean record,
 				  NULL);
      
      if (record) {
-	  pa_stream_set_read_callback(pulse_data.stream,
-				      (pa_stream_request_cb_t)ready_func,NULL);
+	  pa_stream_set_read_callback(pulse_data.stream,ready_func,rf_userdata);
 	  pulse_data.overflow_count = pulse_data.overflow_report_count = 0;
 	  pa_stream_set_overflow_callback(pulse_data.stream,
 					  pulse_overflow_func,NULL);
      } else
-	  pa_stream_set_write_callback(pulse_data.stream,
-				       (pa_stream_request_cb_t)ready_func,NULL);
+	  pa_stream_set_write_callback(pulse_data.stream,ready_func,
+				       rf_userdata);
 
      if (record)
 	  i = pa_stream_connect_record(pulse_data.stream,NULL,NULL,0);
@@ -628,16 +630,43 @@ static gint pulse_select_format_main(Dataformat *format, gboolean record,
      return 0;     
 }
 
+static int ready_constsource_cb(gpointer csource, gpointer user_data)
+{
+     g_assert(pulse_data.stream != NULL);
+     mainloop_constant_source_enable(csource, FALSE);
+     pulse_data.ready_func();
+     return 0;
+}
+
+static void pulse_ready_func(pa_stream *p, size_t bytes, void *userdata)
+{
+     mainloop_constant_source_enable(pulse_data.ready_constsource, TRUE);
+}
+
+static void ready_constsource_setup(void)
+{
+     if (pulse_data.ready_constsource == NULL)
+	  pulse_data.ready_constsource = 
+	       mainloop_constant_source_add(ready_constsource_cb,NULL,FALSE);
+     mainloop_constant_source_enable(pulse_data.ready_constsource, FALSE);
+}
+
 static gint pulse_output_select_format(Dataformat *format, gboolean silent,
 				       GVoidFunc ready_func)
 {
-     return pulse_select_format_main(format,FALSE,silent,ready_func);
+     ready_constsource_setup();
+     pulse_data.ready_func = ready_func;
+     return pulse_select_format_main(format,FALSE,silent,
+				     pulse_ready_func,NULL);
 }
 
 static gint pulse_input_select_format(Dataformat *format, gboolean silent,
 				      GVoidFunc ready_func)
 {
-     return pulse_select_format_main(format,TRUE,silent,ready_func);     
+     ready_constsource_setup();
+     pulse_data.ready_func = ready_func;
+     return pulse_select_format_main(format,TRUE,silent,
+				     pulse_ready_func,NULL);
 }
 
 static gboolean pulse_output_want_data(void)
@@ -659,6 +688,7 @@ static void pulse_flush_success_cb(pa_stream *s, int success, void *userdata)
      }
      /* puts("pulse_flush_success_cb"); */
      pulse_data.flush_state = 2;
+     mainloop_constant_source_enable(pulse_data.ready_constsource,TRUE);
 }
 
 static void pulse_flush_start(void)
@@ -687,12 +717,15 @@ static gboolean pulse_flush_in_progress(void)
 static guint pulse_output_play(gchar *buffer, guint bufsize)
 {
      int i;
+     size_t s;
      if (pulse_data.stream == NULL) return 0;
      if (buffer == NULL) {
 	  g_assert(bufsize == 0);
 	  pulse_flush_start();
 	  return pulse_flush_done()?0:1;
      }
+     s = pa_stream_writable_size(pulse_data.stream);
+     if (bufsize > s) bufsize = s;
      i = pa_stream_write(pulse_data.stream, buffer, bufsize, NULL, 0, 
 			 pulse_data.clear_flag?
 			 PA_SEEK_ABSOLUTE:PA_SEEK_RELATIVE);
@@ -700,6 +733,8 @@ static guint pulse_output_play(gchar *buffer, guint bufsize)
      pulse_data.clear_flag = FALSE;
      if (pulse_data.flush_state == 2)
 	  pulse_data.flush_state = 0;
+     if (bufsize < s) 
+	  mainloop_constant_source_enable(pulse_data.ready_constsource,TRUE);
      return bufsize;
 }
 
@@ -711,6 +746,7 @@ static void pulse_output_clear_buffers(void)
 static gboolean pulse_output_stop(gboolean must_flush)
 {
      /* puts("pulse_output_stop"); */
+     mainloop_constant_source_enable(pulse_data.ready_constsource,FALSE);
      if (pulse_data.stream != NULL) {
 	  if (must_flush || pulse_flush_in_progress()) {
 
@@ -735,11 +771,7 @@ static gboolean pulse_output_stop(gboolean must_flush)
 
 static gboolean pulse_needs_polling(void)
 {     
-     if (pulse_data.record_flag)
-	  return !pulse_data.recursing_mainloop && pulse_data.record_data!=NULL;
-     else
-	  return !pulse_data.recursing_mainloop && 
-	       !pulse_flush_in_progress() && pulse_output_want_data();
+     return FALSE;
 }
 
 struct pulse_scb_data {
@@ -918,12 +950,15 @@ static void pulse_input_store(Ringbuf *buf)
 	  g_assert(pulse_data.record_pos == pulse_data.record_bytes);
 	  pa_stream_drop(pulse_data.stream);
 	  pulse_data.record_data = NULL;
+     } else {
+	  mainloop_constant_source_enable(pulse_data.ready_constsource,TRUE);
      }
 
 }
 
 static void pulse_input_stop(void)
 {
+     mainloop_constant_source_enable(pulse_data.ready_constsource,FALSE);
      if (pulse_data.stream == NULL) return;
 
      g_assert(pulse_data.record_flag);
