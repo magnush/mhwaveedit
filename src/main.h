@@ -44,6 +44,7 @@
 #define gtk_container_get_children gtk_container_children
 #define gtk_bin_get_child(bin) ((bin)->child)
 #define gtk_widget_set_size_request gtk_widget_set_usize
+#define gtk_entry_set_width_chars(e,w) gtk_widget_set_usize(GTK_WIDGET(e),w*10,-1)
 #else
 #define GTK_WINDOW_DIALOG GTK_WINDOW_TOPLEVEL
 #define gtk_object_class_add_signals(x,y,z)
