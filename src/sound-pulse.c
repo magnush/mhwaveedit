@@ -749,7 +749,9 @@ static void pulse_output_clear_buffers(void)
 static gboolean pulse_output_stop(gboolean must_flush)
 {
      /* puts("pulse_output_stop"); */
-     mainloop_constant_source_enable(pulse_data.ready_constsource,FALSE);
+     if (pulse_data.ready_constsource != NULL)
+	  mainloop_constant_source_enable(pulse_data.ready_constsource,FALSE);
+
      if (pulse_data.stream != NULL) {
 	  if (must_flush || pulse_flush_in_progress()) {
 
@@ -961,7 +963,9 @@ static void pulse_input_store(Ringbuf *buf)
 
 static void pulse_input_stop(void)
 {
-     mainloop_constant_source_enable(pulse_data.ready_constsource,FALSE);
+     if (pulse_data.ready_constsource != NULL)
+	  mainloop_constant_source_enable(pulse_data.ready_constsource,FALSE);
+
      if (pulse_data.stream == NULL) return;
 
      g_assert(pulse_data.record_flag);
