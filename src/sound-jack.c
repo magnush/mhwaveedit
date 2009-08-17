@@ -488,12 +488,15 @@ static void mhjack_quit(void)
 static gint mhjack_output_select_format(Dataformat *format, gboolean silent,
 					GVoidFunc ready_func)
 {
+     /* Make sure we're connected before we check the format. This is
+      * to make sure that the error message is displayed. Note that
+      * mhjack_connect call is cheap when we're already connected */
+     mhjack_connect(silent);
+     if (!mhjack.is_activated) return silent ? -1 : +1;
+
      if (format->type != DATAFORMAT_FLOAT ||
 	 format->samplesize != sizeof(float))
 	  return -1;
-
-     mhjack_connect(silent);
-     if (!mhjack.is_activated) return silent ? -1 : +1;
 
      if (format->samplerate != jack_get_sample_rate(mhjack.myself)) return -1;
 
