@@ -364,10 +364,13 @@ void sound_quit(void)
 }
 
 static void sound_output_ready_func(void);
+static gboolean sound_select_in_progress = FALSE;
 
 gboolean sound_poll(void)
 {
      int i=0;
+
+     if (sound_select_in_progress) return -1;
 
      if (drivers[current_driver].driver_needs_polling!=NULL &&
 	 !drivers[current_driver].driver_needs_polling() )
@@ -422,13 +425,19 @@ gint output_select_format(Dataformat *format, gboolean silent,
 	  else delayed_output_stop();
      }     
 
+     /* We "guard" using this flag to protect against recursive calls
+      * to sound_poll (happens if driver calls user_error, for example) */
+     sound_select_in_progress = TRUE;
+
      /* Set up the variables before calling output_select_format, in
       * case the ready callback is called immediately */
      memcpy(&playing_format,format,sizeof(Dataformat));
      output_ready_func = ready_func;
-
      i = drivers[current_driver].output_select_format(format,silent,
 						      sound_output_ready_func);
+     if (i != 0) output_ready_func = NULL;
+
+     sound_select_in_progress = FALSE;
      return i;
 }
 
