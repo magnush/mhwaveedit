@@ -578,7 +578,7 @@ static void register_drivers(void)
      
 #endif
 
-     if (sox_dialog_first_effect() != NULL) {
+     if (sox_dialog_first_effect() != NULL || program_exists("sox")) {
 
 	  d2.is_realtime = FALSE;
 	  d2.prefers_float = FALSE;
