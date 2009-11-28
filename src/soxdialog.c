@@ -47,6 +47,7 @@ static gchar *supported_effects[] = {
 };
 
 static gboolean sox_support_map[22] = { FALSE };
+static gboolean v13_mode = FALSE;
 
 static gchar *supported_effect_names[] = { 
      N_("Echo"),
@@ -75,6 +76,7 @@ static gchar *supported_effect_names[] = {
 };
 
 static gchar *samplesize_switch[] = { NULL,"-b","-w",NULL,"-l" };
+static gchar *samplesize_switch_v13[] = { NULL,"-1","-2","-3","-4" };
 
 #define COMPAND_LINES 6
 
@@ -82,9 +84,14 @@ void sox_dialog_format_string(gchar *buf, guint bufsize, Dataformat *fmt)
 {
      g_assert(fmt->type == DATAFORMAT_PCM && fmt->samplesize != 3);
 
-     g_snprintf(buf,bufsize,"-t raw -r %d %s %s -c %d",fmt->samplerate,
-		fmt->sign?"-s":"-u",samplesize_switch[fmt->samplesize],
-		fmt->channels);
+     if (v13_mode)
+	  g_snprintf(buf,bufsize,"-t raw -r %d %s %s -c %d",fmt->samplerate,
+		     fmt->sign?"-s":"-u",samplesize_switch_v13[fmt->samplesize],
+		     fmt->channels);
+     else
+	  g_snprintf(buf,bufsize,"-t raw -r %d %s %s -c %d",fmt->samplerate,
+		     fmt->sign?"-s":"-u",samplesize_switch[fmt->samplesize],
+		     fmt->channels);
 }
 
 static Chunk *sox_dialog_apply_proc_main(Chunk *chunk, StatusBar *bar, 
@@ -697,8 +704,9 @@ gboolean sox_dialog_register_main(gchar source_tag)
      int fd[2],fd2[2],i,j,lb_pos=0;
      pid_t p;
      gchar *c,*d,**s,**sn;
-     gchar linebuf[4096];
+     gchar linebuf[8192];
      gboolean *map;
+     int sox_maj=0;
 
      if (!program_exists("sox")) return FALSE;
 
@@ -754,6 +762,18 @@ gboolean sox_dialog_register_main(gchar source_tag)
 	  linebuf[lb_pos] = 0;
 	  if (lb_pos == 0) return TRUE;
 	  /* printf("Sox output: %s\n",linebuf); */
+	  /* Look at first line to see if it's SoX version >= 13 */
+	  c = strchr(linebuf,'\n');
+	  *c = 0;
+	  d = strstr(linebuf,"SoX Version ");
+	  if (d != NULL) sox_maj = strtol(d+12,NULL,10);
+	  d = strstr(linebuf,"SoX v");
+	  if (d != NULL && sox_maj==0) sox_maj = strtol(d+5,NULL,10);
+	  if (sox_maj > 12) {
+	       /* printf("SoX version %d detected\n",sox_maj); */
+	       v13_mode = TRUE;
+	  }
+	  *c = '\n';
 	  /* Scan for available effects */
 	  c = strstr(linebuf,"effect: ");
 	  if (c == NULL) {
@@ -761,9 +781,13 @@ gboolean sox_dialog_register_main(gchar source_tag)
 	       if (c == NULL) {
 		    c = strstr(linebuf,"SUPPORTED EFFECTS: ");
 	            if (c == NULL) {
-		          console_message(_("Unable to detect supported "
-			         	      "SoX effects"));
-		    return TRUE;
+			 c = strstr(linebuf,"\nEFFECTS: ");
+			 if (c == NULL) {
+			      console_message(_("Unable to detect supported "
+						"SoX effects"));
+			      return TRUE;
+			 }
+			 c += 10;
 	       	    } else
 		    c += 19;
 		} else
