@@ -54,3 +54,4 @@ src/vu_meter.c
 src/document.c
 src/session.c
 src/mapchannelsdialog.c
+src/sandwichdialog.c
