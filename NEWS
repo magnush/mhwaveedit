@@ -1,3 +1,10 @@
+New features in version 1.4.17:
+
+  * Support for SoX version 14.
+  * New translation: Italian (it)
+  * Updated translation: sv
+  * Bug fixes
+
 New features in version 1.4.16:
 
   * PulseAudio driver added
