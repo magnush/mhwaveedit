@@ -71,6 +71,10 @@
 
 /* #define SHOW_DEBUG_MENU */
 
+#if GTK_MAJOR_VERSION < 2
+#define INV_SPEED
+#endif
+
 ListObject *mainwindow_objects = NULL;
 
 static gboolean window_geometry_stack_inited = FALSE;
@@ -463,11 +467,14 @@ static void do_play(Mainwindow *w, off_t start, off_t end, gboolean loop)
      if (varispeed_reset_flag && 
 	 !(player_playing() && playing_document == w->doc))
 	  speed_reset = TRUE;
-     if (speed_reset) {
-	  document_stop(w->doc,FALSE);
-	  gtk_adjustment_set_value(w->speed_adj,-1.0);
-     }
-     document_play(w->doc, start, end, loop, -w->speed_adj->value);
+     if (speed_reset) document_stop(w->doc,FALSE);
+#ifdef INV_SPEED
+     if (speed_reset) gtk_adjustment_set_value(w->speed_adj,-1.0);
+     document_play(w->doc, start, end, loop, -w->speed_adj->value);     
+#else
+     if (speed_reset) gtk_adjustment_set_value(w->speed_adj,1.0);
+     document_play(w->doc, start, end, loop, w->speed_adj->value);
+#endif
      update_desc(w);
 }
 
@@ -2359,9 +2366,14 @@ static void mainwindow_speed_changed(GtkAdjustment *adjustment,
 {
      Mainwindow *w = MAINWINDOW(user_data);
      gchar c[32];
+     gfloat f;
+     f = adjustment->value;
+#ifdef INV_SPEED     
+     f = -f;
+#endif
      if (w->doc == playing_document)
-	  player_set_speed(-adjustment->value);
-     g_snprintf(c,sizeof(c),"%d%%",(int)(-adjustment->value*100.0+0.5));
+	  player_set_speed(f);
+     g_snprintf(c,sizeof(c),"%d%%",(int)(f*100.0+0.5));
      gtk_label_set_text(w->speed_label,c);
 }
 
@@ -2416,8 +2428,13 @@ static void mainwindow_init(Mainwindow *obj)
      gtk_signal_connect( GTK_OBJECT(obj->vertical_zoom_adj), "value-changed",
 			 GTK_SIGNAL_FUNC(mainwindow_vertical_zoom_changed),
 			 obj);
+#ifdef INV_SPEED
      obj->speed_adj =
 	  GTK_ADJUSTMENT(gtk_adjustment_new(-1.0,-2.0,0.20,0.01,0.1,0.2));
+#else
+     obj->speed_adj =
+	  GTK_ADJUSTMENT(gtk_adjustment_new(1.0,0.0,2.2,0.01,0.1,0.2));
+#endif
      gtk_signal_connect(GTK_OBJECT(obj->speed_adj),"value-changed",
 			GTK_SIGNAL_FUNC(mainwindow_speed_changed),
 			obj);
@@ -2505,6 +2522,9 @@ static void mainwindow_init(Mainwindow *obj)
      gtk_scale_set_digits(GTK_SCALE(c),2);
      gtk_scale_set_draw_value (GTK_SCALE(c), FALSE);
      /* gtk_range_set_update_policy(GTK_RANGE(c),GTK_UPDATE_DELAYED); */
+#ifndef INV_SPEED
+     gtk_range_set_inverted(GTK_RANGE(c),TRUE);
+#endif
      gtk_table_attach(GTK_TABLE(b),c,3,4,1,2,GTK_FILL,GTK_EXPAND|GTK_FILL,0,0);
      obj->need_chunk_items = g_list_append(obj->need_chunk_items,c);
      obj->speed_slider = c;
