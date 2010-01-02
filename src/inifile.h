@@ -43,7 +43,7 @@
 #define INI_SETTING_SPEED "showSpeed"
 #define INI_SETTING_SPEED_DEFAULT inifile_get_gboolean("varispeed",TRUE)
 #define INI_SETTING_MIXER "mixerUtility"
-#define INI_SETTING_MIXER_DEFAULT "xmixer"
+#define INI_SETTING_MIXER_DEFAULT DEFAULT_MIXERAPP
 #define INI_SETTING_VIEW_QUALITY "viewQuality"
 #define INI_SETTING_VIEW_QUALITY_DEFAULT 128
 #define INI_SETTING_VIEW_QUALITY_HIGH "viewQualityHigh"

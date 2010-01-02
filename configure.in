@@ -76,6 +76,14 @@ AC_ARG_WITH(default-ladspa-path,
 DEFAULT_LADSPA_PATH=$withval)
 AC_DEFINE_UNQUOTED(DEFAULT_LADSPA_PATH,"${DEFAULT_LADSPA_PATH}",[Default path for LADSPA plugins])
 
+DEFAULT_MIXERAPP=xmixer
+AC_ARG_WITH(default-mixerapp,
+[  --with-default-mixerapp=appname
+                           Default command for "launch mixer" button
+                           (default: "xmixer")],
+DEFAULT_MIXERAPP=$withval)
+AC_DEFINE_UNQUOTED(DEFAULT_MIXERAPP,"${DEFAULT_MIXERAPP}",[Default mixer application])
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_GCC_TRADITIONAL
@@ -513,6 +521,8 @@ if test "x$MHW_DOUBLE" = "xyes"; then
 else
 	echo "normal precision"
 fi
+
+echo    "  Default mixer app:      $DEFAULT_MIXERAPP"
 
 echo
 if test "x$USES_GTK2$MHW_HAVE_ARTSC" = "xnoyes"; then
