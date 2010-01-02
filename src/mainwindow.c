@@ -2417,7 +2417,7 @@ static void mainwindow_init(Mainwindow *obj)
 			 GTK_SIGNAL_FUNC(mainwindow_vertical_zoom_changed),
 			 obj);
      obj->speed_adj =
-	  GTK_ADJUSTMENT(gtk_adjustment_new(-1.0,-5.0,0.19,0.01,0.1,0.2));
+	  GTK_ADJUSTMENT(gtk_adjustment_new(-1.0,-2.0,0.20,0.01,0.1,0.2));
      gtk_signal_connect(GTK_OBJECT(obj->speed_adj),"value-changed",
 			GTK_SIGNAL_FUNC(mainwindow_speed_changed),
 			obj);
