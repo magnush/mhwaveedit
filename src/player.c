@@ -39,8 +39,11 @@ gboolean varispeed_smooth_flag = FALSE;
 /* Info about currently playing sound. */
 static ChunkHandle *ch=NULL; /* NULL == stopped */
 static rateconv *varispeed_conv = NULL;
-static gfloat file_speed = 1.0; /* Speed relative to file's sample rate */
-static gfloat true_speed = 1.0; /* Speed relative to playback sample rate */
+/* Note speed is inverse relative to output sample rate */
+/* file_speed is the speed which the user "hears" */
+static gfloat file_speed = 1.0; /* Speed relative to file's sample rate (1.0=Normal speed)*/
+static gfloat true_speed = 1.0; /* Speed relative to playback sample rate (file_speed* file_rate/output_rate) */
+static gfloat file_output_ratio = 1.0; /* file_rate/output_rate */
 static off_t loopstart, loopend, curpos;
 static off_t realpos_offset;
 static gboolean loop, small_loop;
@@ -201,6 +204,7 @@ static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos,
      player_stop();
      if (spos == epos) return TRUE;
      true_speed = file_speed;
+     file_output_ratio = 1.0;
      memcpy(&fmt,&(chk->format),sizeof(Dataformat));
      i = output_select_format(&(chk->format),silent,(GVoidFunc)player_work);
      if (i != 0) {	  
@@ -225,17 +229,17 @@ static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos,
 
 	       } else if (chk->format.samplerate != fmt.samplerate) {
 
+		    file_output_ratio = ((float)chk->format.samplerate) / ((float)fmt.samplerate);
 		    if (!inifile_get_gboolean("varispeed",TRUE)) {
 			 /* If we don't have varispeed, still play the sound
 			  * with the wrong speed */
 
 			 true_speed = 1.0;/* the only possible w/o varispeed */
-			 file_speed = ((float)fmt.samplerate) / 
-			      ((float)chk->format.samplerate);
+			 file_speed = 1.0 / file_output_ratio;
 		    } else {
-			 true_speed = file_speed * 
-			      ((float)chk->format.samplerate) /
-			      ((float)fmt.samplerate);
+			 /* Resample to get correct playback speed */
+			 file_speed = 1.0;
+			 true_speed = 1.0 * file_output_ratio;
 		    }
 		    /* Select the format with different sample rate */
 		    i = output_select_format(&fmt,FALSE,(GVoidFunc)player_work);
@@ -484,7 +488,7 @@ void player_set_speed(gfloat s)
      rp = get_realpos_main(pl);
 
      os = true_speed;
-     true_speed *= (s / file_speed);
+     true_speed = s * file_output_ratio;
      file_speed = s;
 
      if (varispeed_smooth_flag) {

@@ -689,8 +689,8 @@ rateconv *rateconv_new(gboolean realtime, const char *driver_id,
      l = realtime ? realtime_drivers : drivers;
      for (; l!=NULL; l=l->next) {
 	  d = (struct driver_data *)l->data;
-	  if (!strcmp(d->id,driver_id)) {
-	       conv = d->new_func(d,realtime,format,outrate,dither_mode);
+	  if (!strcmp(d->id,driver_id)) {	       
+	       conv = d->new_func(d,realtime,format,(outrate>0)?outrate:44100,dither_mode);
 	       if (conv == NULL) return NULL;
 	       conv->driver = d;
 	       conv->inrate = format->samplerate;
@@ -734,6 +734,11 @@ gint rateconv_read(rateconv *conv, void *data, guint bufsize)
      struct convdata_base *convdata = (struct convdata_base *)conv;
      gint i;
 
+     if (convdata->outrate == 0) {
+	  memset(data,0,bufsize);
+	  return bufsize;
+     }
+	  
      i = convdata->driver->read_func(conv,data,bufsize);
 
      if (i > 0) {
@@ -785,7 +790,8 @@ void rateconv_set_outrate(rateconv *conv, guint32 outrate)
 {
      struct convdata_base *convdata = (struct convdata_base *)conv;
      g_assert(convdata->driver->is_realtime);
-     convdata->driver->set_outrate_func(conv,outrate);
+     if (outrate > 0) 
+	  convdata->driver->set_outrate_func(conv,outrate);
      convdata->outrate = outrate;
      if (convdata->passthru_buffer != NULL && 
 	 convdata->outrate == convdata->inrate) {
