@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-05-04 22:18+0200\n"
-"PO-Revision-Date: 2009-10-31 21:43+0100\n"
+"PO-Revision-Date: 2009-11-01 22:02+0100\n"
 "Last-Translator: Andrea Primiani <floyte@gmail.com>\n"
 "Language-Team: Italian <IT@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1146,6 +1146,40 @@ msgid ""
 "way).\n"
 "\n"
 msgstr ""
+"\n"
+"La selezione si può fare trascinando il mouse sopra alla vista campioni. Si "
+"può ascoltare quanto selezionato cliccando sul bottone 'suona "
+"selezione' (quello con il triangolo giallo) o scegliendo 'Suona selezione' "
+"dal menu 'Suona'.\n"
+"\n"
+"Il cursore può essere usato per perfezionare la selezione. I bottoni 'Inizio "
+"selezione al cursore' e 'Fine selezione al cursore' muovono l'inizio o la "
+"fine della selezione alla posizione corrente del cursore. I termini della "
+"selezione possono anche essere spostati col mouse.\n"
+"\n"
+"Le funzioni 'Taglia' e 'Copia' funzionano come in tutti gli altri "
+"programmi.\n"
+"\n"
+"La funzione 'Incolla' inserisce il contenuto della memoria di transito alla "
+"posizione del cursore. La funzione 'Incolla sopra' funziona allo stesso "
+"modo, ma copre il suono esistente dopo la posizione del cursore.\n"
+"\n"
+"La funzione 'Incolla mix' mescola i dati esistenti con quelli incollati.\n"
+"\n"
+"La funzione 'Incolla come nuovo' apre una nuova finestra e ci mette il "
+"contenuto della memoria di transito.\n"
+"\n"
+"La funzione 'Ritaglia' cancella tutte le parti del file che non sono "
+"selezionate.\n"
+"\n"
+"La funzione 'Silenzia selezione' sostituisce la selezione con silenzio. Per "
+"evitare clic, la parte silenziosa si raccorda con l'onda esistente agli "
+"estremi.\n"
+"\n"
+"Tutte le funzioni di modifica lavorano in modo non distruttivo, cioè le "
+"modifiche apportate non vengono applicate fin quando non si salva il file "
+"(anche gli effetti funzionano allo stesso modo).\n"
+"\n"
 
 #: src/help.c:99
 #, no-c-format
@@ -1356,6 +1390,35 @@ msgid ""
 "By default, mhWaveEdit uses floating-point temporary files for storing "
 "processed results to avoid rounding until the file is saved.\n"
 msgstr ""
+"\n"
+"Alcune note sulla qualità del suono.\n"
+"\n"
+"La regola generale quando si modifica un suono è di non manipolare i dati "
+"più del necessario, e tenere una copia dell'originale se si lavora su dati "
+"importanti.\n"
+"\n"
+"Taglia, copia e incolla spostano i dati senza modificarli, dunque non "
+"degradano la qualità del suono. A causa delle differenze di volume, si "
+"possono provocare degli 'scalini' ad inizio e fine delle parti inserite, che "
+"possono causare un piccolo clic sonoro.\n"
+"\n"
+"La funzione Incolla mix non diminuisce la qualità, a meno che i picchi "
+"diventino troppo alti e vengano tosati. In questo caso apparirà un "
+"avvertimento.\n"
+"\n"
+"I dati sonori sono normalmente memorizzati come numeri interi. Le operazioni "
+"di normalizzazione, regolazione volume, diminuzione della dimensione del "
+"campione o filtraggio, quindi, producono risultati che devono essere "
+"arrotondati. Usando campioni a 24 o 32 bit questo non è un problema, ma ad 8 "
+"o 16 bit l'arrotondamento può diminuire la qualità del suono.\n"
+"\n"
+"La diminuzione di qualità dovuta all'arrotondamento può essere mascherata "
+"aggiungendo una piccola quantità di rumore prima che esso avvenga. Questo è "
+"chiamato 'dithering'. mhWaveEdit può applicare il semplice dithering "
+"triangolare ed è di solito attivo.\n"
+"\n"
+"Di solito mhWaveEdit usa file temporanei con virgola per memorizzare i "
+"risultati, evitando di arrotondare fino al momento di salvare il file.\n"
 
 #: src/help.c:177
 #, no-c-format
@@ -1379,6 +1442,24 @@ msgid ""
 "these files can not be saved back after editing, you have to save the file "
 "into a supported format.\n"
 msgstr ""
+"\n"
+"Anche se mhWaveEdit è stato creato per modificare file WAV, è anche "
+"possibile caricare e salvare in alcuni altri formati. mhWaveEdit legge i "
+"file WAV e RAW, ma se viene compilato con libsndfile può lavorare anche "
+"con qualche altro formato.\n"
+"\n"
+"Per salvare un file in altro formato, usare \"Salva come...\" e scegliere un "
+"formato nella finestra di dialogo.\n"
+"\n"
+"mhWaveEdit ha un supporto di base per i formati MP3 e OGG. Questo funziona "
+"se LAME è installato (per gli MP3) e OggDec/OggEnc (per i file OGG). Se ci "
+"sono questi programmi, l'apertura di questi file funziona come quella "
+"degli altri.\n"
+"\n"
+"Se viene installato Mplayer, mhWaveEdit apre tutti i formati supportati da "
+"esso, ad esempio la colonna sonora di un file video. Siccome Mplayer è solo "
+"un lettore, però, questi file non possono essere risalvati dopo la modifica. "
+"Si possono solo salvare in uno dei formati di mhWaveEdit.\n"
 
 #: src/help.c:187
 #, no-c-format
@@ -1406,6 +1487,29 @@ msgid ""
 "open them. After opening a crashed session, the files can be saved or thrown "
 "away.\n"
 msgstr ""
+"\n"
+"mhWaveEdit crea una cartella, ~/.mhwaveedit dove salva le informazioni di "
+"configurazione.\n"
+"\n"
+"Il file di configurazione si chiama config. Può essere modificato a mano, ma "
+"il modo più facile è di usare 'Preferenze' dal menu 'Modifica'.\n"
+"\n"
+"Ogni processo mhWaveEdit crea un file sessione nella cartella .mhwaveedit, "
+"chiamato mhwaveedit-session-<pid>-<session>-<stato>, dove <session> è il "
+"numero ID della sessione e <stato> è un carattere che mostra lo stato della "
+"sessione ('r' per le sessioni in corso).\n"
+"\n"
+"Anche i file temporanei sono salvati nella cartella ~/.mhwaveedit. La "
+"cartella da usare può essere indicata nel pannello delle preferenze. Per "
+"ottenere le migliori prestazioni, ci deve essere una sola cartella "
+"temporanea per ogni filesystem locale. I file temporanei hanno nomi nel "
+"formato \"mhwaveedit-temp-<pid>-nnnn-<session>\". NON aprire o cancellare "
+"questi file se hanno lo stesso numero PID di una finestra mhWaveEdit "
+"aperta.\n"
+"\n"
+"mhWaveEdit controlla ad ogni avvio se ci sono file temporanei rimasti, e "
+"propone all'utente di aprirli. Dopo aver aperto una sessione bloccata, i "
+"file possono essere salvati o buttati.\n"
 
 #: src/help.c:199
 #, no-c-format
@@ -1484,8 +1588,8 @@ msgstr ""
 "Ctrl+J        Porta cursore a fine file\n"
 "Ctrl+K        Porta cursore a inizio selezione\n"
 "Ctrl+L        Porta cursore a fine selezione\n"
-"Y,U           Sposta cursore al più vicino zero di tutti i canali\n"
-"I,O           Sposta cursore al più vicino zero di qualsiasi canale\n"
+"Y,U           Sposta cursore al più vicino zero (tutti i canali)\n"
+"I,O           Sposta cursore al più vicino zero (qualsiasi canale)\n"
 "\n"
 "Ctrl+Q        Inizia selezione al cursore\n"
 "Ctrl+W        Termina selezione al cursore\n"
@@ -1529,6 +1633,25 @@ msgid ""
 "6. Quit gdb with the command: quit\n"
 "7. Now you should have a back trace in the file backtrace.txt\n"
 msgstr ""
+"\n"
+"Se si trova un difetto o un problema non menzionato nel file BUGS, "
+"segnalarlo nel bug tracker (Vedi info contatti) o spedire un messaggio che "
+"descriva il difetto a: magnus.hjorth@home.se\n"
+"\n"
+"In caso di blocco, non spedire nessun core dump. Sono enormi e del tutto "
+"inutili per me. Creare invece un backtrace: i backtrace dicono esattamente "
+"dove il programma si è bloccato.\n"
+"\n"
+"Come creare un backtrace:\n"
+"1) abilitare i core dumps: ulimit -c unlimited\n"
+"2) avviare il programma: mhwaveedit\n"
+"3) far bloccare il programma. Dovrebbe apparire un file chiamato core oppure "
+"core.1234 nella cartella corrente.\n"
+"4) eseguire gdb con il programma e il file core:\n"
+"gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
+"5) dopo che gdb si è avviato, usare il comando: bt\n"
+"6) uscire da gdb con il comando quit\n"
+"7) ora il backtrace è stato scritto nel file backtrace.txt\n"
 
 #: src/help.c:264
 #, no-c-format
@@ -1635,7 +1758,7 @@ msgstr ""
 #: src/inifile.c:84 src/inifile.c:91
 #, c-format
 msgid "%s: Expected '=': %s\n"
-msgstr ""
+msgstr "%s: Atteso '=': %s\n"
 
 #: src/inifile.c:97
 #, c-format
@@ -1650,12 +1773,12 @@ msgstr "Il valore di %s deve essere un numero tra %ld e %ld"
 #: src/ladspacore.c:94
 #, c-format
 msgid "Effect %s contains invalid port %s"
-msgstr ""
+msgstr "L'effetto %s usa la porta non valida %s"
 
 #: src/ladspacore.c:140
 #, c-format
 msgid "Ladspa: Error scanning %s"
-msgstr ""
+msgstr "LADSPA: errore di scansione %s"
 
 #: src/ladspacore.c:409
 #, c-format
@@ -1713,7 +1836,7 @@ msgstr " audio OUT"
 
 #: src/ladspadialog.c:348
 msgid "Keep data in unmapped output channels"
-msgstr ""
+msgstr "Mantenere i dati nei canali OUT non mappati"
 
 #: src/main.c:134
 #, c-format
@@ -1722,15 +1845,15 @@ msgstr "Sintassi: %s [files]\n"
 
 #: src/main.c:137
 msgid "Testing conversion functions:"
-msgstr ""
+msgstr "Prova delle funzioni di conversione:"
 
 #: src/main.c:139
 msgid "Testing conversion functions finished."
-msgstr ""
+msgstr "Prova delle funzioni terminata."
 
 #: src/main.c:158
 msgid "Expected driver name after --driver option"
-msgstr ""
+msgstr "E' necessario un nome di driver dopo l'opzione --driver"
 
 #: src/main.c:164
 #, c-format
@@ -1756,11 +1879,11 @@ msgstr "Sfondo"
 
 #: src/main.c:334
 msgid "L Waveform"
-msgstr "Forma d'ondaSx"
+msgstr "Forma d'onda Sx"
 
 #: src/main.c:335
 msgid "R Waveform"
-msgstr "Forma d'ondaDx"
+msgstr "Forma d'onda Dx"
 
 #: src/main.c:336
 msgid "Cursor"
@@ -1802,7 +1925,7 @@ msgstr "Destro"
 #: src/main.c:518
 #, c-format
 msgid "Ch%d"
-msgstr "Cn%d"
+msgstr "Can.%d"
 
 #: src/main.c:534
 msgid "Stereo"
@@ -2198,11 +2321,11 @@ msgstr "/Suona/Tutto"
 
 #: src/mainwindow.c:1870
 msgid "/Play/Play se_lection"
-msgstr "/Suona/Selezione"
+msgstr "/Suona/Se_lezione"
 
 #: src/mainwindow.c:1871
 msgid "/Play/_Stop"
-msgstr "/Suona/Stop"
+msgstr "/Suona/_Stop"
 
 #: src/mainwindow.c:1872
 msgid "/Play/sep1"
@@ -2242,15 +2365,15 @@ msgstr "/Effetti/sep1"
 
 #: src/mainwindow.c:1881
 msgid "/Effects/Convert sample_rate..."
-msgstr "/Effetti/Converti tasso campione..."
+msgstr "/Effetti/Conve_rti tasso campione..."
 
 #: src/mainwindow.c:1882
 msgid "/Effects/Convert sample _format..."
-msgstr "/Effetti/Converti formato campione..."
+msgstr "/Effetti/Converti _formato campione..."
 
 #: src/mainwindow.c:1884
 msgid "/Effects/B_yte swap"
-msgstr "/Effetti/Scambia byte"
+msgstr "/Effetti/Scambia b_yte"
 
 #: src/mainwindow.c:1885
 msgid "/Effects/sep2"
@@ -2258,7 +2381,7 @@ msgstr "/Effetti/sep2"
 
 #: src/mainwindow.c:1886
 msgid "/Effects/_Mix to mono"
-msgstr "/Effetti/Mix a mono"
+msgstr "/Effetti/_Mix a mono"
 
 #: src/mainwindow.c:1887
 msgid "/Effects/Add channe_l"
@@ -2266,7 +2389,7 @@ msgstr "/Effetti/Aggiungi canale"
 
 #: src/mainwindow.c:1888
 msgid "/Effects/Ma_p channels..."
-msgstr "/Effetti/Mappa canali..."
+msgstr "/Effetti/Ma_ppa canali..."
 
 #: src/mainwindow.c:1889
 msgid "/Effects/_Combine channels..."
@@ -2526,7 +2649,7 @@ msgstr ""
 
 #: src/rawdialog.c:90
 msgid "Header bytes: "
-msgstr "Byte intestazione"
+msgstr "Byte intestazione: "
 
 #: src/recorddialog.c:45
 msgid "Choose a sample format"
@@ -2664,7 +2787,7 @@ msgstr "Formato campione: "
 
 #: src/recorddialog.c:730
 msgid "Time limit: "
-msgstr "Limite tempo:"
+msgstr "Limite tempo: "
 
 #: src/recorddialog.c:738
 msgid "Disable"
@@ -2696,7 +2819,7 @@ msgstr "Avvia registrazione"
 
 #: src/recorddialog.c:791
 msgid "Reset max peaks"
-msgstr ""
+msgstr "Azzera contatore picchi"
 
 #: src/sampleratedialog.c:87
 msgid ""
@@ -2730,11 +2853,11 @@ msgstr "Preferenze ALSA"
 
 #: src/sound-alsalib.c:65
 msgid "Playback device: "
-msgstr ""
+msgstr "Dispositivo di escuzione: "
 
 #: src/sound-alsalib.c:69
 msgid "Recording device: "
-msgstr ""
+msgstr "Dispositivo di registrazione: "
 
 #: src/sound-alsalib.c:101
 #, c-format
@@ -2783,7 +2906,8 @@ msgstr ""
 msgid ""
 "Invalid driver name: %s\n"
 "Using '%s' driver instead"
-msgstr ""
+msgstr "Nome driver non valido: %s\n"
+"Uso il driver '%s' al posto."
 
 #: src/sound-esound.c:59
 #, c-format
@@ -2844,15 +2968,15 @@ msgstr ""
 
 #: src/sound-jack.c:113
 msgid "Invalid number of input ports."
-msgstr ""
+msgstr "Numero non valido di porte IN."
 
 #: src/sound-jack.c:117
 msgid "Invalid number of output ports."
-msgstr ""
+msgstr "Numero non valido di porte OUT."
 
 #: src/sound-jack.c:126
 msgid "The client name change won't take effect until you restart the program."
-msgstr ""
+msgstr "Il nome cliente non cambierà fino al riavvio del programma."
 
 #: src/sound-jack.c:183
 msgid " Input ports "
@@ -3044,7 +3168,7 @@ msgstr "Inverti"
 
 #: src/soxdialog.c:64
 msgid "Earwax"
-msgstr "Cera nelle orecchie"
+msgstr "Earwax"
 
 #: src/soxdialog.c:65
 msgid "Vibro"
@@ -3302,7 +3426,7 @@ msgstr "Profondità: "
 
 #: src/soxdialog.c:637
 msgid "This effect has no options."
-msgstr ""
+msgstr "Questo effetto non ha opzioni."
 
 #: src/soxdialog.c:710
 msgid "Error creating pipe"
@@ -3315,11 +3439,11 @@ msgstr ""
 #: src/soxdialog.c:732
 #, c-format
 msgid "Error running 'sox -h': %s\n"
-msgstr ""
+msgstr "Errore di esecuzione 'sox -h': %s\n"
 
 #: src/soxdialog.c:734
 msgid "Should not reach this point"
-msgstr ""
+msgstr "Questo punto non dovrebbe essere raggiunto"
 
 #: src/soxdialog.c:749
 msgid "Error reading sox output"
@@ -3422,7 +3546,8 @@ msgstr "senza nome #%d"
 msgid ""
 "Loading and then saving files with 'lossy' formats (like mp3 and ogg) leads "
 "to a quality loss, also for the unmodified parts of the file."
-msgstr ""
+msgstr "Aprire e ri-salvare file in formati 'lossy' (come MP3 e OGG) porta"
+"ad una perdita di qualità, anche nella parte di file che non viene modificata."
 
 #: src/session.c:84
 msgid "Error opening session directory"
@@ -3435,7 +3560,7 @@ msgstr "%s: tipo file errato"
 
 #: src/session.c:236
 msgid "Could not create session file"
-msgstr ""
+msgstr "Impossibile creare file di sessione"
 
 #: src/session.c:278
 msgid ""
@@ -3444,6 +3569,10 @@ msgid ""
 "\n"
 "(This notice is only shown once)"
 msgstr ""
+"I file appartenenti alla sessione bloccata sono stati recuperati."
+"Se i file non vengono salvati verranno rimossi definitivamente.\n"
+"\n"
+"(questo avviso appare una sola volta)"
 
 #: src/session.c:328
 msgid "Suspended"
