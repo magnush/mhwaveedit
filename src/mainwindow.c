@@ -2392,6 +2392,40 @@ static void mainwindow_view_double_click(ChunkView *view,
      document_set_selection(wnd->doc,o[1],o[2]);
 }
 
+static gint hzoom_scale_press(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
+{
+     Mainwindow *mw = MAINWINDOW(user_data);
+     if (event->button == 3) {
+	  gtk_adjustment_set_value(mw->zoom_adj, 0);
+	  return TRUE;
+     }
+     return FALSE;
+}
+
+static gint vzoom_scale_press(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
+{
+     Mainwindow *mw = MAINWINDOW(user_data);
+     if (event->button == 3) {
+	  gtk_adjustment_set_value(mw->vertical_zoom_adj, 0);
+	  return TRUE;
+     }
+     return FALSE;
+}
+
+static gint speed_scale_press(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
+{
+     Mainwindow *mw = MAINWINDOW(user_data);
+     if (event->button == 3) {
+#ifdef INV_SPEED
+	  gtk_adjustment_set_value(mw->speed_adj, -1.0);
+#else
+	  gtk_adjustment_set_value(mw->speed_adj, 1.0);
+#endif
+	  return TRUE;
+     }
+     return FALSE;
+}
+
 static void mainwindow_init(Mainwindow *obj)
 {
      GtkWidget *a,*b,*c;
@@ -2505,6 +2539,13 @@ static void mainwindow_init(Mainwindow *obj)
 		      GTK_EXPAND|GTK_FILL|GTK_SHRINK,0,0);
 
      c = gtk_vscale_new ( obj->zoom_adj );
+     /* GTK1 doesn't work well with using the right mouse button press event. 
+      * As a work around, we use the release event instead */
+#if GTK_MAJOR_VERSION > 1
+     gtk_signal_connect(GTK_OBJECT(c),"button_press_event",GTK_SIGNAL_FUNC(hzoom_scale_press),obj);
+#else
+     gtk_signal_connect(GTK_OBJECT(c),"button_release_event",GTK_SIGNAL_FUNC(hzoom_scale_press),obj);
+#endif
      gtk_scale_set_digits(GTK_SCALE(c),3);
      gtk_scale_set_draw_value (GTK_SCALE(c), FALSE);
      gtk_table_attach(GTK_TABLE(b),c,2,3,1,2,GTK_FILL,GTK_EXPAND|GTK_FILL,0,0);
@@ -2512,6 +2553,11 @@ static void mainwindow_init(Mainwindow *obj)
      obj->hzoom_slider = c;
 
      c = gtk_vscale_new ( obj->vertical_zoom_adj );
+#if GTK_MAJOR_VERSION > 1
+     gtk_signal_connect(GTK_OBJECT(c),"button_press_event",GTK_SIGNAL_FUNC(vzoom_scale_press),obj);
+#else
+     gtk_signal_connect(GTK_OBJECT(c),"button_release_event",GTK_SIGNAL_FUNC(vzoom_scale_press),obj);
+#endif
      gtk_scale_set_digits(GTK_SCALE(c),3);
      gtk_scale_set_draw_value (GTK_SCALE(c), FALSE);
      gtk_table_attach(GTK_TABLE(b),c,1,2,1,2,GTK_FILL,GTK_EXPAND|GTK_FILL,0,0);
@@ -2519,6 +2565,11 @@ static void mainwindow_init(Mainwindow *obj)
      obj->vzoom_slider = c;
 
      c = gtk_vscale_new ( obj->speed_adj );
+#if GTK_MAJOR_VERSION > 1
+     gtk_signal_connect(GTK_OBJECT(c),"button_press_event",GTK_SIGNAL_FUNC(speed_scale_press),obj);
+#else
+     gtk_signal_connect(GTK_OBJECT(c),"button_release_event",GTK_SIGNAL_FUNC(speed_scale_press),obj);
+#endif
      gtk_scale_set_digits(GTK_SCALE(c),2);
      gtk_scale_set_draw_value (GTK_SCALE(c), FALSE);
      /* gtk_range_set_update_policy(GTK_RANGE(c),GTK_UPDATE_DELAYED); */
