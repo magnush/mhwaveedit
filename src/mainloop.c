@@ -385,7 +385,7 @@ static void mainloop_main(gpointer *sources, int n_sources)
      static guint const_highprio_idle_count=0;
      struct constant_source *csrc;
      gint i,j;
-     GList *l;
+     GList *l,*ln;
 
      if (dead_iosources != NULL) {
 	  for (l=dead_iosources; l!=NULL; l=l->next) {
@@ -396,7 +396,8 @@ static void mainloop_main(gpointer *sources, int n_sources)
      }
 
      i = -1;
-     for (l=constsources; l!=NULL; l=l->next) {
+     for (l=constsources; l!=NULL; l=ln) {
+	  ln = l->next;
 	  csrc = (struct constant_source *)l->data;
 	  if (csrc->enabled && !csrc->lowprio && 
 	      in_sources(csrc,sources,n_sources)) {
@@ -420,7 +421,8 @@ static void mainloop_main(gpointer *sources, int n_sources)
 	  return;
      }
 
-     for (l=constsources; l!=NULL; l=l->next) {
+     for (l=constsources; l!=NULL; l=ln) {
+	  ln = l->next;
 	  csrc = (struct constant_source *)l->data;
 	  if (csrc->enabled && csrc->lowprio && 
 	      in_sources(csrc,sources,n_sources)) {
