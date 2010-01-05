@@ -16,21 +16,6 @@ AM_GNU_GETTEXT([external])
 
 PKG_PROG_PKG_CONFIG
 
-dnl Setup AM_CFLAGS 
-
-OPTIM=yes
-AC_ARG_ENABLE(optimization,
-[  --disable-optimization  Don't compile with any optimization options.],
-if test "x$enableval" = "xno"; then
-	OPTIM=no
-fi
-)
-
-AM_CFLAGS="-Wall -g"
-if test "x$OPTIM" != "xno"; then AM_CFLAGS="$AM_CFLAGS -O2"; fi
-
-AC_SUBST(AM_CFLAGS)
-
 dnl Various options
 
 AC_ARG_WITH(double-samples,
