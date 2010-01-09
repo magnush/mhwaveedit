@@ -731,6 +731,8 @@ guint datasource_read_array_fp(Datasource *source, off_t sampleno,
      gchar *p;
      guint x,s;
      
+     g_assert(source->opencount > 0);
+
      g_assert(sampleno <= source->length);
      if (samples > source->length-sampleno) 
 	  samples = (guint)(source->length-sampleno);
