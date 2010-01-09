@@ -37,10 +37,10 @@
 
 static struct {
      gint state;
-     guint input_samplesize;
-     guint input_samplerate;
-     guint32 input_bytes_available;
      int lasttime;
+     Dataformat format;
+     gint input_bytes_available;
+     gint output_bytes_buffered;
 } dummy_data = {1};
 
 
@@ -62,6 +62,8 @@ static gint dummy_output_select_format(Dataformat *format, gboolean silent,
 {
      g_assert(dummy_data.state == 2);
      dummy_data.state = 3;
+     memcpy(&dummy_data.format,format,sizeof(Dataformat));
+     dummy_data.output_bytes_buffered = 0;
      return 0;
 }
 
@@ -72,16 +74,43 @@ static gboolean dummy_output_stop(gboolean must_flush)
      return TRUE;
 }
 
+static void dummy_output_checkbuf(void)
+{
+     time_t t;
+     t = time(0);
+     if (t != dummy_data.lasttime) {
+	  dummy_data.output_bytes_buffered -= 
+	       dummy_data.format.samplerate*dummy_data.format.samplebytes;	  
+	  if (dummy_data.output_bytes_buffered < 0 || t > dummy_data.lasttime+1)
+	       dummy_data.output_bytes_buffered = 0;
+	  dummy_data.lasttime = t;
+     }
+}
+
 static gboolean dummy_output_want_data(void)
 {
      g_assert(dummy_data.state == 3);
-     return FALSE;
+     dummy_output_checkbuf();
+     return (dummy_data.output_bytes_buffered < 
+	     2 * dummy_data.format.samplerate * dummy_data.format.samplebytes);
 }
 
 static guint dummy_output_play(gchar *buffer, guint bufsize)
 {
+     gint i;
      g_assert(dummy_data.state == 3);
-     return bufsize;
+     dummy_output_checkbuf();
+     i = 2*dummy_data.format.samplerate*dummy_data.format.samplebytes;
+     i -= dummy_data.output_bytes_buffered;
+     if (i > bufsize) i = bufsize;
+     dummy_data.output_bytes_buffered += i;
+     return i;
+}
+
+static void dummy_output_clear_buffers(void)
+{
+     g_assert(dummy_data.state == 3);
+     dummy_data.output_bytes_buffered = 0;
 }
 
 static GList *dummy_input_supported_formats(gboolean *complete)
@@ -95,9 +124,9 @@ static gint dummy_input_select_format(Dataformat *format, gboolean silent,
 				      GVoidFunc ready_func)
 {
      g_assert(dummy_data.state == 2);
-     if (format->samplerate < 100000 && format->samplerate > 0) return -1;
-     dummy_data.input_samplesize = format->samplesize * format->channels;
-     dummy_data.input_samplerate = format->samplerate;
+     /* if (format->samplerate < 100000 && format->samplerate > 0) return -1; */
+     memcpy(&dummy_data.format,format,sizeof(Dataformat));
+     dummy_data.input_bytes_available = 0;
      dummy_data.state = 4;
      return 0;
 }
@@ -111,16 +140,15 @@ static void dummy_input_stop(void)
 static void dummy_input_store(Ringbuf *buffer)
 {
      guint32 i;
+     time_t t;
      g_assert(dummy_data.state == 4);
-     if (time(0) != dummy_data.lasttime) {
+     t = time(0);
+     if (t != dummy_data.lasttime) {
 	  dummy_data.input_bytes_available += 
-	       dummy_data.input_samplerate * dummy_data.input_samplesize;
-	  dummy_data.lasttime = time(0);
+	       dummy_data.format.samplerate * dummy_data.format.samplebytes;
+	  dummy_data.lasttime = t;
      }
      i = MIN(ringbuf_freespace(buffer),dummy_data.input_bytes_available);
      dummy_data.input_bytes_available -= ringbuf_enqueue_zeroes(buffer,i);
 }
 
-static void dummy_output_clear_buffers(void)
-{
-}
