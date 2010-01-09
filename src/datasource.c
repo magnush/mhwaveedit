@@ -644,7 +644,8 @@ static guint datasource_read_array_main(Datasource *source,
 							buffer);
 	  else
 	       return datasource_sndfile_read_array_fp
-		    (source,sampleno,size/source->format.samplebytes,buffer);
+		    (source,sampleno,size/source->format.samplebytes,buffer) * 
+		    source->format.samplebytes;
      case DATASOURCE_REF:
 	  return datasource_read_array_main(source->data.clone,sampleno,size,
 					    buffer,dither_mode,clipcount);
