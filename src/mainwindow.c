@@ -1086,7 +1086,7 @@ static void dump_format(Dataformat *df)
 {
      printf("%d Channels @ %dHz ",df->channels,df->samplerate);
      if (df->type == DATAFORMAT_FLOAT) {
-	  if (df->samplesize > sizeof(float)) {
+	  if (df->samplesize <= sizeof(float)) {
 	       puts("float");
 	  } else
 	       puts("double");
