@@ -361,6 +361,7 @@ static gboolean datasource_open_sndfile(Datasource *ds)
      int fd;
      fd = xopen(ds->data.sndfile.filename,O_RDONLY,0);
      if (fd == -1) return TRUE;
+     i.format = 0;
      s = sf_open_fd(fd,SFM_READ,&i,TRUE);
      if (s == NULL) {	  
 	  d = g_strdup_printf(_("Couldn't open %s"),
