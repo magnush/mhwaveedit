@@ -302,22 +302,13 @@ void sound_driver_show_preferences(gchar *id)
 	       drivers[i].preferences();
 }
 
-void sound_init(void)
+static void sound_init_driver(char *name)
 {
-     gchar *c,*d,**p;
+     gchar *d,**p;
      int i;
-     sound_lock_driver = inifile_get_gboolean("soundLock",FALSE);
-     output_byteswap_flag = inifile_get_gboolean("outputByteswap",FALSE);
-     output_stereo_flag = inifile_get_gboolean("outputStereo",FALSE);
-     if (driver_option != NULL)
-	  c = driver_option;
-     else {
-	  c = inifile_get(INI_SETTING_SOUNDDRIVER, DEFAULT_DRIVER);
-	  if (!strcmp(c,"default")) c = drivers[0].id;
-     }
 
      /* Handle auto-detection */
-     if (!strcmp(c,"auto")) {
+     if (!strcmp(name,"auto")) {
 	  for (p=autodetect_order; ; p++) {
 	       for (i=0; i<ARRAY_LENGTH(drivers) && 
 			 strcmp(drivers[i].id,*p); i++) { }
@@ -332,19 +323,35 @@ void sound_init(void)
 
      /* Set current_driver */
      for (i=0; i<ARRAY_LENGTH(drivers); i++) {
-	  if (!strcmp(drivers[i].id,c)) {
+	  if (!strcmp(drivers[i].id,name)) {
 	       current_driver = i;
 	       break;
 	  }
      }
      if (i == ARRAY_LENGTH(drivers)) {
 	  d = g_strdup_printf(_("Invalid driver name: %s\nUsing '%s' driver "
-				"instead"),c,drivers[0].name);
+				"instead"),name,drivers[0].name);
 	  user_error(d);
 	  current_driver = 0;
      }
 
      drivers[current_driver].init(FALSE);
+}
+
+void sound_init(void)
+{
+     gchar *c;
+     sound_lock_driver = inifile_get_gboolean("soundLock",FALSE);
+     output_byteswap_flag = inifile_get_gboolean("outputByteswap",FALSE);
+     output_stereo_flag = inifile_get_gboolean("outputStereo",FALSE);
+     if (driver_option != NULL)
+	  c = driver_option;
+     else {
+	  c = inifile_get(INI_SETTING_SOUNDDRIVER, DEFAULT_DRIVER);
+	  if (!strcmp(c,"default")) c = drivers[0].id;
+     }
+
+     sound_init_driver(c);
 
      /* Add sound_poll to main loop */
      mainloop_constant_source_add((constsource_cb)sound_poll,NULL,FALSE);
