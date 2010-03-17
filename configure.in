@@ -166,6 +166,10 @@ AC_CHECK_LIB(portaudio,Pa_Initialize,MHW_HAVE_PORTAUDIO=yes,MHW_HAVE_PORTAUDIO=n
 fi
 
 if test "x$MHW_HAVE_PORTAUDIO" = "xyes"; then
+AC_CHECK_TYPE(PaTimestamp,,MHW_HAVE_PORTAUDIO=no,[[#include <portaudio.h>]])
+fi
+
+if test "x$MHW_HAVE_PORTAUDIO" = "xyes"; then
 	AC_DEFINE(HAVE_PORTAUDIO,[],[Enable PortAudio sound driver])
 	PORTAUDIO_LIBS="-lportaudio $PORTAUDIO_LIBS"
 fi
