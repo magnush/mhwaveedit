@@ -193,7 +193,7 @@ static void pulse_api_io_set_destroy(pa_io_event *e,
      es->destroy_cb = cb;
 }
 
-static void pa_api_time_new_cb(gpointer timesource, GTimeVal *current_time,
+static gint pa_api_time_new_cb(gpointer timesource, GTimeVal *current_time,
 			       gpointer user_data)
 {
      struct pulse_api_time_event *es = 
@@ -203,6 +203,7 @@ static void pa_api_time_new_cb(gpointer timesource, GTimeVal *current_time,
      tv.tv_sec = current_time->tv_sec;
      tv.tv_usec = current_time->tv_usec;
      es->cb(pulse_api(),(pa_time_event *)es,&tv,es->userdata);
+     return 0;
 }
 
 static pa_time_event *pulse_api_time_new(pa_mainloop_api *a, 

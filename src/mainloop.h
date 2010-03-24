@@ -28,7 +28,9 @@ void mainloop_recurse_on(gpointer *sources, int n_sources);
 
 typedef void (*iosource_cb)(gpointer iosource, int fd, gushort revents, 
 			    gpointer user_data);
-typedef void (*timesource_cb)(gpointer timesource, GTimeVal *current_time, 
+/* Return value: 0=disable, >0=call again in X millis from current_time
+ * <0=call again in X millis from nominal time */ 
+typedef gint (*timesource_cb)(gpointer timesource, GTimeVal *current_time, 
 			      gpointer user_data);
 /* Return value:
  * <0: May sleep

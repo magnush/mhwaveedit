@@ -40,9 +40,8 @@ static guint chunk_view_signals[LAST_SIGNAL] = { 0 };
 static void chunk_view_update_image(ChunkView *view, guint xs, guint xe);
 static void chunk_view_redraw_samples(ChunkView *cv, off_t start, off_t end);
 static gint calc_x(ChunkView *cv, off_t sample, off_t width);
-static void chunk_view_autoscroll(gpointer timesource, 
-				  GTimeVal *current_time,
-				  gpointer user_data);
+static int chunk_view_autoscroll(gpointer timesource, GTimeVal *current_time,
+				 gpointer user_data);
 
 static void chunk_view_changed(Document *d, gpointer user_data)
 {
@@ -664,8 +663,8 @@ static gint chunk_view_motion_notify(GtkWidget *widget, GdkEventMotion *event)
 
 #define FLOAT(x) ((gfloat)(x))
 
-static void chunk_view_autoscroll(gpointer timesource, GTimeVal *current_time,
-				  gpointer user_data)
+static int chunk_view_autoscroll(gpointer timesource, GTimeVal *current_time,
+				 gpointer user_data)
 {
      GTimeVal diff,new_time;
      gfloat smp;
@@ -728,6 +727,7 @@ static void chunk_view_autoscroll(gpointer timesource, GTimeVal *current_time,
 	       mainloop_time_source_restart(autoscroll_source,&new_time);
      }
 
+     return 0;
 }
 
 static gint chunk_view_button_release(GtkWidget *widget, GdkEventButton *event)

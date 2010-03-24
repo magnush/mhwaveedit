@@ -82,7 +82,19 @@ static int timesource_scan_main(GTimeVal *current_time, gboolean do_dispatch,
 
 	       if (do_dispatch) {
 		    src->enabled = FALSE;
-		    src->cb(src, current_time, src->user_data);
+		    j = src->cb(src, current_time, src->user_data);
+		    if (j != 0) {
+			 if (j > 0)
+			      memcpy(&src->call_time,current_time,sizeof(GTimeVal));
+			 else
+			      j = -j;
+			 src->call_time.tv_usec += j*1000;
+			 while (src->call_time.tv_usec >= 1000000) {
+			      src->call_time.tv_sec += 1;
+			      src->call_time.tv_usec -= 1000000;
+			 }
+			 src->enabled = TRUE;
+		    }
 	       }
 
 	  } else {
