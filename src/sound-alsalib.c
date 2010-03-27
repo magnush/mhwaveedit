@@ -29,6 +29,8 @@ static struct {
      gpointer *iosources;
      int n_iosources;
      gboolean use_mainloop;
+     int rw_call_count;
+     GVoidFunc ready_func;
 } alsa_data = { 0 };
 
 static gboolean alsa_init(gboolean silent)
@@ -180,6 +182,24 @@ static snd_pcm_format_t alsa_get_format(Dataformat *format)
      return SND_PCM_FORMAT_UNKNOWN;
 }
 
+static void alsa_enable_iosources(gboolean enable)
+{
+     int i;
+     if (alsa_data.iosources != NULL)
+	  for (i=0; i<alsa_data.n_iosources; i++)
+	       mainloop_io_source_enable(alsa_data.iosources[i],enable);     
+}
+
+static void alsa_io_ready_func(gpointer iosource, int fd, gushort revents,
+			       gpointer user_data)
+{
+     int i;
+     i = alsa_data.rw_call_count;
+     alsa_data.ready_func();
+     if (alsa_data.rw_call_count == i)
+	  alsa_enable_iosources(FALSE);
+}
+    
 static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
 				snd_pcm_t **handp,gboolean playback, 
 				GVoidFunc ready_func)
@@ -239,6 +259,7 @@ static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
      }
 
      memcpy(fmtp,format,sizeof(*fmtp));
+     alsa_data.ready_func = ready_func;
 
      if (alsa_data.use_mainloop) {
 	  fd_count = snd_pcm_poll_descriptors_count(*handp);
@@ -251,7 +272,7 @@ static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
 	       /* printf("adding io source, fd=%d, events=%d\n",fds[i].fd,fds[i].events); */
 	       alsa_data.iosources[i] = 
 		    mainloop_io_source_add(fds[i].fd, fds[i].events, 
-					   (iosource_cb)ready_func, NULL);
+					   alsa_io_ready_func, NULL);
 	       /* mainloop_io_source_enable(alsa_data.iosources[i],FALSE); */
 	  }
 	  g_free(fds);
@@ -384,6 +405,8 @@ static guint alsa_output_play(gchar *buffer, guint bufsize)
 	  break;
      }
      u = r*alsa_data.wfmt.samplebytes;
+     alsa_data.rw_call_count ++;
+     alsa_enable_iosources(TRUE);
      return u;
 }
 
@@ -399,6 +422,7 @@ static void alsa_input_store(Ringbuf *buffer)
      gchar buf[4096];
      snd_pcm_sframes_t x;
      if (alsa_data.draining_done) return;
+     alsa_data.rw_call_count ++;
      while (1) {
 	  x = snd_pcm_readi(alsa_data.rhand,buf,
 			    MIN(sizeof(buf),ringbuf_freespace(buffer))/
@@ -420,6 +444,7 @@ static void alsa_input_store(Ringbuf *buffer)
 	       return;
 	  }
      }
+     alsa_enable_iosources(TRUE);
 }
 
 int alsa_input_overrun_count(void)
