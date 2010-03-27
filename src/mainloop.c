@@ -494,11 +494,15 @@ gpointer mainloop_time_source_add(GTimeVal *tv, timesource_cb cb,
 {
      struct time_source *src;
 
-     src = g_malloc(sizeof(*src));
-     memcpy(&src->call_time,tv,sizeof(src->call_time));
+     src = g_malloc(sizeof(*src));     
      src->cb = cb;
      src->user_data = user_data;
-     src->enabled = TRUE;
+     if (tv != NULL) {
+	  memcpy(&src->call_time,tv,sizeof(src->call_time));
+	  src->enabled = TRUE;
+     } else {
+	  src->enabled = FALSE;
+     }
 
      timesources = g_list_append(timesources, src);
 
