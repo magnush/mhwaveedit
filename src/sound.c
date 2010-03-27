@@ -38,6 +38,7 @@ gboolean output_stereo_flag;
 static GVoidFunc output_ready_func=NULL,input_ready_func=NULL;
 static char zerobuf[1024];
 static int output_play_count;
+static gboolean output_want_data_cached;
 
 #ifdef HAVE_ALSALIB
   #include "sound-alsalib.c"
@@ -406,6 +407,7 @@ gboolean sound_poll(void)
 static void sound_output_ready_func(void)
 {
      guint u;
+     output_want_data_cached = TRUE;
      if (sound_delayed_quit) {
 	  while (output_want_data()) {
 	       u = output_play(zerobuf,
@@ -503,11 +505,15 @@ gboolean output_stop(gboolean must_flush)
 
 gboolean output_want_data(void)
 {
-     return drivers[current_driver].output_want_data();
+     if (!output_want_data_cached) 
+	  output_want_data_cached = drivers[current_driver].output_want_data();
+     return output_want_data_cached;
 }
 
 guint output_play(gchar *buffer, guint bufsize)
 {     
+     if (bufsize > 0)
+	  output_want_data_cached = FALSE;
      if (output_byteswap_flag) {
 	  if (output_byteswap_bufsize < bufsize) {
 	       g_free(output_byteswap_buffer);
