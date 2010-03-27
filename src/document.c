@@ -40,6 +40,9 @@ static guint document_signals[LAST_SIGNAL] = { 0 };
 
 static GtkObjectClass *parent_class;
 
+static void document_set_cursor_main(Document *d, off_t cursorpos, 
+				     gboolean playslave, gboolean running);
+
 static void clear_marklist(struct MarkList *m)
 {
      int i;
@@ -292,6 +295,16 @@ gboolean document_save(Document *d, gchar *filename, gint type_id,
      return b;
 }
 
+static void cursor_cb(off_t pos, gboolean is_running)
+{     
+     Document *d = playing_document;
+     if (playing_document != NULL) {
+	  if (!is_running) playing_document=NULL; 
+	  document_set_cursor_main(d,pos,TRUE,is_running);
+	  if (!is_running) gtk_object_unref(GTK_OBJECT(d));
+     }     
+}
+
 void document_play(Document *d, off_t start, off_t end, gboolean loop, 
 		   gfloat speed)
 {     
@@ -313,7 +326,7 @@ void document_play(Document *d, off_t start, off_t end, gboolean loop,
      } else {
 
 	  /* General case */
-	  if (player_play(d->chunk,start,end,loop)) return;
+	  if (player_play(d->chunk,start,end,loop,cursor_cb)) return;
 	  if (playing_document != NULL)
 	       gtk_object_unref(GTK_OBJECT(playing_document));
 	  playing_document = d;
@@ -593,7 +606,7 @@ gboolean document_apply_cb(Document *d, document_apply_proc proc,
 
 
 static void document_set_cursor_main(Document *d, off_t cursorpos, 
-				     gboolean running)
+				     gboolean playslave, gboolean running)
 {
      off_t vs,ve,dist;
 
@@ -601,7 +614,7 @@ static void document_set_cursor_main(Document *d, off_t cursorpos,
 
      if (d->cursorpos == cursorpos) return;
 
-     if (!running && playing_document == d && player_playing()) {
+     if (!playslave && playing_document == d && player_playing()) {
 	  player_set_buffer_pos(cursorpos);
 	  return;
      }
@@ -648,7 +661,7 @@ static void document_set_cursor_main(Document *d, off_t cursorpos,
 
 void document_set_cursor(Document *d, off_t cursorpos)
 {
-     document_set_cursor_main(d,cursorpos,FALSE);
+     document_set_cursor_main(d,cursorpos,FALSE,(playing_document == d && player_playing()));
 }
 
 off_t document_nudge_cursor(Document *d, off_t delta)
@@ -860,39 +873,6 @@ void document_redo(Document *d)
      fix_history(d);
      d->history_pos = d->history_pos->next;
      get_state_from_history(d);
-}
-
-
-gboolean document_update_cursors(void)
-{
-     off_t ui=0;
-     off_t s,e;
-     static GTimeVal last_time = { 0,0 };
-     GTimeVal tv,tv2;
-
-     if (playing_document == NULL) return FALSE;
-
-     if (!player_playing()) {
-	  player_get_range(&s,&e);
-	  if (s <= playing_document->chunk->length) 
-	       document_set_cursor_main(playing_document, s, FALSE);
-	  gtk_object_unref(GTK_OBJECT(playing_document));
-	  playing_document = NULL;
-	  return FALSE;
-     }
-
-     /* Make sure we don't do this to often.. more than 20
-      * times/second seems unneccesary waste of CPU.. */
-     g_get_current_time(&tv);
-     timeval_subtract(&tv2,&tv,&last_time);
-     if (tv2.tv_sec == 0 && tv2.tv_usec < 50000) return FALSE;
-     memcpy(&last_time,&tv,sizeof(last_time));
-
-     ui = player_get_real_pos();
-     if (ui != playing_document->cursorpos)
-	  document_set_cursor_main(playing_document, ui, TRUE);
-
-     return TRUE;
 }
 
 void document_set_status_bar(Document *d, StatusBar *bar)

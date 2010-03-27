@@ -30,6 +30,7 @@
 #include "rateest.h"
 #include "rateconv.h"
 #include "gettext.h"
+#include "mainloop.h"
 
 Dataformat player_fallback_format = { DATAFORMAT_PCM, 44100, 2, 0, 0, TRUE, 
 				      IS_BIGENDIAN };
@@ -64,6 +65,9 @@ static gint varispeed_bufsize,varispeed_bufpos;
 static gchar player_buf[4096],small_loop_buf[4096];
 static gint player_bufsize,player_bufpos,small_loop_bufsize;
 
+static player_notify_func notify_func;
+
+static off_t get_realpos_main(off_t frames_played);
 
 static int get_frames(void *buffer, int maxsize)
 {
@@ -129,6 +133,7 @@ static void get_new_data(void)
 gboolean player_work(void)
 {
      guint32 i;
+     off_t o;
      if (!ch || !output_want_data()) return FALSE;
      if (player_bufpos == player_bufsize) {
 	  /* puts("Hey 1"); */
@@ -138,13 +143,21 @@ gboolean player_work(void)
 	       /* puts("Calling output_play(NULL,0)"); */
 	       i = output_play(NULL,0);
 	       /* puts("output_play done"); */
-	       if (i > 0 || rateest_frames_played()<rateest_frames_written()) 
+	       o = rateest_frames_played();
+	       if (i > 0 || o<rateest_frames_written()) {
+		    if (notify_func != NULL)
+			 notify_func(get_realpos_main(o),TRUE);
+		    /* The sound layer will not call us again so we must
+		     * do it ourselves */
+		    mainloop_defer_once((defer_once_cb)player_work, 50, NULL);
 		    return FALSE;
+	       }
 	       /* puts("Calling output_stop"); */
 	       output_stop(TRUE);
 	       chunk_close(ch);
 	       gtk_object_unref(GTK_OBJECT(ch));
 	       ch=NULL;
+	       if (notify_func != NULL) notify_func(loopstart,FALSE);
 	       return FALSE;
 	  }
      }
@@ -153,6 +166,8 @@ gboolean player_work(void)
      i = output_play(player_buf+player_bufpos,player_bufsize-player_bufpos);
      player_bufpos += i;
      rateest_log_data(i/ch->format.samplebytes);
+     if (i>0 && notify_func!=NULL) 
+	  notify_func(player_get_real_pos(),TRUE);
      return (i>0);
 }
 
@@ -284,8 +299,11 @@ static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos,
      return FALSE;
 }
 
-gboolean player_play(Chunk *chk, off_t spos, off_t epos, gboolean lp)
+gboolean player_play(Chunk *chk, off_t spos, off_t epos, gboolean lp, 
+		     player_notify_func nf)
 {
+     player_stop();
+     notify_func = nf;
      return player_play_main(chk,spos,epos,lp,TRUE);
 }
 
@@ -351,7 +369,7 @@ void player_change_range(off_t start, off_t end)
 	  rp = player_get_real_pos();
 	  if (rp > curpos) {
 	       /* Fixme: Should handle error return (although unlikely) */
-	       player_play(ch,rp,end,TRUE);
+	       player_play(ch,rp,end,TRUE,notify_func);
 	       loopstart = start;
 	       return;
 	  }
@@ -452,6 +470,7 @@ void player_stop(void)
      b = output_stop(FALSE);
      realpos_atstop = get_realpos_main(b ? rateest_frames_written() : 
 				       rateest_frames_played());
+     if (notify_func) notify_func(realpos_atstop,FALSE);
      gtk_object_unref(GTK_OBJECT(ch));
      ch = NULL;
 }

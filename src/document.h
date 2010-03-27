@@ -252,6 +252,4 @@ void document_undo(Document *d);
 gboolean document_can_redo(Document *d);
 void document_redo(Document *d);
 
-gboolean document_update_cursors(void);
-
 #endif

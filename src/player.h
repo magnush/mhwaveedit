@@ -45,9 +45,10 @@ extern Dataformat player_fallback_format;
 gboolean player_work(void);
 
 /* Play a certain chunk. Returns TRUE if anything failed.  */
+typedef void (*player_notify_func)(off_t realpos, gboolean is_running);
 
 gboolean player_play(Chunk *chunk, off_t startpos, off_t endpos, 
-		     gboolean loop);
+		     gboolean loop, player_notify_func nf);
 
 /* TRUE if the play thread is currently playing. */
 

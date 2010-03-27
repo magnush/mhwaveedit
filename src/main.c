@@ -75,7 +75,6 @@ static int idle_work(gpointer csource, gpointer user_data)
 	  return 1;
      }     
      if (status_bar_progress_count() > 0) return 1;
-     document_update_cursors();
      if (mainwindow_update_caches()) return 1;
      return -1;
 }
