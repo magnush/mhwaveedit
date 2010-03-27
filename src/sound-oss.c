@@ -43,6 +43,7 @@
 #include "um.h"
 #include "main.h"
 #include "gettext.h"
+#include "mainloop.h"
 
 #define OSS_PCMFILE_PLAYBACK "OSSdevice"
 #define OSS_PCMFILE_RECORD "OSSRecDevice"
@@ -62,7 +63,11 @@ static int oss_format;
 static int oss_samplesize;
 static int oss_samplerate;
 static int oss_channels;
+static int oss_samplebytes_in,oss_samplebytes_out;
 static gboolean oss_noselect = FALSE;
+static gpointer play_source;
+
+static int oss_output_flush(gpointer tsource, GTimeVal *tv, gpointer user_data);
 
 static gboolean oss_init(gboolean silent)
 {
@@ -70,6 +75,7 @@ static gboolean oss_init(gboolean silent)
 	  inifile_get_guint32(INI_SETTING_SOUNDBUFSIZE,
 			      INI_SETTING_SOUNDBUFSIZE_DEFAULT));
      oss_noselect = inifile_get_gboolean(OSS_NOSELECT,OSS_NOSELECT_DEFAULT);
+     play_source = mainloop_time_source_add(NULL, oss_output_flush, NULL);
      /* When autodetecting, this is the last tested driver before the dummy,
       * so we might as well return TRUE */
      return TRUE;
@@ -77,6 +83,7 @@ static gboolean oss_init(gboolean silent)
 
 static void oss_quit(void)
 {
+     mainloop_time_source_free(play_source);
      ringbuf_free(oss_output_buffer);
 }
 
@@ -181,6 +188,9 @@ static gint oss_try_format(Dataformat *format, gboolean input, gboolean silent)
 	  return (i != -1 || silent)?-1:+1;
      }
      /* Everything went well! */
+     oss_samplebytes_in = oss_samplebytes_out = oss_channels * oss_samplesize;     
+     if (oss_samplesize == 3)
+	  oss_samplebytes_out += oss_channels;
      return 0;
 }
 
@@ -222,7 +232,7 @@ static int oss_errdlg_read(int fd, gchar *buffer, size_t size)
      return s;
 }
 
-static void oss_output_flush(void)
+static int oss_output_flush(gpointer ts, GTimeVal *tv, gpointer ud)
 {
      fd_set a;
      struct timeval t = { 0 };
@@ -232,7 +242,7 @@ static void oss_output_flush(void)
      audio_buf_info info;
      /* printf("oss_output_flush: ringbuf_available: %d\n",ringbuf_available(oss_output_buffer)); */
      /* Do we have anything to write at all? */
-     if (ringbuf_available(oss_output_buffer) == 0) return;
+     if (ringbuf_available(oss_output_buffer) == 0) return 0;
      /* Do a select call and see if it's ready for writing */
      if (!oss_noselect) {
 	  FD_ZERO(&a);
@@ -243,7 +253,7 @@ static void oss_output_flush(void)
 	       user_error(c);
 	       return;
 	  }
-	  if (i==0) return;
+	  if (i==0) return 50;
      }
 #ifdef SNDCTL_DSP_GETOSPACE
      /* Now do an ioctl call to check the number of writable bytes */
@@ -254,7 +264,7 @@ static void oss_output_flush(void)
 	   * SNDCTL_DSP_RESET call. */	  
 	  info.fragments = 1024;
 	  info.fragsize = 1*2*3*4;
-     } else if (i == -1) return;
+     } else if (i == -1) return 0;
 #else
      /* Fill in dummy values */
      info.fragments = 1024;
@@ -265,44 +275,64 @@ static void oss_output_flush(void)
      if (u > info.fragsize)
 	  u -= u % info.fragsize;
      u = MIN(u, info.fragments*info.fragsize);
-     if (u == 0) return;
+     if (u == 0) return 50;
      /* Write it out! */
      c = g_malloc(u);
      ringbuf_dequeue(oss_output_buffer, c, u);
      i = oss_errdlg_write(oss_fd, c, u);
      g_free(c);
-     return;
+     return 10;
 }
 
 static gboolean oss_output_want_data(void)
 {
-     oss_output_flush();
-     return (ringbuf_freespace(oss_output_buffer) > 0);
+     /* oss_output_flush(); */
+     return (ringbuf_freespace(oss_output_buffer) >= oss_samplebytes_out);
 }
 
 static guint oss_output_play(gchar *buffer, guint bufsize)
 {
      guint u=0;
+     GTimeVal t;
+     guint bs0 = bufsize;
      /* 24-bit samples need padding */
      if (oss_samplesize == 3) {
-	  while (bufsize >= 3 && ringbuf_available(oss_output_buffer)>=4) {
+	  while (bufsize >= 3 && ringbuf_freespace(oss_output_buffer)>=oss_samplebytes_out) {
+	       for (u=0; u<oss_channels; u++) {
 #if G_BYTE_ORDER == G_LITTLE_ENDIAN
-	       ringbuf_enqueue(oss_output_buffer,"",1);
-	       ringbuf_enqueue(oss_output_buffer,buffer,3);
+		    ringbuf_enqueue(oss_output_buffer,"",1);
+		    ringbuf_enqueue(oss_output_buffer,buffer,3);
 #else
-	       ringbuf_enqueue(oss_output_buffer,buffer,3);
-	       ringbuf_enqueue(oss_output_buffer,"",1);
+		    ringbuf_enqueue(oss_output_buffer,buffer,3);
+		    ringbuf_enqueue(oss_output_buffer,"",1);
 #endif
-	       buffer += 3;
-	       bufsize -= 3;
-	       u += 3;
+		    buffer += 3;
+		    bufsize -= 3;
+		    u += 3;
+	       }
 	  }
      }
      /* Normal operation */
-     else if (bufsize) 
-	  u = ringbuf_enqueue(oss_output_buffer, buffer, bufsize);
-     oss_output_flush();
-     return bufsize ? u : ringbuf_available(oss_output_buffer);
+     else if (bufsize) {
+	  u = ringbuf_freespace(oss_output_buffer);
+	  if (u > bufsize) u = bufsize;
+	  /* Make sure we store whole samples */
+	  u -= u%(oss_samplebytes_out);
+	  if (u>0)
+	       u = ringbuf_enqueue(oss_output_buffer, buffer, u);	  
+	  buffer += u;
+	  bufsize -= u;
+     }
+     if (ringbuf_freespace(oss_output_buffer) < oss_samplebytes_out && 
+	 !mainloop_time_source_enabled(play_source)) {
+	  puts("Starting time source");
+	  g_get_current_time(&t);
+	  mainloop_time_source_restart(play_source,&t);
+     }
+     g_assert(bufsize == 0 || bufsize >= oss_samplebytes_in);
+     printf("oss_output_play, bs0: %d, u: %d\n",bs0,u);
+     /* oss_output_flush(); */
+     return bs0 ? u : ringbuf_available(oss_output_buffer);
 }
 
 static void oss_output_clear_buffers(void)
@@ -319,7 +349,7 @@ static gboolean oss_output_stop(gboolean must_flush)
      if (oss_fd == -1) return TRUE;
      if (must_flush)
 	  while (ringbuf_available(oss_output_buffer)>0) {
-	       oss_output_flush();
+	       oss_output_flush(NULL,NULL,NULL);
 	       do_yield(TRUE);
 	  }
      else
