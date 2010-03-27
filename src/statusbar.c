@@ -206,12 +206,14 @@ void status_bar_set_info(StatusBar *sb, off_t cursorpos, gboolean is_rolling,
      /* What needs to be updated? */
      if (sb->mode != 0) {	  
 	  mdif = TRUE;
-     } else {
-	  if (status_bar_roll_cursor)
-	       cdif = (sb->cur != cursorpos);
-	  else
-	       cdif = (!is_rolling && (sb->cur != cursorpos)) || 
-		    XOR(is_rolling,sb->rolling);
+     } else {	  
+	  if (XOR(is_rolling,sb->rolling))
+	       cdif = TRUE;
+	  else if (is_rolling && status_bar_roll_cursor)
+	       cdif = (cursorpos < sb->cur) || (cursorpos > sb->cur+samplerate/20);
+	  else 
+	       cdif = (!is_rolling && sb->cur != cursorpos);	  
+
 	  vdif = (sb->vs != viewstart) || (sb->ve != viewend);
 	  if (selstart == selend)
 	       sdif = (sb->ss != sb->se);
