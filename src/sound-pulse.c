@@ -689,7 +689,6 @@ static void pulse_flush_success_cb(pa_stream *s, int success, void *userdata)
      }
      /* puts("pulse_flush_success_cb"); */
      pulse_data.flush_state = 2;
-     mainloop_constant_source_enable(pulse_data.ready_constsource,TRUE);
 }
 
 static void pulse_flush_start(void)
