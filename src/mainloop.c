@@ -68,12 +68,13 @@ static gboolean in_sources(gpointer src, gpointer *sources, int n_sources)
 static int timesource_scan_main(GTimeVal *current_time, gboolean do_dispatch,
 				gpointer *sources, int n_sources)
 {
-     GList *l;     
+     GList *l,*nl;
      struct time_source *src;
      GTimeVal tv;
      int i,j;
      int timeout = -1;
-     for (l=timesources; l!=NULL; l=l->next) {
+     for (l=timesources; l!=NULL; l=nl) {
+	  nl = l->next;
 	  src = (struct time_source *)l->data;
 	  if (!src->enabled || !in_sources(src,sources,n_sources)) continue;
 	  i = timeval_subtract(&tv, &src->call_time, current_time);
