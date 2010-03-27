@@ -525,6 +525,12 @@ void mainloop_time_source_free(gpointer timesource)
      g_free(timesource);     
 }
 
+gboolean mainloop_time_source_enabled(gpointer ts)
+{
+     struct time_source *src = (struct time_source *)ts;
+     return src->enabled;
+}
+
 gpointer mainloop_io_source_add(int fd, gushort events, iosource_cb cb, 
 				gpointer user_data)
 {
@@ -573,5 +579,50 @@ void mainloop_io_source_free(gpointer iosource)
       * removing it from inside a callback called from sources_poll */
      dead_iosources = g_list_append(dead_iosources, iosource);
 
+}
+
+struct defer {
+     gpointer src;
+     defer_once_cb cscb;
+     gpointer user_data;
+};
+
+static int defer_once_cb1(gpointer csource, gpointer user_data)
+{
+     struct defer *d = (struct defer *)user_data;
+     d->cscb(d->user_data);
+     mainloop_constant_source_free(csource);
+     g_free(d);
+     return -1;
+}
+
+static int defer_once_cb2(gpointer tsource, GTimeVal *tm, gpointer user_data)
+{
+     struct defer *d = (struct defer *)user_data;
+     d->cscb(d->user_data);
+     mainloop_time_source_free(tsource);
+     g_free(d);
+     return 0;     
+}
+
+void mainloop_defer_once(defer_once_cb cb, gint reltime, gpointer user_data)
+{
+     struct defer *d;
+     GTimeVal t;
+     d = g_malloc(sizeof(*d));
+     if (reltime <= 0) 
+	  d->src = mainloop_constant_source_add(defer_once_cb1, d, TRUE);
+     else {
+	  g_get_current_time(&t);
+	  t.tv_usec += reltime*1000;
+	  while (t.tv_usec >= 1000000) {
+	       t.tv_usec -= 1000000;
+	       t.tv_sec += 1;
+	  }
+	  d->src = mainloop_time_source_add(&t,defer_once_cb2,d);	  
+     }
+	  
+     d->cscb = cb;
+     d->user_data = user_data;
 }
 

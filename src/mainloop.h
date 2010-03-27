@@ -49,10 +49,16 @@ gpointer mainloop_time_source_add(GTimeVal *tv, timesource_cb cb,
 				  gpointer user_data);
 void mainloop_time_source_restart(gpointer timesource, GTimeVal *new_tv);
 void mainloop_time_source_free(gpointer timesource);
+gboolean mainloop_time_source_enabled(gpointer timesource);
 
 gpointer mainloop_constant_source_add(constsource_cb cb, gpointer user_data, 
 				      gboolean lowprio);
 void mainloop_constant_source_enable(gpointer constsource, gboolean enable);
 void mainloop_constant_source_free(gpointer constsource);
+
+/* Convenience wrappers */
+
+typedef void (*defer_once_cb)(gpointer user_data);
+void mainloop_defer_once(defer_once_cb cb, gint reltime, gpointer user_data);
 
 #endif
