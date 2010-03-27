@@ -91,7 +91,8 @@ static void esound_select_format(Dataformat *format, int *fdp,
 				 "mhWaveEdit");     
 }
 
-static gint esound_output_select_format(Dataformat *format, gboolean silent)
+static gint esound_output_select_format(Dataformat *format, gboolean silent, 
+					GVoidFunc ready_func)
 {
      GTimeVal tv,r;
      int i;
@@ -119,7 +120,8 @@ static gint esound_output_select_format(Dataformat *format, gboolean silent)
      return 0;
 }
 
-static gint esound_input_select_format(Dataformat *format, gboolean silent)
+static gint esound_input_select_format(Dataformat *format, gboolean silent,
+				       GVoidFunc ready_func)
 {
      if (format->type == DATAFORMAT_FLOAT) return -1;
      esound_select_format(format,&esound_record_fd,TRUE);
