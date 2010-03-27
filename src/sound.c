@@ -37,6 +37,7 @@ static Dataformat playing_format;
 gboolean output_stereo_flag;
 static GVoidFunc output_ready_func=NULL,input_ready_func=NULL;
 static char zerobuf[1024];
+static int output_play_count;
 
 #ifdef HAVE_ALSALIB
   #include "sound-alsalib.c"
@@ -376,6 +377,7 @@ static gboolean sound_select_in_progress = FALSE;
 gboolean sound_poll(void)
 {
      int i=0;
+     static int last_playcount;
 
      if (sound_select_in_progress) return -1;
 
@@ -387,7 +389,8 @@ gboolean sound_poll(void)
 	  return -1;
 
      if ((output_ready_func!=NULL || sound_delayed_quit) && 
-	 output_want_data()) {
+	 output_want_data() && last_playcount != output_play_count) {
+	  last_playcount = output_play_count;
 	  sound_output_ready_func();
 	  i=1;
      }
@@ -445,6 +448,7 @@ gint output_select_format(Dataformat *format, gboolean silent,
      if (i != 0) output_ready_func = NULL;
 
      sound_select_in_progress = FALSE;
+     output_play_count++;
      return i;
 }
 
@@ -514,6 +518,7 @@ guint output_play(gchar *buffer, guint bufsize)
 	  byteswap(output_byteswap_buffer,playing_format.samplesize,bufsize);
 	  buffer = output_byteswap_buffer;
      }
+     if (bufsize > 0) output_play_count++;
      return drivers[current_driver].output_play(buffer,bufsize);
 }
 

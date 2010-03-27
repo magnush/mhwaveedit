@@ -150,7 +150,10 @@ void sound_quit(void);
  * If the format isn't supported by the driver, the function does nothing and 
  * returns <0 if no message displayed or >0 if message was displayed. 
  * Changes state to state 3 (Playing) and returns FALSE if successful
+ *
  * ready_func will be called whenever new data can be written.
+ * ready_func is "edge-triggered", that is it is only called once and will not
+ * be called again until you have called output_play with bufsize>0
  */
 
 gint output_select_format(Dataformat *format, gboolean silent, 
@@ -231,9 +234,13 @@ gboolean output_wait(guint timeout);
 
 /* Send as much data as possible to the output device.
  * Return the amount of data sent. 
- * If bufsize=0, the driver sends out as much pre-buffered data
- * as possible without blocking and returns the amount of data left in the
- * buffers.
+ *
+ * If bufsize=0 and buffer=NULL, the driver will go into "drain
+ * mode". Each time it is called again with bufsize=0 and buffer=NULL,
+ * some drivers will return the amount of data left in the buffers, 
+ * some return non-zero if drain is incomplete, and zero for complete
+ * some return always zero
+ * Calling output_play with data cancels the drain process.
  */
 
 guint output_play(gchar *buffer, guint bufsize);
