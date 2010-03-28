@@ -1281,14 +1281,15 @@ static void edit_playall(GtkMenuItem *menuitem, gpointer user_data)
      do_play(w,0,w->doc->chunk->length,w->loopmode);
 }
 
-static void help_readme(void)
+static void help_readme(GtkMenuItem *menuitem, gpointer user_data)
 {
      GtkAccelGroup* ag;
      GtkWidget *window,*table,*notebook,*frame,*label,*button,*box1,*box2;
      int i;
      GtkWidget *scrolledwindow1, *viewport1, *label2;
+     Mainwindow *mw = MAINWINDOW(user_data);
 #if GTK_MAJOR_VERSION == 2
-GtkStyle *style;
+     PangoFontDescription *pfd;
 #endif
      ag = gtk_accel_group_new();
 
@@ -1335,9 +1336,10 @@ GtkStyle *style;
 #if GTK_MAJOR_VERSION == 2
 if (i==HELP_PAGE_SHORTCUTS)	// Keyboard tab only
 {
-	style = gtk_style_copy (gtk_widget_get_style (label2));
-	style->font_desc = pango_font_description_from_string("Monospace 11");  // Courier also works
-	gtk_widget_set_style (label2, style);
+     pfd = pango_font_description_copy_static(GTK_WIDGET(mw)->style->font_desc);
+     pango_font_description_set_family_static(pfd, "Monospace");
+     gtk_widget_modify_font(label2, pfd);
+     pango_font_description_free(pfd);
 }
 #endif
 	gtk_container_add (GTK_CONTAINER (viewport1), label2);
