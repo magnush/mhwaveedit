@@ -325,7 +325,7 @@ static void draw_time_bars(ChunkView *view, GdkEventExpose *event,
 	       /* puts(buf); */
 	       pl = gtk_widget_create_pango_layout( widget, buf );
 	       pango_layout_get_pixel_size(pl, &i, NULL);
-	       gdk_draw_layout( widget->window, widget->style->black_gc,
+	       gdk_draw_layout( widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
 				j-i/2, widget->allocation.height-font_height,
 				pl);
 	       g_object_unref(G_OBJECT(pl));
