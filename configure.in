@@ -517,6 +517,8 @@ else
 fi
 
 echo    "  Default mixer app:      $DEFAULT_MIXERAPP"
+echo -n "  Compiler options:       "
+echo    $CFLAGS
 
 echo
 if test "x$USES_GTK2$MHW_HAVE_ARTSC" = "xnoyes"; then
