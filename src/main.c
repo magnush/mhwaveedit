@@ -79,6 +79,36 @@ static int idle_work(gpointer csource, gpointer user_data)
      return -1;
 }
 
+#if GTK_MAJOR_VERSION == 1
+
+void gdk_gc_set_rgb_fg_color(GdkGC *gc, GdkColor *clr)
+{
+     static GdkColor cached = {0,-1,-1,-1};
+     if (clr->red == cached.red && clr->green == cached.green && 
+	 clr->blue == cached.blue) 
+	  clr->pixel = cached.pixel;
+     else {
+	  gdk_colormap_alloc_color(gdk_colormap_get_system(), 
+				   clr,FALSE,TRUE);
+	  memcpy(&cached,clr,sizeof(cached));
+     }
+     gdk_gc_set_foreground(gc, clr);
+}
+
+#endif
+
+#if GTK_MAJOR_VERSION == 1 || (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 18)
+
+void gtk_widget_set_has_window(GtkWidget *w, gboolean has_window)
+{
+     if (!has_window)
+	  GTK_WIDGET_SET_FLAGS(w,GTK_NO_WINDOW);
+     else
+	  GTK_WIDGET_UNSET_FLAGS(w,GTK_NO_WINDOW);
+}
+
+#endif
+
 int main(int argc, char **argv)
 {
      int i;

@@ -44,6 +44,7 @@
 #include "help.h"
 #include "ladspadialog.h"
 #include "gettext.h"
+#include "bitmap.h"
 
 #include "button_open.xpm"
 #include "button_save.xpm"
@@ -65,9 +66,9 @@
 #include "button_mixer.xpm"
 #include "button_bounce.xpm"
 #include "icon.xpm"
-#include "vzoom.xpm"
-#include "hzoom.xpm"
-#include "speed.xpm"
+#include "vzoom.xbm"
+#include "hzoom.xbm"
+#include "speed.xbm"
 
 /* #define SHOW_DEBUG_MENU */
 
@@ -2431,8 +2432,6 @@ static gint speed_scale_press(GtkWidget *widget, GdkEventButton *event, gpointer
 static void mainwindow_init(Mainwindow *obj)
 {
      GtkWidget *a,*b,*c;
-     GdkPixmap *p;
-     GdkBitmap *mask;
      GtkRequisition req;
      GtkTargetEntry gte;
 
@@ -2518,21 +2517,18 @@ static void mainwindow_init(Mainwindow *obj)
 
      gtk_table_attach(GTK_TABLE(b),c,0,1,0,1,GTK_SHRINK|GTK_FILL,GTK_FILL,0,0);
 
-     p = gdk_pixmap_colormap_create_from_xpm_d
-	  (NULL,gtk_widget_get_colormap(GTK_WIDGET(obj)),&mask,NULL,vzoom_xpm);
-     c = gtk_pixmap_new(p,mask);
+     c = bitmap_new_from_data(vzoom_bits, vzoom_width, vzoom_height);
+     bitmap_set_fg(BITMAP(c),0.8);     
      gtk_table_attach(GTK_TABLE(b),c,1,2,0,1,GTK_FILL,0,0,0);
      obj->vzoom_icon = c;
 
-     p = gdk_pixmap_colormap_create_from_xpm_d
-	  (NULL,gtk_widget_get_colormap(GTK_WIDGET(obj)),&mask,NULL,hzoom_xpm);
-     c = gtk_pixmap_new(p,mask);
+     c = bitmap_new_from_data(hzoom_bits, hzoom_width, hzoom_height);
+     bitmap_set_fg(BITMAP(c),0.8);
      gtk_table_attach(GTK_TABLE(b),c,2,3,0,1,GTK_FILL,0,0,0);
      obj->hzoom_icon = c;
 
-     p = gdk_pixmap_colormap_create_from_xpm_d
-	  (NULL,gtk_widget_get_colormap(GTK_WIDGET(obj)),&mask,NULL,speed_xpm);
-     c = gtk_pixmap_new(p,mask);
+     c = bitmap_new_from_data(speed_bits, speed_width, speed_height);
+     bitmap_set_fg(BITMAP(c),0.8);
      gtk_table_attach(GTK_TABLE(b),c,3,4,0,1,GTK_FILL,0,0,0);
      obj->speed_icon = c;
 
