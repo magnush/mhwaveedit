@@ -55,6 +55,7 @@ static gboolean sandwich_dialog_apply(EffectDialog *ed)
 	       return TRUE;
 	  }
      } else {
+	  c1ap = c2ap = 0; /* Silence compiler */
 	  g_assert_not_reached();
      }
 

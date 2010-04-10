@@ -1288,8 +1288,8 @@ static void help_readme(GtkMenuItem *menuitem, gpointer user_data)
      GtkWidget *window,*table,*notebook,*frame,*label,*button,*box1,*box2;
      int i;
      GtkWidget *scrolledwindow1, *viewport1, *label2;
-     Mainwindow *mw = MAINWINDOW(user_data);
 #if GTK_MAJOR_VERSION == 2
+     Mainwindow *mw = MAINWINDOW(user_data);
      PangoFontDescription *pfd;
 #endif
      ag = gtk_accel_group_new();
