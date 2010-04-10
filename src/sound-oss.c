@@ -251,7 +251,7 @@ static int oss_output_flush(gpointer ts, GTimeVal *tv, gpointer ud)
 	  if (i==-1) {
 	       c = g_strdup_printf(_("Error in sound driver: select failed: %s"),strerror(errno));
 	       user_error(c);
-	       return;
+	       return 2000;
 	  }
 	  if (i==0) return 50;
      }

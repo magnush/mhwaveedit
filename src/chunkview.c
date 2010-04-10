@@ -674,7 +674,7 @@ static int chunk_view_autoscroll(gpointer timesource, GTimeVal *current_time,
 
      g_assert(timesource == NULL || timesource == autoscroll_source);
 
-     if (!autoscroll) return;
+     if (!autoscroll) return 0;
      timeval_subtract(&diff,current_time,&autoscroll_start);
 
      /* printf("diff: %d,%d\n",diff.tv_sec,diff.tv_usec); */
