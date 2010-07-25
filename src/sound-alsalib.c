@@ -414,11 +414,22 @@ static guint alsa_output_play(gchar *buffer, guint bufsize)
      GTimeVal tv;
 #endif
      /* signal(SIGPIPE,SIG_IGN); */
-     if (bufsize == 0) return 0;
+     if (bufsize == 0) return 0;     
+     mainloop_io_group_enable(alsa_data.iogroup,TRUE);
+#ifdef ALSADEBUG
+     g_get_current_time(&tv);
+     printf("called output_play, %d bytes, re-enabled events, time=%3d.%06d\n",
+	    (int)bufsize,(int)tv.tv_sec,(int)tv.tv_usec);
+#endif
      while (1) {
 	  r = snd_pcm_writei(alsa_data.whand,buffer,
 			     bufsize/alsa_data.wfmt.samplebytes);
-	  if (r == -EAGAIN) return 0;
+	  if (r == -EAGAIN) {
+#ifdef ALSADEBUG
+	       puts("snd_pcm_writei: EAGAIN!");
+#endif
+	       return 0;
+	  }
 	  if (r == -EPIPE) {
 	       puts(_("<ALSA playback buffer underrun>"));
 	       snd_pcm_prepare(alsa_data.whand);
@@ -434,9 +445,9 @@ static guint alsa_output_play(gchar *buffer, guint bufsize)
      alsa_data.rw_call_count ++;
 #ifdef ALSADEBUG
      g_get_current_time(&tv);
-     printf("played %d samples, re-enabled events, time=%3d.%06d\n",(int)r,(int)tv.tv_sec,(int)tv.tv_usec);
+     printf("played %d samples time=%3d.%06d\n",(int)r,(int)tv.tv_sec,
+	    (int)tv.tv_usec);
 #endif
-     mainloop_io_group_enable(alsa_data.iogroup,TRUE);
      return u;
 }
 
