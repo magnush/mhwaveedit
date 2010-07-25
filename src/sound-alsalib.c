@@ -30,6 +30,7 @@ static struct {
      int overrun_count;
      gpointer *iogroup;
      gboolean eventdriv;
+     gboolean inside_ready_func;
      int rw_call_count;
      GVoidFunc ready_func;
 } alsa_data = { 0 };
@@ -202,7 +203,9 @@ static int iogroup_ready_func(gpointer iogroup, int fd, gushort revents,
 	  return 0;
      }
      i = alsa_data.rw_call_count;
+     alsa_data.inside_ready_func = TRUE;
      alsa_data.ready_func();
+     alsa_data.inside_ready_func = FALSE;
      if (alsa_data.rw_call_count == i) return -1;
      return 1;
      
@@ -414,12 +417,20 @@ static guint alsa_output_play(gchar *buffer, guint bufsize)
      GTimeVal tv;
 #endif
      /* signal(SIGPIPE,SIG_IGN); */
-     if (bufsize == 0) return 0;     
-     mainloop_io_group_enable(alsa_data.iogroup,TRUE);
+     if (bufsize == 0) return 0;
+     if (!alsa_data.inside_ready_func)
+	  mainloop_io_group_enable(alsa_data.iogroup,TRUE);
+     alsa_data.rw_call_count ++;
 #ifdef ALSADEBUG
      g_get_current_time(&tv);
-     printf("called output_play, %d bytes, re-enabled events, time=%3d.%06d\n",
-	    (int)bufsize,(int)tv.tv_sec,(int)tv.tv_usec);
+     if (!alsa_data.inside_ready_func)
+	  printf("called output_play, %d bytes, re-enabled events, "
+		 "time=%3d.%06d\n",
+		 (int)bufsize,(int)tv.tv_sec,(int)tv.tv_usec);
+     else
+	  printf("called output_play from ready-func, %d bytes, "
+		 "time=%3d.%06d\n",
+		 (int)bufsize,(int)tv.tv_sec,(int)tv.tv_usec);	  
 #endif
      while (1) {
 	  r = snd_pcm_writei(alsa_data.whand,buffer,
@@ -449,7 +460,6 @@ static guint alsa_output_play(gchar *buffer, guint bufsize)
 	  break;
      }
      u = r*alsa_data.wfmt.samplebytes;
-     alsa_data.rw_call_count ++;
 #ifdef ALSADEBUG
      g_get_current_time(&tv);
      printf("played %d samples time=%3d.%06d\n",(int)r,(int)tv.tv_sec,
