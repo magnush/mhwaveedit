@@ -195,7 +195,7 @@ static int iogroup_ready_func(gpointer iogroup, int fd, gushort revents,
      printf("iogroup_ready_func: time=%3d.%06d, fd=%d, revents=%d\n",
 	    (int)tv.tv_sec,(int)tv.tv_usec,(int)fd,(int)revents);
 #endif     
-     if (!alsa_output_want_data()) {
+     if (alsa_data.whand!=NULL && !alsa_output_want_data()) {
 #ifdef ALSADEBUG
 	  printf("Alsa woke us up but didn't want data\n");
 #endif
@@ -280,30 +280,28 @@ static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
      memcpy(fmtp,format,sizeof(*fmtp));
      alsa_data.ready_func = ready_func;
 
-     if (playback) {
-	  fd_count = snd_pcm_poll_descriptors_count(*handp);
-	  fds = g_malloc(fd_count*sizeof(*fds));
-	  fd_count = snd_pcm_poll_descriptors(*handp,fds,fd_count*sizeof(*fds));
+     fd_count = snd_pcm_poll_descriptors_count(*handp);
+     fds = g_malloc(fd_count*sizeof(*fds));
+     fd_count = snd_pcm_poll_descriptors(*handp,fds,fd_count*sizeof(*fds));
 	  
-	  pfds = g_malloc(fd_count*sizeof(GPollFD));
-	  for (i=0; i<fd_count; i++) {
-	       pfds[i].fd = fds[i].fd;
-	       pfds[i].events = fds[i].events;
-	  }
-
-	  g_assert(alsa_data.iogroup == NULL);
-	  if (alsa_data.eventdriv)
-	       wdtime = pertime + 50000;
-	  else {
-	       wdtime = pertime - 50000;
-	       if (wdtime >= pertime) wdtime = 50000;
-	  }
-	  alsa_data.iogroup = mainloop_io_group_add(fd_count,pfds,wdtime/1000,
-						    iogroup_ready_func,NULL);
-	  alsa_data.rw_call_count = 0;
-	  g_free(pfds);
-	  g_free(fds);
+     pfds = g_malloc(fd_count*sizeof(GPollFD));
+     for (i=0; i<fd_count; i++) {
+	  pfds[i].fd = fds[i].fd;
+	  pfds[i].events = fds[i].events;
      }
+
+     g_assert(alsa_data.iogroup == NULL);
+     if (alsa_data.eventdriv)
+	  wdtime = pertime + 50000;
+     else {
+	  wdtime = pertime - 50000;
+	  if (wdtime >= pertime) wdtime = 50000;
+     }
+     alsa_data.iogroup = mainloop_io_group_add(fd_count,pfds,wdtime/1000,
+					       iogroup_ready_func,NULL);
+     alsa_data.rw_call_count = 0;
+     g_free(pfds);
+     g_free(fds);
 
      return FALSE;
 }
@@ -476,6 +474,7 @@ static void alsa_input_store(Ringbuf *buffer)
 	       return;
 	  }
      }
+     mainloop_io_group_enable(alsa_data.iogroup,TRUE);
 }
 
 int alsa_input_overrun_count(void)
