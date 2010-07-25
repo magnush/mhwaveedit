@@ -206,7 +206,9 @@ static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
 {     
      snd_pcm_hw_params_t *par;
      int i;
-     snd_pcm_uframes_t uf;
+     snd_pcm_uframes_t bufsize;
+     unsigned int pertime;
+     int perdir;
      int fd_count;
      struct pollfd *fds;
      if (dataformat_equal(fmtp,format)) return FALSE;
@@ -233,22 +235,25 @@ static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
 	  console_message(_("snd_pcm_hw_params_set_rate failed")); 
 	  return TRUE; 
      }
+     i = snd_pcm_hw_params_set_buffer_size_last(*handp,par,&bufsize);
+     if (i) {
+	  console_message(_("snd_pcm_hw_params_set_buffer_size_last failed"));
+	  return TRUE;
+     }
+#ifdef ALSADEBUG 
+     printf("Buffer size: %d\n",(int)bufsize);
+#endif
+     pertime = 100001; /* 0.1 sec */
+     perdir = -1;
      if (playback) {
-	  uf = inifile_get_guint32(INI_SETTING_SOUNDBUFSIZE,
-				   INI_SETTING_SOUNDBUFSIZE_DEFAULT) 
-	       / format->samplebytes;     
-	  snd_pcm_hw_params_set_buffer_size_near(*handp,par,&uf);
-     } else {
-	  /* Setting buffer size shouldn't be necessary 
-	   * (and uf hasn't been assigned at this point)
-	  i = snd_pcm_hw_params_set_buffer_size_max(*handp,par,&uf);
+	  i = snd_pcm_hw_params_set_period_time_near(*handp,par,&pertime,&perdir);
 	  if (i) {
-	       console_message("snd_pcm_hw_params_set_buffer_size_max");
+	       console_message("snd_pcm_hw_params_set_period_time_near failed");
 	       return TRUE;
 	  }
-	  */
-	  /* printf("Buffer size: %d\n",(int)uf); */
-	  alsa_data.overrun_count = 0;
+#ifdef ALSADEBUG
+	  printf("Period time: %d us\n",pertime);
+#endif
      }
      i = snd_pcm_hw_params(*handp,par);
      snd_pcm_hw_params_free(par);
