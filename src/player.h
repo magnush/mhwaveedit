@@ -38,12 +38,6 @@ extern gboolean varispeed_smooth_flag;
 /* Fallback sample type to use if other fails */
 extern Dataformat player_fallback_format;
 
-/* This function must be called periodically to make sure that sound data gets
- * to the sound driver. It returns FALSE if it had nothing to do.
- */
-
-gboolean player_work(void);
-
 /* Play a certain chunk. Returns TRUE if anything failed.  */
 typedef void (*player_notify_func)(off_t realpos, gboolean is_running);
 

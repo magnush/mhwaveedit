@@ -130,7 +130,7 @@ static void get_new_data(void)
 /* Check if the sound driver wants more data and send it.
  * Returns FALSE if it had nothing to do. */
 
-gboolean player_work(void)
+static gboolean player_work(void)
 {
      guint32 i;
      off_t o;

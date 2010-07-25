@@ -206,7 +206,6 @@ static void chunk_view_update_image_main(ChunkView *cv, GdkDrawable *image,
 	  y = j/2 + i*j;	  
 	  gdk_draw_line(image,get_gc(BARS,wid),xs,y,xe,y);
      }
-     player_work();
      /* Drawing one pixel to the left of xs is a workaround. Some part of the
       * code seems to draw one pixel wrong to the left. */
      view_cache_draw_part(cv->cache, image, (xs==0)?0:xs-1, xe, h, 
