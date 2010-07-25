@@ -227,6 +227,7 @@ static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos,
 	       if (!output_suggest_format(&(chk->format),&fmt)) {
 		    memcpy(&fmt,&player_fallback_format,sizeof(Dataformat));
 		    fmt.channels = chk->format.channels;
+		    fmt.samplebytes = fmt.samplesize * fmt.channels;
 	       }
 	       
 	       b = !dataformat_samples_equal(&(chk->format),&fmt); 
