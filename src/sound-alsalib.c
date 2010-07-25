@@ -424,10 +424,17 @@ static guint alsa_output_play(gchar *buffer, guint bufsize)
      while (1) {
 	  r = snd_pcm_writei(alsa_data.whand,buffer,
 			     bufsize/alsa_data.wfmt.samplebytes);
-	  if (r == -EAGAIN) {
+	  if (r == -EAGAIN || r == 0) {
 #ifdef ALSADEBUG
 	       puts("snd_pcm_writei: EAGAIN!");
 #endif
+
+	       if (snd_pcm_state(alsa_data.whand) == SND_PCM_STATE_PREPARED) {
+#ifdef ALSADEBUG
+		    puts("Starting stream");		    
+#endif
+		    snd_pcm_start(alsa_data.whand);
+	       }
 	       return 0;
 	  }
 	  if (r == -EPIPE) {
