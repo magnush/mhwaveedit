@@ -28,6 +28,12 @@ void mainloop_recurse_on(gpointer *sources, int n_sources);
 
 typedef void (*iosource_cb)(gpointer iosource, int fd, gushort revents, 
 			    gpointer user_data);
+
+/* fd is -1 if timeout occurred 
+ * Return value: <0=Disable, 0=Wait for additional events, >0=Re-enable all events 
+ * For timeout,  <0=Disable watchdog, 0=Restart watchdog and wait for same events, >0=Re-enable all events */
+typedef int (*iogroup_cb)(gpointer iogroup, int fd, gushort revents, gpointer user_data);
+
 /* Return value: 0=disable, >0=call again in X millis from current_time
  * <0=call again in X millis from nominal time */ 
 typedef gint (*timesource_cb)(gpointer timesource, GTimeVal *current_time, 
@@ -44,6 +50,11 @@ gpointer mainloop_io_source_add(int fd, gushort events, iosource_cb cb,
 void mainloop_io_source_set_events(gpointer iosource, gushort new_events);
 void mainloop_io_source_enable(gpointer iosource, gboolean enable);
 void mainloop_io_source_free(gpointer iosource);
+
+gpointer mainloop_io_group_add(int nfds, GPollFD *pfds, int wdtime_ms, 
+			       iogroup_cb cb, gpointer user_data);
+gpointer mainloop_io_group_enable(gpointer iogroup, gboolean enable);
+void mainloop_io_group_free(gpointer iogroup);
 
 gpointer mainloop_time_source_add(GTimeVal *tv, timesource_cb cb,
 				  gpointer user_data);

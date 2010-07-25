@@ -53,7 +53,19 @@ struct io_source  {
      gboolean enabled;
 };
 
+struct io_group {
+     int nfds;
+     GPollFD *pfds;
+     int *orig_events;
+     int wdtime_ms;
+     gpointer wd;
+     iogroup_cb cb;
+     gpointer user_data;
+     gboolean enabled;
+};
+
 static GList *constsources = NULL, *timesources = NULL, *iosources = NULL;
+static GList *iogroups = NULL;
 static GList *dead_iosources = NULL;
 
 static gboolean in_sources(gpointer src, gpointer *sources, int n_sources)
@@ -119,24 +131,63 @@ static gboolean iosource_check_main(void)
 {
      GList *l;     
      struct io_source *src;
+     struct io_group *grp;
+     int i;
 
      for (l=iosources; l!=NULL; l=l->next) {
 	  src = (struct io_source *)l->data;
 	  if (src->enabled && src->pfd.revents != 0) return TRUE;
      }
+     for (l=iogroups; l!=NULL; l=l->next) {
+	  grp = (struct io_group *)l->data;
+	  if (grp->enabled) {
+	       for (i=0; i<grp->nfds; i++) {
+		    if (grp->pfds[i].revents != 0) return TRUE;
+	       }
+	  }
+     }
      return FALSE;
 }
 
-static gboolean iosource_dispatch_main(void)
+static gboolean iosource_dispatch_main(GTimeVal *current_time)
 {
      GList *l;     
      struct io_source *src;
+     struct io_group *grp;
+     int i,j,k;
+     GTimeVal tv;
 
      for (l=iosources; l!=NULL; l=l->next) {
 	  src = (struct io_source *)l->data;
 	  if (src->enabled && src->pfd.revents != 0) {
 	       src->cb(src,src->pfd.fd,src->pfd.revents,src->user_data);
 	       src->pfd.revents = 0;
+	  }
+     }
+     for (l=iogroups; l!=NULL; l=l->next) {
+	  grp = (struct io_group *)l->data;
+	  if (grp->enabled) {
+	       j = 0;
+	       for (i=0; i<grp->nfds; i++) {
+		    if (j == 0 && grp->pfds[i].revents != 0) {
+			 j++;
+			 k = grp->cb(grp,grp->pfds[i].fd,grp->pfds[i].revents,
+				     grp->user_data);			 
+		    } 
+		    if (j != 0 && k == 0) 
+			 grp->pfds[i].events &= ~(grp->pfds[i].revents);
+	       }
+	       if (j != 0 && k != 0) {
+		    mainloop_io_group_enable(grp,(k > 0));
+	       }	       
+	       /* Restart watchdog */
+	       if (grp->wd != NULL) {
+		    tv.tv_sec = current_time->tv_sec;
+		    tv.tv_usec = current_time->tv_usec + grp->wdtime_ms*1000;
+		    if (tv.tv_usec > 1000000) { tv.tv_sec++; tv.tv_usec-=1000000; }
+		    mainloop_time_source_restart(grp->wd, &tv);
+	       }
+	       
 	  }
      }
      return TRUE;
@@ -209,7 +260,7 @@ static gboolean iosource_check(gpointer source_data, GTimeVal *current_time,
 static gboolean iosource_dispatch(gpointer source_data, 
 				    GTimeVal *dispatch_time, gpointer user_data)
 {
-     iosource_dispatch_main();
+     iosource_dispatch_main(dispatch_time);
      return TRUE;
 }
 
@@ -217,21 +268,21 @@ static GSourceFuncs isf = {
      iosource_prepare, iosource_check, iosource_dispatch, NULL
 };
 				    
-
-static void mainloop_io_source_enable_main(struct io_source *src)
+static void poll_add_main(GPollFD *pfd)
 {
      static gboolean inited = FALSE;
      if (!inited) {
 	  g_source_add(G_PRIORITY_HIGH, FALSE, &isf, NULL, NULL, NULL);
 	  inited = TRUE;
      }
-     g_main_add_poll(&src->pfd, G_PRIORITY_HIGH);     
+     g_main_add_poll(pfd, G_PRIORITY_HIGH);
 }
 
-static void mainloop_io_source_disable_main(struct io_source *src)
+static void poll_remove_main(GPollFD *pfd)
 {
-     g_main_remove_poll(&src->pfd);
+     g_main_remove_poll(pfd);
 }
+
 
 
 
@@ -308,7 +359,9 @@ static gboolean iosource_check(GSource *source)
 static gboolean iosource_dispatch(GSource *source, GSourceFunc callback, 
 				  gpointer user_data)
 {
-     iosource_dispatch_main();
+     GTimeVal tv;
+     g_source_get_current_time(source, &tv);
+     iosource_dispatch_main(&tv);
      return TRUE;
 }
 
@@ -317,18 +370,18 @@ static GSource *iosource_handle = NULL;
 static GSourceFuncs isf2 = { iosource_prepare, iosource_check, 
 			     iosource_dispatch };
 
-static void mainloop_io_source_enable_main(struct io_source *src)
+static void poll_add_main(GPollFD *pfd)
 {
      if (iosource_handle == NULL) {
 	  iosource_handle = g_source_new(&isf2, sizeof(GSource));
 	  g_source_attach(iosource_handle,NULL);
      }
-     g_source_add_poll(iosource_handle, &src->pfd);
+     g_source_add_poll(iosource_handle, pfd);
 }
 
-static void mainloop_io_source_disable_main(struct io_source *src)
+static void poll_remove_main(GPollFD *pfd)
 {
-     g_source_remove_poll(iosource_handle, &src->pfd);
+     g_source_remove_poll(iosource_handle, pfd);
 }
 
 #endif
@@ -337,6 +390,7 @@ static void mainloop_io_source_disable_main(struct io_source *src)
 
 /* ---------------------------------------- */
 
+/* Note: Does not yet support io groups */
 static void sources_poll(gpointer *sources, int n_sources)
 {
      int timeout,nfds,i;
@@ -458,6 +512,7 @@ void mainloop(void)
      mainloop_main(NULL,0);
 }
 
+/* Note: Does not (yet) support IO groups */
 void mainloop_recurse_on(gpointer *sources, int n_sources)
 {
      mainloop_main(sources, n_sources);
@@ -543,8 +598,8 @@ gpointer mainloop_io_source_add(int fd, gushort events, iosource_cb cb,
      src->user_data = user_data;
      src->enabled = TRUE;
      iosources = g_list_append(iosources, src);
-     
-     mainloop_io_source_enable_main(src);
+
+     poll_add_main(&(src->pfd));
 
      return src;
 }
@@ -555,9 +610,9 @@ void mainloop_io_source_enable(gpointer iosource, gboolean enable)
      if (XOR(src->enabled,enable)) {
 	  src->enabled = enable;
 	  if (enable)
-	       mainloop_io_source_enable_main(src);
+	       poll_add_main(&(src->pfd));
 	  else
-	       mainloop_io_source_disable_main(src);
+	       poll_remove_main(&(src->pfd));
      }
 }
 
@@ -566,7 +621,7 @@ void mainloop_io_source_set_events(gpointer iosource, gushort new_events)
      struct io_source *src = (struct io_source *)iosource;
      src->pfd.events = new_events;
      if (new_events != 0 && !src->enabled) {
-	  mainloop_io_source_enable_main(src);
+	  poll_add_main(&(src->pfd));
 	  src->enabled = TRUE;
      }
 }
@@ -577,9 +632,105 @@ void mainloop_io_source_free(gpointer iosource)
      iosources = g_list_remove(iosources, iosource);
      /* We can not free the IO source here, because we might be 
       * removing it from inside a callback called from sources_poll */
-     dead_iosources = g_list_append(dead_iosources, iosource);
+     dead_iosources = g_list_append(dead_iosources, iosource);     
+}
+
+gpointer mainloop_io_group_add(int nfds, GPollFD *pfds, int wdtime_ms,
+			       iogroup_cb cb, gpointer user_data)
+{
+     struct io_group *grp;
+     int i;
+     GTimeVal tv;
+     grp = g_malloc(sizeof(*grp));
+     grp->nfds = nfds;
+     grp->pfds = g_malloc(nfds*sizeof(GPollFD));
+     memcpy(grp->pfds, pfds, nfds*sizeof(GPollFD));
+     grp->orig_events = g_malloc(nfds*sizeof(int));
+     for (i=0; i<nfds; i++) {
+	  grp->orig_events[i] = pfds[i].events;
+	  poll_add_main(&(grp->pfds[i]));
+     }     
+     grp->wdtime_ms = wdtime_ms;
+     grp->wd = NULL;
+     grp->cb = cb;
+     grp->user_data = user_data;
+     grp->enabled = FALSE;
+
+     iogroups = g_list_append(iogroups, grp);
+
+     mainloop_io_group_enable(grp,TRUE);
+
+     return grp;
+}
+
+static gint iogroup_watchdog_cb(gpointer timesource, GTimeVal *current_time, 
+				gpointer user_data)
+{
+     struct io_group *grp = (struct io_group *)user_data;
+     int i,j;
+     i = grp->cb(grp, -1, 0, grp->user_data);
+     if (i > 0) {
+	  for (j=0; j<grp->nfds; j++)
+	       grp->pfds[j].events = grp->orig_events[j];	 
+     }
+     if (i >= 0)
+	  return -grp->wdtime_ms;
+     else
+	  return 0;
+}
+
+gpointer mainloop_io_group_enable(gpointer iogroup, gboolean enable)
+{
+     struct io_group *grp = (struct io_group *)iogroup;
+     int i;
+     GTimeVal tv;
+
+     if (XOR(grp->enabled,enable)) {
+	  if (enable) {	       
+	       if (grp->wdtime_ms > 0)
+		    grp->wd = mainloop_time_source_add(NULL,iogroup_watchdog_cb,grp);
+	  } else {
+	       mainloop_time_source_free(grp->wd);
+	       grp->wd = NULL;	       
+	  }
+     }
+
+     if (enable && grp->wd != NULL) {
+	  g_get_current_time(&tv);
+	  tv.tv_sec += grp->wdtime_ms / 1000;
+	  tv.tv_usec += 1000*(grp->wdtime_ms%1000);
+	  if (tv.tv_usec >= 1000000) {
+	       tv.tv_sec++;
+	       tv.tv_usec -= 1000000;
+	  }
+	  mainloop_time_source_restart(grp->wd,&tv);
+     }
+
+     for (i=0; i<grp->nfds; i++) {     
+	  grp->pfds[i].events = enable ? grp->orig_events[i] : 0;
+     }
+
+     grp->enabled = enable;
 
 }
+
+void mainloop_io_group_free(gpointer iogroup)
+{
+     struct io_group *grp = (struct io_group *)iogroup;
+     int i;
+
+     iogroups = g_list_remove(iogroups, grp);
+
+     mainloop_io_group_enable(iogroup,FALSE);
+     for (i=0; i<grp->nfds; i++) {
+	  poll_remove_main(&(grp->pfds[i]));
+     }
+     g_free(grp->pfds);
+     g_free(grp->orig_events);
+     g_free(grp);   
+}
+
+
 
 struct defer {
      gpointer src;
