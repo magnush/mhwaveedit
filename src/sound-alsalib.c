@@ -411,7 +411,7 @@ static gboolean alsa_output_want_data(void)
 
 static guint alsa_output_play(gchar *buffer, guint bufsize)
 {
-     snd_pcm_sframes_t r;
+     snd_pcm_sframes_t r,s;
      guint u;
 #ifdef ALSADEBUG
      GTimeVal tv;
@@ -432,13 +432,18 @@ static guint alsa_output_play(gchar *buffer, guint bufsize)
 		 "time=%3d.%06d\n",
 		 (int)bufsize,(int)tv.tv_sec,(int)tv.tv_usec);	  
 #endif
+     s = bufsize/alsa_data.wfmt.samplebytes;
      while (1) {
-	  r = snd_pcm_writei(alsa_data.whand,buffer,
-			     bufsize/alsa_data.wfmt.samplebytes);
+	  r = snd_pcm_writei(alsa_data.whand,buffer,s);
 	  if (r == -EAGAIN || r == 0) {
 #ifdef ALSADEBUG
 	       puts("snd_pcm_writei: EAGAIN!");
 #endif
+	       r = snd_pcm_avail_update(alsa_data.whand);
+	       if (r > 0 && r<s) {
+		    s = r;
+		    continue;
+	       }
 
 	       if (snd_pcm_state(alsa_data.whand) == SND_PCM_STATE_PREPARED) {
 #ifdef ALSADEBUG
