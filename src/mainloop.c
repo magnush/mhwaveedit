@@ -643,9 +643,13 @@ gpointer mainloop_io_group_add(int nfds, GPollFD *pfds, int wdtime_ms,
      GTimeVal tv;
      grp = g_malloc(sizeof(*grp));
      grp->nfds = nfds;
-     grp->pfds = g_malloc(nfds*sizeof(GPollFD));
-     memcpy(grp->pfds, pfds, nfds*sizeof(GPollFD));
-     grp->orig_events = g_malloc(nfds*sizeof(int));
+     grp->pfds = NULL;
+     grp->orig_events = NULL;
+     if (nfds > 0) {
+	  grp->pfds = g_malloc(nfds*sizeof(GPollFD));
+	  memcpy(grp->pfds, pfds, nfds*sizeof(GPollFD));
+	  grp->orig_events = g_malloc(nfds*sizeof(int));
+     }
      for (i=0; i<nfds; i++) {
 	  grp->orig_events[i] = pfds[i].events;
 	  poll_add_main(&(grp->pfds[i]));

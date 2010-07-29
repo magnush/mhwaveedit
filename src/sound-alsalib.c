@@ -28,7 +28,8 @@ static struct {
      Dataformat wfmt,rfmt;
      gboolean draining,draining_done;     
      int overrun_count;
-     gpointer *iogroup;
+     gpointer iogroup;
+     gpointer csource;
      gboolean eventdriv;
      gboolean inside_ready_func;
      int rw_call_count;
@@ -186,6 +187,28 @@ static snd_pcm_format_t alsa_get_format(Dataformat *format)
      return SND_PCM_FORMAT_UNKNOWN;
 }
 
+static int csource_func(gpointer csource, gpointer user_data)
+{
+     int i;
+#ifdef ALSADEBUG
+     puts("csource_func");
+#endif
+     i = alsa_data.rw_call_count;
+     alsa_data.inside_ready_func = TRUE;
+     alsa_data.ready_func();
+     alsa_data.inside_ready_func = FALSE;
+     if (alsa_data.rw_call_count == i) {
+	  mainloop_constant_source_enable(csource,FALSE);
+	  return -1;
+     }
+     if (alsa_output_want_data()) {
+	  return 0;
+     }
+     mainloop_constant_source_enable(csource,FALSE);
+     mainloop_io_group_enable(alsa_data.iogroup,TRUE);
+     return -1;
+}    
+
 static int iogroup_ready_func(gpointer iogroup, int fd, gushort revents,
 			       gpointer user_data)
 {
@@ -205,12 +228,17 @@ static int iogroup_ready_func(gpointer iogroup, int fd, gushort revents,
      i = alsa_data.rw_call_count;
      alsa_data.inside_ready_func = TRUE;
      alsa_data.ready_func();
-     alsa_data.inside_ready_func = FALSE;
+     alsa_data.inside_ready_func = FALSE;     
      if (alsa_data.rw_call_count == i) return -1;
+     if (!alsa_data.eventdriv && alsa_output_want_data()) {
+	  if (alsa_data.csource == NULL) 
+	       alsa_data.csource = mainloop_constant_source_add(csource_func,NULL,FALSE);
+	  mainloop_constant_source_enable(alsa_data.csource,TRUE);
+	  return -1;
+     }
      return 1;
-     
 }
-    
+
 static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
 				snd_pcm_t **handp,gboolean playback, 
 				GVoidFunc ready_func)
@@ -255,13 +283,8 @@ static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
 #ifdef ALSADEBUG 
      printf("Buffer size: %d\n",(int)bufsize);
 #endif
-     if (alsa_data.eventdriv) {
-	  pertime = 100001; /* 0.1 sec */
-	  perdir = -1;
-     } else {
-	  pertime = 200000;
-	  perdir = 1;
-     }
+     pertime = 100001; /* 0.1 sec */
+     perdir = -1;
      if (playback) {
 	  i = snd_pcm_hw_params_set_period_time_near(*handp,par,&pertime,&perdir);
 	  if (i) {
@@ -297,8 +320,8 @@ static gboolean alsa_set_format(Dataformat *format,Dataformat *fmtp,
      if (alsa_data.eventdriv)
 	  wdtime = pertime + 50000;
      else {
-	  wdtime = pertime - 50000;
-	  if (wdtime >= pertime) wdtime = 50000;
+	  wdtime = pertime;
+	  fd_count = 0;
      }
      alsa_data.iogroup = mainloop_io_group_add(fd_count,pfds,wdtime/1000,
 					       iogroup_ready_func,NULL);
@@ -354,7 +377,6 @@ static gint alsa_input_select_format(Dataformat *format, gboolean silent,
 
 static void alsa_stop_iosource(void)
 {
-     int i;     
      if (alsa_data.iogroup != NULL) {
 	  mainloop_io_group_free(alsa_data.iogroup);
 	  alsa_data.iogroup = NULL;
