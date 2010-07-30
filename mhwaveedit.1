@@ -1,0 +1,41 @@
+.TH "mhwaveedit" "1" "2010\-07\-29"
+.SH "NAME"
+mhwaveedit \- A simple and fast GTK2 sound editor
+.SH "SYNOPSIS"
+.PP
+.B mhwaveedit
+.RI "[ " options " ]"
+.RI "[ " "audio_file  ..." " ]"
+.SH "DESCRIPTION"
+.PP
+This manual page documents briefly the \fBmhwaveedit\fR command.
+.PP
+.B mhwaveedit
+is a graphical program for editing sound files, intended to be user\-friendly
+and robust.
+.SH "OPTIONS"
+.\" main.c, ~ line 130\-150
+.TP
+.BR \-\-no\-ladspa
+Disable LADSPA plugins
+.TP
+.BR \-\-driver " \fIalsa\fR | \fIoss\fR | \fIjack\fR | \fIdummy\fR"
+Use a specific sound driver for playback
+.TP
+.BR \-\-test
+Perform a test of conversion functions
+.TP
+.BR \-\-perftest
+Perform a conversion performance test
+.TP
+.BR \-\-help
+Show a short help message
+.TP
+.BR \-\-version
+Display the version of \fBmhwaveedit\fR 
+.SH "AUTHOR"
+.PP
+\fBmhwaveedit\fR is copyright (C) 2003 2004 2007, Magnus Hjorth
+.PP
+This manual page was written by Francois Wendling <frwendling@free.fr> for the
+Debian GNU/Linux system (but may be used by others).
