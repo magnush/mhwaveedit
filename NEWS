@@ -1,3 +1,8 @@
+New features in version 1.4.20:
+
+ * Fixed Alsa playback regressions
+ * Added manual page
+
 New features in version 1.4.19:
 
  * Fixed bug causing cursor to freeze near end-of-file
