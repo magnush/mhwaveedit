@@ -19,6 +19,7 @@
  */
 
 
+#include <poll.h>
 #include <pulse/pulseaudio.h>
 
 #ifndef PA_CHECK_VERSION
