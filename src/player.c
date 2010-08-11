@@ -68,6 +68,7 @@ static gint player_bufsize,player_bufpos,small_loop_bufsize;
 static player_notify_func notify_func;
 
 static off_t get_realpos_main(off_t frames_played);
+static void player_stop_main(gboolean read_stoppos);
 
 static int get_frames(void *buffer, int maxsize)
 {
@@ -419,11 +420,15 @@ void player_switch(Chunk *chunk, off_t movestart, off_t movedist)
      if (newpos >= movestart) {
 	  newpos += movedist;
 	  if (newpos < movestart) {
-	       player_stop();
-	       curpos = movestart;
+	       realpos_atstop = movestart;
+	       player_stop_main(FALSE);
 	       return;
 	  }
-	  if (newpos > chunk->length) newpos = chunk->length;
+	  if (newpos > chunk->length) {
+	       realpos_atstop = chunk->length;
+	       player_stop_main(FALSE);
+	       return;
+	  }
      }
      
      newstart = loopstart;
@@ -461,19 +466,23 @@ gboolean player_playing(void)
      return (ch != NULL);
 }
 
-
-
-void player_stop(void)
+static void player_stop_main(gboolean read_stoppos)
 {
      gboolean b;
      if (ch == NULL) return;
      chunk_close(ch);
      b = output_stop(FALSE);
-     realpos_atstop = get_realpos_main(b ? rateest_frames_written() : 
-				       rateest_frames_played());
+     if (read_stoppos)
+	  realpos_atstop = get_realpos_main(b ? rateest_frames_written() : 
+					    rateest_frames_played());
      if (notify_func) notify_func(realpos_atstop,FALSE);
      gtk_object_unref(GTK_OBJECT(ch));
      ch = NULL;
+}
+
+void player_stop(void)
+{
+     player_stop_main(TRUE);
 }
 
 gboolean player_looping(void)
