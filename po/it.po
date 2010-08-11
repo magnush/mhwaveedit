@@ -4,14 +4,13 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Andrea Primiani <floyte@gmail.com>, 2009.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-04 22:18+0200\n"
-"PO-Revision-Date: 2009-11-01 22:02+0100\n"
-"Last-Translator: Andrea Primiani <floyte@gmail.com>\n"
+"POT-Creation-Date: 2010-07-31 09:42+0200\n"
+"PO-Revision-Date: 2010-08-11 11:12+0100\n"
+"Last-Translator: Andrea Primiani <primiani@dag.it>\n"
 "Language-Team: Italian <IT@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,53 +24,44 @@ msgstr "Conversione tasso campionamento"
 msgid "Adjusting speed"
 msgstr "Regolazione velocità"
 
-#: src/chunk.c:285
-msgid "Removing channel"
-msgstr "Rimozione canale"
-
-#: src/chunk.c:692
+#: src/chunk.c:701
 msgid "Mixing"
 msgstr "Miscelazione"
 
-#: src/chunk.c:747
+#: src/chunk.c:756
 #, c-format
 msgid "The mixed result was clipped %d times."
 msgstr "Il risultato miscelato è stato tagliato %d volte."
 
-#: src/chunk.c:887
+#: src/chunk.c:820
+msgid "Combining channels"
+msgstr "Combina canali"
+
+#: src/chunk.c:1081
 msgid "Mixing channels"
 msgstr "Miscelazione canali"
 
-#: src/chunk.c:891
-msgid "Mapping channels"
-msgstr "Mappa canali"
-
-#: src/chunk.c:1272
+#: src/chunk.c:1469
 msgid "Calculating peak level"
 msgstr "Calcolo livello di picco"
 
-#: src/chunk.c:1343 src/chunk.c:1353 src/chunk.c:1391 src/chunk.c:1401
+#: src/chunk.c:1540
+#: src/chunk.c:1550
+#: src/chunk.c:1588
+#: src/chunk.c:1598
 msgid "Finding zero-crossing"
 msgstr "Ricerca punto zero"
 
-#: src/chunk.c:1429
+#: src/chunk.c:1626
 #, c-format
 msgid "Amplifying (by %3.1f%% / %+.1fdB)"
 msgstr "Amplificazione (di %3.1f%% / %+.1f dB)"
 
-#: src/chunk.c:1470
+#: src/chunk.c:1667
 msgid "Amplifying"
 msgstr "Amplificazione"
 
-#: src/chunk.c:1639
-msgid "Removing channels"
-msgstr "Rimozione canali"
-
-#: src/chunk.c:1645
-msgid "Adding channels"
-msgstr "Aggiunta canali"
-
-#: src/chunk.c:1708
+#: src/chunk.c:1865
 #, c-format
 msgid "The input was clipped %d times during processing."
 msgstr "Durante il processo, il suono è stato tagliato %d volte."
@@ -81,385 +71,384 @@ msgid "number of recent files"
 msgstr "numero di file recenti"
 
 #: src/configdialog.c:75
-msgid ""
-"Some of the settings you have changed will not be activated until you "
-"restart the program"
-msgstr ""
-"Alcune impostazioni modificate non saranno attive fino al riavvio del "
-"programma"
+msgid "Some of the settings you have changed will not be activated until you restart the program"
+msgstr "Alcune impostazioni modificate non saranno attive fino al riavvio del programma"
 
-#: src/configdialog.c:269
+#: src/configdialog.c:272
 msgid "Colors"
 msgstr "Colori"
 
-#: src/configdialog.c:306
+#: src/configdialog.c:309
 msgid "_Preview"
 msgstr "Ante_prima"
 
-#: src/configdialog.c:313 src/configdialog.c:1098
+#: src/configdialog.c:316
+#: src/configdialog.c:1111
 msgid "_OK"
 msgstr "_OK"
 
-#: src/configdialog.c:331
+#: src/configdialog.c:334
 msgid "_Cancel"
 msgstr "_Annulla"
 
-#: src/configdialog.c:408
+#: src/configdialog.c:411
 msgid "Browse directory"
 msgstr "Sfoglia cartella"
 
-#: src/configdialog.c:458
+#: src/configdialog.c:461
 msgid "Preferences"
 msgstr "Preferenze"
 
-#: src/configdialog.c:517
+#: src/configdialog.c:520
 msgid "Show _time scale by default"
 msgstr "Mostra scala tempi"
 
-#: src/configdialog.c:527
+#: src/configdialog.c:530
 msgid "Show _horizontal zoom slider by default"
 msgstr "Mostra cursore zoom orizzontale"
 
-#: src/configdialog.c:537
+#: src/configdialog.c:540
 msgid "Show _vertical zoom slider by default"
 msgstr "Mostra cursore zoom _verticale"
 
-#: src/configdialog.c:547
+#: src/configdialog.c:550
 msgid "Show _speed slider by default"
 msgstr "Mostra cursore velocità"
 
-#: src/configdialog.c:556
+#: src/configdialog.c:559
 msgid "_Settings"
 msgstr "_Impostazioni"
 
-#: src/configdialog.c:566
+#: src/configdialog.c:569
 msgid "_Keep sound driver opened (to avoid start/stop clicks)"
 msgstr "Tieni aperto il driver audio (per evitare clic alla partenza/fermata)"
 
-#: src/configdialog.c:575
+#: src/configdialog.c:578
 msgid "_Byte-swap output (try this if playback sounds horrible)"
 msgstr "Scambia ordine _byte (provare se il suono è orribile)"
 
-#: src/configdialog.c:584
+#: src/configdialog.c:587
+msgid "Play _mono files as stereo"
+msgstr "Suona file _mono come stereo"
+
+#: src/configdialog.c:595
 msgid "_Update cursor information while playing"
 msgstr "Aggiorna info cursore mentre suona"
 
-#: src/configdialog.c:592
+#: src/configdialog.c:603
 msgid "_Keep cursor in center of view when following playback"
 msgstr "Tieni il cursore al centro mentre segue il suono"
 
-#: src/configdialog.c:602
+#: src/configdialog.c:613
 msgid "_Auto-start playback when jumping to mark"
 msgstr "_Auto partenza quando salta ad un segno"
 
-#: src/configdialog.c:610
+#: src/configdialog.c:621
 msgid "Enable _variable speed playback"
 msgstr "Abilita esecuzione a _velocità variabile"
 
-#: src/configdialog.c:619
+#: src/configdialog.c:630
 msgid "Auto-_reset speed"
 msgstr "Auto-_reset velocità"
 
-#: src/configdialog.c:626
+#: src/configdialog.c:637
 msgid "Use fast and noisy method"
 msgstr "Usa metodo veloce e rumoroso"
 
-#: src/configdialog.c:634
+#: src/configdialog.c:645
 msgid "(H')MM:SS.t"
 msgstr "(O')MM:SS.t"
 
-#: src/configdialog.c:635
+#: src/configdialog.c:646
 msgid "(H')MM:SS.mmmm"
 msgstr "(O')MM:SS.mmmm"
 
-#: src/configdialog.c:636
+#: src/configdialog.c:647
 msgid "TimeDisplay|Samples"
-msgstr "TimeDisplay|Campioni"
+msgstr "Campioni"
 
-#: src/configdialog.c:637
+#: src/configdialog.c:648
 msgid "Time Code 24fps"
 msgstr "Time Code 24fps"
 
-#: src/configdialog.c:638
+#: src/configdialog.c:649
 msgid "Time Code 25fps (PAL)"
 msgstr "Time Code 25fps (PAL)"
 
-#: src/configdialog.c:639
+#: src/configdialog.c:650
 msgid "Time Code 29.97fps (NTSC)"
 msgstr "Time Code 29.97fps (NTSC)"
 
-#: src/configdialog.c:640
+#: src/configdialog.c:651
 msgid "Time Code 30fps"
 msgstr "Time Code 30fps"
 
-#: src/configdialog.c:653
+#: src/configdialog.c:664
 msgid "_Remember window sizes/positions"
 msgstr "_Ricorda dimensioni/posizione finestre"
 
-#: src/configdialog.c:662
+#: src/configdialog.c:673
 msgid "_Draw waveform a second time with improved quality"
 msgstr "_Disegna forma d'onda due volte con qualità migliore"
 
-#: src/configdialog.c:692
+#: src/configdialog.c:703
 msgid "_Remove"
 msgstr "_Rimuovi"
 
-#: src/configdialog.c:700
+#: src/configdialog.c:711
 msgid "_Add"
 msgstr "_Aggiungi"
 
-#: src/configdialog.c:707
+#: src/configdialog.c:718
 msgid "_Browse..."
 msgstr "_Sfoglia..."
 
-#: src/configdialog.c:714
+#: src/configdialog.c:725
 msgid "_Up"
 msgstr "_Su"
 
-#: src/configdialog.c:722
+#: src/configdialog.c:733
 msgid "_Down"
 msgstr "_Giù"
 
-#: src/configdialog.c:735
+#: src/configdialog.c:746
 msgid "Keep main _window in front after applying effect"
 msgstr "Tieni finestra davanti dopo applicazione effetto"
 
-#: src/configdialog.c:751
+#: src/configdialog.c:762
 msgid "_Use floating-point temporary files"
 msgstr "Usa file temporanei con decimali"
 
-#: src/configdialog.c:760
+#: src/configdialog.c:771
 msgid "Enable _dithering for editing"
 msgstr "Abilita dithering per la modifica"
 
-#: src/configdialog.c:768
+#: src/configdialog.c:779
 msgid "Enable dithering for _playback"
 msgstr "Abilita dithering per l'esecuzione"
 
-#: src/configdialog.c:776
+#: src/configdialog.c:787
 msgid "Auto dete_ct driver on each start-up"
 msgstr "Auto-rilevamento driver ad ogni avvio"
 
-#: src/configdialog.c:799
+#: src/configdialog.c:810
 msgid "Interface"
 msgstr "Interfaccia"
 
-#: src/configdialog.c:800
+#: src/configdialog.c:811
 msgid " Main window "
 msgstr " Finestra principale "
 
-#: src/configdialog.c:811
+#: src/configdialog.c:822
 msgid "Number of recent files in File menu: "
 msgstr "Numero di file recenti nel menu File:"
 
-#: src/configdialog.c:816
+#: src/configdialog.c:827
 msgid " View "
 msgstr " Vista "
 
-#: src/configdialog.c:827
+#: src/configdialog.c:838
 msgid "Customize co_lors..."
 msgstr "Modifica co_lori..."
 
-#: src/configdialog.c:834
+#: src/configdialog.c:845
 msgid " Window contents "
 msgstr " Contenuto finestra "
 
-#: src/configdialog.c:851
+#: src/configdialog.c:862
 msgid "Sound"
 msgstr "Suono"
 
-#: src/configdialog.c:852
+#: src/configdialog.c:863
 msgid " Driver options "
 msgstr " Opzioni driver "
 
-#: src/configdialog.c:860
+#: src/configdialog.c:871
 msgid "_Driver:"
 msgstr "_Driver:"
 
-#: src/configdialog.c:875
+#: src/configdialog.c:888
 msgid " Fallback format "
 msgstr " Formato di riserva "
 
-#: src/configdialog.c:880
+#: src/configdialog.c:893
 msgid "Sample format to try when the sound file's format isn't supported."
 msgstr "Formato da usare quando il formato non è riconosciuto"
 
-#: src/configdialog.c:892
+#: src/configdialog.c:905
 msgid "Playback"
 msgstr "Suona"
 
-#: src/configdialog.c:894
+#: src/configdialog.c:907
 msgid " Playback settings "
 msgstr " Impostazioni suona "
 
-#: src/configdialog.c:906
+#: src/configdialog.c:919
 msgid " Variable speed "
 msgstr " Velocità variabile "
 
-#: src/configdialog.c:921 src/help.c:38
+#: src/configdialog.c:934
+#: src/help.c:38
 msgid "Files"
 msgstr "File"
 
-#: src/configdialog.c:923
+#: src/configdialog.c:936
 msgid " Temporary file directories "
 msgstr " Cartelle file temporanei "
 
-#: src/configdialog.c:949
+#: src/configdialog.c:962
 msgid " Temporary file settings "
 msgstr " Impostazioni file temporanei "
 
-#: src/configdialog.c:954
-msgid ""
-"To avoid rounding errors when applying more than one effect on the same "
-"data, floating-point temporary files can be used. However, this will "
-"increase disk and CPU usage."
-msgstr ""
-"Per evitare errori di arrotondamento quando si applicano diversi effetti "
-"sugli stessi dati, possono essere usati file temporanei con decimali. "
-"Tuttavia questo aumenta il consumo di CPU e di memoria."
+#: src/configdialog.c:967
+msgid "To avoid rounding errors when applying more than one effect on the same data, floating-point temporary files can be used. However, this will increase disk and CPU usage."
+msgstr "Per evitare errori di arrotondamento quando si applicano diversi effetti sugli stessi dati, possono essere usati file temporanei con decimali. Tuttavia questo aumenta il consumo di CPU e di memoria."
 
-#: src/configdialog.c:967 src/help.c:36
+#: src/configdialog.c:980
+#: src/help.c:36
 msgid "Quality"
 msgstr "Qualità"
 
-#: src/configdialog.c:969
+#: src/configdialog.c:982
 msgid " Rate conversions "
 msgstr " Conversioni di tasso "
 
-#: src/configdialog.c:976
+#: src/configdialog.c:989
 msgid "Varispeed: "
 msgstr "Variavelocità:"
 
-#: src/configdialog.c:977
+#: src/configdialog.c:990
 msgid "Speed effect: "
 msgstr "Effetto velocità: "
 
-#: src/configdialog.c:984
+#: src/configdialog.c:997
 msgid " Dithering "
 msgstr " Dithering "
 
-#: src/configdialog.c:998
+#: src/configdialog.c:1011
 msgid "Other"
 msgstr "Altro"
 
-#: src/configdialog.c:1000
+#: src/configdialog.c:1013
 msgid " Time format "
 msgstr " Formato tempo "
 
-#: src/configdialog.c:1009
+#: src/configdialog.c:1022
 msgid "Display t_imes as: "
 msgstr "Mostra tempi come: "
 
-#: src/configdialog.c:1020
+#: src/configdialog.c:1033
 msgid "Times_cale format: "
 msgstr "Formato _scala dei tempi: "
 
-#: src/configdialog.c:1031
+#: src/configdialog.c:1044
 msgid " External applications "
 msgstr " Applicazioni esterne "
 
-#: src/configdialog.c:1039
+#: src/configdialog.c:1052
 msgid "Mi_xer utility: "
 msgstr "Mi_xer: "
 
-#: src/configdialog.c:1049
+#: src/configdialog.c:1062
 msgid "Advanced"
 msgstr "Avanzato"
 
-#: src/configdialog.c:1050
+#: src/configdialog.c:1063
 msgid " Advanced settings "
 msgstr " Impostazioni avanzate "
 
-#: src/configdialog.c:1058
+#: src/configdialog.c:1071
 msgid "Disk editing _threshold: "
 msgstr "Soglia editing su disco: "
 
-#: src/configdialog.c:1069
+#: src/configdialog.c:1082
 msgid "View _quality:"
 msgstr "_Qualità vista:"
 
-#: src/configdialog.c:1075
+#: src/configdialog.c:1088
 msgid "samples/pixel"
 msgstr "campioni/pixel"
 
-#: src/configdialog.c:1081
+#: src/configdialog.c:1094
 msgid "Output _buffer size:"
 msgstr "Dimensioni _buffer uscita:"
 
-#: src/configdialog.c:1087
+#: src/configdialog.c:1100
 msgid "bytes"
 msgstr "bytes"
 
-#: src/configdialog.c:1112
+#: src/configdialog.c:1125
 msgid "_Close"
 msgstr "_Chiudi"
 
-#: src/dataformat.c:426
+#: src/dataformat.c:429
 msgid "Floating-point (single)"
 msgstr "Virgola mobile (singola)"
 
-#: src/dataformat.c:428
+#: src/dataformat.c:431
 msgid "Floating-point (double)"
 msgstr "Virgola mobile (doppia)"
 
-#: src/dataformat.c:430
+#: src/dataformat.c:433
 #, c-format
 msgid "PCM, %d bit, %s %s\n"
 msgstr "PCM, %d bit, %s %s\n"
 
-#: src/dataformat.c:431 src/formatselector.c:91
+#: src/dataformat.c:434
+#: src/formatselector.c:91
 msgid "Signed"
 msgstr "Con segno"
 
-#: src/dataformat.c:431 src/formatselector.c:90
+#: src/dataformat.c:434
+#: src/formatselector.c:90
 msgid "Unsigned"
 msgstr "Senza segno"
 
-#: src/dataformat.c:432
+#: src/dataformat.c:435
 msgid "Big-endian"
 msgstr "Big-endian"
 
-#: src/dataformat.c:432
+#: src/dataformat.c:435
 msgid "Little-endian"
 msgstr "Little-endian"
 
-#: src/dataformat.c:479
+#: src/dataformat.c:482
 msgid "Testing ranges..."
 msgstr "Test intervalli..."
 
-#: src/dataformat.c:495
+#: src/dataformat.c:498
 msgid "Range test failed for format: "
 msgstr "Test intervalli fallito per il formato: "
 
-#: src/dataformat.c:503
+#: src/dataformat.c:506
 msgid "Testing all conversions.."
 msgstr "Test di tutte le conversioni..."
 
-#: src/dataformat.c:536
+#: src/dataformat.c:539
 msgid "(expected) "
 msgstr "(atteso) "
 
-#: src/dataformat.c:537
+#: src/dataformat.c:540
 msgid "Conversion test failed, between: "
 msgstr "Test conversione fallito, tra: "
 
-#: src/dataformat.c:539
+#: src/dataformat.c:542
 msgid "  and: "
 msgstr "  e: "
 
-#: src/dataformat.c:547
+#: src/dataformat.c:550
 msgid "No errors detected!"
 msgstr "Nessun errore!"
 
-#: src/dataformat.c:581
+#: src/dataformat.c:584
 msgid "Preparing tests.."
 msgstr "Preparazione test.."
 
-#: src/dataformat.c:589
+#: src/dataformat.c:592
 msgid "Running tests.."
 msgstr "Esecuzione test.."
 
-#: src/dataformat.c:629
+#: src/dataformat.c:632
 #, c-format
 msgid ""
 "\n"
@@ -470,140 +459,153 @@ msgstr ""
 "\n"
 "Risultati test (1 unità di tempo = %f usec/campione)\n"
 
-#: src/datasource.c:309
+#: src/datasource.c:367
 #, c-format
 msgid "Couldn't open %s"
 msgstr "Non riesco ad aprire %s"
 
-#: src/datasource.c:423
+#: src/datasource.c:500
 msgid "Unexpected end of file"
 msgstr "Fine file inattesa"
 
-#: src/datasource.c:424
+#: src/datasource.c:501
 #, c-format
 msgid "Error reading %s: %s"
 msgstr "Errore di lettura %s: %s"
 
-#: src/datasource.c:442 src/datasource.c:490
+#: src/datasource.c:519
+#: src/datasource.c:567
 #, c-format
 msgid "Error seeking in %s: %s"
 msgstr "Errore di ricerca in %s: %s"
 
-#: src/effectbrowser.c:98
+#: src/effectbrowser.c:99
 msgid "Built-in"
 msgstr "Interni (B)"
 
-#: src/effectbrowser.c:101
+#: src/effectbrowser.c:102
 msgid "Volume adjust/fade"
 msgstr "Regola volume/sfuma"
 
-#: src/effectbrowser.c:103
+#: src/effectbrowser.c:104
 msgid "Convert samplerate"
 msgstr "Converti tasso"
 
-#: src/effectbrowser.c:105
+#: src/effectbrowser.c:106
 msgid "Convert sample format"
 msgstr "Converti formato campione"
 
-#: src/effectbrowser.c:107
+#: src/effectbrowser.c:108
 msgid "Map channels"
 msgstr "Mappa canali"
 
-#: src/effectbrowser.c:109
+#: src/effectbrowser.c:110
 msgid "Combine channels"
 msgstr "Combina canali"
 
-#: src/effectbrowser.c:111
+#: src/effectbrowser.c:113
+msgid "Add channels from other file"
+msgstr "Aggiungi canali da altro file"
+
+#: src/effectbrowser.c:114
 msgid "Speed"
 msgstr "Velocità"
 
-#: src/effectbrowser.c:112
+#: src/effectbrowser.c:115
 msgid "Pipe through program"
 msgstr "Invia attraverso programma"
 
-#: src/effectbrowser.c:246
+#: src/effectbrowser.c:250
 msgid "You have no open file to apply the effect to!"
 msgstr "Nessun file aperto su cui applicare l'effetto!"
 
-#: src/effectbrowser.c:271
+#: src/effectbrowser.c:275
 msgid "This effect could not be loaded."
 msgstr "L'effetto non puo' essere caricato."
 
-#: src/effectbrowser.c:578
+#: src/effectbrowser.c:582
 msgid "/Move Up"
 msgstr "/Sposta Su"
 
-#: src/effectbrowser.c:579
+#: src/effectbrowser.c:583
 msgid "/Move Down"
 msgstr "/Sposta Giù"
 
-#: src/effectbrowser.c:580
+#: src/effectbrowser.c:584
 msgid "/Move to Top"
 msgstr "/Sposta in cima"
 
-#: src/effectbrowser.c:581
+#: src/effectbrowser.c:585
 msgid "/Move to Bottom"
 msgstr "/Sposta in fondo"
 
-#: src/effectbrowser.c:583
+#: src/effectbrowser.c:587
 msgid "/Sort by Name"
 msgstr "/Ordina per nome"
 
-#: src/effectbrowser.c:584
+#: src/effectbrowser.c:588
 msgid "/Sort by Type"
 msgstr "/Ordina per tipo"
 
-#: src/effectbrowser.c:585
+#: src/effectbrowser.c:589
 msgid "/Sort by Location"
 msgstr "/Ordina per posizione"
 
-#: src/effectbrowser.c:586
+#: src/effectbrowser.c:590
 msgid "/Sort by Author"
 msgstr "/Ordina per autore"
 
-#: src/effectbrowser.c:588
+#: src/effectbrowser.c:592
 msgid "/Restore Order"
 msgstr "/Ripristina ordine"
 
-#: src/effectbrowser.c:589
+#: src/effectbrowser.c:593
 msgid "/Rebuild Effect List"
 msgstr "/Rileggi lista effetti"
 
-#: src/effectbrowser.c:740
+#: src/effectbrowser.c:744
 msgid "Top"
 msgstr "Cima"
 
-#: src/effectbrowser.c:747
+#: src/effectbrowser.c:751
 msgid "Up"
 msgstr "Su"
 
-#: src/effectbrowser.c:754
+#: src/effectbrowser.c:758
 msgid "Down"
 msgstr "Giù"
 
-#: src/effectbrowser.c:761
+#: src/effectbrowser.c:765
 msgid "Bottom"
 msgstr "Fondo"
 
-#: src/effectbrowser.c:789
+#: src/effectbrowser.c:793
 msgid "Close dialog after applying effect"
 msgstr "Chiudi questa finestra dopo l'applicazione dell'effetto"
 
-#: src/effectbrowser.c:796 src/gotodialog.c:143
+#: src/effectbrowser.c:800
+#: src/gotodialog.c:143
 msgid "Apply"
 msgstr "Applica"
 
-#: src/effectbrowser.c:806 src/gotodialog.c:148 src/mainwindow.c:1360
-#: src/pipedialog.c:155 src/recorddialog.c:801 src/sound-esound.c:288
-#: src/sound-jack.c:260 src/sound-oss.c:420
+#: src/effectbrowser.c:810
+#: src/gotodialog.c:148
+#: src/mainwindow.c:1372
+#: src/pipedialog.c:155
+#: src/recorddialog.c:603
+#: src/recorddialog.c:979
+#: src/sound-esound.c:290
+#: src/sound-jack.c:260
+#: src/sound-oss.c:478
 msgid "Close"
 msgstr "Chiudi"
 
-#: src/effectbrowser.c:828 src/help.c:35
+#: src/effectbrowser.c:832
+#: src/help.c:35
 msgid "Effects"
 msgstr "Effetti"
 
-#: src/effectbrowser.c:888
+#: src/effectbrowser.c:892
 msgid "Apply to: "
 msgstr "Applica a:"
 
@@ -647,12 +649,8 @@ msgstr "Apertura.."
 
 #: src/filetypes.c:325
 #, c-format
-msgid ""
-"The file name '%s' has an extension unknown to the program. Please specify "
-"in which format this file should be saved."
-msgstr ""
-"Il nome del file %s ha un'estensione ignota al programma. Specificare in che "
-"formato deve essere salvato."
+msgid "The file name '%s' has an extension unknown to the program. Please specify in which format this file should be saved."
+msgstr "Il nome del file %s ha un'estensione ignota al programma. Specificare in che formato deve essere salvato."
 
 #: src/filetypes.c:330
 msgid "Unknown file type"
@@ -664,14 +662,8 @@ msgstr "Salvataggio.."
 
 #: src/filetypes.c:385
 #, c-format
-msgid ""
-"The file %s may be destroyed since the saving failed. Try to free up some "
-"disk space and save again. If you exit now the file's contents could be in a "
-"bad state. "
-msgstr ""
-"Il file %s può essere corrotto perché il salvataggio è fallito. Cercate di "
-"liberare spazio sul disco e salvate di nuovo. Se uscite ora il contenuto del "
-"file può essere rovinato."
+msgid "The file %s may be destroyed since the saving failed. Try to free up some disk space and save again. If you exit now the file's contents could be in a bad state. "
+msgstr "Il file %s può essere corrotto perché il salvataggio è fallito. Cercate di liberare spazio sul disco e salvate di nuovo. Se uscite ora il contenuto del file può essere rovinato."
 
 #: src/filetypes.c:449
 #, c-format
@@ -680,33 +672,25 @@ msgstr "%s non è un file WAV valido"
 
 #: src/filetypes.c:464
 #, c-format
-msgid ""
-"The file %s is a compressed wav file. This program can only work with "
-"uncompressed wav files."
-msgstr ""
-"Il file %s è un WAV compresso. Questo programma lavora solo con file non "
-"compressi."
+msgid "The file %s is a compressed wav file. This program can only work with uncompressed wav files."
+msgstr "Il file %s è un WAV compresso. Questo programma lavora solo con file non compressi."
 
 #: src/filetypes.c:551
-msgid ""
-"On this system, libsndfile is required to save floating-point wav files."
-msgstr ""
-"Su questo sistema è necessaria la presenza di libsndfile per salvare file "
-"WAV con virgola mobile."
+msgid "On this system, libsndfile is required to save floating-point wav files."
+msgstr "Su questo sistema è necessaria la presenza di libsndfile per salvare file WAV con virgola mobile."
 
 #: src/filetypes.c:590
 msgid ""
-"You are saving a wav file larger than 2048MB. Such large files are non-"
-"standard and may not be readable by all programs.\n"
+"You are saving a wav file larger than 2048MB. Such large files are non-standard and may not be readable by all programs.\n"
 "\n"
 " (this warning will not be displayed again)"
 msgstr ""
-"Stai salvando un file più grande di 2048MB. Questo non è standard e potrebbe "
-"dare problemi di lettura su alcuni programmi.\n"
+"Stai salvando un file più grande di 2048MB. Questo non è standard e potrebbe dare problemi di lettura su alcuni programmi.\n"
 "\n"
 "(questo avvertimento non verrà ripetuto)"
 
-#: src/filetypes.c:710 src/filetypes.c:844
+#: src/filetypes.c:710
+#: src/filetypes.c:844
 #, c-format
 msgid "Failed to open '%s'!"
 msgstr "Caricamento fallito '%s'!"
@@ -720,76 +704,90 @@ msgstr "Formato campioni o numero canali non valido per questo formato"
 msgid "Failed to write to '%s'!"
 msgstr "Scrittura fallita in '%s'!"
 
-#: src/filetypes.c:940
+#: src/filetypes.c:946
 msgid "Decoding"
 msgstr "Decodifica.."
 
-#: src/filetypes.c:1053
+#: src/filetypes.c:1066
 msgid "Variable bitrate (default)"
 msgstr "Bitrate variabile (predefinito)"
 
-#: src/filetypes.c:1054
+#: src/filetypes.c:1067
 msgid "Average bitrate"
 msgstr "Bitrate medio"
 
-#: src/filetypes.c:1055
+#: src/filetypes.c:1068
 msgid "Constant bitrate"
 msgstr "Bitrate costante"
 
-#: src/filetypes.c:1056
+#: src/filetypes.c:1069
 msgid "Custom argument"
 msgstr "Argomento opzionale"
 
-#: src/filetypes.c:1060
+#: src/filetypes.c:1073
 msgid "Standard (high quality)"
 msgstr "Standard (alta qualità)"
 
-#: src/filetypes.c:1061
+#: src/filetypes.c:1074
 msgid "Extreme (higher quality)"
 msgstr "Estremo (qualità altissima)"
 
-#: src/filetypes.c:1062
+#: src/filetypes.c:1075
 msgid "Insane (highest possible quality)"
 msgstr "Senza senso (qualità massima possibile)"
 
-#: src/filetypes.c:1080
+#: src/filetypes.c:1093
 #, c-format
 msgid "%s kbit/s"
 msgstr "%s kbit/s"
 
-#: src/filetypes.c:1109
+#: src/filetypes.c:1122
 msgid "MP3 Preferences"
 msgstr "Preferenze MP3"
 
-#: src/filetypes.c:1120
+#: src/filetypes.c:1133
 msgid "Encoding type: "
 msgstr "Tipo codifica: "
 
-#: src/filetypes.c:1133
+#: src/filetypes.c:1146
 msgid "Quality: "
 msgstr "Qualità: "
 
-#: src/filetypes.c:1142
+#: src/filetypes.c:1155
 msgid "Custom argument: "
 msgstr "Argomento facoltativo: "
 
-#: src/filetypes.c:1148
+#: src/filetypes.c:1161
 msgid "Use this setting by default"
 msgstr "Usa sempre queste impostazioni"
 
-#: src/filetypes.c:1153 src/gotodialog.c:135 src/mainwindow.c:1431
-#: src/rawdialog.c:99 src/recorddialog.c:367 src/sound-alsalib.c:78
-#: src/sound-esound.c:284 src/sound-jack.c:256 src/sound-oss.c:416
-#: src/um.c:107 src/um.c:140 src/um.c:336 src/um.c:434
+#: src/filetypes.c:1166
+#: src/gotodialog.c:135
+#: src/mainwindow.c:1443
+#: src/rawdialog.c:100
+#: src/sound-alsalib.c:98
+#: src/sound-esound.c:286
+#: src/sound-jack.c:256
+#: src/sound-oss.c:474
+#: src/um.c:108
+#: src/um.c:141
+#: src/um.c:337
+#: src/um.c:437
 msgid "OK"
 msgstr "OK"
 
-#: src/filetypes.c:1161 src/rawdialog.c:105 src/recorddialog.c:375
-#: src/sound-alsalib.c:82 src/um.c:131 src/um.c:148 src/um.c:340 src/um.c:443
+#: src/filetypes.c:1174
+#: src/rawdialog.c:106
+#: src/sound-alsalib.c:102
+#: src/um.c:132
+#: src/um.c:149
+#: src/um.c:341
+#: src/um.c:446
 msgid "Cancel"
 msgstr "Annulla"
 
-#: src/float_box.c:167 src/int_box.c:169
+#: src/float_box.c:167
+#: src/int_box.c:169
 #, c-format
 msgid "'%s' is not a number!"
 msgstr "'%s' non è un numero!"
@@ -859,8 +857,10 @@ msgstr "tasso campione"
 msgid "Place cursor "
 msgstr "Porta il cursore a"
 
-#: src/gotodialog.c:101 src/soxdialog.c:518 src/soxdialog.c:523
-#: src/soxdialog.c:553
+#: src/gotodialog.c:101
+#: src/soxdialog.c:525
+#: src/soxdialog.c:530
+#: src/soxdialog.c:560
 msgid " seconds"
 msgstr " secondi"
 
@@ -885,75 +885,75 @@ msgid "after selection end"
 msgstr "dopo la fine della selezione"
 
 #: src/gotodialog.c:128
-msgid ""
-"(use a negative number to place the cursor before instead of after the "
-"selected point)"
-msgstr ""
-"(usare numeri negativi per portare il cursore prima del punto selezionato)"
+msgid "(use a negative number to place the cursor before instead of after the selected point)"
+msgstr "(usare numeri negativi per portare il cursore prima del punto selezionato)"
 
 #: src/gotodialog.c:163
 msgid "Position cursor"
 msgstr "Porta cursore"
 
-#: src/gtkfiles.c:47
+#: src/gtkfiles.c:48
 #, c-format
 msgid "Could not open %s: %s"
 msgstr "Impossible aprire %s: %s"
 
-#: src/gtkfiles.c:52
+#: src/gtkfiles.c:53
 #, c-format
 msgid "Warning: Unexpected error: %s"
 msgstr "Attenzione: errore inaspettato: %s"
 
-#: src/gtkfiles.c:109 src/gtkfiles.c:124
+#: src/gtkfiles.c:110
+#: src/gtkfiles.c:125
 #, c-format
 msgid "Error closing %s: %s"
 msgstr "Errore di chiusura %s: %s"
 
-#: src/gtkfiles.c:139
+#: src/gtkfiles.c:140
 #, c-format
 msgid "Could not seek in %s: %s"
 msgstr "Non posso cercare in %s: %s"
 
-#: src/gtkfiles.c:158 src/gtkfiles.c:203
+#: src/gtkfiles.c:159
+#: src/gtkfiles.c:204
 #, c-format
 msgid "Could not read from %s: %s"
 msgstr "Impossibile leggere da %s: %s"
 
-#: src/gtkfiles.c:177
+#: src/gtkfiles.c:178
 #, c-format
 msgid "Unexpected end of file reading from %s"
 msgstr "Fine file inaspettata mentre leggo da %s"
 
-#: src/gtkfiles.c:195
+#: src/gtkfiles.c:196
 #, c-format
 msgid "Unable to write data to %s"
 msgstr "Impossibile scrivere dati su %s"
 
-#: src/gtkfiles.c:261
+#: src/gtkfiles.c:262
 #, c-format
 msgid "Could not get file position in %s: %s"
 msgstr "Impossibile trovare posizione in %s: %s"
 
-#: src/gtkfiles.c:312 src/gtkfiles.c:472
+#: src/gtkfiles.c:313
+#: src/gtkfiles.c:473
 msgid "File already exists. Overwrite?"
 msgstr "Il file esiste. Sovrascrivo?"
 
-#: src/gtkfiles.c:320
+#: src/gtkfiles.c:321
 msgid "No file with that name!"
 msgstr "Nessun file con quel nome!"
 
-#: src/gtkfiles.c:704
+#: src/gtkfiles.c:705
 #, c-format
 msgid "Error reading from %s: %s"
 msgstr "Errore di lettura da %s: %s"
 
-#: src/gtkfiles.c:736
+#: src/gtkfiles.c:737
 #, c-format
 msgid "Could not remove '%s': %s"
 msgstr "Impossibile eliminare '%s': %s"
 
-#: src/gtkfiles.c:756
+#: src/gtkfiles.c:757
 #, c-format
 msgid "Error creating link to '%s': %s"
 msgstr "Errore creazione link a '%s': %s"
@@ -1002,15 +1002,13 @@ msgstr "Contatti"
 #, no-c-format
 msgid ""
 "\n"
-"mhWaveEdit is a graphical program for editing sound files. It is completely "
-"free (GPL).\n"
+"mhWaveEdit is a graphical program for editing sound files. It is completely free (GPL).\n"
 "\n"
 "You can find the latest release of mhWaveEdit at:\n"
 "http://gna.org/projects/mhwaveedit/\n"
 msgstr ""
 "\n"
-"mhWaveEdit è un programma grafico per modificare i file sonori. E' "
-"totalmente libero (GPL).\n"
+"mhWaveEdit è un programma grafico per modificare i file sonori. E' totalmente libero (GPL).\n"
 "\n"
 "L'ultima versione di mhWaveEdit si trova a:\n"
 "http://gna.org/projects/mhwaveedit/\n"
@@ -1019,61 +1017,33 @@ msgstr ""
 #, no-c-format
 msgid ""
 "\n"
-"The area where you 'see' the contents of the file you are editing, is called "
-"the 'sample view'. \n"
+"The area where you 'see' the contents of the file you are editing, is called the 'sample view'. \n"
 "\n"
-"In the sample view there is a grey vertical bar called the 'cursor'. The "
-"cursor follows the sound wave when you play the sound. You can position the "
-"cursor by clicking with the right (2:nd) mouse button. If you do this while "
-"you're playing a file, the playing will continue from the new cursor "
-"position. You can also position the cursor more exact by using the 'Position "
-"Cursor...' command on the Edit menu.\n"
+"In the sample view there is a grey vertical bar called the 'cursor'. The cursor follows the sound wave when you play the sound. You can position the cursor by clicking with the right (2:nd) mouse button. If you do this while you're playing a file, the playing will continue from the new cursor position. You can also position the cursor more exact by using the 'Position Cursor...' command on the Edit menu.\n"
 "\n"
-"You can place marks in your file by holding down Ctrl and pressing a number "
-"from 0 to 9. This will place a mark (green vertical bar) with the same "
-"number at the current cursor position. You can later make the cursor go to "
-"that position again by just pressing the number. Setting and jumping to "
-"marks can be done while playing. To remove a mark, jump to the mark and set "
-"it again.\n"
+"You can place marks in your file by holding down Ctrl and pressing a number from 0 to 9. This will place a mark (green vertical bar) with the same number at the current cursor position. You can later make the cursor go to that position again by just pressing the number. Setting and jumping to marks can be done while playing. To remove a mark, jump to the mark and set it again.\n"
 msgstr ""
 "\n"
-"L'area dove si 'vedono' i contenuti del file che si sta modificando è "
-"chiamata 'vista dei campioni'.\n"
+"L'area dove si 'vedono' i contenuti del file che si sta modificando è chiamata 'vista dei campioni'.\n"
 "\n"
-"Nella vista c'è una barra grigia chiamata 'cursore'. Il cursore segue l'onda "
-"sonora quando si suona il file. Si puo' spostare il cursore con un clic "
-"destro del mouse. Se si clicca mentre il file sta suonando, l'esecuzione "
-"continua dalla nuova posizione del cursore. La voce 'Posizione cursore' del "
-"menu Cursore contiene alcuni comandi per posizionare più precisamente la "
-"barra.\n"
+"Nella vista c'è una barra grigia chiamata 'cursore'. Il cursore segue l'onda sonora quando si suona il file. Si puo' spostare il cursore con un clic destro del mouse. Se si clicca mentre il file sta suonando, l'esecuzione continua dalla nuova posizione del cursore. La voce 'Posizione cursore' del menu Cursore contiene alcuni comandi per posizionare più precisamente la barra.\n"
 "\n"
-"Premendo Ctrl con un tasto numerico si possono creare dei segnalibri sul "
-"suono. Comparirà una barra verde con il numero scelto. Per portare il "
-"cursore alla posizione segnata basta premere il tasto numerico. "
-"L'impostazione e il salto ai segni possono essere fatti suonando. Per "
-"togliere un segno, saltare al numero e reimpostarlo.\n"
+"Premendo Ctrl con un tasto numerico si possono creare dei segnalibri sul suono. Comparirà una barra verde con il numero scelto. Per portare il cursore alla posizione segnata basta premere il tasto numerico. L'impostazione e il salto ai segni possono essere fatti suonando. Per togliere un segno, saltare al numero e reimpostarlo.\n"
 
 #: src/help.c:62
 #, no-c-format
 msgid ""
 "\n"
-"Playing a file is simple, just load the file and press the play button. The "
-"green play button plays from the current position. The yellow play button "
-"plays the current selection, or the entire file if nothing is selected. Stop "
-"the playback with the stop button (with the red square). \n"
+"Playing a file is simple, just load the file and press the play button. The green play button plays from the current position. The yellow play button plays the current selection, or the entire file if nothing is selected. Stop the playback with the stop button (with the red square). \n"
 "\n"
 "The playback speed can be varied by adjusting the slider to the far right. \n"
 "\n"
 "You can do normal editing while the file is playing.\n"
 msgstr ""
 "\n"
-"Ascoltare un file è semplice: lo si carica e si preme il bottone Play. "
-"Quello verde suona dalla posizione attuale del cursore, quello giallo suona "
-"la selezione attuale o l'intero file se non è selezionato niente. Fermare "
-"l'esecuzione con il bottone Stop (quadrato rosso)\n"
+"Ascoltare un file è semplice: lo si carica e si preme il bottone Play. Quello verde suona dalla posizione attuale del cursore, quello giallo suona la selezione attuale o l'intero file se non è selezionato niente. Fermare l'esecuzione con il bottone Stop (quadrato rosso)\n"
 "\n"
-"La velocità di esecuzione può variare regolando il cursore verticale "
-"all'estrema destra.\n"
+"La velocità di esecuzione può variare regolando il cursore verticale all'estrema destra.\n"
 "\n"
 "Le modifiche normali possono essere fatte durante l'esecuzione.\n"
 
@@ -1081,112 +1051,67 @@ msgstr ""
 #, no-c-format
 msgid ""
 "\n"
-"Recording is done with 'Record...' on the Play menu, or the Record button "
-"(the red circle). A dialog box will pop up where you can select what format "
-"you want to record in. After selecting the format, meters and numbers will "
-"appear showing info about the volume level of the sound input. \n"
+"Recording is done with 'Record...' on the Play menu, or the Record button (the red circle). A dialog box will pop up where you can select what format you want to record in. After selecting the format, meters and numbers will appear showing info about the volume level of the sound input. \n"
 "\n"
-"When you want to start recording, press the \"Start recording\" button. When "
-"you've recorded everything you wanted to, press the Finish button and the "
-"record dialog will disappear and newly recorded sound will show up in a new "
-"window.\n"
+"When you want to start recording, press the \"Start recording\" button. When you've recorded everything you wanted to, press the Finish button and the record dialog will disappear and newly recorded sound will show up in a new window.\n"
 "\n"
-"Currently it is impossible to play and record at the same time, so the "
-"playback will stop when you record.\n"
+"Currently it is impossible to play and record at the same time, so the playback will stop when you record.\n"
 msgstr ""
 "\n"
-"La registrazione si avvia con 'Registra...' dal menu Suona, oppure dal "
-"bottone Registra (cerchio rosso). Compare una finestra dove si può "
-"selezionare il formato di registrazione. Appena fatta questa scelta, "
-"compaiono indicatori e numeri che mostrano il livello dei suoni in "
-"ingresso.\n"
+"La registrazione si avvia con 'Registra...' dal menu Suona, oppure dal bottone Registra (cerchio rosso). Compare una finestra dove si può selezionare il formato di registrazione. Appena fatta questa scelta, compaiono indicatori e numeri che mostrano il livello dei suoni in ingresso.\n"
 "\n"
-"Quando si vuol far partire la registrazione, premere il bottone 'Avvia "
-"registrazione'. Alla fine, premere il bottone 'Termina', la finestra di "
-"registrazione scompare ed i suoni appena registrati appariranno in una nuova "
-"finestra.\n"
+"Quando si vuol far partire la registrazione, premere il bottone 'Avvia registrazione'. Alla fine, premere il bottone 'Termina', la finestra di registrazione scompare ed i suoni appena registrati appariranno in una nuova finestra.\n"
 "\n"
-"E' attualmente impossibile registrare mentre si sta suonando, quindi "
-"l'esecuzione si ferma quando si avvia una registrazione.\n"
+"E' attualmente impossibile registrare mentre si sta suonando, quindi l'esecuzione si ferma quando si avvia una registrazione.\n"
 
 #: src/help.c:78
 #, no-c-format
 msgid ""
 "\n"
-"You make selections by dragging the mouse over the sample view. You can hear "
-"what you've currently selected by clicking on the \"play selection\" button "
-"(the button with the yellow arrow) or by selecting 'Play selection' from the "
-"Play menu.\n"
+"You make selections by dragging the mouse over the sample view. You can hear what you've currently selected by clicking on the \"play selection\" button (the button with the yellow arrow) or by selecting 'Play selection' from the Play menu.\n"
 "\n"
-"You can use the cursor to refine the selection. Use the 'Selection start at "
-"cursor' and 'Selection end at cursor' buttons to move the selection starting "
-"point or the selection end point to the current cursor position. You can "
-"also drag the selection endpoints using the mouse.\n"
+"You can use the cursor to refine the selection. Use the 'Selection start at cursor' and 'Selection end at cursor' buttons to move the selection starting point or the selection end point to the current cursor position. You can also drag the selection endpoints using the mouse.\n"
 "\n"
 "The 'Cut' and 'Copy' functions work like in any other software. \n"
 "\n"
-"The 'Paste' function insert the clipboard contents at the cursor position. "
-"The 'Paste over' function works like 'Paste', except that it overwrites the "
-"data after the insert position. \n"
+"The 'Paste' function insert the clipboard contents at the cursor position. The 'Paste over' function works like 'Paste', except that it overwrites the data after the insert position. \n"
 "\n"
-"The 'Paste mix' function combines the clipboard data with the data at the "
-"cursor position.\n"
+"The 'Paste mix' function combines the clipboard data with the data at the cursor position.\n"
 "\n"
-"The 'Paste as new' function opens a new window and puts the clipboard "
-"contents into it. \n"
+"The 'Paste as new' function opens a new window and puts the clipboard contents into it. \n"
 "\n"
 "The 'Crop' function deletes all parts of the file that are not selected.\n"
 "\n"
-"The 'Silence selection' function replaces the selected part with silence. To "
-"avoid clicks, the silent part is a line that meets the wave at the "
-"endpoints.\n"
+"The 'Silence selection' function replaces the selected part with silence. To avoid clicks, the silent part is a line that meets the wave at the endpoints.\n"
 "\n"
-"All editing functions work non-destructively, that is, the file you're "
-"editing isn't actually changed until you save it (the effects also work this "
-"way).\n"
+"All editing functions work non-destructively, that is, the file you're editing isn't actually changed until you save it (the effects also work this way).\n"
 "\n"
 msgstr ""
 "\n"
-"La selezione si può fare trascinando il mouse sopra alla vista campioni. Si "
-"può ascoltare quanto selezionato cliccando sul bottone 'suona "
-"selezione' (quello con il triangolo giallo) o scegliendo 'Suona selezione' "
-"dal menu 'Suona'.\n"
+"La selezione si può fare trascinando il mouse sopra alla vista campioni. Si può ascoltare quanto selezionato cliccando sul bottone 'suona selezione' (quello con il triangolo giallo) o scegliendo 'Suona selezione' dal menu 'Suona'.\n"
 "\n"
-"Il cursore può essere usato per perfezionare la selezione. I bottoni 'Inizio "
-"selezione al cursore' e 'Fine selezione al cursore' muovono l'inizio o la "
-"fine della selezione alla posizione corrente del cursore. I termini della "
-"selezione possono anche essere spostati col mouse.\n"
+"Il cursore può essere usato per perfezionare la selezione. I bottoni 'Inizio selezione al cursore' e 'Fine selezione al cursore' muovono l'inizio o la fine della selezione alla posizione corrente del cursore. I termini della selezione possono anche essere spostati col mouse.\n"
 "\n"
-"Le funzioni 'Taglia' e 'Copia' funzionano come in tutti gli altri "
-"programmi.\n"
+"Le funzioni 'Taglia' e 'Copia' funzionano come in tutti gli altri programmi.\n"
 "\n"
-"La funzione 'Incolla' inserisce il contenuto della memoria di transito alla "
-"posizione del cursore. La funzione 'Incolla sopra' funziona allo stesso "
-"modo, ma copre il suono esistente dopo la posizione del cursore.\n"
+"La funzione 'Incolla' inserisce il contenuto della memoria di transito alla posizione del cursore. La funzione 'Incolla sopra' funziona allo stesso modo, ma copre il suono esistente dopo la posizione del cursore.\n"
 "\n"
 "La funzione 'Incolla mix' mescola i dati esistenti con quelli incollati.\n"
 "\n"
-"La funzione 'Incolla come nuovo' apre una nuova finestra e ci mette il "
-"contenuto della memoria di transito.\n"
+"La funzione 'Incolla come nuovo' apre una nuova finestra e ci mette il contenuto della memoria di transito.\n"
 "\n"
-"La funzione 'Ritaglia' cancella tutte le parti del file che non sono "
-"selezionate.\n"
+"La funzione 'Ritaglia' cancella tutte le parti del file che non sono selezionate.\n"
 "\n"
-"La funzione 'Silenzia selezione' sostituisce la selezione con silenzio. Per "
-"evitare clic, la parte silenziosa si raccorda con l'onda esistente agli "
-"estremi.\n"
+"La funzione 'Silenzia selezione' sostituisce la selezione con silenzio. Per evitare clic, la parte silenziosa si raccorda con l'onda esistente agli estremi.\n"
 "\n"
-"Tutte le funzioni di modifica lavorano in modo non distruttivo, cioè le "
-"modifiche apportate non vengono applicate fin quando non si salva il file "
-"(anche gli effetti funzionano allo stesso modo).\n"
+"Tutte le funzioni di modifica lavorano in modo non distruttivo, cioè le modifiche apportate non vengono applicate fin quando non si salva il file (anche gli effetti funzionano allo stesso modo).\n"
 "\n"
 
 #: src/help.c:99
 #, no-c-format
 msgid ""
 "\n"
-"mhWaveEdit has a few simple effects, which are available from the 'Effects' "
-"menu. \n"
+"mhWaveEdit has a few simple effects, which are available from the 'Effects' menu. \n"
 "\n"
 " * Fade in/out\n"
 "\n"
@@ -1194,42 +1119,29 @@ msgid ""
 "\n"
 " * Normalize, Normalize to...\n"
 "\n"
-"   This amplifies the sound as much as possible without getting clipping "
-"distortion. The \"Normalize to...\" item lets you specify which level to "
-"normalize to.\n"
+"   This amplifies the sound as much as possible without getting clipping distortion. The \"Normalize to...\" item lets you specify which level to normalize to.\n"
 "\n"
 " * Volume adjust/fade...\n"
 "\n"
-"   This effect lets you select a starting volume and a ending volume and "
-"amplifies the selection fading from the starting volume to the ending "
-"volume.\n"
+"   This effect lets you select a starting volume and a ending volume and amplifies the selection fading from the starting volume to the ending volume.\n"
 "\n"
-"   Note that volumes above 100% may cause sound distortion. Use the 'Find "
-"top volume' to find out the maximum amplification possible without "
-"distortion. (You can use this for normalizing samples.) \n"
+"   Note that volumes above 100% may cause sound distortion. Use the 'Find top volume' to find out the maximum amplification possible without distortion. (You can use this for normalizing samples.) \n"
 "\n"
-"   By setting starting volume and ending volume to the same value you get a "
-"simple amplification of the sound. \n"
+"   By setting starting volume and ending volume to the same value you get a simple amplification of the sound. \n"
 "\n"
 " * Convert samplerate...\n"
 "\n"
-"   This converts the samplerate of the entire file to one you specify. There "
-"are different methods for doing this, usually the one in the top has the "
-"best quality but can take longer than the other methode.\n"
+"   This converts the samplerate of the entire file to one you specify. There are different methods for doing this, usually the one in the top has the best quality but can take longer than the other methode.\n"
 "\n"
 " * Convert sample format...\n"
 "\n"
 "   This converts the sample format of the entire file.\n"
 "\n"
-"   The 'Don't actually change the data' option can be used if the program "
-"was wrong about the file's format.\n"
+"   The 'Don't actually change the data' option can be used if the program was wrong about the file's format.\n"
 "\n"
 " * Byte swap\n"
 "\n"
-"   This \"byte swaps\" the selected part. It can be used to repair damaged "
-"files where the byte order is wrong. Note that if the sound looks alright "
-"but plays wrong, you should not use this option, instead you should use the "
-"\"byte-swap output\" option in the Preferences dialog.\n"
+"   This \"byte swaps\" the selected part. It can be used to repair damaged files where the byte order is wrong. Note that if the sound looks alright but plays wrong, you should not use this option, instead you should use the \"byte-swap output\" option in the Preferences dialog.\n"
 "\n"
 " * Mix to mono\n"
 "\n"
@@ -1237,45 +1149,30 @@ msgid ""
 "\n"
 " * Add channel\n"
 "\n"
-"   This copies the first channel to a new channel in the sound, converting "
-"mono to stereo etc.\n"
+"   This copies the first channel to a new channel in the sound, converting mono to stereo etc.\n"
 "\n"
 " * Map channels...\n"
 "   \n"
-"   With this effect, you can change the number of channels in the file. You "
-"can also rearrange and add (i.e. mix) channels.\n"
+"   With this effect, you can change the number of channels in the file. You can also rearrange and add (i.e. mix) channels.\n"
 "\n"
 " * Combine channels...\n"
 "\n"
-"   This effect lets you create a new sound by a linear combination of the "
-"old channels. This means you can do channel mixing / swapping / balance / "
-"panning / amplification etc. by entering different values. For example, to "
-"swap the left and right channel, you select that the new Channel 1 should be "
-"0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 "
-"should be 100% of the old Channel 1 and 0% of the old Channel 2 \n"
+"   This effect lets you create a new sound by a linear combination of the old channels. This means you can do channel mixing / swapping / balance / panning / amplification etc. by entering different values. For example, to swap the left and right channel, you select that the new Channel 1 should be 0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 should be 100% of the old Channel 1 and 0% of the old Channel 2 \n"
 "\n"
 " * Speed adjustment...\n"
 "\n"
-"   This effect changes the speed of the selection. The tone will change as "
-"well.\n"
+"   This effect changes the speed of the selection. The tone will change as well.\n"
 " * Pipe through program...\n"
 " \n"
-"   This effect is for advanced users wanting to pipe raw audio data through "
-"an external program. The output of the program is read back and replaces the "
-"processed part. \n"
+"   This effect is for advanced users wanting to pipe raw audio data through an external program. The output of the program is read back and replaces the processed part. \n"
 "\n"
-"mhWaveEdit supports LADSPA effects and can also make use of most of the SoX "
-"utility's effects. To find the LADSPA plugins the environment variable "
-"LADSPA_PATH must be properly set up. \n"
+"mhWaveEdit supports LADSPA effects and can also make use of most of the SoX utility's effects. To find the LADSPA plugins the environment variable LADSPA_PATH must be properly set up. \n"
 "\n"
-"All supported effects can be found by choosing the 'Effects...' menu item. "
-"The effects are listed with names beginning with [B] for builtin effects, "
-"[L] for LADSPA effects, and [S] for SoX effects.\n"
+"All supported effects can be found by choosing the 'Effects...' menu item. The effects are listed with names beginning with [B] for builtin effects, [L] for LADSPA effects, and [S] for SoX effects.\n"
 "\n"
 msgstr ""
 "\n"
-"mhWaveEdit ha pochi effetti semplici, che si trovano sotto il menu "
-"'Effetti'.\n"
+"mhWaveEdit ha pochi effetti semplici, che si trovano sotto il menu 'Effetti'.\n"
 "\n"
 "* Fade in/out\n"
 "\n"
@@ -1283,42 +1180,29 @@ msgstr ""
 "\n"
 "* Normalizza, Normalizza a...\n"
 "\n"
-"   Amplifica il suono quanto più possibile senza tagliare i picchi o "
-"distorcere. La voce 'Normalizza a...' permette di indicare a che livello si "
-"vuole aumentare.\n"
+"   Amplifica il suono quanto più possibile senza tagliare i picchi o distorcere. La voce 'Normalizza a...' permette di indicare a che livello si vuole aumentare.\n"
 "\n"
 "* Regola volume/sfuma...\n"
 "\n"
-"   Questo effetto permette di scegliere un volume iniziale e uno finale ed "
-"aumenta la selezione in base ai livelli scelti, partendo dal primo per "
-"arrivare al secondo.\n"
+"   Questo effetto permette di scegliere un volume iniziale e uno finale ed aumenta la selezione in base ai livelli scelti, partendo dal primo per arrivare al secondo.\n"
 "\n"
-"   Notare che volumi oltre il 100% possono causare distorsione. Usare il "
-"bottone 'Trova volume massimo' per cercare la massima amplificazione senza "
-"distorsione (si può usare per normalizzare dei frammenti).\n"
+"   Notare che volumi oltre il 100% possono causare distorsione. Usare il bottone 'Trova volume massimo' per cercare la massima amplificazione senza distorsione (si può usare per normalizzare dei frammenti).\n"
 "\n"
-"   Impostando il volume iniziale e finale allo stesso livello, si ottiene "
-"l'amplificazione semplice del suono.\n"
+"   Impostando il volume iniziale e finale allo stesso livello, si ottiene l'amplificazione semplice del suono.\n"
 "\n"
 "* Converti tasso campionamento...\n"
 "\n"
-"   Converte il tasso di campionamento dell'intero file. Ci sono diversi "
-"metodi per farlo, normalmente il primo ha la migliore qualità ma può essere "
-"più lento degli altri.\n"
+"   Converte il tasso di campionamento dell'intero file. Ci sono diversi metodi per farlo, normalmente il primo ha la migliore qualità ma può essere più lento degli altri.\n"
 "\n"
 "* Converti formato campione\n"
 "\n"
 "   Converte il formato del campione per l'intero file.\n"
 "\n"
-"   L'opzione 'Non cambiare i dati' può essere usata se il programma ha "
-"sbagliato ad identificare il formato del file quando lo ha aperto.\n"
+"   L'opzione 'Non cambiare i dati' può essere usata se il programma ha sbagliato ad identificare il formato del file quando lo ha aperto.\n"
 "\n"
 "* Scambia byte\n"
 "\n"
-"   Scambia i byte nella selezione. Può essere usato per riparare file "
-"danneggiati, quando l'ordine dei byte è errato. Notare che se il suono "
-"sembra a posto ma suona male non si deve usare questa opzione ma 'uscita con "
-"byte scambiati' nel pannello Modifica/Preferenze.\n"
+"   Scambia i byte nella selezione. Può essere usato per riparare file danneggiati, quando l'ordine dei byte è errato. Notare che se il suono sembra a posto ma suona male non si deve usare questa opzione ma 'uscita con byte scambiati' nel pannello Modifica/Preferenze.\n"
 "\n"
 "* Mix a mono\n"
 "\n"
@@ -1326,36 +1210,23 @@ msgstr ""
 "\n"
 "* Aggiungi canale\n"
 "\n"
-"   Copia il primo canale ad un nuovo canale, convertendo ad esempio mono a "
-"stereo eccetera\n"
+"   Copia il primo canale ad un nuovo canale, convertendo ad esempio mono a stereo eccetera\n"
 "\n"
 "* Mappa canali...\n"
 "\n"
-"   Con questo effetto si può creare un nuovo suono con una combinazione "
-"lineare dei vecchi canali. Si possono fare miscelazioni/ scambio/ "
-"bilanciamento/ panning/ amplificazione ecc. inserendo diversi valori. Per "
-"esempio per scambiare destro e sinistro si imposta Nuovo Canale 1 con 0% del "
-"Vecchio Canale 1 e 100% del Vecchio Canale 2, e Nuovo Canale 2 con 100% di "
-"Vecchio Canale 1 e 0% di Vecchio Canale 2.\n"
+"   Con questo effetto si può creare un nuovo suono con una combinazione lineare dei vecchi canali. Si possono fare miscelazioni/ scambio/ bilanciamento/ panning/ amplificazione ecc. inserendo diversi valori. Per esempio per scambiare destro e sinistro si imposta Nuovo Canale 1 con 0% del Vecchio Canale 1 e 100% del Vecchio Canale 2, e Nuovo Canale 2 con 100% di Vecchio Canale 1 e 0% di Vecchio Canale 2.\n"
 "\n"
 "* Regola velocità\n"
 "\n"
-"   Questo effetto cambia la velocità della selezione. Anche la tonalità "
-"cambia, ovviamente.\n"
+"   Questo effetto cambia la velocità della selezione. Anche la tonalità cambia, ovviamente.\n"
 "\n"
 "* Invia a programma...\n"
 "\n"
-"   Questo effetto è per utenti esperti che vogliono inviare dati grezzi ad "
-"un programma esterno. Il risultato viene riletto e sostituisce la "
-"selezione.\n"
+"   Questo effetto è per utenti esperti che vogliono inviare dati grezzi ad un programma esterno. Il risultato viene riletto e sostituisce la selezione.\n"
 "\n"
-"   mhWaveEdit supporta gli effetti LADSPA e può anche fare uso della maggior "
-"parte degli effetti di SoX. Per trovare gli effetti LADSPA, la variabile "
-"d'ambiente LADSPA_PATH deve essere impostata correttamente.\n"
+"   mhWaveEdit supporta gli effetti LADSPA e può anche fare uso della maggior parte degli effetti di SoX. Per trovare gli effetti LADSPA, la variabile d'ambiente LADSPA_PATH deve essere impostata correttamente.\n"
 "\n"
-"   Tutti gli effetti supportati possono essere trovati aprendo 'Effetti/"
-"Finestra effetti...'. Gli effetti sono elencati per nome, preceduti da [B] "
-"per quelli interni, [L] per i LADSPA e [S] per i SoX.\n"
+"   Tutti gli effetti supportati possono essere trovati aprendo 'Effetti/Finestra effetti...'. Gli effetti sono elencati per nome, preceduti da [B] per quelli interni, [L] per i LADSPA e [S] per i SoX.\n"
 "\n"
 
 #: src/help.c:161
@@ -1364,152 +1235,78 @@ msgid ""
 "\n"
 "Some notes on sound quality.\n"
 "\n"
-"The general rule when doing audio editing/processing is to not manipulate "
-"the data more than necessary and keep an original copy whenever you're "
-"processing your important files. \n"
+"The general rule when doing audio editing/processing is to not manipulate the data more than necessary and keep an original copy whenever you're processing your important files. \n"
 "\n"
-"Cut, copy and paste operations move the data around without modifying it, so "
-"these don't degrade the sound quality. Because of level differences, you may "
-"get a \"step\" at the start and end of the inserted part, which can cause a "
-"small clicking sound. \n"
+"Cut, copy and paste operations move the data around without modifying it, so these don't degrade the sound quality. Because of level differences, you may get a \"step\" at the start and end of the inserted part, which can cause a small clicking sound. \n"
 "\n"
-"The mix paste function doesn't decrease quality, unless the peaks become too "
-"high and you get clipping. In that case you will get a warning message.\n"
+"The mix paste function doesn't decrease quality, unless the peaks become too high and you get clipping. In that case you will get a warning message.\n"
 "\n"
-"Sound data is normally stored as integer values. Therefore, whenever you "
-"normalize, adjust volume, decrease sample size or filter a sound, the result "
-"must be rounded. If you use 24 or 32 bit sample sizes, this is not really a "
-"problem, but if you use 8 or 16 bits sample size, this rounding causes a "
-"decrease in quality. \n"
+"Sound data is normally stored as integer values. Therefore, whenever you normalize, adjust volume, decrease sample size or filter a sound, the result must be rounded. If you use 24 or 32 bit sample sizes, this is not really a problem, but if you use 8 or 16 bits sample size, this rounding causes a decrease in quality. \n"
 "\n"
-"The quality decrease that the rounding causes can be masked by adding a "
-"small amount of noise before rounding. This is called \"dithering\". "
-"mhWaveEdit supports basic triangular dithering and it's enabled by "
-"default. \n"
+"The quality decrease that the rounding causes can be masked by adding a small amount of noise before rounding. This is called \"dithering\". mhWaveEdit supports basic triangular dithering and it's enabled by default. \n"
 "\n"
-"By default, mhWaveEdit uses floating-point temporary files for storing "
-"processed results to avoid rounding until the file is saved.\n"
+"By default, mhWaveEdit uses floating-point temporary files for storing processed results to avoid rounding until the file is saved.\n"
 msgstr ""
 "\n"
 "Alcune note sulla qualità del suono.\n"
 "\n"
-"La regola generale quando si modifica un suono è di non manipolare i dati "
-"più del necessario, e tenere una copia dell'originale se si lavora su dati "
-"importanti.\n"
+"La regola generale quando si modifica un suono è di non manipolare i dati più del necessario, e tenere una copia dell'originale se si lavora su dati importanti.\n"
 "\n"
-"Taglia, copia e incolla spostano i dati senza modificarli, dunque non "
-"degradano la qualità del suono. A causa delle differenze di volume, si "
-"possono provocare degli 'scalini' ad inizio e fine delle parti inserite, che "
-"possono causare un piccolo clic sonoro.\n"
+"Taglia, copia e incolla spostano i dati senza modificarli, dunque non degradano la qualità del suono. A causa delle differenze di volume, si possono provocare degli 'scalini' ad inizio e fine delle parti inserite, che possono causare un piccolo clic sonoro.\n"
 "\n"
-"La funzione Incolla mix non diminuisce la qualità, a meno che i picchi "
-"diventino troppo alti e vengano tosati. In questo caso apparirà un "
-"avvertimento.\n"
+"La funzione Incolla mix non diminuisce la qualità, a meno che i picchi diventino troppo alti e vengano tosati. In questo caso apparirà un avvertimento.\n"
 "\n"
-"I dati sonori sono normalmente memorizzati come numeri interi. Le operazioni "
-"di normalizzazione, regolazione volume, diminuzione della dimensione del "
-"campione o filtraggio, quindi, producono risultati che devono essere "
-"arrotondati. Usando campioni a 24 o 32 bit questo non è un problema, ma ad 8 "
-"o 16 bit l'arrotondamento può diminuire la qualità del suono.\n"
+"I dati sonori sono normalmente memorizzati come numeri interi. Le operazioni di normalizzazione, regolazione volume, diminuzione della dimensione del campione o filtraggio, quindi, producono risultati che devono essere arrotondati. Usando campioni a 24 o 32 bit questo non è un problema, ma ad 8 o 16 bit l'arrotondamento può diminuire la qualità del suono.\n"
 "\n"
-"La diminuzione di qualità dovuta all'arrotondamento può essere mascherata "
-"aggiungendo una piccola quantità di rumore prima che esso avvenga. Questo è "
-"chiamato 'dithering'. mhWaveEdit può applicare il semplice dithering "
-"triangolare ed è di solito attivo.\n"
+"La diminuzione di qualità dovuta all'arrotondamento può essere mascherata aggiungendo una piccola quantità di rumore prima che esso avvenga. Questo è chiamato 'dithering'. mhWaveEdit può applicare il semplice dithering triangolare ed è di solito attivo.\n"
 "\n"
-"Di solito mhWaveEdit usa file temporanei con virgola per memorizzare i "
-"risultati, evitando di arrotondare fino al momento di salvare il file.\n"
+"Di solito mhWaveEdit usa file temporanei con virgola per memorizzare i risultati, evitando di arrotondare fino al momento di salvare il file.\n"
 
 #: src/help.c:177
 #, no-c-format
 msgid ""
 "\n"
-"Even if mhWaveEdit was originally built for editing wav files, it's also "
-"possible to load and save in a few other formats. mhWaveEdit always supports "
-"wav and raw files, but if it's compiled with the libsndfile library, "
-"mhWaveEdit supports a couple of other formats as well. \n"
+"Even if mhWaveEdit was originally built for editing wav files, it's also possible to load and save in a few other formats. mhWaveEdit always supports wav and raw files, but if it's compiled with the libsndfile library, mhWaveEdit supports a couple of other formats as well. \n"
 "\n"
-"To save a file with a different file format, use \"Save as...\" and choose a "
-"format in the file type selection box. \n"
+"To save a file with a different file format, use \"Save as...\" and choose a format in the file type selection box. \n"
 "\n"
-"mhWaveEdit has basic support for mp3 and ogg formats. For this to work you "
-"need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg "
-"support. If you have these programs, you can open and save mp3/ogg files "
-"just like any other file format.\n"
+"mhWaveEdit has basic support for mp3 and ogg formats. For this to work you need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg support. If you have these programs, you can open and save mp3/ogg files just like any other file format.\n"
 "\n"
-"If mplayer is installed, mhwaveedit can open all formats that it supports, "
-"for example the soundtrack of a video file. Since mplayer is only a player, "
-"these files can not be saved back after editing, you have to save the file "
-"into a supported format.\n"
+"If mplayer is installed, mhwaveedit can open all formats that it supports, for example the soundtrack of a video file. Since mplayer is only a player, these files can not be saved back after editing, you have to save the file into a supported format.\n"
 msgstr ""
 "\n"
-"Anche se mhWaveEdit è stato creato per modificare file WAV, è anche "
-"possibile caricare e salvare in alcuni altri formati. mhWaveEdit legge i "
-"file WAV e RAW, ma se viene compilato con libsndfile può lavorare anche "
-"con qualche altro formato.\n"
+"Anche se mhWaveEdit è stato creato per modificare file WAV, è anche possibile caricare e salvare in alcuni altri formati. mhWaveEdit legge i file WAV e RAW, ma se viene compilato con libsndfile può lavorare anche con qualche altro formato.\n"
 "\n"
-"Per salvare un file in altro formato, usare \"Salva come...\" e scegliere un "
-"formato nella finestra di dialogo.\n"
+"Per salvare un file in altro formato, usare \"Salva come...\" e scegliere un formato nella finestra di dialogo.\n"
 "\n"
-"mhWaveEdit ha un supporto di base per i formati MP3 e OGG. Questo funziona "
-"se LAME è installato (per gli MP3) e OggDec/OggEnc (per i file OGG). Se ci "
-"sono questi programmi, l'apertura di questi file funziona come quella "
-"degli altri.\n"
+"mhWaveEdit ha un supporto di base per i formati MP3 e OGG. Questo funziona se LAME è installato (per gli MP3) e OggDec/OggEnc (per i file OGG). Se ci sono questi programmi, l'apertura di questi file funziona come quella degli altri.\n"
 "\n"
-"Se viene installato Mplayer, mhWaveEdit apre tutti i formati supportati da "
-"esso, ad esempio la colonna sonora di un file video. Siccome Mplayer è solo "
-"un lettore, però, questi file non possono essere risalvati dopo la modifica. "
-"Si possono solo salvare in uno dei formati di mhWaveEdit.\n"
+"Se viene installato Mplayer, mhWaveEdit apre tutti i formati supportati da esso, ad esempio la colonna sonora di un file video. Siccome Mplayer è solo un lettore, però, questi file non possono essere risalvati dopo la modifica. Si possono solo salvare in uno dei formati di mhWaveEdit.\n"
 
 #: src/help.c:187
 #, no-c-format
 msgid ""
 "\n"
-"mhWaveEdit creates a directory ~/.mhwaveedit where it stores configuration "
-"information. \n"
+"mhWaveEdit creates a directory ~/.mhwaveedit where it stores configuration information. \n"
 "\n"
-"The configuration file is called config. It can be hand edited, but the "
-"easiest way is through 'Preferences' on the Edit menu.\n"
+"The configuration file is called config. It can be hand edited, but the easiest way is through 'Preferences' on the Edit menu.\n"
 "\n"
-"Each mhwaveedit process creates a session file in the .mhwaveedit directory "
-"called mhwaveedit-session-<pid>-<session>-<state>, where <session> is the "
-"session ID number and <state> is a character code showing the state of the "
-"session ('r' for running sessions). \n"
+"Each mhwaveedit process creates a session file in the .mhwaveedit directory called mhwaveedit-session-<pid>-<session>-<state>, where <session> is the session ID number and <state> is a character code showing the state of the session ('r' for running sessions). \n"
 "\n"
-"Temporary files are by default also stored in the ~/.mhwaveedit directory. "
-"Which directories to use can be set through the preferences dialog. To get "
-"the best performance, you should have one temporary directory for each local "
-"filesystem. The temporary files have names of the form \"mhwaveedit-temp-"
-"<pid>-nnnn-<session>\". Do NOT open or remove temporary files with the same "
-"pid number as a currently running mhWaveEdit.\n"
+"Temporary files are by default also stored in the ~/.mhwaveedit directory. Which directories to use can be set through the preferences dialog. To get the best performance, you should have one temporary directory for each local filesystem. The temporary files have names of the form \"mhwaveedit-temp-<pid>-nnnn-<session>\". Do NOT open or remove temporary files with the same pid number as a currently running mhWaveEdit.\n"
 "\n"
-"mhWaveEdit checks on startup for leftover temporary files and lets the user "
-"open them. After opening a crashed session, the files can be saved or thrown "
-"away.\n"
+"mhWaveEdit checks on startup for leftover temporary files and lets the user open them. After opening a crashed session, the files can be saved or thrown away.\n"
 msgstr ""
 "\n"
-"mhWaveEdit crea una cartella, ~/.mhwaveedit dove salva le informazioni di "
-"configurazione.\n"
+"mhWaveEdit crea una cartella, ~/.mhwaveedit dove salva le informazioni di configurazione.\n"
 "\n"
-"Il file di configurazione si chiama config. Può essere modificato a mano, ma "
-"il modo più facile è di usare 'Preferenze' dal menu 'Modifica'.\n"
+"Il file di configurazione si chiama config. Può essere modificato a mano, ma il modo più facile è di usare 'Preferenze' dal menu 'Modifica'.\n"
 "\n"
-"Ogni processo mhWaveEdit crea un file sessione nella cartella .mhwaveedit, "
-"chiamato mhwaveedit-session-<pid>-<session>-<stato>, dove <session> è il "
-"numero ID della sessione e <stato> è un carattere che mostra lo stato della "
-"sessione ('r' per le sessioni in corso).\n"
+"Ogni processo mhWaveEdit crea un file sessione nella cartella .mhwaveedit, chiamato mhwaveedit-session-<pid>-<session>-<stato>, dove <session> è il numero ID della sessione e <stato> è un carattere che mostra lo stato della sessione ('r' per le sessioni in corso).\n"
 "\n"
-"Anche i file temporanei sono salvati nella cartella ~/.mhwaveedit. La "
-"cartella da usare può essere indicata nel pannello delle preferenze. Per "
-"ottenere le migliori prestazioni, ci deve essere una sola cartella "
-"temporanea per ogni filesystem locale. I file temporanei hanno nomi nel "
-"formato \"mhwaveedit-temp-<pid>-nnnn-<session>\". NON aprire o cancellare "
-"questi file se hanno lo stesso numero PID di una finestra mhWaveEdit "
-"aperta.\n"
+"Anche i file temporanei sono salvati nella cartella ~/.mhwaveedit. La cartella da usare può essere indicata nel pannello delle preferenze. Per ottenere le migliori prestazioni, ci deve essere una sola cartella temporanea per ogni filesystem locale. I file temporanei hanno nomi nel formato \"mhwaveedit-temp-<pid>-nnnn-<session>\". NON aprire o cancellare questi file se hanno lo stesso numero PID di una finestra mhWaveEdit aperta.\n"
 "\n"
-"mhWaveEdit controlla ad ogni avvio se ci sono file temporanei rimasti, e "
-"propone all'utente di aprirli. Dopo aver aperto una sessione bloccata, i "
-"file possono essere salvati o buttati.\n"
+"mhWaveEdit controlla ad ogni avvio se ci sono file temporanei rimasti, e propone all'utente di aprirli. Dopo aver aperto una sessione bloccata, i file possono essere salvati o buttati.\n"
 
 #: src/help.c:199
 #, no-c-format
@@ -1614,19 +1411,14 @@ msgstr ""
 #, no-c-format
 msgid ""
 "\n"
-"If you find a bug or flaw in the program that's not mentioned in the BUGS "
-"file, report the bug in the bug tracker (see contact info) or mail a bug "
-"report describing the bug to: magnus.hjorth@home.se\n"
+"If you find a bug or flaw in the program that's not mentioned in the BUGS file, report the bug in the bug tracker (see contact info) or mail a bug report describing the bug to: magnus.hjorth@home.se\n"
 "\n"
-"In case of a crash, please do not send me any core dumps. They are huge and "
-"completely useless to me. Instead, create a backtrace. Backtraces tell you "
-"exactly where the program crashed.\n"
+"In case of a crash, please do not send me any core dumps. They are huge and completely useless to me. Instead, create a backtrace. Backtraces tell you exactly where the program crashed.\n"
 "\n"
 "How to create a backtrace:\n"
 "1. Enable core dumps: ulimit -c unlimited\n"
 "2. Run the program:   mhwaveedit\n"
-"3. Make the program crash. You should now get a file named core or core.1234 "
-"in the directory you're in.\n"
+"3. Make the program crash. You should now get a file named core or core.1234 in the directory you're in.\n"
 "4. Run gdb with the program and core file: \n"
 "   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
 "5. After gdb has loaded, use the command: bt\n"
@@ -1634,19 +1426,14 @@ msgid ""
 "7. Now you should have a back trace in the file backtrace.txt\n"
 msgstr ""
 "\n"
-"Se si trova un difetto o un problema non menzionato nel file BUGS, "
-"segnalarlo nel bug tracker (Vedi info contatti) o spedire un messaggio che "
-"descriva il difetto a: magnus.hjorth@home.se\n"
+"Se si trova un difetto o un problema non menzionato nel file BUGS, segnalarlo nel bug tracker (Vedi info contatti) o spedire un messaggio che descriva il difetto a: magnus.hjorth@home.se\n"
 "\n"
-"In caso di blocco, non spedire nessun core dump. Sono enormi e del tutto "
-"inutili per me. Creare invece un backtrace: i backtrace dicono esattamente "
-"dove il programma si è bloccato.\n"
+"In caso di blocco, non spedire nessun core dump. Sono enormi e del tutto inutili per me. Creare invece un backtrace: i backtrace dicono esattamente dove il programma si è bloccato.\n"
 "\n"
 "Come creare un backtrace:\n"
 "1) abilitare i core dumps: ulimit -c unlimited\n"
 "2) avviare il programma: mhwaveedit\n"
-"3) far bloccare il programma. Dovrebbe apparire un file chiamato core oppure "
-"core.1234 nella cartella corrente.\n"
+"3) far bloccare il programma. Dovrebbe apparire un file chiamato core oppure core.1234 nella cartella corrente.\n"
 "4) eseguire gdb con il programma e il file core:\n"
 "gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
 "5) dopo che gdb si è avviato, usare il comando: bt\n"
@@ -1657,77 +1444,39 @@ msgstr ""
 #, no-c-format
 msgid ""
 "\n"
-"There are plenty of things you can do if you want to help the development of "
-"mhWaveEdit. \n"
+"There are plenty of things you can do if you want to help the development of mhWaveEdit. \n"
 "\n"
-"First of all, look for bugs and report all bugs you find into the bug "
-"tracker or through e-mail. Sometimes a bug can get overlooked for a long "
-"time because nobody reports it, so don't be afraid to report bugs that have "
-"been there for a few releases. You don't have to provide fixes or very "
-"detailed information, although it helps of course.\n"
+"First of all, look for bugs and report all bugs you find into the bug tracker or through e-mail. Sometimes a bug can get overlooked for a long time because nobody reports it, so don't be afraid to report bugs that have been there for a few releases. You don't have to provide fixes or very detailed information, although it helps of course.\n"
 "\n"
-"Feature requests are also welcome, report them to the mailing list or to the "
-"bug tracker.\n"
+"Feature requests are also welcome, report them to the mailing list or to the bug tracker.\n"
 "\n"
-"If you speak a language other than English and mhWaveEdit isn't translated "
-"to your language, you can contribute a translation. To do that, copy the "
-"template mhwaveedit.pot in the po directory into a new file ll.po, where ll "
-"is your language code (see http://www.gnu.org/software/gettext/manual/"
-"html_node/gettext_221.html for a list of language codes). \n"
+"If you speak a language other than English and mhWaveEdit isn't translated to your language, you can contribute a translation. To do that, copy the template mhwaveedit.pot in the po directory into a new file ll.po, where ll is your language code (see http://www.gnu.org/software/gettext/manual/html_node/gettext_221.html for a list of language codes). \n"
 "\n"
-"It's possible to edit po-files by hand, but I recommend a program such as "
-"poEdit (http://www.poedit.org) for editing translations. \n"
+"It's possible to edit po-files by hand, but I recommend a program such as poEdit (http://www.poedit.org) for editing translations. \n"
 "\n"
-"Note that for those translatable strings that look like \"RecordStatus|Paused"
-"\", you should ignore what's to the left and only translate the string to "
-"the right (\"Paused\" in this example). This convention is there to make it "
-"possible to translate the same string to different things depending on "
-"context. \n"
+"Note that for those translatable strings that look like \"RecordStatus|Paused\", you should ignore what's to the left and only translate the string to the right (\"Paused\" in this example). This convention is there to make it possible to translate the same string to different things depending on context. \n"
 "\n"
-"After you've filled in all the translations you want (you don't have to "
-"translate all the strings), mail in the po file to me (see contact info) and "
-"I'll add it to the next release. \n"
+"After you've filled in all the translations you want (you don't have to translate all the strings), mail in the po file to me (see contact info) and I'll add it to the next release. \n"
 "\n"
-"If a translation is incomplete, you're very welcome to translate the "
-"remaining untranslated messages and mail them in. Corrections to "
-"translations are also appreciated, but they may need to be checked with the "
-"previous translator before including them. \n"
+"If a translation is incomplete, you're very welcome to translate the remaining untranslated messages and mail them in. Corrections to translations are also appreciated, but they may need to be checked with the previous translator before including them. \n"
 "\n"
 msgstr ""
 "\n"
 "Chi vuole aiutare lo sviluppo di mhWaveEdit può fare tante cose.\n"
 "\n"
-"Per prima cosa, cercare errori e riportarli nel bugtracker o per posta "
-"elettronica. A volte un errore può rimanere trascurato per molto tempo "
-"perché nessuno lo segnala, dunque non esitate a riportare errori che sono lì "
-"da qualche tempo. Non è necessario suggerire correzioni o informazioni molto "
-"dettagliate, anche se ovviamente ciò aiuta.\n"
+"Per prima cosa, cercare errori e riportarli nel bugtracker o per posta elettronica. A volte un errore può rimanere trascurato per molto tempo perché nessuno lo segnala, dunque non esitate a riportare errori che sono lì da qualche tempo. Non è necessario suggerire correzioni o informazioni molto dettagliate, anche se ovviamente ciò aiuta.\n"
 "\n"
-"Anche le richieste di nuove funzioni sono gradite, inviatele alla mailing "
-"list o al bug tracker.\n"
+"Anche le richieste di nuove funzioni sono gradite, inviatele alla mailing list o al bug tracker.\n"
 "\n"
-"Se parlate una lingua diversa dall'inglese e mhWaveEdit non è tradotto nella "
-"vostra lingua, potete contribuire con una traduzione. Per farlo, copiate il "
-"modello <mhwaveedit.pot> nella cartella po con il nome ll.po, dove ll è il "
-"codice della vostra lingua (vedi http://www.gnu.org/software/gettext/manual/"
-"html_node/gettext_221.html per una lista dei codici).\n"
+"Se parlate una lingua diversa dall'inglese e mhWaveEdit non è tradotto nella vostra lingua, potete contribuire con una traduzione. Per farlo, copiate il modello <mhwaveedit.pot> nella cartella po con il nome ll.po, dove ll è il codice della vostra lingua (vedi http://www.gnu.org/software/gettext/manual/html_node/gettext_221.html per una lista dei codici).\n"
 "\n"
-"E' possibile modificare il file po a mano, ma raccomandiamo di usare un "
-"programma come poEdit (http://www.poedit.org).\n"
+"E' possibile modificare il file po a mano, ma raccomandiamo di usare un programma come poEdit (http://www.poedit.org).\n"
 "\n"
-"Da notare che le stringhe simili a \"RecordStatus|Paused\" devono essere "
-"tradotte soltanto nella parte alla destra della barra (\"Paused\" in questo "
-"esempio). Questa convenzione serve per rendere possibile l'uso della "
-"traduzione in modi diversi in diversi contesti.\n"
+"Da notare che le stringhe simili a \"RecordStatus|Paused\" devono essere tradotte soltanto nella parte alla destra della barra (\"Paused\" in questo esempio). Questa convenzione serve per rendere possibile l'uso della traduzione in modi diversi in diversi contesti.\n"
 "\n"
-"Quando la traduzione è completa (ma non è necessario tradurre tutte le "
-"frasi) si può spedire il file po a me (vedi info contatto) e verrà aggiunta "
-"alla prossima versione.\n"
+"Quando la traduzione è completa (ma non è necessario tradurre tutte le frasi) si può spedire il file po a me (vedi info contatto) e verrà aggiunta alla prossima versione.\n"
 "\n"
-"Se la traduzione è incompleta, potete tradurre le frasi restanti e spedirle. "
-"Anche le correzioni alla traduzione sono ammesse, ma è possibile che si "
-"debba procedere ad un confronto con il precedente traduttore prima di "
-"inserirle.\n"
+"Se la traduzione è incompleta, potete tradurre le frasi restanti e spedirle. Anche le correzioni alla traduzione sono ammesse, ma è possibile che si debba procedere ad un confronto con il precedente traduttore prima di inserirle.\n"
 "\n"
 
 #: src/help.c:283
@@ -1755,7 +1504,8 @@ msgstr ""
 "mhwaveedit-discuss@gna.org\n"
 "\n"
 
-#: src/inifile.c:84 src/inifile.c:91
+#: src/inifile.c:84
+#: src/inifile.c:91
 #, c-format
 msgid "%s: Expected '=': %s\n"
 msgstr "%s: Atteso '=': %s\n"
@@ -1797,12 +1547,8 @@ msgstr "Il valore di '%s' non deve essere maggiore di %f"
 
 #: src/ladspadialog.c:127
 #, c-format
-msgid ""
-"You have mapped more than one output port to channel '%s'. You can only map "
-"one output port to each channel."
-msgstr ""
-"Hai mappato più di un canale in uscita al canale '%s'. Si può collegare una "
-"sola porta ad ogni canale."
+msgid "You have mapped more than one output port to channel '%s'. You can only map one output port to each channel."
+msgstr "Hai mappato più di un canale in uscita al canale '%s'. Si può collegare una sola porta ad ogni canale."
 
 #: src/ladspadialog.c:191
 #, c-format
@@ -1822,7 +1568,9 @@ msgstr " controlli IN"
 msgid " Output controls "
 msgstr " controlli OUT"
 
-#: src/ladspadialog.c:309 src/recorddialog.c:204 src/recorddialog.c:496
+#: src/ladspadialog.c:309
+#: src/recorddialog.c:310
+#: src/recorddialog.c:732
 msgid "None"
 msgstr "Nessuno/a"
 
@@ -1838,169 +1586,166 @@ msgstr " audio OUT"
 msgid "Keep data in unmapped output channels"
 msgstr "Mantenere i dati nei canali OUT non mappati"
 
-#: src/main.c:134
+#: src/main.c:157
 #, c-format
 msgid "Syntax: %s [files]\n"
 msgstr "Sintassi: %s [files]\n"
 
-#: src/main.c:137
+#: src/main.c:160
 msgid "Testing conversion functions:"
 msgstr "Prova delle funzioni di conversione:"
 
-#: src/main.c:139
+#: src/main.c:162
 msgid "Testing conversion functions finished."
 msgstr "Prova delle funzioni terminata."
 
-#: src/main.c:158
+#: src/main.c:181
 msgid "Expected driver name after --driver option"
 msgstr "E' necessario un nome di driver dopo l'opzione --driver"
 
-#: src/main.c:164
+#: src/main.c:187
 #, c-format
 msgid "Unknown option '%s'"
 msgstr "Opzione sconosciuta '%s'"
 
-#: src/main.c:303
-msgid ""
-"Could not find home directory. Using current directory as home directory."
+#: src/main.c:328
+msgid "Could not find home directory. Using current directory as home directory."
 msgstr "Non trovo la cartella home. Uso la cartella corrente come home."
 
-#: src/main.c:331
+#: src/main.c:356
 msgid "Black"
 msgstr "Nero"
 
-#: src/main.c:332
+#: src/main.c:357
 msgid "White"
 msgstr "Bianco"
 
-#: src/main.c:333
+#: src/main.c:358
 msgid "Background"
 msgstr "Sfondo"
 
-#: src/main.c:334
+#: src/main.c:359
 msgid "L Waveform"
 msgstr "Forma d'onda Sx"
 
-#: src/main.c:335
+#: src/main.c:360
 msgid "R Waveform"
 msgstr "Forma d'onda Dx"
 
-#: src/main.c:336
+#: src/main.c:361
 msgid "Cursor"
 msgstr "Cursore"
 
-#: src/main.c:337
+#: src/main.c:362
 msgid "Marks"
 msgstr "Segni"
 
-#: src/main.c:338
+#: src/main.c:363
 msgid "Selection"
 msgstr "Selezione"
 
-#: src/main.c:339
+#: src/main.c:364
 msgid "Progress bar"
 msgstr "Barra progresso"
 
-#: src/main.c:340
+#: src/main.c:365
 msgid "Zero-level"
 msgstr "Livello zero"
 
-#: src/main.c:463
+#: src/main.c:488
 #, c-format
 msgid "Error launching mixer: fork: %s"
 msgstr "Errore lancio mixer: fork %s"
 
-#: src/main.c:514 src/main.c:533
+#: src/main.c:539
+#: src/main.c:558
 msgid "Mono"
 msgstr "Mono"
 
-#: src/main.c:515
+#: src/main.c:540
 msgid "Left"
 msgstr "Sinistro"
 
-#: src/main.c:516
+#: src/main.c:541
 msgid "Right"
 msgstr "Destro"
 
-#: src/main.c:518
+#: src/main.c:543
 #, c-format
 msgid "Ch%d"
 msgstr "Can.%d"
 
-#: src/main.c:534
+#: src/main.c:559
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/main.c:536
+#: src/main.c:561
 #, c-format
 msgid "%d channels"
 msgstr "%d canali"
 
-#: src/main.c:1112
+#: src/main.c:1137
 msgid "Ignoring extreme old window size/position values\n"
-msgstr ""
+msgstr "Ignoro vecchissime impostazioni di posizione/dimensione finestra\n"
 
-#: src/mainwindow.c:197
+#: src/mainwindow.c:202
 #, c-format
 msgid "mhWaveEdit: %s (%s): %d Hz, %s"
 msgstr "mhWaveEdit: %s (%s): %d Hz, %s"
 
-#: src/mainwindow.c:205 src/recorddialog.c:65
+#: src/mainwindow.c:210
 msgid "double"
 msgstr "doppio"
 
-#: src/mainwindow.c:205 src/recorddialog.c:63
+#: src/mainwindow.c:210
 msgid "float"
 msgstr "virgola"
 
-#: src/mainwindow.c:207
+#: src/mainwindow.c:212
 #, c-format
 msgid "mhWaveEdit: %s (%s): %d Hz, %d bit"
 msgstr "mhWaveEdit: %s (%s): %d Hz, %d bit"
 
-#: src/mainwindow.c:292
+#: src/mainwindow.c:297
 msgid "Use default settings"
 msgstr "Usa impostazioni predefinite"
 
-#: src/mainwindow.c:296
+#: src/mainwindow.c:301
 msgid "Auto-detect from extension"
 msgstr "Deduci dall'estensione"
 
-#: src/mainwindow.c:311
+#: src/mainwindow.c:316
 msgid "File type: "
 msgstr "Tipo file: "
 
-#: src/mainwindow.c:357
-msgid ""
-"The file has not changed since last save. Press OK if you want to save it "
-"anyway?"
-msgstr ""
-"Il file non è stato cambiato dall'ultimo salvataggio. Premi OK se lo vuoi "
-"salvare lo stesso."
+#: src/mainwindow.c:362
+msgid "The file has not changed since last save. Press OK if you want to save it anyway?"
+msgstr "Il file non è stato cambiato dall'ultimo salvataggio. Premi OK se lo vuoi salvare lo stesso."
 
-#: src/mainwindow.c:366
+#: src/mainwindow.c:371
 msgid "Save File"
 msgstr "Salva file"
 
-#: src/mainwindow.c:391
+#: src/mainwindow.c:396
 #, c-format
 msgid "Save changes to %s?"
 msgstr "Salvare cambiamenti a %s?"
 
-#: src/mainwindow.c:751 src/mainwindow.c:755
+#: src/mainwindow.c:760
+#: src/mainwindow.c:764
 msgid "Load File"
 msgstr "Carica file"
 
-#: src/mainwindow.c:780
+#: src/mainwindow.c:789
 msgid "Save selection as ..."
 msgstr "Salva selezione con nome..."
 
-#: src/mainwindow.c:1067
+#: src/mainwindow.c:1077
 #, c-format
 msgid "Chunk %p has opencount=%d\n"
 msgstr ""
 
-#: src/mainwindow.c:1150
+#: src/mainwindow.c:1160
 #, c-format
 msgid ""
 "\n"
@@ -2009,27 +1754,27 @@ msgstr ""
 "\n"
 "Finestra '%s'\n"
 
-#: src/mainwindow.c:1151
+#: src/mainwindow.c:1161
 msgid "  Current chunk:"
 msgstr "  Chunk attuale:"
 
-#: src/mainwindow.c:1153
+#: src/mainwindow.c:1163
 msgid "  History:"
 msgstr "  Storico:"
 
-#: src/mainwindow.c:1208
+#: src/mainwindow.c:1218
 msgid "There already is only one channel!"
 msgstr "C'e' già rimasto solo un canale!"
 
-#: src/mainwindow.c:1291
+#: src/mainwindow.c:1302
 msgid "mhWaveEdit Help"
 msgstr "Aiuto di mhWaveEdit"
 
-#: src/mainwindow.c:1387
+#: src/mainwindow.c:1399
 msgid "About mhWaveEdit"
 msgstr "A proposito di mhWaveEdit"
 
-#: src/mainwindow.c:1399
+#: src/mainwindow.c:1411
 msgid ""
 "Created by Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2007, Magnus Hjorth"
@@ -2037,21 +1782,21 @@ msgstr ""
 "Creato da Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2007, Magnus Hjorth"
 
-#: src/mainwindow.c:1406
+#: src/mainwindow.c:1418
 #, c-format
 msgid "Current sound driver: %s"
 msgstr "Driver audio attuale: %s"
 
-#: src/mainwindow.c:1414
+#: src/mainwindow.c:1426
 #, c-format
 msgid "Compiled %s %s"
 msgstr "Compilato. %s %s"
 
-#: src/mainwindow.c:1420
+#: src/mainwindow.c:1432
 msgid "Uses double-precision math"
 msgstr "Usa matematica a doppia precisione"
 
-#: src/mainwindow.c:1427
+#: src/mainwindow.c:1439
 msgid ""
 "Distributed under GNU General Public License.\n"
 "For information, see the file COPYING"
@@ -2059,479 +1804,485 @@ msgstr ""
 "Distribuito sotto la GNU General Public License.\n"
 "Per informazioni, vedi il file COPYING"
 
-#: src/mainwindow.c:1541
+#: src/mainwindow.c:1558
 msgid "Seconds of silence: "
 msgstr "Secondi di silenzio: "
 
-#: src/mainwindow.c:1541
+#: src/mainwindow.c:1558
 msgid "Insert Silence"
 msgstr "Inserisci silenzio"
 
-#: src/mainwindow.c:1590
+#: src/mainwindow.c:1607
 msgid "Level: "
 msgstr "Livello: "
 
-#: src/mainwindow.c:1590
+#: src/mainwindow.c:1607
 msgid "Normalize to..."
 msgstr "Normalizza a..."
 
-#: src/mainwindow.c:1800
+#: src/mainwindow.c:1817
 msgid "/_File"
 msgstr "/_File"
 
-#: src/mainwindow.c:1801
+#: src/mainwindow.c:1818
 msgid "/File/_Open..."
 msgstr "/File/_Apri..."
 
-#: src/mainwindow.c:1802
+#: src/mainwindow.c:1819
 msgid "/File/_Save"
 msgstr "/File/_Salva"
 
-#: src/mainwindow.c:1803
+#: src/mainwindow.c:1820
 msgid "/File/Save _as..."
 msgstr "/File/Sal_va con nome..."
 
-#: src/mainwindow.c:1804
+#: src/mainwindow.c:1821
 msgid "/File/Save selection as..."
 msgstr "/File/Salva selezione con nome..."
 
-#: src/mainwindow.c:1805
+#: src/mainwindow.c:1822
 msgid "/_Edit"
 msgstr "/_Modifica"
 
-#: src/mainwindow.c:1806
+#: src/mainwindow.c:1823
 msgid "/Edit/_Undo"
 msgstr "/Modifica/_Annulla"
 
-#: src/mainwindow.c:1807
+#: src/mainwindow.c:1824
 msgid "/Edit/_Redo"
 msgstr "/Modifica/_Rifai"
 
-#: src/mainwindow.c:1808
+#: src/mainwindow.c:1825
 msgid "/Edit/sep1"
 msgstr "/Modifica/sep1"
 
-#: src/mainwindow.c:1809
+#: src/mainwindow.c:1826
 msgid "/Edit/Cu_t"
 msgstr "/Modifica/_Taglia"
 
-#: src/mainwindow.c:1810
+#: src/mainwindow.c:1827
 msgid "/Edit/_Copy"
 msgstr "/Modifica/_Copia"
 
-#: src/mainwindow.c:1811
+#: src/mainwindow.c:1828
 msgid "/Edit/_Paste"
 msgstr "/Modifica/_Incolla"
 
-#: src/mainwindow.c:1812
+#: src/mainwindow.c:1829
 msgid "/Edit/Paste _over"
 msgstr "/Modifica/Incolla _sopra"
 
-#: src/mainwindow.c:1813
+#: src/mainwindow.c:1830
 msgid "/Edit/_Mix paste"
 msgstr "/Modifica/Incolla _mix"
 
-#: src/mainwindow.c:1814
+#: src/mainwindow.c:1831
 msgid "/Edit/Insert _silence"
 msgstr "/Modifica/Inserisci _silenzio"
 
-#: src/mainwindow.c:1815
+#: src/mainwindow.c:1832
 msgid "/Edit/Paste to _new"
 msgstr "/Modifica/Incolla _nuovo"
 
-#: src/mainwindow.c:1816
+#: src/mainwindow.c:1833
 msgid "/Edit/Cr_op"
 msgstr "/Modifica/Ritaglia"
 
-#: src/mainwindow.c:1817
+#: src/mainwindow.c:1834
 msgid "/Edit/_Delete"
 msgstr "/Modifica/Cancella"
 
-#: src/mainwindow.c:1818
+#: src/mainwindow.c:1835
 msgid "/Edit/Silence selection"
 msgstr "/Modifica/Selez silenzio"
 
-#: src/mainwindow.c:1819
+#: src/mainwindow.c:1836
 msgid "/Edit/sep2"
 msgstr "/Modifica/sep2"
 
-#: src/mainwindow.c:1820
+#: src/mainwindow.c:1837
 msgid "/Edit/Select _all"
 msgstr "/Modifica/Seleziona tutto"
 
-#: src/mainwindow.c:1821
+#: src/mainwindow.c:1838
 msgid "/Edit/Select none"
 msgstr "/Modifica/Seleziona niente"
 
-#: src/mainwindow.c:1822
+#: src/mainwindow.c:1839
 msgid "/Edit/sep3"
 msgstr "/Modifica/sep3"
 
-#: src/mainwindow.c:1823
+#: src/mainwindow.c:1840
 msgid "/Edit/Clear clipboard"
 msgstr "/Modifica/Svuota clipboard"
 
-#: src/mainwindow.c:1824
+#: src/mainwindow.c:1841
 msgid "/Edit/sep4"
 msgstr "/Modifica/sep4"
 
-#: src/mainwindow.c:1825
+#: src/mainwindow.c:1842
 msgid "/Edit/Preferences"
 msgstr "/Modifica/Preferenze"
 
-#: src/mainwindow.c:1826
+#: src/mainwindow.c:1843
 msgid "/_View"
 msgstr "/_Vista"
 
-#: src/mainwindow.c:1827
+#: src/mainwindow.c:1844
 msgid "/View/Zoom _in"
 msgstr "/Vista/Zoom _in"
 
-#: src/mainwindow.c:1828
+#: src/mainwindow.c:1845
 msgid "/View/Zoom _out"
 msgstr "/Vista/Zoom _out"
 
-#: src/mainwindow.c:1829
+#: src/mainwindow.c:1846
 msgid "/View/Zoom to _selection"
 msgstr "/Vista/Zoom a _selezione"
 
-#: src/mainwindow.c:1830
+#: src/mainwindow.c:1847
 msgid "/View/sep1"
 msgstr "/Vista/sep1"
 
-#: src/mainwindow.c:1831
+#: src/mainwindow.c:1848
 msgid "/View/Zoom _all"
 msgstr "/Vista/Zoom _tutto"
 
-#: src/mainwindow.c:1832
+#: src/mainwindow.c:1849
 msgid "/View/sep2"
 msgstr "/Vista/sep2"
 
-#: src/mainwindow.c:1833
+#: src/mainwindow.c:1850
 msgid "/View/_Time scale"
 msgstr "/Vista/Scala _tempo"
 
-#: src/mainwindow.c:1834
+#: src/mainwindow.c:1851
 msgid "/View/_Horizontal zoom"
 msgstr "/Vista/Zoom ori_z"
 
-#: src/mainwindow.c:1835
+#: src/mainwindow.c:1852
 msgid "/View/_Vertical zoom"
 msgstr "/Vista/Zoom _vert"
 
-#: src/mainwindow.c:1836
+#: src/mainwindow.c:1853
 msgid "/View/Sp_eed slider"
 msgstr "/Vista/_Cursore velocità"
 
-#: src/mainwindow.c:1837
+#: src/mainwindow.c:1854
 msgid "/_Cursor"
 msgstr "/_Cursore"
 
-#: src/mainwindow.c:1838
+#: src/mainwindow.c:1855
 msgid "/Cursor/Set selection start"
 msgstr "/Cursore/Inizio selezione qui"
 
-#: src/mainwindow.c:1840
+#: src/mainwindow.c:1857
 msgid "/Cursor/Set selection end"
 msgstr "/Cursore/Fine selezione qui"
 
-#: src/mainwindow.c:1841
+#: src/mainwindow.c:1858
 msgid "/Cursor/sep1"
 msgstr "/Cursore/sep1"
 
-#: src/mainwindow.c:1842
+#: src/mainwindow.c:1859
 msgid "/Cursor/Move to"
 msgstr "/Cursore/Vai a"
 
-#: src/mainwindow.c:1843
+#: src/mainwindow.c:1860
 msgid "/Cursor/Move to/Beginning"
 msgstr "/Cursore/Vai a/Inizio"
 
-#: src/mainwindow.c:1845
+#: src/mainwindow.c:1862
 msgid "/Cursor/Move to/End"
 msgstr "/Cursore/Vai a/Fine"
 
-#: src/mainwindow.c:1846
+#: src/mainwindow.c:1863
 msgid "/Cursor/Move to/Selection start"
 msgstr "/Cursore/Vai a /Inizio selezione"
 
-#: src/mainwindow.c:1848
+#: src/mainwindow.c:1865
 msgid "/Cursor/Move to/Selection end"
 msgstr "/Cursore/Vai a/Fine selezione"
 
-#: src/mainwindow.c:1850
+#: src/mainwindow.c:1867
 msgid "/Cursor/Move"
 msgstr "/Cursore/Sposta"
 
-#: src/mainwindow.c:1851
+#: src/mainwindow.c:1868
 msgid "/Cursor/Move/Left"
 msgstr "/Cursore/Sposta/Sinistra"
 
-#: src/mainwindow.c:1852
+#: src/mainwindow.c:1869
 msgid "/Cursor/Move/Right"
 msgstr "/Cursore/Sposta/Destra"
 
-#: src/mainwindow.c:1853
+#: src/mainwindow.c:1870
 msgid "/Cursor/Move/Left sample"
 msgstr "/Cursore/Sposta/Camp. sinistro"
 
-#: src/mainwindow.c:1854
+#: src/mainwindow.c:1871
 msgid "/Cursor/Move/Right sample"
 msgstr "Cursore/Sposta/Camp. destro"
 
-#: src/mainwindow.c:1855
+#: src/mainwindow.c:1872
 msgid "/Cursor/Find zero-crossing"
 msgstr "/Cursore/Trova punto zero"
 
-#: src/mainwindow.c:1856
+#: src/mainwindow.c:1873
 msgid "/Cursor/Find zero-crossing/Left (all channels)"
 msgstr "/Cursore/Trova punto zero/Sinistra (tutti i canali)"
 
-#: src/mainwindow.c:1858
+#: src/mainwindow.c:1875
 msgid "/Cursor/Find zero-crossing/Right (all channels)"
 msgstr "/Cursore/Trova punto zero/Destra (tutti i canali)"
 
-#: src/mainwindow.c:1860
+#: src/mainwindow.c:1877
 msgid "/Cursor/Find zero-crossing/Left (any channel)"
 msgstr "/Cursore/Trova punto zero/Sinistra (qualsiasi canale)"
 
-#: src/mainwindow.c:1862
+#: src/mainwindow.c:1879
 msgid "/Cursor/Find zero-crossing/Right (any channel)"
 msgstr "/Cursore/Trova punto zero/Destra (qualsiasi canale)"
 
-#: src/mainwindow.c:1864
+#: src/mainwindow.c:1881
 msgid "/Cursor/sep2"
 msgstr "/Cursore/sep2"
 
-#: src/mainwindow.c:1865
+#: src/mainwindow.c:1882
 msgid "/Cursor/Position cursor..."
 msgstr "/Cursore/Posiziona cursore..."
 
-#: src/mainwindow.c:1867
+#: src/mainwindow.c:1884
 msgid "/_Play"
 msgstr "/_Suona"
 
-#: src/mainwindow.c:1868
+#: src/mainwindow.c:1885
 msgid "/Play/_Play from cursor"
 msgstr "/Suona/Dal cursore"
 
-#: src/mainwindow.c:1869
+#: src/mainwindow.c:1886
 msgid "/Play/Play _all"
 msgstr "/Suona/Tutto"
 
-#: src/mainwindow.c:1870
+#: src/mainwindow.c:1887
 msgid "/Play/Play se_lection"
 msgstr "/Suona/Se_lezione"
 
-#: src/mainwindow.c:1871
+#: src/mainwindow.c:1888
 msgid "/Play/_Stop"
 msgstr "/Suona/_Stop"
 
-#: src/mainwindow.c:1872
+#: src/mainwindow.c:1889
 msgid "/Play/sep1"
 msgstr "/Suona/sep1"
 
-#: src/mainwindow.c:1873
+#: src/mainwindow.c:1890
 msgid "/Play/_Record..."
 msgstr "/Suona/_Registra..."
 
-#: src/mainwindow.c:1874
+#: src/mainwindow.c:1891
 msgid "/Effec_ts"
 msgstr "/_Effetti"
 
-#: src/mainwindow.c:1875
+#: src/mainwindow.c:1892
 msgid "/Effects/Fade _in"
 msgstr "/Effetti/Fade _in"
 
-#: src/mainwindow.c:1876
+#: src/mainwindow.c:1893
 msgid "/Effects/Fade o_ut"
 msgstr "/Effetti/Fade o_ut"
 
-#: src/mainwindow.c:1877
+#: src/mainwindow.c:1894
 msgid "/Effects/_Normalize"
 msgstr "/Effetti/_Normalizza"
 
-#: src/mainwindow.c:1878
+#: src/mainwindow.c:1895
 msgid "/Effects/Normali_ze to..."
 msgstr "/Effetti/Normali_zza a..."
 
-#: src/mainwindow.c:1879
+#: src/mainwindow.c:1896
 msgid "/Effects/_Volume adjust (fade)..."
 msgstr "/Effetti/Regola _volume (fade)..."
 
-#: src/mainwindow.c:1880
+#: src/mainwindow.c:1897
 msgid "/Effects/sep1"
 msgstr "/Effetti/sep1"
 
-#: src/mainwindow.c:1881
+#: src/mainwindow.c:1898
 msgid "/Effects/Convert sample_rate..."
 msgstr "/Effetti/Conve_rti tasso campione..."
 
-#: src/mainwindow.c:1882
+#: src/mainwindow.c:1899
 msgid "/Effects/Convert sample _format..."
 msgstr "/Effetti/Converti _formato campione..."
 
-#: src/mainwindow.c:1884
+#: src/mainwindow.c:1901
 msgid "/Effects/B_yte swap"
 msgstr "/Effetti/Scambia b_yte"
 
-#: src/mainwindow.c:1885
+#: src/mainwindow.c:1902
 msgid "/Effects/sep2"
 msgstr "/Effetti/sep2"
 
-#: src/mainwindow.c:1886
+#: src/mainwindow.c:1903
 msgid "/Effects/_Mix to mono"
 msgstr "/Effetti/_Mix a mono"
 
-#: src/mainwindow.c:1887
+#: src/mainwindow.c:1904
 msgid "/Effects/Add channe_l"
 msgstr "/Effetti/Aggiungi canale"
 
-#: src/mainwindow.c:1888
+#: src/mainwindow.c:1905
 msgid "/Effects/Ma_p channels..."
 msgstr "/Effetti/Ma_ppa canali..."
 
-#: src/mainwindow.c:1889
+#: src/mainwindow.c:1906
 msgid "/Effects/_Combine channels..."
 msgstr "/Effetti/_Combina canali..."
 
-#: src/mainwindow.c:1890
+#: src/mainwindow.c:1907
+msgid "/Effects/Add channels from other file..."
+msgstr "/Effetti/Aggiungi canale da altro file..."
+
+#: src/mainwindow.c:1908
 msgid "/Effects/sep3"
 msgstr "/Effetti/sep3"
 
-#: src/mainwindow.c:1891
+#: src/mainwindow.c:1909
 msgid "/Effects/_Speed adjustment..."
 msgstr "/Effetti/Regola velocità..."
 
-#: src/mainwindow.c:1892
+#: src/mainwindow.c:1910
 msgid "/Effects/Pipe through program..."
 msgstr "/Effetti/Invia a programma..."
 
-#: src/mainwindow.c:1893
+#: src/mainwindow.c:1911
 msgid "/Effects/sep4"
 msgstr "/Effetti/sep4"
 
-#: src/mainwindow.c:1894
+#: src/mainwindow.c:1912
 msgid "/Effects/Effects dialog..."
 msgstr "/Effetti/Finestra effetti..."
 
-#: src/mainwindow.c:1896
+#: src/mainwindow.c:1914
 msgid "/Debug"
 msgstr "/Debug"
 
-#: src/mainwindow.c:1898
+#: src/mainwindow.c:1916
 msgid "/Debug/Dummy effect"
 msgstr "/Debug/Dummy effect"
 
-#: src/mainwindow.c:1899
+#: src/mainwindow.c:1917
 msgid "/Debug/Check opencount"
 msgstr "/Debug/Check opencount"
 
-#: src/mainwindow.c:1900
+#: src/mainwindow.c:1918
 msgid "/Debug/Dump chunk info"
 msgstr "/Debug/Dump chunk info"
 
-#: src/mainwindow.c:1902
+#: src/mainwindow.c:1920
 msgid "/_Help"
 msgstr "/_Aiuto"
 
-#: src/mainwindow.c:1903
+#: src/mainwindow.c:1921
 msgid "/Help/_Documentation"
 msgstr "/Aiuto/_Documentazione"
 
-#: src/mainwindow.c:1904
+#: src/mainwindow.c:1922
 msgid "/Help/_About"
 msgstr "/Aiuto/A proposito di..."
 
-#: src/mainwindow.c:1908
+#: src/mainwindow.c:1926
 msgid "/File/sep1"
 msgstr "/File/sep1"
 
-#: src/mainwindow.c:1909
+#: src/mainwindow.c:1927
 msgid "/File/_Close"
 msgstr "/File/Chiudi"
 
-#: src/mainwindow.c:1910
+#: src/mainwindow.c:1928
 msgid "/File/sep2"
 msgstr "/File/sep2"
 
-#: src/mainwindow.c:1911
+#: src/mainwindow.c:1929
 msgid "/File/_Exit"
 msgstr "/File/_Esci"
 
-#: src/mainwindow.c:2069
+#: src/mainwindow.c:2087
 msgid "Load a file from disk"
 msgstr "Carica file da disco"
 
-#: src/mainwindow.c:2076
+#: src/mainwindow.c:2094
 msgid "Save the current file to disk"
 msgstr "Salva file su disco"
 
-#: src/mainwindow.c:2085
+#: src/mainwindow.c:2103
 msgid "Undo the last change"
 msgstr "Annulla ultimo cambiamento"
 
-#: src/mainwindow.c:2093
+#: src/mainwindow.c:2111
 msgid "Redo the last undo operation"
 msgstr "Rifai l'ultima operazione"
 
-#: src/mainwindow.c:2103
+#: src/mainwindow.c:2121
 msgid "Cut out the current selection"
 msgstr "Taglia la selezione"
 
-#: src/mainwindow.c:2111
+#: src/mainwindow.c:2129
 msgid "Copy the current selection"
 msgstr "Copia la selezione"
 
-#: src/mainwindow.c:2119
+#: src/mainwindow.c:2137
 msgid "Paste at cursor position"
 msgstr "Incolla alla posizione del cursore"
 
-#: src/mainwindow.c:2127
+#: src/mainwindow.c:2145
 msgid "Paste, overwriting the data after the cursor position"
 msgstr "Incolla, coprendo i dati dopo la posizione attuale"
 
-#: src/mainwindow.c:2137
+#: src/mainwindow.c:2155
 msgid "Delete the selection"
 msgstr "Cancella la selezione"
 
-#: src/mainwindow.c:2146
+#: src/mainwindow.c:2164
 msgid "Set selection start to cursor position"
 msgstr "Imposta l'inizio della selezione al cursore"
 
-#: src/mainwindow.c:2155
+#: src/mainwindow.c:2173
 msgid "Set selection end to cursor position"
 msgstr "Imposta la fine selezione al cursore"
 
-#: src/mainwindow.c:2165
+#: src/mainwindow.c:2183
 msgid "Play from cursor position"
 msgstr "Suona dal cursore"
 
-#: src/mainwindow.c:2174
+#: src/mainwindow.c:2192
 msgid "Play selected area"
 msgstr "Suona area selezionata"
 
-#: src/mainwindow.c:2183
+#: src/mainwindow.c:2201
 msgid "Stop playing"
 msgstr "Stop al suono"
 
-#: src/mainwindow.c:2193
+#: src/mainwindow.c:2211
 msgid "Loop mode (play over and over)"
 msgstr "Modo Loop (suona sempre da capo)"
 
-#: src/mainwindow.c:2203
+#: src/mainwindow.c:2221
 msgid "Follow cursor while playing"
 msgstr "Segui cursore mentre suona"
 
-#: src/mainwindow.c:2216
+#: src/mainwindow.c:2234
 msgid "Auto return to playback start"
 msgstr "Torna all'inizio"
 
-#: src/mainwindow.c:2230 src/recorddialog.c:628
+#: src/mainwindow.c:2248
+#: src/recorddialog.c:866
 msgid "Record"
 msgstr "Registra"
 
-#: src/mainwindow.c:2239 src/recorddialog.c:797
+#: src/mainwindow.c:2257
+#: src/recorddialog.c:975
 msgid "Launch mixer"
 msgstr "Apri mixer"
 
@@ -2556,30 +2307,30 @@ msgstr ""
 "Risposta del comando '%s':\n"
 "\n"
 
-#: src/pipedialog.c:190
+#: src/pipedialog.c:191
 #, c-format
 msgid "Could not create pipe: %s"
 msgstr "Impossibile creare pipe: %s"
 
-#: src/pipedialog.c:205
+#: src/pipedialog.c:206
 #, c-format
 msgid "Error: fork: %s"
 msgstr "Errore: fork: %s"
 
-#: src/pipedialog.c:256
+#: src/pipedialog.c:258
 msgid "Should not reach this point!"
 msgstr "Should not reach this point!"
 
-#: src/pipedialog.c:465
+#: src/pipedialog.c:468
 msgid "Command failed without returning any data"
 msgstr "Il comando ha fallito senza restituire nulla"
 
-#: src/pipedialog.c:475
+#: src/pipedialog.c:478
 #, c-format
 msgid "Error: %s"
 msgstr "Errore: %s"
 
-#: src/player.c:245
+#: src/player.c:273
 msgid "The sound format of this file is not supported for playing."
 msgstr "Il formato sonoro di questo file non è supportato per l'esecuzione."
 
@@ -2607,7 +2358,8 @@ msgstr "EOF inaspettato nella connessione al sottoprocesso"
 msgid "Error writing to subprocess: %s"
 msgstr "Errore di scrittura al sottoprocesso: %s"
 
-#: src/rateconv.c:379 src/rateconv.c:401
+#: src/rateconv.c:379
+#: src/rateconv.c:401
 #, c-format
 msgid "Error reading from sub process: %s"
 msgstr "Errore di lettura dal sottoprocesso: %s"
@@ -2628,15 +2380,15 @@ msgstr "(SoX) interpolazione polifase"
 msgid "Sample repeat/skip (low quality)"
 msgstr "Ripeti/salta campione (bassa qualità)"
 
-#: src/rawdialog.c:41
+#: src/rawdialog.c:42
 msgid "header size"
 msgstr "dimensione header"
 
-#: src/rawdialog.c:71
+#: src/rawdialog.c:72
 msgid "Unknown file format"
 msgstr "Formato file sconosciuto"
 
-#: src/rawdialog.c:78
+#: src/rawdialog.c:79
 #, c-format
 msgid ""
 "The format of file '%s' could not be recognized.\n"
@@ -2647,177 +2399,164 @@ msgstr ""
 "\n"
 "Specificare il formato dei campionamento qui sotto"
 
-#: src/rawdialog.c:90
+#: src/rawdialog.c:91
 msgid "Header bytes: "
 msgstr "Byte intestazione: "
 
-#: src/recorddialog.c:45
-msgid "Choose a sample format"
-msgstr "Scegliere un formato di campionamento"
-
-#: src/recorddialog.c:61
-#, c-format
-msgid "%d-bit"
-msgstr "%d-bit"
-
-#: src/recorddialog.c:67
-#, c-format
-msgid "%s (%s %s %d Hz)"
-msgstr "%s (%s %s %d Hz)"
-
-#: src/recorddialog.c:71
-#, c-format
-msgid "%s %s %d Hz"
-msgstr "%s %s %d Hz"
-
-#: src/recorddialog.c:84
-msgid "Other format..."
-msgstr "Altro formato..."
-
-#: src/recorddialog.c:101 src/recorddialog.c:426 src/recorddialog.c:732
+#: src/recorddialog.c:206
+#: src/recorddialog.c:664
+#: src/recorddialog.c:910
 msgid "(no limit)"
 msgstr "(nessun limite)"
 
-#: src/recorddialog.c:207
+#: src/recorddialog.c:313
 msgid "Mild"
 msgstr "Lieve"
 
-#: src/recorddialog.c:209
+#: src/recorddialog.c:315
 msgid "Heavy"
 msgstr "Pesante"
 
-#: src/recorddialog.c:328
+#: src/recorddialog.c:423
+msgid "Update preset"
+msgstr "Aggiorna impostazione"
+
+#: src/recorddialog.c:428
+msgid "Add preset"
+msgstr "Aggiungi impostazione"
+
+#: src/recorddialog.c:507
 msgid "Custom format"
 msgstr "Altro formato"
 
-#: src/recorddialog.c:345
-msgid ""
-"The sign and endian-ness can usually be left at their defaults, but should "
-"be changed if you're unable to record or get bad sound."
-msgstr ""
-"Il segno e l'endianess di solito possono rimanere come sono, ma dovrebbero "
-"essere cambiati se non si riesce a registrare o si ottiene un suono alterato."
+#: src/recorddialog.c:545
+msgid "The sign and endian-ness can usually be left at their defaults, but should be changed if you're unable to record or get bad sound."
+msgstr "Il segno e l'endianess di solito possono rimanere come sono, ma dovrebbero essere cambiati se non si riesce a registrare o si ottiene un suono alterato."
 
-#: src/recorddialog.c:352
-msgid ""
-"To add this format to the presets, enter a name below. Otherwise, leave it "
-"blank."
-msgstr ""
-"Per aggiungere questo formato ai preset, scrivere un nome. Altrimenti "
-"lasciare in bianco."
-
-#: src/recorddialog.c:358
+#: src/recorddialog.c:559
 msgid "Name :"
 msgstr "Nome :"
 
-#: src/recorddialog.c:409
-msgid ""
-"Invalid time value. Time must be specified in the form (HH')MM:SS(.mmmm)"
-msgstr ""
-"Valore di tempo non valido. Il tempo deve essere scritto come (OO')MM:SS"
-"( mmmm)"
+#: src/recorddialog.c:571
+msgid "Presets:"
+msgstr "Impostazioni:"
 
-#: src/recorddialog.c:452 src/recorddialog.c:762
+#: src/recorddialog.c:586
+msgid "Set format"
+msgstr "Imposta formato"
+
+#: src/recorddialog.c:594
+msgid "Add/Update preset"
+msgstr "Aggiungi/aggiorna impostazione"
+
+#: src/recorddialog.c:647
+msgid "Invalid time value. Time must be specified in the form (HH')MM:SS(.mmmm)"
+msgstr "Valore di tempo non valido. Il tempo deve essere scritto come (OO')MM:SS( mmmm)"
+
+#: src/recorddialog.c:691
+#: src/recorddialog.c:940
 msgid "Format not selected"
 msgstr "Formato non selezionato"
 
-#: src/recorddialog.c:458
+#: src/recorddialog.c:698
 msgid "This format is not supported by the input driver!"
 msgstr "Questo formato non è supportato dal driver d'ingresso!"
 
-#: src/recorddialog.c:463
+#: src/recorddialog.c:703
 msgid "Ready for recording"
 msgstr "Pronto a registrare"
 
-#: src/recorddialog.c:480
+#: src/recorddialog.c:716
 msgid "Peak: "
 msgstr "Picco: "
 
-#: src/recorddialog.c:481
+#: src/recorddialog.c:717
 msgid "Peak max: "
 msgstr "Picco max: "
 
-#: src/recorddialog.c:482
+#: src/recorddialog.c:718
 msgid "RMS: "
 msgstr "RMS: "
 
-#: src/recorddialog.c:483
+#: src/recorddialog.c:719
 msgid "Clipping: "
 msgstr "Clipping: "
 
-#: src/recorddialog.c:557
+#: src/recorddialog.c:788
 msgid "Resume recording"
 msgstr "Riprendi registrazione"
 
-#: src/recorddialog.c:557 src/recorddialog.c:570
+#: src/recorddialog.c:788
+#: src/recorddialog.c:808
 msgid "Pause recording"
 msgstr "Pausa registrazione"
 
-#: src/recorddialog.c:559
+#: src/recorddialog.c:790
 msgid "RecordStatus|Paused"
-msgstr "RecordStatus|Pausa"
+msgstr "In pausa"
 
-#: src/recorddialog.c:560 src/recorddialog.c:578
+#: src/recorddialog.c:791
+#: src/recorddialog.c:816
 msgid "RecordStatus|Recording"
-msgstr "RecordStatus|Registra"
+msgstr "In corso"
 
-#: src/recorddialog.c:573
+#: src/recorddialog.c:811
 msgid "Finish"
 msgstr "Finisci"
 
-#: src/recorddialog.c:581
+#: src/recorddialog.c:819
 msgid "Overruns: "
 msgstr "Overruns: "
 
-#: src/recorddialog.c:583
+#: src/recorddialog.c:821
 msgid "Bytes written: "
 msgstr "Byte scritti: "
 
-#: src/recorddialog.c:584
+#: src/recorddialog.c:822
 msgid "Auto stop in: "
-msgstr "Auto stop in: "
+msgstr "Auto stop tra: "
 
-#: src/recorddialog.c:706
+#: src/recorddialog.c:886
 msgid "Recording settings"
 msgstr "Impostazioni registrazione"
 
-#: src/recorddialog.c:713
+#: src/recorddialog.c:893
 msgid "Sample format: "
 msgstr "Formato campione: "
 
-#: src/recorddialog.c:730
+#: src/recorddialog.c:908
 msgid "Time limit: "
 msgstr "Limite tempo: "
 
-#: src/recorddialog.c:738
+#: src/recorddialog.c:916
 msgid "Disable"
 msgstr "Disabilita"
 
-#: src/recorddialog.c:744
+#: src/recorddialog.c:922
 msgid "Set"
 msgstr "Imposta"
 
-#: src/recorddialog.c:756
+#: src/recorddialog.c:934
 msgid "Input levels"
 msgstr "Livelli ingresso"
 
-#: src/recorddialog.c:761
+#: src/recorddialog.c:939
 msgid "Recording status: "
 msgstr "Stato registrazione: "
 
-#: src/recorddialog.c:766
+#: src/recorddialog.c:944
 msgid "Time recorded: "
 msgstr "Tempo registrato: "
 
-#: src/recorddialog.c:767
+#: src/recorddialog.c:945
 msgid "N/A"
 msgstr "N/D"
 
-#: src/recorddialog.c:780
+#: src/recorddialog.c:958
 msgid "Start recording"
 msgstr "Avvia registrazione"
 
-#: src/recorddialog.c:791
+#: src/recorddialog.c:969
 msgid "Reset max peaks"
 msgstr "Azzera contatore picchi"
 
@@ -2838,133 +2577,138 @@ msgid "Method: "
 msgstr "Metodo: "
 
 #: src/samplesizedialog.c:82
-msgid ""
-"(This changes the sample type of the entire file, not just the selection)"
-msgstr ""
-"(Cambia il tipo di campione di tutto il file, non solo della selezione)"
+msgid "(This changes the sample type of the entire file, not just the selection)"
+msgstr "(Cambia il tipo di campione di tutto il file, non solo della selezione)"
 
 #: src/samplesizedialog.c:94
 msgid "Don't actually change the data (for repairing bad files etc)"
 msgstr "Non cambia davvero i dati (per riparare file corrotti ecc.)"
 
-#: src/sound-alsalib.c:57
+#: src/sound-alsalib.c:73
 msgid "ALSA Preferences"
 msgstr "Preferenze ALSA"
 
-#: src/sound-alsalib.c:65
+#: src/sound-alsalib.c:81
 msgid "Playback device: "
 msgstr "Dispositivo di escuzione: "
 
-#: src/sound-alsalib.c:69
+#: src/sound-alsalib.c:85
 msgid "Recording device: "
 msgstr "Dispositivo di registrazione: "
 
-#: src/sound-alsalib.c:101
+#: src/sound-alsalib.c:91
+msgid "Event driven I/O"
+msgstr "I/O guidato da eventi"
+
+#: src/sound-alsalib.c:123
 #, c-format
 msgid "Error opening ALSA device '%s' for recording: %s"
-msgstr ""
+msgstr "Errore di apertura dispositivo ALSA '%s' per registrare: %s"
 
-#: src/sound-alsalib.c:103
+#: src/sound-alsalib.c:125
 #, c-format
 msgid "Error opening ALSA device '%s' for playback: %s"
-msgstr ""
+msgstr "Errore apertura dispositivo ALSA '%s' per suonare: %s"
 
-#: src/sound-alsalib.c:179
+#: src/sound-alsalib.c:260
 msgid "snd_pcm_hw_params_set_access failed"
 msgstr ""
 
-#: src/sound-alsalib.c:184
+#: src/sound-alsalib.c:265
 msgid "snd_pcm_hw_params_set_format failed"
 msgstr ""
 
-#: src/sound-alsalib.c:189
+#: src/sound-alsalib.c:270
 msgid "snd_pcm_hw_params_set_channels failed"
 msgstr ""
 
-#: src/sound-alsalib.c:194
+#: src/sound-alsalib.c:275
 msgid "snd_pcm_hw_params_set_rate failed"
 msgstr ""
 
-#: src/sound-alsalib.c:295 src/sound-alsalib.c:316
+#: src/sound-alsalib.c:280
+msgid "snd_pcm_hw_params_set_buffer_size_last failed"
+msgstr ""
+
+#: src/sound-alsalib.c:423
+#: src/sound-alsalib.c:479
 msgid "<ALSA playback buffer underrun>"
 msgstr ""
 
-#: src/sound-alsalib.c:354
+#: src/sound-alsalib.c:523
 msgid "<ALSA recording buffer overrun>"
 msgstr ""
 
-#: src/sound.c:153
+#: src/sound.c:167
 msgid "SDL (output only)"
-msgstr ""
+msgstr "SDL (solo out)"
 
-#: src/sound.c:182
+#: src/sound.c:209
 msgid "Dummy (no sound)"
-msgstr ""
+msgstr "Fittizio (nessun suono)"
 
-#: src/sound.c:315
+#: src/sound.c:334
 #, c-format
 msgid ""
 "Invalid driver name: %s\n"
 "Using '%s' driver instead"
-msgstr "Nome driver non valido: %s\n"
+msgstr ""
+"Nome driver non valido: %s\n"
 "Uso il driver '%s' al posto."
 
 #: src/sound-esound.c:59
 #, c-format
 msgid "Couldn't connect to ESD daemon: %s"
-msgstr ""
+msgstr "Collegamento con demone ESD fallito: %s"
 
-#: src/sound-esound.c:113
+#: src/sound-esound.c:114
 msgid "EsounD: Unable to open playback stream"
-msgstr ""
+msgstr "EsounD: errore di apertura flusso in uscita"
 
-#: src/sound-esound.c:128
+#: src/sound-esound.c:130
 msgid "EsounD: Unable to open recording stream"
-msgstr ""
+msgstr "EsounD: errore di apertura flusso in ingresso"
 
-#: src/sound-esound.c:143 src/sound-esound.c:215
+#: src/sound-esound.c:145
+#: src/sound-esound.c:217
 msgid "EsounD driver: select"
-msgstr ""
+msgstr "EsounD driver: scelta"
 
-#: src/sound-esound.c:155
+#: src/sound-esound.c:157
 msgid "EsounD driver: write"
-msgstr ""
+msgstr "Esound driver: scrittura"
 
-#: src/sound-esound.c:219
+#: src/sound-esound.c:221
 msgid "Esound connection closed by server"
-msgstr ""
+msgstr "Connessione EsounD chiusa dal server"
 
-#: src/sound-esound.c:225
+#: src/sound-esound.c:227
 msgid "EsounD driver: read"
-msgstr ""
+msgstr "Esound driver: lettura"
 
-#: src/sound-esound.c:239
+#: src/sound-esound.c:241
 msgid "jump delay"
-msgstr ""
+msgstr "ritardo salto"
 
-#: src/sound-esound.c:253
+#: src/sound-esound.c:255
 msgid "ESD preferences"
-msgstr ""
+msgstr "Preferenze ESD"
 
-#: src/sound-esound.c:261
-msgid ""
-"If the cursor starts running too early when jumping, this delay should be "
-"increased."
-msgstr ""
+#: src/sound-esound.c:263
+msgid "If the cursor starts running too early when jumping, this delay should be increased."
+msgstr "Se il cursore inizia a scorrere troppo presto dopo un salto, aumentare questo ritardo"
 
-#: src/sound-esound.c:267
+#: src/sound-esound.c:269
 msgid "Jump delay:"
-msgstr ""
+msgstr "Ritardo salto:"
 
-#: src/sound-esound.c:272
+#: src/sound-esound.c:274
 msgid "seconds"
 msgstr "secondi"
 
-#: src/sound-esound.c:276
-msgid ""
-"Selecting the ESD host to connect to is done through the ESPEAKER "
-"environment variable."
-msgstr ""
+#: src/sound-esound.c:278
+msgid "Selecting the ESD host to connect to is done through the ESPEAKER environment variable."
+msgstr "La scelta del server ESD a cui connettersi è compiuta dalla variabile di ambiente ESPEAKER"
 
 #: src/sound-jack.c:113
 msgid "Invalid number of input ports."
@@ -3032,49 +2776,50 @@ msgstr "Impossibile connettersi al server JACK"
 msgid "Activation failed!"
 msgstr "Attivazione fallita!"
 
-#: src/sound-jack.c:682
+#: src/sound-jack.c:714
 #, c-format
-msgid ""
-"With JACK, the only supported recording format is Floating-point, single "
-"precision, %d Hz"
-msgstr ""
-"Con JACK l'unico formato di registrazione possibile è Con virgola, Singola "
-"precisione, %d Hz"
+msgid "With JACK, the only supported recording format is Floating-point, single precision, %d Hz"
+msgstr "Con JACK l'unico formato di registrazione possibile è Con virgola, Singola precisione, %d Hz"
 
-#: src/sound-oss.c:88
+#: src/sound-oss.c:96
 #, c-format
 msgid "Could not open '%s': %s"
 msgstr "Impossibile aprire '%s': %s"
 
-#: src/sound-oss.c:101
+#: src/sound-oss.c:109
 #, c-format
 msgid "Error in sound driver: ioctl failed: %s"
 msgstr "Error in sound driver: ioctl failed: %s"
 
-#: src/sound-oss.c:191
+#: src/sound-oss.c:215
 #, c-format
 msgid "Error in sound driver: write failed: %s"
 msgstr "Error in sound driver: write failed: %s"
 
-#: src/sound-oss.c:204
+#: src/sound-oss.c:228
 #, c-format
 msgid "Error in sound driver: read failed: %s"
 msgstr "Error in sound driver: read failed: %s"
 
-#: src/sound-oss.c:228 src/sound-oss.c:340
+#: src/sound-oss.c:252
+#: src/sound-oss.c:384
 #, c-format
 msgid "Error in sound driver: select failed: %s"
 msgstr "Error in sound driver: select failed: %s"
 
-#: src/sound-oss.c:390
+#: src/sound-oss.c:439
 msgid "OSS preferences"
 msgstr "OSS preferences"
 
-#: src/sound-oss.c:400
-msgid "Sound device file:"
-msgstr "Sound device file:"
+#: src/sound-oss.c:449
+msgid "Playback device file:"
+msgstr "Dispositivo di escuzione:"
 
-#: src/sound-oss.c:406
+#: src/sound-oss.c:458
+msgid "Recording device file:"
+msgstr "Dispositivo di registrazione:"
+
+#: src/sound-oss.c:464
 msgid "Avoid select calls (try this if recording locks up)"
 msgstr "Avoid select calls (try this if recording locks up)"
 
@@ -3086,12 +2831,13 @@ msgstr "sound-portaudio: No output devices available!"
 msgid "sound-portaudio: No input devices available!"
 msgstr "sound-portaudio: No input devices available!"
 
-#: src/sound-portaudio.c:186 src/sound-portaudio.c:272
+#: src/sound-portaudio.c:186
+#: src/sound-portaudio.c:273
 #, c-format
 msgid "Pa_OpenStream failed: %s\n"
 msgstr "Pa_OpenStream failed: %s\n"
 
-#: src/sound-portaudio.c:246
+#: src/sound-portaudio.c:247
 msgid "Buffer overrun!"
 msgstr "Buffer overrun!"
 
@@ -3100,7 +2846,7 @@ msgstr "Buffer overrun!"
 msgid "Could not initialize SDL: %s"
 msgstr "Could not initialize SDL: %s"
 
-#: src/sound-sdl.c:88
+#: src/sound-sdl.c:89
 #, c-format
 msgid "SDL: Couldn't open audio: %s"
 msgstr "SDL: Couldn't open audio: %s"
@@ -3118,342 +2864,349 @@ msgstr "SunAudio: Error writing to sound device"
 msgid "SunAudio: Error reading from sound device"
 msgstr "SunAudio: Error reading from sound device"
 
-#: src/soxdialog.c:52
+#: src/soxdialog.c:53
 msgid "Echo"
 msgstr "Eco"
 
-#: src/soxdialog.c:53
+#: src/soxdialog.c:54
 msgid "Echo sequence"
 msgstr "Sequenza eco"
 
-#: src/soxdialog.c:54
+#: src/soxdialog.c:55
 msgid "Reverb"
 msgstr "Riverb"
 
-#: src/soxdialog.c:55
+#: src/soxdialog.c:56
 msgid "Chorus"
 msgstr "Coro"
 
-#: src/soxdialog.c:56
+#: src/soxdialog.c:57
 msgid "Flanger"
 msgstr "Flanger"
 
-#: src/soxdialog.c:57
+#: src/soxdialog.c:58
 msgid "Phaser"
 msgstr "Phaser"
 
-#: src/soxdialog.c:58
+#: src/soxdialog.c:59
 msgid "Compress/Expand"
 msgstr "Comprimi/Espandi"
 
-#: src/soxdialog.c:59
+#: src/soxdialog.c:60
 msgid "Pitch adjust"
 msgstr "Regola altezza"
 
-#: src/soxdialog.c:60
+#: src/soxdialog.c:61
 msgid "Time stretch"
 msgstr "Allunga tempo"
 
-#: src/soxdialog.c:61
+#: src/soxdialog.c:62
 msgid "DC Shift"
 msgstr "DC Shift"
 
-#: src/soxdialog.c:62
+#: src/soxdialog.c:63
 msgid "Masking noise"
 msgstr "Maschera rumore"
 
-#: src/soxdialog.c:63
+#: src/soxdialog.c:64
 msgid "Reverse"
 msgstr "Inverti"
 
-#: src/soxdialog.c:64
+#: src/soxdialog.c:65
 msgid "Earwax"
 msgstr "Earwax"
 
-#: src/soxdialog.c:65
+#: src/soxdialog.c:66
 msgid "Vibro"
 msgstr "Vibro"
 
-#: src/soxdialog.c:66
+#: src/soxdialog.c:67
 msgid "Lowpass filter (single-pole)"
 msgstr "Filtro passa basso (polo singolo)"
 
-#: src/soxdialog.c:67
+#: src/soxdialog.c:68
 msgid "Highpass filter (single-pole)"
 msgstr "Filtro passa alto (polo singolo)"
 
-#: src/soxdialog.c:68
+#: src/soxdialog.c:69
 msgid "Bandpass filter"
 msgstr "Filtro passa banda"
 
-#: src/soxdialog.c:69
+#: src/soxdialog.c:70
 msgid "Butterworth lowpass filter"
 msgstr "Filtro passa basso Butterworth"
 
-#: src/soxdialog.c:70
+#: src/soxdialog.c:71
 msgid "Butterworth highpass filter"
 msgstr "Filtro passa alto Butterworth"
 
-#: src/soxdialog.c:71
+#: src/soxdialog.c:72
 msgid "Butterworth bandpass filter"
 msgstr "Filtro passa banda Butterworth"
 
-#: src/soxdialog.c:72
+#: src/soxdialog.c:73
 msgid "Butterworth bandreject filter"
 msgstr "Filtro escludi banda Butterworth"
 
-#: src/soxdialog.c:73
+#: src/soxdialog.c:74
 msgid "Sinc-windowed filter"
 msgstr "Sinc-windowed filter"
 
-#: src/soxdialog.c:300
+#: src/soxdialog.c:307
 msgid "Frequency: "
 msgstr "Frequenza: "
 
-#: src/soxdialog.c:305 src/soxdialog.c:312 src/soxdialog.c:471
-#: src/soxdialog.c:473
+#: src/soxdialog.c:312
+#: src/soxdialog.c:319
+#: src/soxdialog.c:478
+#: src/soxdialog.c:480
 msgid "Hz"
 msgstr "Hz"
 
-#: src/soxdialog.c:315
+#: src/soxdialog.c:322
 msgid "Noise mode"
 msgstr "Noise mode"
 
-#: src/soxdialog.c:375
+#: src/soxdialog.c:382
 msgid "Reverb time: "
 msgstr "Tempo riverbero:"
 
-#: src/soxdialog.c:380
+#: src/soxdialog.c:387
 msgid "ms"
 msgstr "ms"
 
-#: src/soxdialog.c:385
+#: src/soxdialog.c:392
 msgid "Delay (ms)  "
 msgstr "Ritardo (ms)  "
 
-#: src/soxdialog.c:388
+#: src/soxdialog.c:395
 msgid "Decay  "
 msgstr "Caduta.."
 
-#: src/soxdialog.c:392
+#: src/soxdialog.c:399
 msgid "Speed (Hz)  "
 msgstr "Velocità (Hz)  "
 
-#: src/soxdialog.c:396
+#: src/soxdialog.c:403
 msgid "Depth (ms)  "
 msgstr "Profondità (ms)  "
 
-#: src/soxdialog.c:400
+#: src/soxdialog.c:407
 msgid "Modulation  "
 msgstr "Modulazione  "
 
-#: src/soxdialog.c:403
+#: src/soxdialog.c:410
 msgid "Modulation|Sinusoidal"
-msgstr "Modulazione|Sinusoidale"
+msgstr "Sinusoidale"
 
-#: src/soxdialog.c:404
+#: src/soxdialog.c:411
 msgid "Modulation|Triangular"
-msgstr "Modulazione|Triangolare"
+msgstr "Triangolare"
 
-#: src/soxdialog.c:417
+#: src/soxdialog.c:424
 msgid "(Lines with delay=0 will be ignored.)"
 msgstr "(Le righe con ritardo=0 saranno ignorate)"
 
-#: src/soxdialog.c:436 src/soxdialog.c:438 src/soxdialog.c:442
-#: src/soxdialog.c:444 src/soxdialog.c:446
+#: src/soxdialog.c:443
+#: src/soxdialog.c:445
+#: src/soxdialog.c:449
+#: src/soxdialog.c:451
+#: src/soxdialog.c:453
 msgid "Input gain: "
 msgstr "Guadagno IN: "
 
-#: src/soxdialog.c:440
+#: src/soxdialog.c:447
 msgid "Output gain: "
 msgstr "Guadagno OUT: "
 
-#: src/soxdialog.c:452
+#: src/soxdialog.c:459
 msgid "Width: "
 msgstr "Ampiezza: "
 
-#: src/soxdialog.c:458 src/soxdialog.c:460
+#: src/soxdialog.c:465
+#: src/soxdialog.c:467
 msgid "Bandwidth: "
 msgstr "Larghezza banda: "
 
-#: src/soxdialog.c:469
+#: src/soxdialog.c:476
 msgid "Filter type: "
 msgstr "Tipo filtro: "
 
-#: src/soxdialog.c:470
+#: src/soxdialog.c:477
 msgid "Low 6dB corner: "
 msgstr "Low 6dB corner: "
 
-#: src/soxdialog.c:472
+#: src/soxdialog.c:479
 msgid "High 6db corner: "
 msgstr "High 6db corner: "
 
-#: src/soxdialog.c:474
+#: src/soxdialog.c:481
 msgid "Window length: "
 msgstr "Window length: "
 
-#: src/soxdialog.c:475
+#: src/soxdialog.c:482
 msgid "samples"
 msgstr "campioni"
 
-#: src/soxdialog.c:476
+#: src/soxdialog.c:483
 msgid "Beta"
 msgstr "Beta"
 
-#: src/soxdialog.c:479
+#: src/soxdialog.c:486
 msgid "Lowpass"
 msgstr "Passa basso"
 
-#: src/soxdialog.c:480
+#: src/soxdialog.c:487
 msgid "Highpass"
 msgstr "Passa alto"
 
-#: src/soxdialog.c:481
+#: src/soxdialog.c:488
 msgid "Bandpass"
 msgstr "Passa banda"
 
-#: src/soxdialog.c:514
+#: src/soxdialog.c:521
 msgid "Attack integration time: "
 msgstr "Attack integration time: "
 
-#: src/soxdialog.c:519
+#: src/soxdialog.c:526
 msgid "Decay integration time: "
 msgstr "Decay integration time: "
 
-#: src/soxdialog.c:526
+#: src/soxdialog.c:533
 msgid "Input level (dB)"
 msgstr "Livello IN (dB)"
 
-#: src/soxdialog.c:527
+#: src/soxdialog.c:534
 msgid "Output level (dB)"
 msgstr "Livello OUT (dB)"
 
-#: src/soxdialog.c:540
+#: src/soxdialog.c:547
 msgid "Post-processing gain: "
 msgstr "Guadagno post-processo: "
 
-#: src/soxdialog.c:544
+#: src/soxdialog.c:551
 msgid " dB"
 msgstr " dB"
 
-#: src/soxdialog.c:545
+#: src/soxdialog.c:552
 msgid "Initial volume: "
 msgstr "Volume iniziale: "
 
-#: src/soxdialog.c:549
+#: src/soxdialog.c:556
 msgid "Delay time: "
 msgstr "Tempo di ritardo: "
 
-#: src/soxdialog.c:558
+#: src/soxdialog.c:565
 msgid "Shift amount: "
 msgstr "Shift amount: "
 
-#: src/soxdialog.c:562
+#: src/soxdialog.c:569
 msgid "Peak limiter"
 msgstr "Limitatore picco"
 
-#: src/soxdialog.c:566
+#: src/soxdialog.c:573
 msgid "Limiter gain: "
 msgstr "Limiter gain: "
 
-#: src/soxdialog.c:579
+#: src/soxdialog.c:586
 msgid "Amount: "
 msgstr "Quantità: "
 
-#: src/soxdialog.c:580
+#: src/soxdialog.c:587
 msgid " cents"
 msgstr " cents"
 
-#: src/soxdialog.c:581
+#: src/soxdialog.c:588
 msgid "Window width: "
 msgstr "Ampiezza finestra: "
 
-#: src/soxdialog.c:582 src/soxdialog.c:613
+#: src/soxdialog.c:589
+#: src/soxdialog.c:620
 msgid " ms"
 msgstr " ms"
 
-#: src/soxdialog.c:583
+#: src/soxdialog.c:590
 msgid "Interpolation: "
 msgstr "Interpolazione: "
 
-#: src/soxdialog.c:584
+#: src/soxdialog.c:591
 msgid "Fade: "
 msgstr "Fade: "
 
-#: src/soxdialog.c:593
-msgid "Interpolation|Cubic"
-msgstr "Interpolation|Cubic"
-
-#: src/soxdialog.c:594
-msgid "Interpolation|Linear"
-msgstr "Interpolation|Linear"
-
 #: src/soxdialog.c:600
-msgid "Fade|Cos"
-msgstr "Fade|Cos"
+msgid "Interpolation|Cubic"
+msgstr "Cubica"
 
 #: src/soxdialog.c:601
+msgid "Interpolation|Linear"
+msgstr "Lineare"
+
+#: src/soxdialog.c:607
+msgid "Fade|Cos"
+msgstr "Cos"
+
+#: src/soxdialog.c:608
 msgid "Fade|Hamming"
-msgstr "Fade|Hamming"
+msgstr "Hamming"
 
-#: src/soxdialog.c:602
+#: src/soxdialog.c:609
 msgid "Fade|Linear"
-msgstr "Fade|Linear"
+msgstr "Lineare"
 
-#: src/soxdialog.c:603
+#: src/soxdialog.c:610
 msgid "Fade|Trapezoid"
-msgstr "Fade|Trapezoid"
+msgstr "Trapezoide"
 
-#: src/soxdialog.c:611
+#: src/soxdialog.c:618
 msgid "Factor: "
 msgstr "Fattore: "
 
-#: src/soxdialog.c:612
+#: src/soxdialog.c:619
 msgid "Window size: "
 msgstr "Dim. finestra: "
 
-#: src/soxdialog.c:624
+#: src/soxdialog.c:631
 msgid "Speed: "
 msgstr "Velocità: "
 
-#: src/soxdialog.c:625
+#: src/soxdialog.c:632
 msgid " Hz"
 msgstr " Hz"
 
-#: src/soxdialog.c:626
+#: src/soxdialog.c:633
 msgid "Depth: "
 msgstr "Profondità: "
 
-#: src/soxdialog.c:637
+#: src/soxdialog.c:644
 msgid "This effect has no options."
 msgstr "Questo effetto non ha opzioni."
 
-#: src/soxdialog.c:710
+#: src/soxdialog.c:718
 msgid "Error creating pipe"
-msgstr ""
+msgstr "Errore creazione pipe"
 
-#: src/soxdialog.c:717
+#: src/soxdialog.c:725
 msgid "Couldn't fork"
-msgstr ""
+msgstr "Fork impossibile"
 
-#: src/soxdialog.c:732
+#: src/soxdialog.c:740
 #, c-format
 msgid "Error running 'sox -h': %s\n"
 msgstr "Errore di esecuzione 'sox -h': %s\n"
 
-#: src/soxdialog.c:734
+#: src/soxdialog.c:742
 msgid "Should not reach this point"
 msgstr "Questo punto non dovrebbe essere raggiunto"
 
-#: src/soxdialog.c:749
+#: src/soxdialog.c:757
 msgid "Error reading sox output"
 msgstr "Errorr di lettura dei dati sox"
 
-#: src/soxdialog.c:764
+#: src/soxdialog.c:786
 msgid "Unable to detect supported SoX effects"
 msgstr "Impossibile verificare gli effetti sox disponibili"
 
-#: src/soxdialog.c:800
+#: src/soxdialog.c:824
 msgid "Sox support couldn't be initialized"
 msgstr "Impossibile avviare il supporto a sox"
 
@@ -3465,59 +3218,59 @@ msgstr "Velocità:"
 msgid "(no file loaded)"
 msgstr "(nessun file caricato)"
 
-#: src/statusbar.c:233
+#: src/statusbar.c:235
 msgid "Cursor: running"
 msgstr "Cursore: scorrevole"
 
-#: src/statusbar.c:235
+#: src/statusbar.c:237
 msgid "Cursor: "
 msgstr "Cursore: "
 
-#: src/statusbar.c:258
+#: src/statusbar.c:260
 #, c-format
 msgid "View: [ %s - %s ]"
 msgstr "Vista: [ %s - %s]"
 
-#: src/statusbar.c:279
+#: src/statusbar.c:281
 #, c-format
 msgid "Selection: %s+%s"
 msgstr "Selezione: %s+%s"
 
-#: src/statusbar.c:302
+#: src/statusbar.c:304
 msgid "Processing data"
 msgstr "Elaborazione"
 
-#: src/statusbar.c:304
+#: src/statusbar.c:306
 #, c-format
 msgid "%s... (Press ESC to cancel)"
 msgstr "%s... (Premi ESC per annullare)"
 
-#: src/um.c:49
+#: src/um.c:50
 msgid "mhWaveEdit: "
 msgstr "mhWaveEdit: "
 
-#: src/um.c:62
+#: src/um.c:63
 #, c-format
 msgid "mhWaveEdit: %s: %s\n"
 msgstr "mhWaveEdit: %s: %s\n"
 
-#: src/um.c:95
+#: src/um.c:96
 msgid "Message"
 msgstr "Messaggio"
 
-#: src/um.c:115
+#: src/um.c:116
 msgid "Yes"
 msgstr "Sì"
 
-#: src/um.c:123
+#: src/um.c:124
 msgid "No"
 msgstr "No"
 
-#: src/um.c:316
+#: src/um.c:317
 msgid "Input"
 msgstr "Ingresso"
 
-#: src/um.c:398
+#: src/um.c:401
 msgid "Choice"
 msgstr "Scelta"
 
@@ -3537,80 +3290,78 @@ msgstr "Fine:"
 msgid "Find top volume"
 msgstr "Trova volume massimo"
 
-#: src/document.c:226
+#: src/document.c:229
 #, c-format
 msgid "untitled #%d"
 msgstr "senza nome #%d"
 
-#: src/document.c:278
-msgid ""
-"Loading and then saving files with 'lossy' formats (like mp3 and ogg) leads "
-"to a quality loss, also for the unmodified parts of the file."
-msgstr "Aprire e ri-salvare file in formati 'lossy' (come MP3 e OGG) porta"
-"ad una perdita di qualità, anche nella parte di file che non viene modificata."
+#: src/document.c:281
+msgid "Loading and then saving files with 'lossy' formats (like mp3 and ogg) leads to a quality loss, also for the unmodified parts of the file."
+msgstr "Aprire e ri-salvare file in formati 'lossy' (come MP3 e OGG) portaad una perdita di qualità, anche nella parte di file che non viene modificata."
 
-#: src/session.c:84
+#: src/session.c:87
 msgid "Error opening session directory"
 msgstr "Errore di apertura della cartella sessione"
 
-#: src/session.c:101 src/session.c:161
+#: src/session.c:104
+#: src/session.c:164
 #, c-format
 msgid "%s: Wrong file type"
 msgstr "%s: tipo file errato"
 
-#: src/session.c:236
+#: src/session.c:238
 msgid "Could not create session file"
 msgstr "Impossibile creare file di sessione"
 
-#: src/session.c:278
+#: src/session.c:280
 msgid ""
-"The files that belonged to the crashed session have been recovered. Any "
-"files that are not saved will be removed permanently.\n"
+"The files that belonged to the crashed session have been recovered. Any files that are not saved will be removed permanently.\n"
 "\n"
 "(This notice is only shown once)"
 msgstr ""
-"I file appartenenti alla sessione bloccata sono stati recuperati."
-"Se i file non vengono salvati verranno rimossi definitivamente.\n"
+"I file appartenenti alla sessione bloccata sono stati recuperati.Se i file non vengono salvati verranno rimossi definitivamente.\n"
 "\n"
 "(questo avviso appare una sola volta)"
 
-#: src/session.c:328
+#: src/session.c:380
 msgid "Suspended"
 msgstr "Sospeso"
 
-#: src/session.c:328 src/session.c:329
+#: src/session.c:380
+#: src/session.c:381
 msgid "Crash"
 msgstr "Bloccato"
 
-#: src/session.c:329
+#: src/session.c:381
 msgid "Left files"
 msgstr "File rimasti"
 
-#: src/session.c:338
+#: src/session.c:391
 #, c-format
 msgid "%s on %s(%d files, %ld bytes)"
 msgstr "%s su %s(%d files, %ld bytes)"
 
-#: src/session.c:355
+#: src/session.c:409
 msgid "Sessions"
 msgstr "Sessioni"
 
-#: src/session.c:365
-msgid ""
-"Earlier sessions were found. Choose one to resume or start a new session."
-msgstr ""
-"Trovate sessioni precedenti. Sceglierne una da proseguire o iniziarne una "
-"nuova."
+#: src/session.c:419
+msgid "Earlier sessions were found. Choose one to resume or start a new session."
+msgstr "Trovate sessioni precedenti. Sceglierne una da proseguire o iniziarne una nuova."
 
-#: src/session.c:384
+#: src/session.c:439
 msgid "Resume selected"
 msgstr "Riavvia sessione selezionata"
 
-#: src/session.c:394
+#: src/session.c:449
+msgid "Delete selected"
+msgstr "Cancella la selezione"
+
+#: src/session.c:456
 msgid "Start new session"
 msgstr "Nuova sessione"
 
-#: src/session.c:400
+#: src/session.c:462
 msgid "Exit"
 msgstr "Esci"
 
@@ -3633,3 +3384,49 @@ msgstr "Sorgente"
 #: src/mapchannelsdialog.c:139
 msgid "Destination"
 msgstr "Destinazione"
+
+#: src/sandwichdialog.c:107
+msgid "Align beginning of files"
+msgstr "Allinea file all'inizio"
+
+#: src/sandwichdialog.c:110
+msgid "Align end of files"
+msgstr "Allinea file alla fine"
+
+#: src/sandwichdialog.c:113
+msgid "Align at marker: "
+msgstr "Allinea al segno:"
+
+#: src/sandwichdialog.c:126
+msgid "Add channels from: "
+msgstr "Aggiungi canali da:"
+
+#: src/sandwichdialog.c:130
+msgid "Alignment"
+msgstr "Allineamento"
+
+#~ msgid "Removing channel"
+#~ msgstr "Rimozione canale"
+#~ msgid "Mapping channels"
+#~ msgstr "Mappa canali"
+#~ msgid "Removing channels"
+#~ msgstr "Rimozione canali"
+#~ msgid "Choose a sample format"
+#~ msgstr "Scegliere un formato di campionamento"
+#~ msgid "%d-bit"
+#~ msgstr "%d-bit"
+#~ msgid "%s (%s %s %d Hz)"
+#~ msgstr "%s (%s %s %d Hz)"
+#~ msgid "%s %s %d Hz"
+#~ msgstr "%s %s %d Hz"
+#~ msgid "Other format..."
+#~ msgstr "Altro formato..."
+#~ msgid ""
+#~ "To add this format to the presets, enter a name below. Otherwise, leave "
+#~ "it blank."
+#~ msgstr ""
+#~ "Per aggiungere questo formato ai preset, scrivere un nome. Altrimenti "
+#~ "lasciare in bianco."
+#~ msgid "Sound device file:"
+#~ msgstr "Sound device file:"
+
