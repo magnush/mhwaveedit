@@ -407,14 +407,19 @@ void player_switch(Chunk *chunk, off_t movestart, off_t movedist)
 
      if (ch == NULL) return;
 
-     g_assert(chunk->format.samplerate == ch->format.samplerate && 
-	      chunk->format.channels == ch->format.channels);
+     g_assert(chunk->format.samplerate == ch->format.samplerate); 
      if (!dataformat_samples_equal(&(chunk->format),&(ch->format))) {
 	  x = chunk_convert_sampletype(chunk, &(ch->format));
 	  player_switch(x,movestart,movedist);
 	  gtk_object_sink(GTK_OBJECT(x));
 	  return;
      } 
+     if (chunk->format.channels != ch->format.channels) {
+	  x = chunk_convert_channels(chunk, ch->format.channels);
+	  player_switch(x,movestart,movedist);
+	  gtk_object_sink(GTK_OBJECT(x));
+	  return;
+     }
 
      newpos = curpos;
      if (newpos >= movestart) {
