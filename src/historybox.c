@@ -62,6 +62,8 @@ static void save_history(HistoryBoxHistory *hist)
 	  g_snprintf(c,sizeof(c),"history_%s_%d",hist->name,i);
 	  inifile_set(c,l->data);
      }
+     g_snprintf(c,sizeof(c),"history_%s_%d",hist->name,i);
+     inifile_set(c,NULL);
      g_assert(i<=HISTORY_BOX_MAXENTRIES+1);
 }
 
@@ -122,11 +124,20 @@ void history_box_rotate_history(HistoryBox *box)
 {
      gchar *v;
      HistoryBoxHistory *hist=box->history;
-     GList *l;
+     GList *l,*n;
      v = g_strdup(history_box_get_value(box));
+     for (l=hist->entries; l!=NULL; l=n) {
+	  n = l->next;
+	  if (!strcmp(l->data,v)) {
+	       g_free(l->data);
+	       hist->entries = g_list_remove_link(hist->entries,l);
+	       g_list_free(l);
+	  }
+     }
      hist->entries = g_list_prepend(hist->entries, v);
      l = g_list_nth(hist->entries, HISTORY_BOX_MAXENTRIES-1);
      if (l && l->next) {
+	  g_assert(l->next->next == NULL);
 	  g_free(l->next->data);
 	  g_list_free_1(l->next);
 	  l->next = NULL;
