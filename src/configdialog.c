@@ -59,7 +59,8 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
         intbox_check(cd->disk_threshold) ||
 	intbox_check(cd->view_quality) ||
 	intbox_check_limit(cd->recent_files,0,MAINWINDOW_RECENT_MAX,
-			   _("number of recent files")) )
+			   _("number of recent files")) ||
+	format_selector_check(cd->fallback_format))
         return;
     /* c = (gchar *)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(cd->sound_driver)->entry)); */
     c = sound_driver_id_from_index(combo_selected_index(cd->sound_driver));
@@ -752,7 +753,7 @@ static void config_dialog_init(ConfigDialog *cd)
 				 inifile_get_gboolean("mainwinFront",TRUE));
 
 
-    w = format_selector_new(FALSE);
+    w = format_selector_new(TRUE);
     format_selector_set(FORMAT_SELECTOR(w),&player_fallback_format);
     cd->fallback_format = FORMAT_SELECTOR(w);
 

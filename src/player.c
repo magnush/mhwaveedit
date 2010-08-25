@@ -32,7 +32,7 @@
 #include "gettext.h"
 #include "mainloop.h"
 
-Dataformat player_fallback_format = { DATAFORMAT_PCM, 44100, 2, 0, 0, TRUE, 
+Dataformat player_fallback_format = { DATAFORMAT_PCM, 44100, 2, 2, 4, TRUE, 
 				      IS_BIGENDIAN };
 
 gboolean varispeed_smooth_flag = FALSE;
@@ -212,35 +212,34 @@ static void restart_converter(void)
 }
 
 static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos, 
-				 gboolean lp, gboolean silent)
+				 gboolean lp, gint recursed)
 {
      gint i;
      gboolean b;
      Dataformat fmt;
+     gchar *c;
      player_stop();
      if (spos == epos) return TRUE;
      true_speed = file_speed;
      file_output_ratio = 1.0;
      memcpy(&fmt,&(chk->format),sizeof(Dataformat));
-     i = output_select_format(&(chk->format),silent,(GVoidFunc)player_work);
+     i = output_select_format(&(chk->format),(recursed<2),(GVoidFunc)player_work);
      if (i != 0) {	  
-	  if (silent) {
+	  if (recursed<2) {
 	       if (!output_suggest_format(&(chk->format),&fmt)) {
 		    memcpy(&fmt,&player_fallback_format,sizeof(Dataformat));
-		    fmt.channels = chk->format.channels;
-		    fmt.samplebytes = fmt.samplesize * fmt.channels;
 	       }
 	       
 	       b = !dataformat_samples_equal(&(chk->format),&fmt); 
 	       if (b) {
 		    chk = chunk_convert_sampletype(chk,&fmt);
-		    b = player_play_main(chk,spos,epos,lp,TRUE);
+		    b = player_play_main(chk,spos,epos,lp,1);
 		    gtk_object_sink(GTK_OBJECT(chk));
 		    return b;
 
 	       } else if (chk->format.channels != fmt.channels) {
 		    chk = chunk_convert_channels(chk,fmt.channels);
-		    b = player_play_main(chk,spos,epos,lp,TRUE);
+		    b = player_play_main(chk,spos,epos,lp,1);
 		    gtk_object_sink(GTK_OBJECT(chk));
 		    return b;
 
@@ -261,13 +260,13 @@ static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos,
 		    /* Select the format with different sample rate */
 		    i = output_select_format(&fmt,FALSE,(GVoidFunc)player_work);
 		    if (i < 0) 
-			 return player_play_main(chk,spos,epos,lp,FALSE);
+			 return player_play_main(chk,spos,epos,lp,2);
 		    else if (i > 0)
 			 return TRUE;
 		    /* Fall out to other init stuff below */
-
+		    recursed++;
 	       } else {
-		    return player_play_main(chk,spos,epos,lp,FALSE);	    
+		    return player_play_main(chk,spos,epos,lp,2);
 	       }
 	  } else {
 	       if (i < 0)
@@ -278,6 +277,13 @@ static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos,
      }
      
      /* printf("true_speed: %f\n",(float)true_speed); */
+     if (recursed > 0) {
+	  c = g_strdup_printf("playing file as %d Hz, %s, %s",fmt.samplerate,
+			      sampletype_name(chk->format.type,chk->format.samplesize),
+			      channel_format_name(chk->format.channels));
+	  console_message(c);
+	  g_free(c);
+     }
 
      ch = chunk_open(chk);
      gtk_object_ref(GTK_OBJECT(chk));
@@ -306,7 +312,7 @@ gboolean player_play(Chunk *chk, off_t spos, off_t epos, gboolean lp,
 {
      player_stop();
      notify_func = nf;
-     return player_play_main(chk,spos,epos,lp,TRUE);
+     return player_play_main(chk,spos,epos,lp,0);
 }
 
 off_t player_get_buffer_pos(void)

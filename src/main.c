@@ -202,7 +202,7 @@ int main(int argc, char **argv)
      autoplay_mark_flag = inifile_get_gboolean("autoPlayMark",FALSE);
      varispeed_reset_flag = inifile_get_gboolean("speedReset",FALSE);
      varispeed_smooth_flag = inifile_get_gboolean("speedSmooth",TRUE);
-     dataformat_get_from_inifile("playerFallback",FALSE,
+     dataformat_get_from_inifile("playerFallback",TRUE,
 				 &player_fallback_format);
      chunk_filter_use_floating_tempfiles = 
 	  inifile_get_gboolean("tempfilesFP",TRUE);
