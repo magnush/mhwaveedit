@@ -76,6 +76,21 @@ gboolean dataformat_samples_equal(Dataformat *f1, Dataformat *f2)
 	       (f1->samplesize == 1 || f1->bigendian == f2->bigendian))));
 }
 
+const gchar *sampletype_name(int sampletype, guint samplesize)
+{
+     if (sampletype == DATAFORMAT_FLOAT) {
+	  if (samplesize == sizeof(double)) return "double";
+	  else return "float";
+     }
+     switch (samplesize) {
+     case 1: return "8 bit";
+     case 2: return "16 bit";
+     case 3: return "24 bit";
+     default:
+     case 4: return "32 bit";
+     }
+}
+
 gboolean dataformat_get_from_inifile(gchar *ini_prefix, gboolean full,
 				     Dataformat *result)
 {
@@ -110,10 +125,10 @@ gboolean dataformat_get_from_inifile(gchar *ini_prefix, gboolean full,
      result->bigendian = end;
      if (full) {
 	  c = g_strdup_printf("%s_SampleRate",ini_prefix);
-	  sr = inifile_get_guint32(c,22050);
+	  sr = inifile_get_guint32(c,44100);
 	  g_free(c);
 	  c = g_strdup_printf("%s_Channels",ini_prefix);
-	  chn = inifile_get_guint32(c,1);
+	  chn = inifile_get_guint32(c,2);
 	  g_free(c);
 	  result->samplerate = sr;
 	  result->channels = chn;

@@ -69,6 +69,9 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 				gboolean full);
 
 
+const gchar *sampletype_name(int sampletype, guint samplesize);
+
+
 /* -------------------
  * CONVERSION ROUTINES 
  * ------------------- */

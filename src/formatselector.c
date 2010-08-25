@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 2003 2004 2005, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2010, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -26,6 +26,9 @@
 #include "inifile.h"
 #include "gettext.h"
 
+#define DEFAULT_CHANS 2
+#define DEFAULT_RATE 44100
+
 static void format_selector_class_init(GtkObjectClass *klass)
 {
 }
@@ -35,13 +38,6 @@ static void samplesize_changed(Combo *obj, gpointer user_data)
      int i;
      FormatSelector *fs = FORMAT_SELECTOR(user_data);
      i = combo_selected_index(obj);
-     if (i<4) {
-	  fs->format.type = DATAFORMAT_PCM;
-	  fs->format.samplesize = i+1;
-     } else {
-	  fs->format.type = DATAFORMAT_FLOAT;
-	  fs->format.samplesize = (i>4)?sizeof(double):sizeof(float);
-     }
      gtk_widget_set_sensitive(GTK_WIDGET(fs->sign_combo),(i<4));
      gtk_widget_set_sensitive(GTK_WIDGET(fs->endian_combo),(i<4));
      if (i == 0)
@@ -49,19 +45,6 @@ static void samplesize_changed(Combo *obj, gpointer user_data)
      else if (i < 4)
 	  combo_set_selection(fs->sign_combo,1);
 }
-
-static void signedness_changed(Combo *obj, gpointer user_data)
-{
-     FormatSelector *fs = FORMAT_SELECTOR(user_data);
-     fs->format.sign = combo_selected_index(obj);
-}
-
-static void endianness_changed(Combo *obj, gpointer user_data)
-{
-     FormatSelector *fs = FORMAT_SELECTOR(user_data);
-     fs->format.bigendian = combo_selected_index(obj);
-}
-
 
 static void format_selector_init(GtkWidget *widget)
 {
@@ -92,8 +75,6 @@ static void format_selector_init(GtkWidget *widget)
      combo_set_items(COMBO(b),l,0);
      g_list_free(l);
      fs->sign_combo = COMBO(b);
-     gtk_signal_connect(GTK_OBJECT(b),"selection_changed",
-			GTK_SIGNAL_FUNC(signedness_changed),fs);
      gtk_table_attach(GTK_TABLE(a),b,1,2,2,3,GTK_FILL,0,0,0);
      attach_label(_("Endianness: "),a,3,0);
      b = combo_new();
@@ -102,18 +83,8 @@ static void format_selector_init(GtkWidget *widget)
      combo_set_items(COMBO(b),l,0);
      g_list_free(l);
      fs->endian_combo = COMBO(b);
-     gtk_signal_connect(GTK_OBJECT(b),"selection_changed",
-			GTK_SIGNAL_FUNC(endianness_changed),fs);
      gtk_table_attach(GTK_TABLE(a),b,1,2,3,4,GTK_FILL,0,0,0);
      
-     fs->format.samplerate = 0;
-     fs->format.channels = 0;
-     fs->format.samplebytes = 0;
-     fs->format.type = DATAFORMAT_PCM;
-     fs->format.samplesize = 1;
-     fs->format.sign = FALSE;
-     fs->format.bigendian = FALSE;
-
      fs->channel_combo = NULL;
      fs->rate_box = NULL;
 
@@ -146,17 +117,17 @@ static void format_selector_show_full(FormatSelector *fs)
      attach_label(_("Channels: "),a,0,0);
      b = combo_new();
      for (i=1; i<9; i++) l=g_list_append(l,g_strdup(channel_format_name(i)));
-     combo_set_items(COMBO(b),l,0);
+     combo_set_items(COMBO(b),l,DEFAULT_CHANS-1);
      g_list_foreach(l,(GFunc)g_free,NULL);
      g_list_free(l);
-     gtk_table_attach(GTK_TABLE(fs),b,1,2,0,1,GTK_FILL,0,0,5);
+     gtk_table_attach(GTK_TABLE(fs),b,1,2,0,1,GTK_FILL,0,0,0);
      fs->channel_combo = COMBO(b);
      gtk_widget_show(b);
      attach_label(_("Sample rate: "),a,4,0);
      b = gtk_alignment_new(0.0,0.5,0.0,1.0);
-     gtk_table_attach(GTK_TABLE(fs),b,1,2,4,5,GTK_FILL,0,0,5);
+     gtk_table_attach(GTK_TABLE(fs),b,1,2,4,5,GTK_FILL,0,0,0);
      gtk_widget_show(b);
-     c = intbox_new(22050);     
+     c = intbox_new(DEFAULT_RATE);
      fs->rate_box = INTBOX(c);
      gtk_container_add(GTK_CONTAINER(b),c);
      gtk_widget_show(c);
@@ -189,14 +160,26 @@ void format_selector_set(FormatSelector *fs, Dataformat *fmt)
 
 void format_selector_get(FormatSelector *fs, Dataformat *result)
 {
-     result->type = fs->format.type  ;
-     result->samplesize = fs->format.samplesize;
-     result->sign = fs->format.sign;
-     result->bigendian = fs->format.bigendian;
+     int i;
+     i = combo_selected_index(fs->samplesize_combo);
+     if (i<4) {
+	  result->type = DATAFORMAT_PCM;
+	  result->samplesize = i+1;
+     } else {
+	  result->type = DATAFORMAT_FLOAT;
+	  result->samplesize = (i>4)?sizeof(double):sizeof(float);
+     }
+     result->sign = combo_selected_index(fs->sign_combo);
+     result->bigendian = combo_selected_index(fs->endian_combo);
      if (fs->channel_combo != NULL) 
 	  result->channels = combo_selected_index(fs->channel_combo)+1;
-     if (fs->rate_box != NULL)
+     else
+	  result->channels = DEFAULT_CHANS;
+     if (fs->rate_box != NULL) {
+	  intbox_check(fs->rate_box);
 	  result->samplerate = fs->rate_box->val;
+     } else
+	  result->samplerate = DEFAULT_RATE;
      result->samplebytes = result->samplesize * result->channels;
 }
 
@@ -209,8 +192,9 @@ void format_selector_set_from_inifile(FormatSelector *fs, gchar *ini_prefix)
 
 void format_selector_save_to_inifile(FormatSelector *fs, gchar *ini_prefix)
 {
-     dataformat_save_to_inifile(ini_prefix,&(fs->format),
-				fs->channel_combo!=NULL);
+     Dataformat f;
+     format_selector_get(fs,&f);
+     dataformat_save_to_inifile(ini_prefix,&f,fs->channel_combo!=NULL);
 }
 
 gboolean format_selector_check(FormatSelector *fs)
