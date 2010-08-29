@@ -31,7 +31,6 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
-#define GTK_ENABLE_BROKEN /* for GtkText under GTK 2.x */
 #include <gtk/gtk.h>
 
 #include "main.h"
@@ -45,7 +44,7 @@
 struct pipe_data {
      int fds[3];
      gchar *command;
-     GtkText *error_log;
+     GtkWidget *error_log;
 };
 
 extern char **environ;
@@ -128,17 +127,25 @@ GtkType pipe_dialog_get_type(void)
      return id;
 }
 
-static void add_error_text(GtkText *t,gchar *text)
+static void add_error_text(GtkWidget *t,gchar *text)
 {
-     GtkWidget *w = GTK_WIDGET(t);
-     gtk_text_insert(t,gtk_style_get_font(w->style),w->style->fg,
+     GtkWidget *w = t;
+#if GTK_MAJOR_VERSION < 2
+     gtk_text_insert(GTK_TEXT(t),gtk_style_get_font(w->style),w->style->fg,
 		     &(w->style->white),text,-1);     
+#else
+     GtkTextBuffer *tb;
+     GtkTextIter iter;
+     tb = gtk_text_view_get_buffer(GTK_TEXT_VIEW(t));
+     gtk_text_buffer_get_end_iter(tb,&iter);
+     gtk_text_buffer_insert(tb, &iter, text, -1);
+#endif
 }
 
-static GtkText *create_error_window(gchar *command)
+static GtkWidget *create_error_window(gchar *command)
 {
      GtkWidget *a,*b,*c;
-     GtkText *t;
+     GtkWidget *t;
      gchar *q;
      GtkAccelGroup* ag;
 
@@ -149,8 +156,12 @@ static GtkText *create_error_window(gchar *command)
      gtk_window_set_default_size(GTK_WINDOW(a),470,200);
      b = gtk_vbox_new(FALSE,0);
      gtk_container_add(GTK_CONTAINER(a),b);
+#if GTK_MAJOR_VERSION < 2
      c = gtk_text_new(NULL,NULL);
-     t = GTK_TEXT(c);
+#else
+     c = gtk_text_view_new();
+#endif
+     t = c;
      gtk_container_add(GTK_CONTAINER(b),c);
      c = gtk_button_new_with_label(_("Close"));
      gtk_widget_add_accelerator (c, "clicked", ag, GDK_KP_Enter, 0, 
