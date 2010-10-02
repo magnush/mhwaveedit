@@ -180,8 +180,12 @@ static void procstart(StatusBar *bar, gpointer user_data)
      Mainwindow *w = MAINWINDOW(user_data);
      mainwindow_set_sensitive(w,FALSE);
      w->esc_pressed_flag = FALSE;
+#if GTK_MAJOR_VERSION > 1
+     gtk_window_present(GTK_WINDOW(w));
+#else
      if (GTK_WIDGET(w)->window)
 	  gdk_window_raise(GTK_WIDGET(w)->window);
+#endif
      gtk_grab_add(GTK_WIDGET(w));
 }
 
