@@ -33,6 +33,10 @@ static Chunk *samplesize_apply_proc(Chunk *chunk, StatusBar *bar,
      SamplesizeDialog *ssd = SAMPLESIZE_DIALOG(user_data);
      memcpy(&(df),&(chunk->format),sizeof(Dataformat));
      format_selector_get(ssd->fs,&df);
+     if (dataformat_samples_equal(&df,&(chunk->format))) {
+	  user_info(_("File already has the selected sample format"));
+	  return NULL;
+     }
      if (ssd->gurumode) 
 	  return chunk_clone_df(chunk,&df);
      else
