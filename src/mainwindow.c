@@ -1940,7 +1940,8 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  "/Edit/Select all", "/Cursor", "/View", "/Play/Play from cursor",
 	  "/Play/Play all", "/Play/Stop", "/Effects", 
 	  "/Effects/Normalize",
-	  "/Effects/Effects dialog..."
+	  "/Effects/Effects dialog...",
+	  "/Edit/Select none"
      };
 
      gchar *need_selection_names[] = {
