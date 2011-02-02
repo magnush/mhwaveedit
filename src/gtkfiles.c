@@ -797,3 +797,38 @@ gboolean fd_canread(int fd)
      else return TRUE;
 }
 
+gboolean e_fread_u16_xe(guint16 *data, EFILE *stream, gboolean be)
+{
+     unsigned char buf[2];
+     guint16 i;
+     if (e_fread(buf,2,stream)) return TRUE;
+     if (be) { 
+	  i=buf[0];
+	  i<<=8; i|=buf[1];
+     } else {
+	  i=buf[1];
+	  i<<=8; i|=buf[0];
+     }
+     *data = i;
+     return FALSE;
+}
+
+gboolean e_fread_u32_xe(guint32 *data, EFILE *stream, gboolean be)
+{
+     unsigned char buf[4];
+     guint32 i;
+     if (e_fread(buf,4,stream)) return TRUE;
+     if (be) {
+	  i=buf[0];
+	  i<<=8; i|=buf[1];
+	  i<<=8; i|=buf[2];
+	  i<<=8; i|=buf[3];
+     } else {
+	  i=buf[3];
+	  i<<=8; i|=buf[2];
+	  i<<=8; i|=buf[1];
+	  i<<=8; i|=buf[0];
+     }
+     *data = i;
+     return FALSE;
+}

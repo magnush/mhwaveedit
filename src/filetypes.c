@@ -415,10 +415,10 @@ static gboolean wav_check(gchar *filename)
 static off_t find_wav_chunk(EFILE *f, char *chunkname, gboolean be)
 {
      char buf[4];
-     unsigned long l;
+     guint32 l;
      while (1) {
 	  if (e_fread(buf,4,f) ||
-	      e_fread_xe(&l,4,f,be)) return -1;
+	      e_fread_u32_xe(&l,f,be)) return -1;
 	  if (!memcmp(buf,chunkname,4)) {
 #if SIZEOF_OFF_T > 4
 	       return (off_t) l;
@@ -436,8 +436,8 @@ static Chunk *wav_load(char *filename, int dither_mode, StatusBar *bar)
      char *c;
      char buf[12];
      long int m;
-     unsigned short int s,channels,bits;
-     unsigned long int samplerate;
+     guint16 s,channels,bits;
+     guint32 samplerate;
      off_t l,e;
      gboolean rifx = FALSE;
      Datasource *ds;
@@ -454,7 +454,7 @@ static Chunk *wav_load(char *filename, int dither_mode, StatusBar *bar)
      }
      if (!memcmp(buf,"RIFX",4)) rifx=TRUE;
      l = find_wav_chunk(f,"fmt ",rifx);
-     if ((l == -1) || e_fread_xe(&s,2,f,rifx)) { e_fclose(f); return NULL; }
+     if ((l == -1) || e_fread_u16_xe(&s,f,rifx)) { e_fclose(f); return NULL; }
      if ( l<16 || (s != 0x0001 && s != 0x0003) ) {
 	  e_fclose(f);
 #if defined(HAVE_LIBSNDFILE)
@@ -469,10 +469,10 @@ static Chunk *wav_load(char *filename, int dither_mode, StatusBar *bar)
 	  return NULL;
 #endif
      }
-     if (e_fread_xe(&channels,2,f,rifx) ||
-	 e_fread_xe(&samplerate,4,f,rifx) ||
+     if (e_fread_u16_xe(&channels,f,rifx) ||
+	 e_fread_u32_xe(&samplerate,f,rifx) ||
 	 e_fseek(f,6,SEEK_CUR) ||
-	 e_fread_xe(&bits,2,f,rifx) ||
+	 e_fread_u16_xe(&bits,f,rifx) ||
 	 (l>16 && e_fseek(f,l-16,SEEK_CUR))) { 
 	  e_fclose(f); 
 	  return NULL; 

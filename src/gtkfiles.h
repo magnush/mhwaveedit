@@ -114,4 +114,7 @@ gboolean fd_canwrite(int fd);
 #define e_fwrite_xe(a,b,c,be) ((be)?e_fwrite_be(a,b,c):e_fwrite_le(a,b,c))
 #define e_fread_xe(a,b,c,be) ((be)?e_fread_be(a,b,c):e_fread_le(a,b,c))
 
+gboolean e_fread_u16_xe(guint16 *data, EFILE *stream, gboolean be);
+gboolean e_fread_u32_xe(guint32 *data, EFILE *stream, gboolean be);
+
 #endif
