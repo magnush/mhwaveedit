@@ -40,7 +40,7 @@ struct _IntboxClass {
 	void (*numchange)(Intbox *, long int);
 	};
 
-guint intbox_get_type(void);
+GtkType intbox_get_type(void);
 GtkWidget *intbox_new(long value);
 void intbox_set(Intbox *box, long value);
 

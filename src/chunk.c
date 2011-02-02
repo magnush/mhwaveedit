@@ -94,9 +94,9 @@ static void chunk_init(Chunk *object)
      chunks = g_list_append( chunks, object );
 }
 
-guint chunk_get_type(void)
+GtkType chunk_get_type(void)
 {
-     static guint id=0;
+     static GtkType id=0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "Chunk",

@@ -73,7 +73,7 @@ extern ListObject *mainwindow_objects;
 
 extern gboolean autoplay_mark_flag, varispeed_reset_flag;
 
-guint mainwindow_get_type(void);
+GtkType mainwindow_get_type(void);
 GtkWidget *mainwindow_new();
 GtkWidget *mainwindow_new_with_file(char *filename, gboolean log);
 

@@ -2626,9 +2626,9 @@ static void mainwindow_init(Mainwindow *obj)
 		       GDK_ACTION_COPY | GDK_ACTION_MOVE);
 }
 
-guint mainwindow_get_type(void)
+GtkType mainwindow_get_type(void)
 {
-static guint id=0;
+static GtkType id=0;
 if (!id) {
 	GtkTypeInfo info = {
 	     "Mainwindow",

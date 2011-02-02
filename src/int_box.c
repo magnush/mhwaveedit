@@ -119,9 +119,9 @@ static void intbox_init(Intbox *fbox)
      intbox_set(fbox,0);
 }
 
-guint intbox_get_type(void)
+GtkType intbox_get_type(void)
 {
-static guint id=0;
+static GtkType id=0;
 if (!id) {
 	GtkTypeInfo info = {
 		"Intbox",
