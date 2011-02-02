@@ -816,6 +816,7 @@ static void file_close(GtkMenuItem *menuitem, gpointer user_data)
 	  fix_title(w);
 	  set_sensitive(w->need_chunk_items,FALSE);
 	  set_sensitive(w->need_undo_items,FALSE);
+	  set_sensitive(w->need_selection_items,FALSE);
 	  list_object_remove(mainwindow_objects,w);
      } else {
 	  geometry_stack_push(GTK_WINDOW(w),NULL,&window_geometry_stack);
