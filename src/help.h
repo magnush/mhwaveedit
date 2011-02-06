@@ -26,7 +26,7 @@
 #define HELP_PAGE_DEFAULT HELP_PAGE_SHORTCUTS
 
 extern int help_page_count;
-extern char *help_page_titles[];
-extern char *help_page_contents[];
+extern const char *help_page_titles[];
+extern const char **help_page_contents[];
 
 #endif
