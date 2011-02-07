@@ -996,34 +996,49 @@ msgstr "Adresser"
 #: src/help.c:47
 #, no-c-format
 msgid ""
-"\n"
 "mhWaveEdit is a graphical program for editing sound files. It is completely "
 "free (GPL).\n"
-"\n"
-"You can find the latest release of mhWaveEdit at:\n"
-"http://gna.org/projects/mhwaveedit/\n"
 msgstr ""
-"\n"
 "mhWaveEdit är ett grafiskt program för att redigera ljudfiler. Programmet är "
 "fri programvara som distribueras under GPL-licens.\n"
-"\n"
-"Den senaste versionen av mhWaveEdit finns på:\n"
-"http://gna.org/projects/mhwaveedit/\n"
+
+#: src/help.c:47
+#, no-c-format
+msgid "You can find the latest release of mhWaveEdit at:\n"
+msgstr "Den senaste versionen av mhWaveEdit finns på:\n"
+
+#: src/help.c:47
+#, no-c-format
+msgid "http://gna.org/projects/mhwaveedit/\n"
+msgstr "http://gna.org/projects/mhwaveedit/\n"
 
 #: src/help.c:54
 #, no-c-format
 msgid ""
-"\n"
 "The area where you 'see' the contents of the file you are editing, is called "
 "the 'sample view'. \n"
-"\n"
+msgstr "Den yta i fönstret där du ser ljudfilen som öppnats kallas för vyn.\n"
+
+#: src/help.c:54
+#, no-c-format
+msgid ""
 "In the sample view there is a grey vertical bar called the 'cursor'. The "
 "cursor follows the sound wave when you play the sound. You can position the "
 "cursor by clicking with the right (2:nd) mouse button. If you do this while "
 "you're playing a file, the playing will continue from the new cursor "
 "position. You can also position the cursor more exact by using the 'Position "
 "Cursor...' command on the Edit menu.\n"
-"\n"
+msgstr ""
+"I vyn finns en grå linje som kallas 'markör'. När man spelar upp en ljudfil "
+"följer markören efter ljudvågen. Med höger musknapp så kan man placera "
+"markören där man vill i filen. Detta kan göras även under tiden man spelar "
+"upp ljudfilen, då kommer uppspelningen hoppa till den nya positionen. Man "
+"kan också placera markören mer exakt genom att använda 'Placera markör...' i "
+"Redigera-menyn\n"
+
+#: src/help.c:54
+#, no-c-format
+msgid ""
 "You can place marks in your file by holding down Ctrl and pressing a number "
 "from 0 to 9. This will place a mark (green vertical bar) with the same "
 "number at the current cursor position. You can later make the cursor go to "
@@ -1031,16 +1046,6 @@ msgid ""
 "marks can be done while playing. To remove a mark, jump to the mark and set "
 "it again.\n"
 msgstr ""
-"\n"
-"Den yta i fönstret där du ser ljudfilen som öppnats kallas för vyn.\n"
-"\n"
-"I vyn finns en grå linje som kallas 'markör'. När man spelar upp en ljudfil "
-"följer markören efter ljudvågen. Med höger musknapp så kan man placera "
-"markören där man vill i filen. Detta kan göras även under tiden man spelar "
-"upp ljudfilen, då kommer uppspelningen hoppa till den nya positionen. Man "
-"kan också placera markören mer exakt genom att använda 'Placera markör...' i "
-"Redigera-menyn\n"
-"\n"
 "Man kan placera märken i filen genom att trycka Ctrl och en siffertangent. "
 "Gör man detta placeras en linje med motsvarande siffra vid nuvarande "
 "markörposition. Man kan sedan flytta markören till denna position genom att "
@@ -1050,393 +1055,498 @@ msgstr ""
 #: src/help.c:62
 #, no-c-format
 msgid ""
-"\n"
 "Playing a file is simple, just load the file and press the play button. The "
 "green play button plays from the current position. The yellow play button "
 "plays the current selection, or the entire file if nothing is selected. Stop "
 "the playback with the stop button (with the red square). \n"
-"\n"
-"The playback speed can be varied by adjusting the slider to the far right. \n"
-"\n"
-"You can do normal editing while the file is playing.\n"
 msgstr ""
-"\n"
 "Att spela upp en fil är enkelt, bara ladda filen och tryck på spelaknappen. "
 "Den gröna spelaknappen spelar från nuvarande markörposition. Den gula spelar "
 "aktuell markering eller hela filen om ingenting är markerat. Stoppa "
 "uppspelningen med stoppknappen.\n"
-"\n"
-"Uppspelningshastigheten kan regleras med kontrollen längst till höger.\n"
-"\n"
-"Man kan redigera filen medan man spelar.\n"
+
+#: src/help.c:62
+#, no-c-format
+msgid "The playback speed can be varied by adjusting the slider to the far right. \n"
+msgstr "Uppspelningshastigheten kan regleras med kontrollen längst till höger.\n"
+
+#: src/help.c:62
+#, no-c-format
+msgid "You can do normal editing while the file is playing.\n"
+msgstr "Man kan redigera filen medan man spelar.\n"
 
 #: src/help.c:70
 #, no-c-format
 msgid ""
-"\n"
 "Recording is done with 'Record...' on the Play menu, or the Record button "
 "(the red circle). A dialog box will pop up where you can select what format "
 "you want to record in. After selecting the format, meters and numbers will "
 "appear showing info about the volume level of the sound input. \n"
-"\n"
-"When you want to start recording, press the \"Start recording\" button. When "
-"you've recorded everything you wanted to, press the Finish button and the "
-"record dialog will disappear and newly recorded sound will show up in a new "
-"window.\n"
-"\n"
-"Currently it is impossible to play and record at the same time, so the "
-"playback will stop when you record.\n"
 msgstr ""
-"\n"
 "Inspelning startas med 'Spela in...' på Spela-menyn, eller "
 "inspelningsknappen (den röda cirkeln). En dialogruta dyker upp där man kan "
 "välja vilket format man ska spela in. Efter att ha valt format dyker mätare "
 "och nummer upp som visar information om volymnivå på insignalen.\n"
-"\n"
+
+#: src/help.c:70
+#, no-c-format
+msgid ""
+"When you want to start recording, press the \"Start recording\" button. When "
+"you've recorded everything you wanted to, press the Finish button and the "
+"record dialog will disappear and newly recorded sound will show up in a new "
+"window.\n"
+msgstr ""
 "När man vill starta inspelningen, tryck knappen \"Starta inspelning\". När "
 "inspelningen är klar, tryck \"Slutför\"-knappen. Dialogrutan försvinner då "
 "och det inspelade ljudet dyker upp i ett nytt fönster.\n"
-"\n"
-"Det går för närvarande inte att spela in och spela upp ljud på samma gång.\n"
+
+#: src/help.c:70
+#, no-c-format
+msgid ""
+"Currently it is impossible to play and record at the same time, so the "
+"playback will stop when you record.\n"
+msgstr "Det går för närvarande inte att spela in och spela upp ljud på samma gång.\n"
 
 #: src/help.c:78
 #, no-c-format
 msgid ""
-"\n"
 "You make selections by dragging the mouse over the sample view. You can hear "
 "what you've currently selected by clicking on the \"play selection\" button "
 "(the button with the yellow arrow) or by selecting 'Play selection' from the "
 "Play menu.\n"
-"\n"
+msgstr ""
+"Man kan markera ett område i filen genom att dra med musen. Det går sedan "
+"att lyssna på det som markerats genom att trycka på \"spela markering\"-"
+"knappen (den gula triangeln) eller välja \"Spela markering\" på Spela-menyn\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
 "You can use the cursor to refine the selection. Use the 'Selection start at "
 "cursor' and 'Selection end at cursor' buttons to move the selection starting "
 "point or the selection end point to the current cursor position. You can "
 "also drag the selection endpoints using the mouse.\n"
-"\n"
-"The 'Cut' and 'Copy' functions work like in any other software. \n"
-"\n"
-"The 'Paste' function insert the clipboard contents at the cursor position. "
-"The 'Paste over' function works like 'Paste', except that it overwrites the "
-"data after the insert position. \n"
-"\n"
-"The 'Paste mix' function combines the clipboard data with the data at the "
-"cursor position.\n"
-"\n"
-"The 'Paste as new' function opens a new window and puts the clipboard "
-"contents into it. \n"
-"\n"
-"The 'Crop' function deletes all parts of the file that are not selected.\n"
-"\n"
-"The 'Silence selection' function replaces the selected part with silence. To "
-"avoid clicks, the silent part is a line that meets the wave at the "
-"endpoints.\n"
-"\n"
-"All editing functions work non-destructively, that is, the file you're "
-"editing isn't actually changed until you save it (the effects also work this "
-"way).\n"
-"\n"
 msgstr ""
-"\n"
-"Man kan markera ett område i filen genom att dra med musen. Det går sedan "
-"att lyssna på det som markerats genom att trycka på \"spela markering\"-"
-"knappen (den gula triangeln) eller välja \"Spela markering\" på Spela-menyn\n"
-"\n"
 "Det finns två sätt att ändra en markering. Man kan använda markören och "
 "knapparna \"Start på markeringen till markören\" och \"Slut på markeringen "
 "till markören\". Man kan också justera markeringen genom att dra "
 "markeringens ändpunkter med musen.\n"
-"\n"
-"'Klipp ut' och 'Kopiera' fungerar som i de flesta andra program.\n"
-"\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid "The 'Cut' and 'Copy' functions work like in any other software. \n"
+msgstr "'Klipp ut' och 'Kopiera' fungerar som i de flesta andra program.\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"The 'Paste' function insert the clipboard contents at the cursor position. "
+"The 'Paste over' function works like 'Paste', except that it overwrites the "
+"data after the insert position. \n"
+msgstr ""
 "'Klistra in' infogar urklippets innehåll vid markören. 'Klistra över' "
 "fungerar som 'Klistra in', fast det skriver över datat som ligger framför "
 "markören. \n"
-"\n"
-"'Mixa in'-funktionen mixar ihop urklippets data och datat vid markören.\n"
-"\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"The 'Paste mix' function combines the clipboard data with the data at the "
+"cursor position.\n"
+msgstr "'Mixa in'-funktionen mixar ihop urklippets data och datat vid markören.\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"The 'Paste as new' function opens a new window and puts the clipboard "
+"contents into it. \n"
+msgstr ""
 "'Klistra in till ny' öppnar ett nytt fönster och lägger in urklippets "
 "innehåll.\n"
-"\n"
-"'Skär ut' tar bort allt utom markeringen.\n"
-"\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid "The 'Crop' function deletes all parts of the file that are not selected.\n"
+msgstr "'Skär ut' tar bort allt utom markeringen.\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"The 'Silence selection' function replaces the selected part with silence. To "
+"avoid clicks, the silent part is a line that meets the wave at the "
+"endpoints.\n"
+msgstr ""
 "'Tysta markering' byter ut markerat område mot tystnad. För att undvika "
 "klick så görs tystnaden som en linje mellan ändpunkterna.\n"
-"\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"All editing functions work non-destructively, that is, the file you're "
+"editing isn't actually changed until you save it (the effects also work this "
+"way).\n"
+msgstr ""
 "All redigering och alla effekter sker icke-destruktivt, dvs filen ändras "
 "inte i verkligheten förrän man sparar.\n"
-"\n"
 
 #: src/help.c:99
 #, no-c-format
 msgid ""
-"\n"
 "mhWaveEdit has a few simple effects, which are available from the 'Effects' "
 "menu. \n"
-"\n"
-" * Fade in/out\n"
-"\n"
-"   This creates a linear fade in or fade out effect.\n"
-"\n"
-" * Normalize, Normalize to...\n"
-"\n"
+msgstr "mhWaveEdit har några enkla effekter som går att nå under 'Effekter'-menyn.\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Fade in/out\n"
+msgstr " * Fade-in/Fade-ut\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid "   This creates a linear fade in or fade out effect.\n"
+msgstr "   Detta gör en linjär fade-in eller fade-ut på markerat område.\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Normalize, Normalize to...\n"
+msgstr " * Normalisera volym\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
 "   This amplifies the sound as much as possible without getting clipping "
 "distortion. The \"Normalize to...\" item lets you specify which level to "
 "normalize to.\n"
-"\n"
-" * Volume adjust/fade...\n"
-"\n"
+msgstr ""
+"   Detta justerar volymen så högt som går innan distortion inträffar. "
+"\"Normalisera till...\" gör samma sak men låter dig välja vilken nivå som de "
+"högsta topparna ska ha. \n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Volume adjust/fade...\n"
+msgstr " * Volymjustering...\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
 "   This effect lets you select a starting volume and a ending volume and "
 "amplifies the selection fading from the starting volume to the ending "
 "volume.\n"
-"\n"
+msgstr ""
+"   Denna effekt låter dig ange start- och slutvolym och \"fade:ar\" "
+"markeringen. För att skapa en fade-ut, välj startvolym 100% och slutvolym "
+"0%.\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
 "   Note that volumes above 100% may cause sound distortion. Use the 'Find "
 "top volume' to find out the maximum amplification possible without "
 "distortion. (You can use this for normalizing samples.) \n"
-"\n"
+msgstr ""
+"   Förstärkning över 100% kan orsaka distortion. Använd 'Hitta maxvolym'-"
+"knappen för att hitta högsta möjliga förstärkning som går att få utan "
+"distortion.\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
 "   By setting starting volume and ending volume to the same value you get a "
 "simple amplification of the sound. \n"
-"\n"
-" * Convert samplerate...\n"
-"\n"
+msgstr ""
+"   Sätter man samma start- och slutvolym får man en vanlig förstärkning av "
+"ljudet.\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Convert samplerate...\n"
+msgstr " * Omvandla samplingsfrekvens...\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
 "   This converts the samplerate of the entire file to one you specify. There "
 "are different methods for doing this, usually the one in the top has the "
 "best quality but can take longer than the other methode.\n"
-"\n"
-" * Convert sample format...\n"
-"\n"
-"   This converts the sample format of the entire file.\n"
-"\n"
+msgstr ""
+"   Denna effekt omvandlar samplingsfrekvensen på aktuell fil. Det finns "
+"olika metoder att göra detta på, det första alternativet i listan har högst "
+"kvalitet men kan ta längre tid än metoderna längre ner.\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Convert sample format...\n"
+msgstr " * Omvandla sampelformat...\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid "   This converts the sample format of the entire file.\n"
+msgstr "   Denna effekt omvandlar sampelformatet på filen.\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
 "   The 'Don't actually change the data' option can be used if the program "
 "was wrong about the file's format.\n"
-"\n"
-" * Byte swap\n"
-"\n"
+msgstr ""
+"   Knappen \"Ändra ej datat\" kan användas om programmet inte har läst filen "
+"med rätt format.\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Byte swap\n"
+msgstr " * Växla byteordning\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
 "   This \"byte swaps\" the selected part. It can be used to repair damaged "
 "files where the byte order is wrong. Note that if the sound looks alright "
 "but plays wrong, you should not use this option, instead you should use the "
 "\"byte-swap output\" option in the Preferences dialog.\n"
-"\n"
-" * Mix to mono\n"
-"\n"
-"   This mixes all channels of the file together to a mono sound.\n"
-"\n"
-" * Add channel\n"
-"\n"
-"   This copies the first channel to a new channel in the sound, converting "
-"mono to stereo etc.\n"
-"\n"
-" * Map channels...\n"
-"   \n"
-"   With this effect, you can change the number of channels in the file. You "
-"can also rearrange and add (i.e. mix) channels.\n"
-"\n"
-" * Combine channels...\n"
-"\n"
-"   This effect lets you create a new sound by a linear combination of the "
-"old channels. This means you can do channel mixing / swapping / balance / "
-"panning / amplification etc. by entering different values. For example, to "
-"swap the left and right channel, you select that the new Channel 1 should be "
-"0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 "
-"should be 100% of the old Channel 1 and 0% of the old Channel 2 \n"
-"\n"
-" * Speed adjustment...\n"
-"\n"
-"   This effect changes the speed of the selection. The tone will change as "
-"well.\n"
-" * Pipe through program...\n"
-" \n"
-"   This effect is for advanced users wanting to pipe raw audio data through "
-"an external program. The output of the program is read back and replaces the "
-"processed part. \n"
-"\n"
-"mhWaveEdit supports LADSPA effects and can also make use of most of the SoX "
-"utility's effects. To find the LADSPA plugins the environment variable "
-"LADSPA_PATH must be properly set up. \n"
-"\n"
-"All supported effects can be found by choosing the 'Effects...' menu item. "
-"The effects are listed with names beginning with [B] for builtin effects, "
-"[L] for LADSPA effects, and [S] for SoX effects.\n"
-"\n"
 msgstr ""
-"\n"
-"mhWaveEdit har några enkla effekter som går att nå under 'Effekter'-menyn.\n"
-"\n"
-" * Fade-in/Fade-ut\n"
-"\n"
-"   Detta gör en linjär fade-in eller fade-ut på markerat område.\n"
-"\n"
-" * Normalisera volym\n"
-"\n"
-"   Detta justerar volymen så högt som går innan distortion inträffar. "
-"\"Normalisera till...\" gör samma sak men låter dig välja vilken nivå som de "
-"högsta topparna ska ha. \n"
-"\n"
-" * Volymjustering...\n"
-"\n"
-"   Denna effekt låter dig ange start- och slutvolym och \"fade:ar\" "
-"markeringen. För att skapa en fade-ut, välj startvolym 100% och slutvolym "
-"0%.\n"
-"\n"
-"   Förstärkning över 100% kan orsaka distortion. Använd 'Hitta maxvolym'-"
-"knappen för att hitta högsta möjliga förstärkning som går att få utan "
-"distortion.\n"
-"\n"
-"   Sätter man samma start- och slutvolym får man en vanlig förstärkning av "
-"ljudet.\n"
-"\n"
-" * Omvandla samplingsfrekvens...\n"
-"\n"
-"   Denna effekt omvandlar samplingsfrekvensen på aktuell fil. Det finns "
-"olika metoder att göra detta på, det första alternativet i listan har högst "
-"kvalitet men kan ta längre tid än metoderna längre ner.\n"
-"\n"
-" * Omvandla sampelformat...\n"
-"\n"
-"   Denna effekt omvandlar sampelformatet på filen.\n"
-"\n"
-"   Knappen \"Ändra ej datat\" kan användas om programmet inte har läst filen "
-"med rätt format.\n"
-"\n"
-" * Växla byteordning\n"
-"\n"
 "   Denna effekt kan användas för att reparera skadade filer där "
 "byteordningen blivit fel. Observera att om ljudfilen ser bra ut på skärmen "
 "men låter illa när man spelar den ska man inte använda denna effekt, använd "
 "i stället inställningen \"Växla byteordning på spelat ljud\" i Inställningar-"
 "fönstret. \n"
-"\n"
-" * Mixa kanaler\n"
-"\n"
-"   Mixar ihop alla kanaler i filen till mono.\n"
-"\n"
-" * Lägg till kanal\n"
-"\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Mix to mono\n"
+msgstr " * Mixa kanaler\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid "   This mixes all channels of the file together to a mono sound.\n"
+msgstr "   Mixar ihop alla kanaler i filen till mono.\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Add channel\n"
+msgstr " * Lägg till kanal\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
+"   This copies the first channel to a new channel in the sound, converting "
+"mono to stereo etc.\n"
+msgstr ""
 "   Delar den första kanalen till en ny kanal i ljudet, om ljudet var mono "
 "blir det stereo.\n"
-"\n"
-" * Ändra kanaler...\n"
-"\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Map channels...\n"
+msgstr " * Ändra kanaler...\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid "   \n"
+msgstr ""
 "    Med denna effekt kan man ändra antalet kanaler i filen. Det går också "
 "att flytta om och mixa ihop kanaler. \n"
-"\n"
-" * Kombinera kanaler...\n"
-"\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
+"   With this effect, you can change the number of channels in the file. You "
+"can also rearrange and add (i.e. mix) channels.\n"
+msgstr " * Kombinera kanaler...\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Combine channels...\n"
+msgstr ""
 "   Med denna effekt gör man en linjärkombination av kanalerna. Genom att "
 "välja olika värden kan man göra mixning, byta plats på kanaler, justera "
 "balans, förstärking osv. Till exempel, för att byta plats på vänster och "
 "höger kanal, ange att nya Kanal 1 ska vara 0% av gamla Kanal 1 och 100% av "
 "gamla Kanal 2, och nya Kanal 2 ska vara 100% av gamla Kanal 1 och 0% av "
 "gamla Kanal 2\n"
-"\n"
-" * Ändra hastighet...\n"
-"\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
+"   This effect lets you create a new sound by a linear combination of the "
+"old channels. This means you can do channel mixing / swapping / balance / "
+"panning / amplification etc. by entering different values. For example, to "
+"swap the left and right channel, you select that the new Channel 1 should be "
+"0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 "
+"should be 100% of the old Channel 1 and 0% of the old Channel 2 \n"
+msgstr " * Ändra hastighet...\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Speed adjustment...\n"
+msgstr ""
 "   Med denna effekt ändrar man hastigheten på ljudet. Tonen kommer att "
 "ändras på samma sätt.\n"
-"\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
+"   This effect changes the speed of the selection. The tone will change as "
+"well.\n"
+msgstr ""
 "mhWaveEdit stöder LADSPA-effekter och kan också använda de flesta av "
 "programmet SoX effekter. För att programmet ska hitta LADSPA-effekterna "
 "måste miljövariabeln LADSPA_PATH vara rätt inställd.\n"
-"\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " * Pipe through program...\n"
+msgstr ""
 "Alla effekter som stöds kan man hitta genom att välja \"Effektfönster...\" "
 "på Effekter-menyn. Effekterna listas med namn som börjar på [B] för inbyggda "
 "effekter, [L] för LADSPA-effekter och [S] för SoX-effekter.\n"
-"\n"
+
+#: src/help.c:99
+#, no-c-format
+msgid " \n"
+msgstr " \n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
+"   This effect is for advanced users wanting to pipe raw audio data through "
+"an external program. The output of the program is read back and replaces the "
+"processed part. \n"
+msgstr " \n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
+"mhWaveEdit supports LADSPA effects and can also make use of most of the SoX "
+"utility's effects. To find the LADSPA plugins the environment variable "
+"LADSPA_PATH must be properly set up. \n"
+msgstr " \n"
+
+#: src/help.c:99
+#, no-c-format
+msgid ""
+"All supported effects can be found by choosing the 'Effects...' menu item. "
+"The effects are listed with names beginning with [B] for builtin effects, "
+"[L] for LADSPA effects, and [S] for SoX effects.\n"
+msgstr " \n"
+
+#: src/help.c:161
+#, no-c-format
+msgid "Some notes on sound quality.\n"
+msgstr "Lite information om ljudkvalitet.\n"
 
 #: src/help.c:161
 #, no-c-format
 msgid ""
-"\n"
-"Some notes on sound quality.\n"
-"\n"
 "The general rule when doing audio editing/processing is to not manipulate "
 "the data more than necessary and keep an original copy whenever you're "
 "processing your important files. \n"
-"\n"
+msgstr ""
+"Den viktigaste regeln när man håller på med ljud är att inte ändra datat mer "
+"än nödvändigt och att behålla originalversionen när man gör någon form av "
+"bearbetning av ljudfiler.\n"
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
 "Cut, copy and paste operations move the data around without modifying it, so "
 "these don't degrade the sound quality. Because of level differences, you may "
 "get a \"step\" at the start and end of the inserted part, which can cause a "
 "small clicking sound. \n"
-"\n"
+msgstr ""
+"Klipp ut, kopiera och klistra in flyttar data utan att ändra i det, så de "
+"sänker normalt inte ljudkvaliteten. På grund av nivåskillnader kan man få "
+"ett litet \"steg\" vid början och slutet på den inklistrade delen, vilket "
+"kan orsaka ett litet klickljud.\n"
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
 "The mix paste function doesn't decrease quality, unless the peaks become too "
 "high and you get clipping. In that case you will get a warning message.\n"
-"\n"
+msgstr ""
+"Mixa in-funktionen sänker inte kvaliteten om inte topparna blir för höga och "
+"klipps. I så fall får man ett varningsmeddelande.\n"
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
 "Sound data is normally stored as integer values. Therefore, whenever you "
 "normalize, adjust volume, decrease sample size or filter a sound, the result "
 "must be rounded. If you use 24 or 32 bit sample sizes, this is not really a "
 "problem, but if you use 8 or 16 bits sample size, this rounding causes a "
 "decrease in quality. \n"
-"\n"
-"The quality decrease that the rounding causes can be masked by adding a "
-"small amount of noise before rounding. This is called \"dithering\". "
-"mhWaveEdit supports basic triangular dithering and it's enabled by "
-"default. \n"
-"\n"
-"By default, mhWaveEdit uses floating-point temporary files for storing "
-"processed results to avoid rounding until the file is saved.\n"
 msgstr ""
-"\n"
-"Lite information om ljudkvalitet.\n"
-"\n"
-"Den viktigaste regeln när man håller på med ljud är att inte ändra datat mer "
-"än nödvändigt och att behålla originalversionen när man gör någon form av "
-"bearbetning av ljudfiler.\n"
-"\n"
-"Klipp ut, kopiera och klistra in flyttar data utan att ändra i det, så de "
-"sänker normalt inte ljudkvaliteten. På grund av nivåskillnader kan man få "
-"ett litet \"steg\" vid början och slutet på den inklistrade delen, vilket "
-"kan orsaka ett litet klickljud.\n"
-"\n"
-"Mixa in-funktionen sänker inte kvaliteten om inte topparna blir för höga och "
-"klipps. I så fall får man ett varningsmeddelande.\n"
-"\n"
 "Ljuddata lagras normalt som heltalsvärden. Därför sker det avrundningar när "
 "man normaliserar, justerar volym, omvandlar mellan format eller filtrerar "
 "ljud på olika sätt. Om man använder 24- eller 32-bitars sampelstorlek så "
 "märks inte avrundningen, men använder man 8 eller 16 bitar orsakar "
 "avrundningen en hörbar kvalitetssänkning. \n"
-"\n"
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
+"The quality decrease that the rounding causes can be masked by adding a "
+"small amount of noise before rounding. This is called \"dithering\". "
+"mhWaveEdit supports basic triangular dithering and it's enabled by "
+"default. \n"
+msgstr ""
 "Kvalitetssänkningen vid avrundningar kan döljas genom att lägga till mycket "
 "svagt brus innan avrundningen. Detta kallas \"dithering\". mhWaveEdit stöder "
 "vanlig triangulär dithering och det är påslaget som standard. \n"
-"\n"
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
+"By default, mhWaveEdit uses floating-point temporary files for storing "
+"processed results to avoid rounding until the file is saved.\n"
+msgstr ""
 "Vanligtvis använder mhWaveEdit temporära filer i flyttalsformat för att "
 "undvika onödiga avrundningar tills filen sparas.\n"
 
 #: src/help.c:177
 #, no-c-format
 msgid ""
-"\n"
 "Even if mhWaveEdit was originally built for editing wav files, it's also "
 "possible to load and save in a few other formats. mhWaveEdit always supports "
 "wav and raw files, but if it's compiled with the libsndfile library, "
 "mhWaveEdit supports a couple of other formats as well. \n"
-"\n"
+msgstr ""
+"Även om mhWaveEdit från början byggdes för att redigera wav-filer kan man "
+"också ladda in och spara filer i ett antal andra format. Wav och raw-filer "
+"stöds alltid, men om mhWaveEdit kompilerats med libsndfile-biblioteket, "
+"stöds ett antal andra format också. \n"
+
+#: src/help.c:177
+#, no-c-format
+msgid ""
 "To save a file with a different file format, use \"Save as...\" and choose a "
 "format in the file type selection box. \n"
-"\n"
+msgstr ""
+"För att spara en fil med ett annat filformat, välj \"Spara som...\" och "
+"ändra filtyp i fönstret som kommer upp. \n"
+
+#: src/help.c:177
+#, no-c-format
+msgid ""
 "mhWaveEdit has basic support for mp3 and ogg formats. For this to work you "
 "need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg "
 "support. If you have these programs, you can open and save mp3/ogg files "
 "just like any other file format.\n"
-"\n"
+msgstr ""
+"mhWaveEdit har visst stöd för mp3- och ogg-filer. För att detta ska fungera "
+"måste du ha LAME installerat för mp3, och OggDec/OggEnc för Ogg-stöd. Finns "
+"dessa program kan man öppna och spara mp3/ogg-filer.\n"
+
+#: src/help.c:177
+#, no-c-format
+msgid ""
 "If mplayer is installed, mhwaveedit can open all formats that it supports, "
 "for example the soundtrack of a video file. Since mplayer is only a player, "
 "these files can not be saved back after editing, you have to save the file "
 "into a supported format.\n"
 msgstr ""
-"\n"
-"Även om mhWaveEdit från början byggdes för att redigera wav-filer kan man "
-"också ladda in och spara filer i ett antal andra format. Wav och raw-filer "
-"stöds alltid, men om mhWaveEdit kompilerats med libsndfile-biblioteket, "
-"stöds ett antal andra format också. \n"
-"\n"
-"För att spara en fil med ett annat filformat, välj \"Spara som...\" och "
-"ändra filtyp i fönstret som kommer upp. \n"
-"\n"
-"mhWaveEdit har visst stöd för mp3- och ogg-filer. För att detta ska fungera "
-"måste du ha LAME installerat för mp3, och OggDec/OggEnc för Ogg-stöd. Finns "
-"dessa program kan man öppna och spara mp3/ogg-filer.\n"
-"\n"
 "Om programmet MPlayer är installerat så kan mhWaveEdit öppna alla filer som "
 "det stöder, till exempel ljudet till videoklipp. Eftersom mplayer bara är en "
 "spelare så kan man inte spara tillbaka filen, utan man får spara filen i "
@@ -1445,297 +1555,447 @@ msgstr ""
 #: src/help.c:187
 #, no-c-format
 msgid ""
-"\n"
 "mhWaveEdit creates a directory ~/.mhwaveedit where it stores configuration "
 "information. \n"
-"\n"
+msgstr "mhWaveEdit skapar en katalog ~/.mhwaveedit där inställningar lagras.\n"
+
+#: src/help.c:187
+#, no-c-format
+msgid ""
 "The configuration file is called config. It can be hand edited, but the "
 "easiest way is through 'Preferences' on the Edit menu.\n"
-"\n"
+msgstr ""
+"Inställningsfilen kallas config. Den kan redigeras för hand med en "
+"texteditor, men det enklaste sättet är genom \"Inställningar\" på Redigera-"
+"menyn.\n"
+
+#: src/help.c:187
+#, no-c-format
+msgid ""
 "Each mhwaveedit process creates a session file in the .mhwaveedit directory "
 "called mhwaveedit-session-<pid>-<session>-<state>, where <session> is the "
 "session ID number and <state> is a character code showing the state of the "
 "session ('r' for running sessions). \n"
-"\n"
+msgstr ""
+"Varje mhWaveEdit-process skapar en sessionsfil i .mhwaveedit-katalogen. Den "
+"har namn på formen mhwaveedit-session-<pid>-<session>-<tillstånd>, där "
+"<session> är ett ID-nummer och <tillstånd> är en bokstav som talar om vilket "
+"tillstånd sessionen är i ('r' betyder att den är igång).\n"
+
+#: src/help.c:187
+#, no-c-format
+msgid ""
 "Temporary files are by default also stored in the ~/.mhwaveedit directory. "
 "Which directories to use can be set through the preferences dialog. To get "
 "the best performance, you should have one temporary directory for each local "
 "filesystem. The temporary files have names of the form \"mhwaveedit-temp-"
 "<pid>-nnnn-<session>\". Do NOT open or remove temporary files with the same "
 "pid number as a currently running mhWaveEdit.\n"
-"\n"
-"mhWaveEdit checks on startup for leftover temporary files and lets the user "
-"open them. After opening a crashed session, the files can be saved or thrown "
-"away.\n"
 msgstr ""
-"\n"
-"mhWaveEdit skapar en katalog ~/.mhwaveedit där inställningar lagras.\n"
-"\n"
-"Inställningsfilen kallas config. Den kan redigeras för hand med en "
-"texteditor, men det enklaste sättet är genom \"Inställningar\" på Redigera-"
-"menyn.\n"
-"\n"
-"Varje mhWaveEdit-process skapar en sessionsfil i .mhwaveedit-katalogen. Den "
-"har namn på formen mhwaveedit-session-<pid>-<session>-<tillstånd>, där "
-"<session> är ett ID-nummer och <tillstånd> är en bokstav som talar om vilket "
-"tillstånd sessionen är i ('r' betyder att den är igång).\n"
-"\n"
 "Temporära filer lagras också normalt i ~/.mhwaveedit-katalogen. Vilka "
 "kataloger som skall användas kan man välja genom Inställningar-fönstret. För "
 "att få så bra prestanda som möjligt, använd en katalog för varje lokalt "
 "filsystem. Temporära filer har namn på formen \"mhwaveedit-temp-<pid>-nnnn-"
 "<session>\". Öppna INTE och ta INTE bort temporära filer medan mhWaveEdit "
 "körs.\n"
-"\n"
+
+#: src/help.c:187
+#, no-c-format
+msgid ""
+"mhWaveEdit checks on startup for leftover temporary files and lets the user "
+"open them. After opening a crashed session, the files can be saved or thrown "
+"away.\n"
+msgstr ""
 "Vid uppstart så kollar mhWaveEdit om det finns några övergivna temorära "
 "filer och låter i så fall användaren öppna upp dem. De kan sedan antingen "
 "sparas på riktigt eller slängas. \n"
 
 #: src/help.c:199
 #, no-c-format
-msgid ""
-"\n"
-"F1            Help\n"
-"F12           Record\n"
-"\n"
-"Ctrl+(number) Set mark\n"
-"(number)      Goto mark\n"
-"\n"
-"Ctrl+P        Preferences\n"
-"Ctrl+E        Effects\n"
-"\n"
-"Ctrl+O        Open file\n"
-"Ctrl+S        Save file\n"
-"Ctrl+U        Save selection as\n"
-"\n"
-"Ctrl+C        Copy\n"
-"Ctrl+X        Cut\n"
-"Ctrl+D        Delete\n"
-"Ctrl+V        Paste\n"
-"Ctrl+Z        Undo\n"
-"Ctrl+A        Select all\n"
-"\n"
-"Ctrl+G        Position cursor (Go to)\n"
-"Ctrl+H        Position cursor at file start\n"
-"Ctrl+J        Position cursor at file end\n"
-"Ctrl+K        Position cursor at selection start\n"
-"Ctrl+L        Position cursor at selection end\n"
-"Y,U           Move cursor to nearest all-channel zero-crossing\n"
-"I,O           Move cursor to nearest any-channel zero-crossing\n"
-"\n"
-"Ctrl+Q        Selection start at cursor\n"
-"Ctrl+W        Selection end at cursor\n"
-"\n"
-"+,=           Zoom in\n"
-"-             Zoom out\n"
-">             Zoom to selection\n"
-"<             Zoom all\n"
-"Arrow keys    Scroll left/right\n"
-"\n"
-"<space>       Play/Stop\n"
-",             Play from cursor pos\n"
-".             Stop\n"
-"/             Play selection\n"
-"H,J           Move cursor (and playback) 1/8 of view\n"
-"K,L           Move cursor one sample\n"
-"Ctrl+arrow    Move cursor (and playback) half second\n"
-"(             Play first 3 seconds of selection\n"
-")             Play last 3 seconds of selection\n"
-msgstr ""
-"\n"
-"F1            Hjälp\n"
-"F12           Spela in\n"
-"\n"
-"Ctrl+(siffra) Sätt märke\n"
-"(siffra)      Gå till märke\n"
-"\n"
-"Ctrl+P        Inställningar\n"
-"Ctrl+E        Effekter\n"
-"\n"
-"Ctrl+O        Öppna fil\n"
-"Ctrl+S        Spara fil\n"
-"Ctrl+U        Spara markering som\n"
-"\n"
-"Ctrl+C        Kopiera\n"
-"Ctrl+X        Klipp ut\n"
-"Ctrl+D        Ta bort\n"
-"Ctrl+V        Klistra in\n"
-"Ctrl+Z        Ångra\n"
-"Ctrl+A        Markera allt\n"
-"\n"
-"Ctrl+G        Placera markör\n"
-"Ctrl+H        Placera markören vid filens början\n"
-"Ctrl+J        Placera markören vid filens slut\n"
-"Ctrl+K        Placera markören vid markeringens början\n"
-"Ctrl+L        Placera markören vid markeringens slut\n"
-"Y,U           Flytta markören till närmaste nollnivå för alla kanaler\n"
-"I,O           Flytta markören till närmaste nollnivå för någon kanal\n"
-"\n"
-"Ctrl+Q        Sätt markeringens början till markör\n"
-"Ctrl+W        Sätt markeringens slut till markör\n"
-"\n"
-"+,=           Zooma in\n"
-"-             Zooma ut\n"
-">             Zooma till markering\n"
-"<             Zooma ut maximalt\n"
-"Piltangenter  Flytta vy vänster/höger\n"
-"\n"
-"<mellanslag>  Spela/Stopp\n"
-",             Spela från markörens position\n"
-".             Stopp\n"
-"/             Spela markering\n"
-"H,J           Flytta markör (och uppspelning) 1/8 vy\n"
-"K,L           Flytta markör ett sampel\n"
-"Ctrl+pil      Flytta markör (och uppspelning) en halv sekund\n"
-"(             Spela de första 3 sekunderna i markeringen\n"
-")             Spela de sista 3 sekunderna i markeringen\n"
+msgid "F1            Help\n"
+msgstr "F1            Hjälp\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "F12           Record\n"
+msgstr "F12           Spela in\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+(number) Set mark\n"
+msgstr "Ctrl+(siffra) Sätt märke\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "(number)      Goto mark\n"
+msgstr "(siffra)      Gå till märke\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+P        Preferences\n"
+msgstr "Ctrl+P        Inställningar\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+E        Effects\n"
+msgstr "Ctrl+E        Effekter\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+O        Open file\n"
+msgstr "Ctrl+O        Öppna fil\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+S        Save file\n"
+msgstr "Ctrl+S        Spara fil\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+U        Save selection as\n"
+msgstr "Ctrl+U        Spara markering som\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+C        Copy\n"
+msgstr "Ctrl+C        Kopiera\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+X        Cut\n"
+msgstr "Ctrl+X        Klipp ut\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+D        Delete\n"
+msgstr "Ctrl+D        Ta bort\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+V        Paste\n"
+msgstr "Ctrl+V        Klistra in\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+Z        Undo\n"
+msgstr "Ctrl+Z        Ångra\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+A        Select all\n"
+msgstr "Ctrl+A        Markera allt\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+G        Position cursor (Go to)\n"
+msgstr "Ctrl+G        Placera markör\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+H        Position cursor at file start\n"
+msgstr "Ctrl+H        Placera markören vid filens början\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+J        Position cursor at file end\n"
+msgstr "Ctrl+J        Placera markören vid filens slut\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+K        Position cursor at selection start\n"
+msgstr "Ctrl+K        Placera markören vid markeringens början\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+L        Position cursor at selection end\n"
+msgstr "Ctrl+L        Placera markören vid markeringens slut\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Y,U           Move cursor to nearest all-channel zero-crossing\n"
+msgstr "Y,U           Flytta markören till närmaste nollnivå för alla kanaler\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "I,O           Move cursor to nearest any-channel zero-crossing\n"
+msgstr "I,O           Flytta markören till närmaste nollnivå för någon kanal\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+Q        Selection start at cursor\n"
+msgstr "Ctrl+Q        Sätt markeringens början till markör\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+W        Selection end at cursor\n"
+msgstr "Ctrl+W        Sätt markeringens slut till markör\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "+,=           Zoom in\n"
+msgstr "+,=           Zooma in\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "-             Zoom out\n"
+msgstr "-             Zooma ut\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid ">             Zoom to selection\n"
+msgstr ">             Zooma till markering\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "<             Zoom all\n"
+msgstr "<             Zooma ut maximalt\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Arrow keys    Scroll left/right\n"
+msgstr "Piltangenter  Flytta vy vänster/höger\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "<space>       Play/Stop\n"
+msgstr "<mellanslag>  Spela/Stopp\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid ",             Play from cursor pos\n"
+msgstr ",             Spela från markörens position\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid ".             Stop\n"
+msgstr ".             Stopp\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "/             Play selection\n"
+msgstr "/             Spela markering\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "H,J           Move cursor (and playback) 1/8 of view\n"
+msgstr "H,J           Flytta markör (och uppspelning) 1/8 vy\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "K,L           Move cursor one sample\n"
+msgstr "K,L           Flytta markör ett sampel\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "Ctrl+arrow    Move cursor (and playback) half second\n"
+msgstr "Ctrl+pil      Flytta markör (och uppspelning) en halv sekund\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid "(             Play first 3 seconds of selection\n"
+msgstr "(             Spela de första 3 sekunderna i markeringen\n"
+
+#: src/help.c:199
+#, no-c-format
+msgid ")             Play last 3 seconds of selection\n"
+msgstr ")             Spela de sista 3 sekunderna i markeringen\n"
 
 #: src/help.c:248
 #, no-c-format
 msgid ""
-"\n"
 "If you find a bug or flaw in the program that's not mentioned in the BUGS "
 "file, report the bug in the bug tracker (see contact info) or mail a bug "
 "report describing the bug to: magnus.hjorth@home.se\n"
-"\n"
+msgstr ""
+"Om du hittar ett fel i programmet som inte nämnts i BUGS-filen, maila en "
+"buggrapport till: magnus.hjorth@home.se\n"
+
+#: src/help.c:248
+#, no-c-format
+msgid ""
 "In case of a crash, please do not send me any core dumps. They are huge and "
 "completely useless to me. Instead, create a backtrace. Backtraces tell you "
 "exactly where the program crashed.\n"
-"\n"
-"How to create a backtrace:\n"
-"1. Enable core dumps: ulimit -c unlimited\n"
-"2. Run the program:   mhwaveedit\n"
-"3. Make the program crash. You should now get a file named core or core.1234 "
-"in the directory you're in.\n"
-"4. Run gdb with the program and core file: \n"
-"   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
-"5. After gdb has loaded, use the command: bt\n"
-"6. Quit gdb with the command: quit\n"
-"7. Now you should have a back trace in the file backtrace.txt\n"
 msgstr ""
-"\n"
-"Om du hittar ett fel i programmet som inte nämnts i BUGS-filen, maila en "
-"buggrapport till: magnus.hjorth@home.se\n"
-"\n"
 "Om programmet kraschar, maila inte några core-filer till mig. De har jag "
 "ingen användning för. Skapa istället en \"backtrace\" som talar om var "
 "programmet kraschade.\n"
-"\n"
-"Så här skapar man en backtrace:\n"
-"1. Aktivera core-filer: ulimit -c unlimited\n"
-"2. Kör programmet:      mhwaveedit\n"
+
+#: src/help.c:248
+#, no-c-format
+msgid "How to create a backtrace:\n"
+msgstr "Så här skapar man en backtrace:\n"
+
+#: src/help.c:248
+#, no-c-format
+msgid "1. Enable core dumps: ulimit -c unlimited\n"
+msgstr "1. Aktivera core-filer: ulimit -c unlimited\n"
+
+#: src/help.c:248
+#, no-c-format
+msgid "2. Run the program:   mhwaveedit\n"
+msgstr "2. Kör programmet:      mhwaveedit\n"
+
+#: src/help.c:248
+#, no-c-format
+msgid ""
+"3. Make the program crash. You should now get a file named core or core.1234 "
+"in the directory you're in.\n"
+msgstr ""
 "3. Gör så att programmet kraschar. När det gör det så ska en fil som heter "
 "core eller core.nnnn dyka upp i den katalog du är i. \n"
-"4. Kör gdb med programmet och core-filen:\n"
-"   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
-"5. Efter att gdb laddats, använd kommandot: bt\n"
-"6. Avsluta gdb med kommandot: quit\n"
-"7. Nu ska det finnas en backtrace i filen backtrace.txt\n"
-"\n"
+
+#: src/help.c:248
+#, no-c-format
+msgid "4. Run gdb with the program and core file: \n"
+msgstr "4. Kör gdb med programmet och core-filen:\n"
+
+#: src/help.c:248
+#, no-c-format
+msgid "   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
+msgstr "   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
+
+#: src/help.c:248
+#, no-c-format
+msgid "5. After gdb has loaded, use the command: bt\n"
+msgstr "5. Efter att gdb laddats, använd kommandot: bt\n"
+
+#: src/help.c:248
+#, no-c-format
+msgid "6. Quit gdb with the command: quit\n"
+msgstr "6. Avsluta gdb med kommandot: quit\n"
+
+#: src/help.c:248
+#, no-c-format
+msgid "7. Now you should have a back trace in the file backtrace.txt\n"
+msgstr "7. Nu ska det finnas en backtrace i filen backtrace.txt\n"
 
 #: src/help.c:264
 #, no-c-format
 msgid ""
-"\n"
 "There are plenty of things you can do if you want to help the development of "
 "mhWaveEdit. \n"
-"\n"
+msgstr ""
+"Det finns mycket du kan göra om du vill hjälpa till med utvecklingen av "
+"mhWaveEdit. \n"
+
+#: src/help.c:264
+#, no-c-format
+msgid ""
 "First of all, look for bugs and report all bugs you find into the bug "
 "tracker or through e-mail. Sometimes a bug can get overlooked for a long "
 "time because nobody reports it, so don't be afraid to report bugs that have "
 "been there for a few releases. You don't have to provide fixes or very "
 "detailed information, although it helps of course.\n"
-"\n"
-"Feature requests are also welcome, report them to the mailing list or to the "
-"bug tracker.\n"
-"\n"
-"If you speak a language other than English and mhWaveEdit isn't translated "
-"to your language, you can contribute a translation. To do that, copy the "
-"template mhwaveedit.pot in the po directory into a new file ll.po, where ll "
-"is your language code (see http://www.gnu.org/software/gettext/manual/"
-"html_node/gettext_221.html for a list of language codes). \n"
-"\n"
-"It's possible to edit po-files by hand, but I recommend a program such as "
-"poEdit (http://www.poedit.org) for editing translations. \n"
-"\n"
-"Note that for those translatable strings that look like \"RecordStatus|Paused"
-"\", you should ignore what's to the left and only translate the string to "
-"the right (\"Paused\" in this example). This convention is there to make it "
-"possible to translate the same string to different things depending on "
-"context. \n"
-"\n"
-"After you've filled in all the translations you want (you don't have to "
-"translate all the strings), mail in the po file to me (see contact info) and "
-"I'll add it to the next release. \n"
-"\n"
-"If a translation is incomplete, you're very welcome to translate the "
-"remaining untranslated messages and mail them in. Corrections to "
-"translations are also appreciated, but they may need to be checked with the "
-"previous translator before including them. \n"
-"\n"
 msgstr ""
-"\n"
-"Det finns mycket du kan göra om du vill hjälpa till med utvecklingen av "
-"mhWaveEdit. \n"
-"\n"
 "Först och främst, leta efter fel och buggar och rapportera alla fel du "
 "hittar i buggrapporteringssystemet eller via e-mail. Ibland kan en bugg "
 "finnas länge utan att upptäckas, så tveka inte att rapportera även om "
 "problemet funnits i flera versioner tillbaka. Du måste inte ha lösningar "
 "eller detaljerad information, även om det underlättar. \n"
-"\n"
+
+#: src/help.c:264
+#, no-c-format
+msgid ""
+"Feature requests are also welcome, report them to the mailing list or to the "
+"bug tracker.\n"
+msgstr ""
 "Förbättringsförslag och nya idéer är också välkomna, skicka dem till "
 "maillistan eller buggrapporteringssystemet.\n"
-"\n"
+
+#: src/help.c:264
+#, no-c-format
+msgid ""
+"If you speak a language other than English and mhWaveEdit isn't translated "
+"to your language, you can contribute a translation. To do that, copy the "
+"template mhwaveedit.pot in the po directory into a new file ll.po, where ll "
+"is your language code (see http://www.gnu.org/software/gettext/manual/"
+"html_node/gettext_221.html for a list of language codes). \n"
+msgstr ""
 "Om du pratar något språk som mhWaveEdit inte har blivit översatt till ännu "
 "så kan du bidra med en översättning till det språket. För att göra detta, "
 "kopiera filen mhwaveedit.pot i po-katalogen till en ny fil ll.po, där ll är "
 "en språkkod (se http://www.gnu.org/software/gettext/manual/html_node/"
 "gettext_221.html för en lista med sådana koder.)\n"
-"\n"
+
+#: src/help.c:264
+#, no-c-format
+msgid ""
+"It's possible to edit po-files by hand, but I recommend a program such as "
+"poEdit (http://www.poedit.org) for editing translations. \n"
+msgstr ""
 "Det går att redigera po-filer för hand, men jag rekommenderar att du "
 "använder ett program som poEdit (http://www.poedit.org).\n"
-"\n"
+
+#: src/help.c:264
+#, no-c-format
+msgid ""
+"Note that for those translatable strings that look like \"RecordStatus|Paused"
+"\", you should ignore what's to the left and only translate the string to "
+"the right (\"Paused\" in this example). This convention is there to make it "
+"possible to translate the same string to different things depending on "
+"context. \n"
+msgstr ""
 "I de texter som ser ut som \"RecordStatus|Paused\" så ska man ignorera det "
 "som står till vänster och bara översätta det som står till höger, dvs "
 "\"Paused\" i detta exempel. Denna konvention används när samma ord kan "
 "betyda olika saker beroende på sammanhanget. \n"
-"\n"
+
+#: src/help.c:264
+#, no-c-format
+msgid ""
+"After you've filled in all the translations you want (you don't have to "
+"translate all the strings), mail in the po file to me (see contact info) and "
+"I'll add it to the next release. \n"
+msgstr ""
 "Efter att du översatt så mycket du vill (du behöver inte översätta allt på "
 "en gång), skicka in po-filen till mig (se Adresser) så lägger jag till den "
 "till nästa version.\n"
-"\n"
+
+#: src/help.c:264
+#, no-c-format
+msgid ""
+"If a translation is incomplete, you're very welcome to translate the "
+"remaining untranslated messages and mail them in. Corrections to "
+"translations are also appreciated, but they may need to be checked with the "
+"previous translator before including them. \n"
+msgstr ""
 "Om en översättning är ofullständig så får du gärna översätta de återstående "
 "icke-översatta meddelandena och skicka in dem. Rättelser tas också emot, men "
 "de kan behöva godkännas av tidigare översättare om han eller hon går att "
 "nå.\n"
-"\n"
 
 #: src/help.c:283
 #, no-c-format
-msgid ""
-"\n"
-"For bug reports, translation updates, patches and PayPal donations:\n"
-"magnus.hjorth@home.se\n"
-"\n"
-"Project page with bug tracker, mailing list membership:\n"
-"http://gna.org/projects/mhwaveedit\n"
-"\n"
-"Mailing list (you must be a subscriber before you can post messages):\n"
-"mhwaveedit-discuss@gna.org\n"
-"\n"
+msgid "For bug reports, translation updates, patches and PayPal donations:\n"
 msgstr ""
-"\n"
 "För buggrapporter, uppdaterade översättningar, patchar och PayPal-"
 "donationer:\n"
-"magnus.hjorth@home.se\n"
-"\n"
-"Projektsida med buggrapporteringssystem, mailinglistmedlemskap med mera:\n"
-"http://gna.org/projects/mhwaveedit\n"
-"\n"
-"Maillista (du måste bli medlem innan du postar):\n"
-"mhwaveedit-discuss@gna.org\n"
-"\n"
+
+#: src/help.c:283
+#, no-c-format
+msgid "magnus.hjorth@home.se\n"
+msgstr "magnus.hjorth@home.se\n"
+
+#: src/help.c:283
+#, no-c-format
+msgid "Project page with bug tracker, mailing list membership:\n"
+msgstr "Projektsida med buggrapporteringssystem, mailinglistmedlemskap med mera:\n"
+
+#: src/help.c:283
+#, no-c-format
+msgid "http://gna.org/projects/mhwaveedit\n"
+msgstr "http://gna.org/projects/mhwaveedit\n"
+
+#: src/help.c:283
+#, no-c-format
+msgid "Mailing list (you must be a subscriber before you can post messages):\n"
+msgstr "Maillista (du måste bli medlem innan du postar):\n"
+
+#: src/help.c:283
+#, no-c-format
+msgid "mhwaveedit-discuss@gna.org\n"
+msgstr "mhwaveedit-discuss@gna.org\n"
 
 #: src/inifile.c:84 src/inifile.c:91
 #, c-format

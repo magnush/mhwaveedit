@@ -1021,52 +1021,44 @@ msgstr "Envoi de bug"
 msgid "Helping out"
 msgstr "/Aide/_A propos"
 
-#: src/help.c:42
-msgid "Contact"
-msgstr ""
-
 #: src/help.c:47
 #, no-c-format
 msgid ""
-"\n"
 "mhWaveEdit is a graphical program for editing sound files. It is completely "
 "free (GPL).\n"
-"\n"
-"You can find the latest release of mhWaveEdit at:\n"
-"http://gna.org/projects/mhwaveedit/\n"
 msgstr ""
-"\n"
 "mhWaveEdit est un programme d'édition graphique de sons. Complètement "
 "gratuit (GPL).\n"
-"\n"
-"Vous pouvez trouver la dernière version de mhWaveEdit à l'adresse:\n"
-"http://gna.org/projects/mhwaveedit/\n"
+
+#: src/help.c:47
+#, no-c-format
+msgid "You can find the latest release of mhWaveEdit at:\n"
+msgstr "Vous pouvez trouver la dernière version de mhWaveEdit à l'adresse:\n"
+
+#: src/help.c:47
+#, no-c-format
+msgid "http://gna.org/projects/mhwaveedit/\n"
+msgstr "http://gna.org/projects/mhwaveedit/\n"
 
 #: src/help.c:54
 #, no-c-format
 msgid ""
-"\n"
 "The area where you 'see' the contents of the file you are editing, is called "
 "the 'sample view'. \n"
-"\n"
+msgstr ""
+"La partie où vous 'voyez' le contenu du fichier que vous éditez, est "
+"'appelée' \"l'affichage de l'échantillon\".\n"
+
+#: src/help.c:54
+#, no-c-format
+msgid ""
 "In the sample view there is a grey vertical bar called the 'cursor'. The "
 "cursor follows the sound wave when you play the sound. You can position the "
 "cursor by clicking with the right (2:nd) mouse button. If you do this while "
 "you're playing a file, the playing will continue from the new cursor "
 "position. You can also position the cursor more exact by using the 'Position "
 "Cursor...' command on the Edit menu.\n"
-"\n"
-"You can place marks in your file by holding down Ctrl and pressing a number "
-"from 0 to 9. This will place a mark (green vertical bar) with the same "
-"number at the current cursor position. You can later make the cursor go to "
-"that position again by just pressing the number. Setting and jumping to "
-"marks can be done while playing. To remove a mark, jump to the mark and set "
-"it again.\n"
 msgstr ""
-"\n"
-"La partie où vous 'voyez' le contenu du fichier que vous éditez, est "
-"'appelée' \"l'affichage de l'échantillon\".\n"
-"\n"
 "Dans cette affichage, se trouve une barre verticale grise appelée le "
 "'curseur'. Ce curseur suit la courbe de fréquence du son lorsque vous le "
 "jouez. Vous pouvez positionner le curseur en cliquant avec le bouton droit "
@@ -1074,7 +1066,17 @@ msgstr ""
 "suivra la nouvelle position du curseur. Vous pouvez également positionner le "
 "curseur plus précisement grâce à \"Positionner le curseur...\" dans le menu "
 "'Edition'.\n"
-"\n"
+
+#: src/help.c:54
+#, no-c-format
+msgid ""
+"You can place marks in your file by holding down Ctrl and pressing a number "
+"from 0 to 9. This will place a mark (green vertical bar) with the same "
+"number at the current cursor position. You can later make the cursor go to "
+"that position again by just pressing the number. Setting and jumping to "
+"marks can be done while playing. To remove a mark, jump to the mark and set "
+"it again.\n"
+msgstr ""
 "Vous pouvez placer des marques dans votre fichier en maintenant la touche "
 "'Control' et en appuyant sur un chiffre de 0 à 9. Ceci placera une marque "
 "(barre verticale de couleur verte) avec le même chiffre à la position du "
@@ -1086,283 +1088,311 @@ msgstr ""
 #: src/help.c:62
 #, no-c-format
 msgid ""
-"\n"
 "Playing a file is simple, just load the file and press the play button. The "
 "green play button plays from the current position. The yellow play button "
 "plays the current selection, or the entire file if nothing is selected. Stop "
 "the playback with the stop button (with the red square). \n"
-"\n"
-"The playback speed can be varied by adjusting the slider to the far right. \n"
-"\n"
-"You can do normal editing while the file is playing.\n"
 msgstr ""
-"\n"
 "Pour lire un fichier, chargez le fichier et pressez sur le bouton 'lire'. Le "
 "bouton vert quant à lui sert à lire depuis la position du curseur. Le bouton "
 "jaune lit la sélection, ou le fichier en entier si rien n'est sélectionné. "
 "Pour arrêter la lecture, utilisez le bouton Stop (le rond rouge).\n"
-"\n"
+
+#: src/help.c:62
+#, no-c-format
+msgid "The playback speed can be varied by adjusting the slider to the far right. \n"
+msgstr ""
 "La vitesse de lecture peut être variée en ajustant le baromètre tout à "
 "droite.\n"
-"\n"
-"Vous pouvez continuer à éditer normalement pendant la lecture.\n"
+
+#: src/help.c:62
+#, no-c-format
+msgid "You can do normal editing while the file is playing.\n"
+msgstr "Vous pouvez continuer à éditer normalement pendant la lecture.\n"
 
 #: src/help.c:70
 #, no-c-format
 msgid ""
-"\n"
 "Recording is done with 'Record...' on the Play menu, or the Record button "
 "(the red circle). A dialog box will pop up where you can select what format "
 "you want to record in. After selecting the format, meters and numbers will "
 "appear showing info about the volume level of the sound input. \n"
-"\n"
-"When you want to start recording, press the \"Start recording\" button. When "
-"you've recorded everything you wanted to, press the Finish button and the "
-"record dialog will disappear and newly recorded sound will show up in a new "
-"window.\n"
-"\n"
-"Currently it is impossible to play and record at the same time, so the "
-"playback will stop when you record.\n"
 msgstr ""
-"\n"
 "L'enregistrement se fait grâce à 'Enregistrer...' dans le menu 'Lire', ou le "
 "bouton enregistrement (rond rouge). Une boîte de dialogue s'ouvre alors où "
 "vous pouvez sélectionner dans quel format vous voulez enregistrer. Après "
 "avoir sélectionner le format, des informations chiffrées et mesurées vous "
 "seront fournies.\n"
-"\n"
+
+#: src/help.c:70
+#, no-c-format
+msgid ""
+"When you want to start recording, press the \"Start recording\" button. When "
+"you've recorded everything you wanted to, press the Finish button and the "
+"record dialog will disappear and newly recorded sound will show up in a new "
+"window.\n"
+msgstr ""
 "Lorsque vous voulez commencer l'enregistrement, appuyez sur le bouton "
 "\"Commencer l'enregistrement\". Une fois terminé, appuyez sur le bouton "
 "'Terminer' et la boîte de dialogue disparaîtra. Le son nouveau son apparaît "
 "alors dans une nouvelle fenêtre.\n"
-"\n"
+
+#: src/help.c:70
+#, no-c-format
+msgid ""
+"Currently it is impossible to play and record at the same time, so the "
+"playback will stop when you record.\n"
+msgstr ""
 "Il est impossible de lire et d'enregistrer en même temps, la lecture "
 "s'interrompra si vous essayez.\n"
 
 #: src/help.c:78
 #, no-c-format
 msgid ""
-"\n"
 "You make selections by dragging the mouse over the sample view. You can hear "
 "what you've currently selected by clicking on the \"play selection\" button "
 "(the button with the yellow arrow) or by selecting 'Play selection' from the "
 "Play menu.\n"
-"\n"
-"You can use the cursor to refine the selection. Use the 'Selection start at "
-"cursor' and 'Selection end at cursor' buttons to move the selection starting "
-"point or the selection end point to the current cursor position. You can "
-"also drag the selection endpoints using the mouse.\n"
-"\n"
-"The 'Cut' and 'Copy' functions work like in any other software. \n"
-"\n"
-"The 'Paste' function insert the clipboard contents at the cursor position. "
-"The 'Paste over' function works like 'Paste', except that it overwrites the "
-"data after the insert position. \n"
-"\n"
-"The 'Paste mix' function combines the clipboard data with the data at the "
-"cursor position.\n"
-"\n"
-"The 'Paste as new' function opens a new window and puts the clipboard "
-"contents into it. \n"
-"\n"
-"The 'Crop' function deletes all parts of the file that are not selected.\n"
-"\n"
-"The 'Silence selection' function replaces the selected part with silence. To "
-"avoid clicks, the silent part is a line that meets the wave at the "
-"endpoints.\n"
-"\n"
-"All editing functions work non-destructively, that is, the file you're "
-"editing isn't actually changed until you save it (the effects also work this "
-"way).\n"
-"\n"
 msgstr ""
-"\n"
 "Pour faire une sélection, faites glisser la souris dans la vue de "
 "l'échantillon. Vous pouvez entendre ce que vous avez sélectionné grâce au "
 "bouton \"Lire la sélection\" (bouton flèche jaune) ou en sélectionnant 'Lire "
 "la sélection' depuis le menu 'Lire'.\n"
-"\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"You can use the cursor to refine the selection. Use the 'Selection start at "
+"cursor' and 'Selection end at cursor' buttons to move the selection starting "
+"point or the selection end point to the current cursor position. You can "
+"also drag the selection endpoints using the mouse.\n"
+msgstr ""
 "Vous pouvez utiliser le curseur pour redéfinir la sélection. Utilisez les "
 "boutons 'Mettre le début de la sélection au curseur' et 'Mettre la fin de la "
 "sélection au curseur' pour bouger la position de début et de fin de la "
 "sélection à la position du curseur. Vous pouvez également faire glisser les "
 "extrémités de la sélection grâce à la souris.\n"
-"\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid "The 'Cut' and 'Copy' functions work like in any other software. \n"
+msgstr ""
 "Les fonctions 'Couper' et 'Coller' fonctionnent comme dans les autres "
 "programmes.\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"The 'Paste' function insert the clipboard contents at the cursor position. "
+"The 'Paste over' function works like 'Paste', except that it overwrites the "
+"data after the insert position. \n"
+msgstr ""
 "La fonction 'Coller' insère le contenu du presse-papier à la position du "
 "curseur. La fonction 'Coller par dessus' fonctionne comme 'Coller', excepté "
 "qu'après le point d'insertion, les données seront effacées.\n"
-"\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"The 'Paste mix' function combines the clipboard data with the data at the "
+"cursor position.\n"
+msgstr ""
 "La fonction 'Coller mixte' combine les données du presse-papier avec celles "
 "de la position du curseur.\n"
-"\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"The 'Paste as new' function opens a new window and puts the clipboard "
+"contents into it. \n"
+msgstr ""
 "La fonction 'Coller nouveau' ouvre une nouvelle fenêtre et y met le contenu "
 "du presse-papier.\n"
-"\n"
-"La fonction 'Découper' efface les parties du fichier non sélectionnée.\n"
-"\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid "The 'Crop' function deletes all parts of the file that are not selected.\n"
+msgstr "La fonction 'Découper' efface les parties du fichier non sélectionnée.\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"The 'Silence selection' function replaces the selected part with silence. To "
+"avoid clicks, the silent part is a line that meets the wave at the "
+"endpoints.\n"
+msgstr ""
 "La fonction 'Sélection en silence' transforme la partie sélectionnée en "
 "silence. Pour éviter les clicks, la partie silencieuse est une ligne "
 "correspondant à la position des ondes sonores aux points de début et de "
 "fin. \n"
-"\n"
+
+#: src/help.c:78
+#, no-c-format
+msgid ""
+"All editing functions work non-destructively, that is, the file you're "
+"editing isn't actually changed until you save it (the effects also work this "
+"way).\n"
+msgstr ""
 "Toutes les fonctions d'édition fonctionnent sur un fichier temporaire, le "
 "fichier original n'étant pas altéré tant que vous ne le sauvegardez pas (les "
 "effets fonctionnent aussi de la sorte).\n"
-"\n"
-"\n"
-"\n"
 
 #: src/help.c:99
 #, fuzzy, no-c-format
 msgid ""
-"\n"
 "mhWaveEdit has a few simple effects, which are available from the 'Effects' "
 "menu. \n"
-"\n"
-" * Fade in/out\n"
-"\n"
-"   This creates a linear fade in or fade out effect.\n"
-"\n"
-" * Normalize, Normalize to...\n"
-"\n"
+msgstr ""
+"mhWaveEdit possède quelques effets de base, qui sont disponible à partir du "
+"menu 'Effets'.\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Fade in/out\n"
+msgstr " * Fondus\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid "   This creates a linear fade in or fade out effect.\n"
+msgstr "   Génère un effet de fondu linéaire, entrant ou sortant. \n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Normalize, Normalize to...\n"
+msgstr " * Normalisation\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
 "   This amplifies the sound as much as possible without getting clipping "
 "distortion. The \"Normalize to...\" item lets you specify which level to "
 "normalize to.\n"
-"\n"
-" * Volume adjust/fade...\n"
-"\n"
+msgstr "   Amplifie le son autant que possible sans distorsions.\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Volume adjust/fade...\n"
+msgstr " * Ajustement/Fondu du volume...\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
 "   This effect lets you select a starting volume and a ending volume and "
 "amplifies the selection fading from the starting volume to the ending "
 "volume.\n"
-"\n"
+msgstr ""
+"   Cet effet vous laisse sélectionner un volume de départ, et un volume de "
+"fin et amplifie la sélection, du fondu de départ au fondu de fin.\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
 "   Note that volumes above 100% may cause sound distortion. Use the 'Find "
 "top volume' to find out the maximum amplification possible without "
 "distortion. (You can use this for normalizing samples.) \n"
-"\n"
-"   By setting starting volume and ending volume to the same value you get a "
-"simple amplification of the sound. \n"
-"\n"
-" * Convert samplerate...\n"
-"\n"
-"   This converts the samplerate of the entire file to one you specify. There "
-"are different methods for doing this, usually the one in the top has the "
-"best quality but can take longer than the other methode.\n"
-"\n"
-" * Convert sample format...\n"
-"\n"
-"   This converts the sample format of the entire file.\n"
-"\n"
-"   The 'Don't actually change the data' option can be used if the program "
-"was wrong about the file's format.\n"
-"\n"
-" * Byte swap\n"
-"\n"
-"   This \"byte swaps\" the selected part. It can be used to repair damaged "
-"files where the byte order is wrong. Note that if the sound looks alright "
-"but plays wrong, you should not use this option, instead you should use the "
-"\"byte-swap output\" option in the Preferences dialog.\n"
-"\n"
-" * Mix to mono\n"
-"\n"
-"   This mixes all channels of the file together to a mono sound.\n"
-"\n"
-" * Add channel\n"
-"\n"
-"   This copies the first channel to a new channel in the sound, converting "
-"mono to stereo etc.\n"
-"\n"
-" * Map channels...\n"
-"   \n"
-"   With this effect, you can change the number of channels in the file. You "
-"can also rearrange and add (i.e. mix) channels.\n"
-"\n"
-" * Combine channels...\n"
-"\n"
-"   This effect lets you create a new sound by a linear combination of the "
-"old channels. This means you can do channel mixing / swapping / balance / "
-"panning / amplification etc. by entering different values. For example, to "
-"swap the left and right channel, you select that the new Channel 1 should be "
-"0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 "
-"should be 100% of the old Channel 1 and 0% of the old Channel 2 \n"
-"\n"
-" * Speed adjustment...\n"
-"\n"
-"   This effect changes the speed of the selection. The tone will change as "
-"well.\n"
-" * Pipe through program...\n"
-" \n"
-"   This effect is for advanced users wanting to pipe raw audio data through "
-"an external program. The output of the program is read back and replaces the "
-"processed part. \n"
-"\n"
-"mhWaveEdit supports LADSPA effects and can also make use of most of the SoX "
-"utility's effects. To find the LADSPA plugins the environment variable "
-"LADSPA_PATH must be properly set up. \n"
-"\n"
-"All supported effects can be found by choosing the 'Effects...' menu item. "
-"The effects are listed with names beginning with [B] for builtin effects, "
-"[L] for LADSPA effects, and [S] for SoX effects.\n"
-"\n"
 msgstr ""
-"\n"
-"mhWaveEdit possède quelques effets de base, qui sont disponible à partir du "
-"menu 'Effets'.\n"
-"\n"
-" * Fondus\n"
-"\n"
-"   Génère un effet de fondu linéaire, entrant ou sortant. \n"
-" * Normalisation\n"
-"\n"
-"   Amplifie le son autant que possible sans distorsions.\n"
-"\n"
-" * Ajustement/Fondu du volume...\n"
-"\n"
-"   Cet effet vous laisse sélectionner un volume de départ, et un volume de "
-"fin et amplifie la sélection, du fondu de départ au fondu de fin.\n"
-"\n"
 "   Notez qu'un volume supérieur à 100% peut causer des distorsions dans le "
 "son. Utilisez le 'Trouver le volume haut' pour déterminer l'amplification "
 "maximale sans distorsions (Vous pouvez utiliser ceci pour normaliser des "
 "échantillons).\n"
-"\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"   By setting starting volume and ending volume to the same value you get a "
+"simple amplification of the sound. \n"
+msgstr ""
 "   En paramétrant un volume de départ et un volume de fin à la même valeur, "
 "vous pouvez obtenir une simple amplification du son.\n"
-"\n"
-" * Convertir le taux d'échantillonnage..\n"
-"\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Convert samplerate...\n"
+msgstr " * Convertir le taux d'échantillonnage..\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"   This converts the samplerate of the entire file to one you specify. There "
+"are different methods for doing this, usually the one in the top has the "
+"best quality but can take longer than the other methode.\n"
+msgstr ""
 "   Converti le taux d'échantillonnage de tout le fichier au taux défini. Il "
 "existe différentes méthodes pour faire cela, habituellement la première en "
 "haut possède la meilleure qualité mais peut prendre plus longtemps que les "
 "autres méthodes.\n"
-"\n"
-" * Convertir le format d'échantillon...\n"
-"\n"
-"   Ceci converti le format d'échantillon de tout le fichier.\n"
-"\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Convert sample format...\n"
+msgstr " * Convertir le format d'échantillon...\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid "   This converts the sample format of the entire file.\n"
+msgstr "   Ceci converti le format d'échantillon de tout le fichier.\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"   The 'Don't actually change the data' option can be used if the program "
+"was wrong about the file's format.\n"
+msgstr ""
 "   L'option 'Ne pas réellement changer les données' peut être utilisée si le "
 "programme n'a pas déterminé le bon format de fichier.\n"
-"\n"
-" * Permuter les octets\n"
-"\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Byte swap\n"
+msgstr " * Permuter les octets\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"   This \"byte swaps\" the selected part. It can be used to repair damaged "
+"files where the byte order is wrong. Note that if the sound looks alright "
+"but plays wrong, you should not use this option, instead you should use the "
+"\"byte-swap output\" option in the Preferences dialog.\n"
+msgstr ""
 "   Ceci permute les octets de la partie sélectionnée. Peut-être utilisé pour "
 "réparer des fichiers endommagés où l'ordre des octets est mauvais. Notez que "
 "si le son paraît correct mais se joue bizarrement, vous ne devriez pas "
 "utiliser cette option, et à la place devriez choisir l'option 'Permuter les "
 "octets en sortie' dans la boîte de dialogue des 'Préférences'.\n"
-"\n"
-" * Mixer les canaux...\n"
-"\n"
-"   Ceci mixe tous les canaux du fichier ensembles et forme un son mono.\n"
-"\n"
-" * Séparer les canaux...\n"
-"\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Mix to mono\n"
+msgstr " * Mixer les canaux...\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid "   This mixes all channels of the file together to a mono sound.\n"
+msgstr "   Ceci mixe tous les canaux du fichier ensembles et forme un son mono.\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Add channel\n"
+msgstr " * Séparer les canaux...\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"   This copies the first channel to a new channel in the sound, converting "
+"mono to stereo etc.\n"
+msgstr ""
 "   Ceci copie le premier canal vers un nouveau canal dans le son, "
 "convertissant ainsi de mono vers stéréo etc.\n"
-"\n"
-" * Combiner les canaux...\n"
-"\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Map channels...\n"
+msgstr " * Combiner les canaux...\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid "   \n"
+msgstr ""
 "   Cet effet vous laisse créer un nouveau son par une combinaision linéaire "
 "des anciens canaux. Ceci veut dire que vous pouvez mixer / balancer / "
 "permuter / amplifier / étendre etc. en entrant différentes valeurs. Par "
@@ -1370,77 +1400,156 @@ msgstr ""
 "définissez le nouveau Canal 1 à 0% du vieux canal 1 et 100% du vieux canal "
 "2, et le nouveau canal 2 devrait être à 100% du vieux canal 1 et 0% du vieux "
 "canal 2.\n"
-"\n"
-" * Ajustement de vitesse...\n"
-"\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"   With this effect, you can change the number of channels in the file. You "
+"can also rearrange and add (i.e. mix) channels.\n"
+msgstr " * Ajustement de vitesse...\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Combine channels...\n"
+msgstr ""
 "   Cet effet change la vitesse de la sélection. La tonalité changera "
 "également.\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"   This effect lets you create a new sound by a linear combination of the "
+"old channels. This means you can do channel mixing / swapping / balance / "
+"panning / amplification etc. by entering different values. For example, to "
+"swap the left and right channel, you select that the new Channel 1 should be "
+"0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 "
+"should be 100% of the old Channel 1 and 0% of the old Channel 2 \n"
+msgstr ""
 "mhWaveEdit supporte les effets LADSPA et peut aussi utiliser la plupart des "
 "effets des utilitaires SoX. Tous les effets supportés peuvent être trouvés "
 "en choisissant le menu 'Effets'.\n"
-"\n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Speed adjustment...\n"
+msgstr " \n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"   This effect changes the speed of the selection. The tone will change as "
+"well.\n"
+msgstr " \n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " * Pipe through program...\n"
+msgstr " \n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid " \n"
+msgstr " \n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"   This effect is for advanced users wanting to pipe raw audio data through "
+"an external program. The output of the program is read back and replaces the "
+"processed part. \n"
+msgstr " \n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"mhWaveEdit supports LADSPA effects and can also make use of most of the SoX "
+"utility's effects. To find the LADSPA plugins the environment variable "
+"LADSPA_PATH must be properly set up. \n"
+msgstr " \n"
+
+#: src/help.c:99
+#, fuzzy, no-c-format
+msgid ""
+"All supported effects can be found by choosing the 'Effects...' menu item. "
+"The effects are listed with names beginning with [B] for builtin effects, "
+"[L] for LADSPA effects, and [S] for SoX effects.\n"
+msgstr " \n"
+
+#: src/help.c:161
+#, no-c-format
+msgid "Some notes on sound quality.\n"
+msgstr "Quelques notes sur la qualité du son.\n"
 
 #: src/help.c:161
 #, no-c-format
 msgid ""
-"\n"
-"Some notes on sound quality.\n"
-"\n"
 "The general rule when doing audio editing/processing is to not manipulate "
 "the data more than necessary and keep an original copy whenever you're "
 "processing your important files. \n"
-"\n"
+msgstr ""
+"La règle générale en vigueur lorsque l'on édite une piste audio est de ne "
+"pas manipuler les données plus que nécessairement et de garder toujours une "
+"copie de l'original lorsque l'on travaille sur des fichiers importants.\n"
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
 "Cut, copy and paste operations move the data around without modifying it, so "
 "these don't degrade the sound quality. Because of level differences, you may "
 "get a \"step\" at the start and end of the inserted part, which can cause a "
 "small clicking sound. \n"
-"\n"
-"The mix paste function doesn't decrease quality, unless the peaks become too "
-"high and you get clipping. In that case you will get a warning message.\n"
-"\n"
-"Sound data is normally stored as integer values. Therefore, whenever you "
-"normalize, adjust volume, decrease sample size or filter a sound, the result "
-"must be rounded. If you use 24 or 32 bit sample sizes, this is not really a "
-"problem, but if you use 8 or 16 bits sample size, this rounding causes a "
-"decrease in quality. \n"
-"\n"
-"The quality decrease that the rounding causes can be masked by adding a "
-"small amount of noise before rounding. This is called \"dithering\". "
-"mhWaveEdit supports basic triangular dithering and it's enabled by "
-"default. \n"
-"\n"
-"By default, mhWaveEdit uses floating-point temporary files for storing "
-"processed results to avoid rounding until the file is saved.\n"
 msgstr ""
-"\n"
-"Quelques notes sur la qualité du son.\n"
-"\n"
-"La règle générale en vigueur lorsque l'on édite une piste audio est de ne "
-"pas manipuler les données plus que nécessairement et de garder toujours une "
-"copie de l'original lorsque l'on travaille sur des fichiers importants.\n"
-"\n"
 "Couper, copier et coller fonctionne en déplaçant les données sans les "
 "modifier, donc ces opérations n'altèrent pas, ou ne dégradent pas la qualité "
 "du son. En raison des différences de niveau, il est possible que vous "
 "entendiez un \"pas\" au début et à la fin de la partie insérée, ce qui peut "
 "causer un son cliquotant.\n"
-"\n"
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
+"The mix paste function doesn't decrease quality, unless the peaks become too "
+"high and you get clipping. In that case you will get a warning message.\n"
+msgstr ""
 "La fonction coller mixte ne diminue pas la qualité, tant que les maximum ne "
 "deviennent pas trop haut, dans lequel cas vous obtiendrez des coupures. Vous "
 "seriez alors averti par un message d'alerte.\n"
-"\n"
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
+"Sound data is normally stored as integer values. Therefore, whenever you "
+"normalize, adjust volume, decrease sample size or filter a sound, the result "
+"must be rounded. If you use 24 or 32 bit sample sizes, this is not really a "
+"problem, but if you use 8 or 16 bits sample size, this rounding causes a "
+"decrease in quality. \n"
+msgstr ""
 "Les données du son sont normalement enregistrées au format entier. Lorsque "
 "vous normalisez, ajustez le volume, diminuez la taille d'échantillon ou "
 "filtrez un son, il est normal que le résultat soit arrondi. Si vous utilisez "
 "des tailles d'échantillonage de 24 ou 32 bit, ça ne causera aucun problème "
 "vraisemblablement, mais si vous utilisez des tailles de 8 ou 16 bits pour "
 "les échantillons, cet arrondi provoque une diminution de la qualité du son.\n"
-"\n"
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
+"The quality decrease that the rounding causes can be masked by adding a "
+"small amount of noise before rounding. This is called \"dithering\". "
+"mhWaveEdit supports basic triangular dithering and it's enabled by "
+"default. \n"
+msgstr ""
 "Cette diminution peut être masquée en ajoutant un petit peu de bruit avant "
 "d'opérer l'arrondi. Ceci est appelé \"signal aléatoire\" (i.e. dithering). "
 "mhWaveEdit supporte le signal aléatoire triangulaire basique et il est "
 "activé par défaut.\n"
-"\n"
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
+"By default, mhWaveEdit uses floating-point temporary files for storing "
+"processed results to avoid rounding until the file is saved.\n"
+msgstr ""
 "Par défaut, mhWaveEdit utilise des virgules flottantes pour ses fichiers "
 "temporaires, et non pas au format entier pour éviter les arrondis tant que "
 "le fichier n'est pas sauvé.\n"
@@ -1448,77 +1557,79 @@ msgstr ""
 #: src/help.c:177
 #, fuzzy, no-c-format
 msgid ""
-"\n"
 "Even if mhWaveEdit was originally built for editing wav files, it's also "
 "possible to load and save in a few other formats. mhWaveEdit always supports "
 "wav and raw files, but if it's compiled with the libsndfile library, "
 "mhWaveEdit supports a couple of other formats as well. \n"
-"\n"
-"To save a file with a different file format, use \"Save as...\" and choose a "
-"format in the file type selection box. \n"
-"\n"
-"mhWaveEdit has basic support for mp3 and ogg formats. For this to work you "
-"need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg "
-"support. If you have these programs, you can open and save mp3/ogg files "
-"just like any other file format.\n"
-"\n"
-"If mplayer is installed, mhwaveedit can open all formats that it supports, "
-"for example the soundtrack of a video file. Since mplayer is only a player, "
-"these files can not be saved back after editing, you have to save the file "
-"into a supported format.\n"
 msgstr ""
-"\n"
 "Même si mhWaveEdit est globalement prévu pour éditer des fichiers wav, il "
 "est possible également de charger et de sauver dans quelques autres formats. "
 "mhWaveEdit supporte toujours les wav et les fichiers au format brut (raw) "
 "mais s'il est construit à partir de la librairie libsndfile, quelques "
 "formats supplémentaires sont supportés.\n"
-"\n"
+
+#: src/help.c:177
+#, fuzzy, no-c-format
+msgid ""
+"To save a file with a different file format, use \"Save as...\" and choose a "
+"format in the file type selection box. \n"
+msgstr ""
 "Pour sauver un fichier sous un autre format, sauver le avec un nom qui ne se "
 "termine pas par '.wav'. Quelques extensions sont reconnues directement (par "
 "exemple '.iff') mais si le suffixe n'est pas reconnu une boîte de dialogue "
 "s'affichera et vous demandera dans quel format vous desirez sauver le "
 "fichier.\n"
+
+#: src/help.c:177
+#, fuzzy, no-c-format
+msgid ""
+"mhWaveEdit has basic support for mp3 and ogg formats. For this to work you "
+"need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg "
+"support. If you have these programs, you can open and save mp3/ogg files "
+"just like any other file format.\n"
+msgstr ""
 "mhWaveEdit possède un support basique pour les mp3 et les ogg. Pour que cela "
 "fonctionne vous avez besoin du programme LAME installé pour les mp3, et "
 "OggDec/OggEnc pour le support des ogg. Si vous avez ces programmes, vous "
 "pouvez ouvrir et sauvegarder des fichiers mp3/ogg de la même façon que "
 "n'importe quel autre format.\n"
 
+#: src/help.c:177
+#, fuzzy, no-c-format
+msgid ""
+"If mplayer is installed, mhwaveedit can open all formats that it supports, "
+"for example the soundtrack of a video file. Since mplayer is only a player, "
+"these files can not be saved back after editing, you have to save the file "
+"into a supported format.\n"
+msgstr " \n"
+
 #: src/help.c:187
 #, fuzzy, no-c-format
 msgid ""
-"\n"
 "mhWaveEdit creates a directory ~/.mhwaveedit where it stores configuration "
 "information. \n"
-"\n"
+msgstr ""
+"mhWaveEdit crée un répertoire ~/.mhwaveedit où il enregistre les "
+"informations de configuration. \n"
+
+#: src/help.c:187
+#, fuzzy, no-c-format
+msgid ""
 "The configuration file is called config. It can be hand edited, but the "
 "easiest way is through 'Preferences' on the Edit menu.\n"
-"\n"
+msgstr ""
+"Le fichier de configuration est appelé config. Il peut édité avec un éditeur "
+"de texte, mais la manière plus simple est de passer par le menu "
+"'Préférences' du menu 'Edition'.\n"
+
+#: src/help.c:187
+#, fuzzy, no-c-format
+msgid ""
 "Each mhwaveedit process creates a session file in the .mhwaveedit directory "
 "called mhwaveedit-session-<pid>-<session>-<state>, where <session> is the "
 "session ID number and <state> is a character code showing the state of the "
 "session ('r' for running sessions). \n"
-"\n"
-"Temporary files are by default also stored in the ~/.mhwaveedit directory. "
-"Which directories to use can be set through the preferences dialog. To get "
-"the best performance, you should have one temporary directory for each local "
-"filesystem. The temporary files have names of the form \"mhwaveedit-temp-"
-"<pid>-nnnn-<session>\". Do NOT open or remove temporary files with the same "
-"pid number as a currently running mhWaveEdit.\n"
-"\n"
-"mhWaveEdit checks on startup for leftover temporary files and lets the user "
-"open them. After opening a crashed session, the files can be saved or thrown "
-"away.\n"
 msgstr ""
-"\n"
-"mhWaveEdit crée un répertoire ~/.mhwaveedit où il enregistre les "
-"informations de configuration. \n"
-"\n"
-"Le fichier de configuration est appelé config. Il peut édité avec un éditeur "
-"de texte, mais la manière plus simple est de passer par le menu "
-"'Préférences' du menu 'Edition'.\n"
-"\n"
 "Les fichiers temporaires sont sauvés par défaut dans ce dossier ~/."
 "mhwaveedit mais le dossier à utiliser peut être changé à l'aide de la boîte "
 "de dialogue des préférences. Pour avoir une meilleure expérience avec "
@@ -1526,208 +1637,294 @@ msgstr ""
 "Les fichiers temporaires sont sauvés sous cette forme \"mhwaveedit-temp-"
 "<pid>-nnnn\". N'ouvrez SURTOUT PAS ou ne supprimez les fichiers temporaires "
 "qui ont le même pid que l'application mhWaveEdit lancée.\n"
-"\n"
+
+#: src/help.c:187
+#, fuzzy, no-c-format
+msgid ""
+"Temporary files are by default also stored in the ~/.mhwaveedit directory. "
+"Which directories to use can be set through the preferences dialog. To get "
+"the best performance, you should have one temporary directory for each local "
+"filesystem. The temporary files have names of the form \"mhwaveedit-temp-"
+"<pid>-nnnn-<session>\". Do NOT open or remove temporary files with the same "
+"pid number as a currently running mhWaveEdit.\n"
+msgstr " \n"
+
+#: src/help.c:187
+#, fuzzy, no-c-format
+msgid ""
+"mhWaveEdit checks on startup for leftover temporary files and lets the user "
+"open them. After opening a crashed session, the files can be saved or thrown "
+"away.\n"
+msgstr " \n"
 
 #: src/help.c:199
 #, fuzzy, no-c-format
-msgid ""
-"\n"
-"F1            Help\n"
-"F12           Record\n"
-"\n"
-"Ctrl+(number) Set mark\n"
-"(number)      Goto mark\n"
-"\n"
-"Ctrl+P        Preferences\n"
-"Ctrl+E        Effects\n"
-"\n"
-"Ctrl+O        Open file\n"
-"Ctrl+S        Save file\n"
-"Ctrl+U        Save selection as\n"
-"\n"
-"Ctrl+C        Copy\n"
-"Ctrl+X        Cut\n"
-"Ctrl+D        Delete\n"
-"Ctrl+V        Paste\n"
-"Ctrl+Z        Undo\n"
-"Ctrl+A        Select all\n"
-"\n"
-"Ctrl+G        Position cursor (Go to)\n"
-"Ctrl+H        Position cursor at file start\n"
-"Ctrl+J        Position cursor at file end\n"
-"Ctrl+K        Position cursor at selection start\n"
-"Ctrl+L        Position cursor at selection end\n"
-"Y,U           Move cursor to nearest all-channel zero-crossing\n"
-"I,O           Move cursor to nearest any-channel zero-crossing\n"
-"\n"
-"Ctrl+Q        Selection start at cursor\n"
-"Ctrl+W        Selection end at cursor\n"
-"\n"
-"+,=           Zoom in\n"
-"-             Zoom out\n"
-">             Zoom to selection\n"
-"<             Zoom all\n"
-"Arrow keys    Scroll left/right\n"
-"\n"
-"<space>       Play/Stop\n"
-",             Play from cursor pos\n"
-".             Stop\n"
-"/             Play selection\n"
-"H,J           Move cursor (and playback) 1/8 of view\n"
-"K,L           Move cursor one sample\n"
-"Ctrl+arrow    Move cursor (and playback) half second\n"
-"(             Play first 3 seconds of selection\n"
-")             Play last 3 seconds of selection\n"
-msgstr ""
-"\n"
-"F1            Aide\n"
-"F12           Enregistrer\n"
-"\n"
-"Ctrl+(nombre) Définir une marque\n"
-"(nombre)      Aller à une marque\n"
-"\n"
-"Ctrl+P        Préférences\n"
-"Ctrl+E        Effets\n"
-"\n"
-"Ctrl+O        Ouvrir un fichier\n"
-"Ctrl+S        Sauver un fichier\n"
-"Ctrl+U        Sauver la sélection en tant que\n"
-"\n"
-"Ctrl+C        Copier\n"
-"Ctrl+X        Couper\n"
-"Ctrl+D        Effacer\n"
-"Ctrl+V        Coller\n"
-"Ctrl+Z        Refaire\n"
-"Ctrl+A        Tout sélectionner\n"
-"\n"
-"Ctrl+G        Positionner le curseur\n"
-"Ctrl+H        Positionner le curseur au début du fichier\n"
-"Ctrl+J        Positionner le curseur à la fin du fichier\n"
-"Ctrl+K        Positionner le curseur au début de la sélection\n"
-"Ctrl+L        Positionner le curseur à la fin de la sélection\n"
-"\n"
-"Ctrl+Q        Positionner le début de la sélection au curseur\n"
-"Ctrl+W        Positionner la fin de la sélection au curseur\n"
-"\n"
-"+,=           Zoomer\n"
-"-             Dézoomer\n"
-">             Zoomer à la sélection\n"
-"<             Zoomer l'entièreté\n"
-"Touches des flèches    Défiler vers la gauche/droite\n"
-"\n"
-"<espace>       Lire/Stopper\n"
-",             Lire depuis la position du curseur\n"
-".             Arrêter\n"
-"/             Lire la sélection\n"
-"Ctrl+flèche    Avancer ou reculer d'un cran\n"
-"(             Lire les 3 premières secondes de la sélection\n"
-")             Lire les 3 dernières secondes de la sélection\n"
+msgid "F1            Help\n"
+msgstr "F1            Aide\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "F12           Record\n"
+msgstr "F12           Enregistrer\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+(number) Set mark\n"
+msgstr "Ctrl+(nombre) Définir une marque\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "(number)      Goto mark\n"
+msgstr "(nombre)      Aller à une marque\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+P        Preferences\n"
+msgstr "Ctrl+P        Préférences\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+E        Effects\n"
+msgstr "Ctrl+E        Effets\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+O        Open file\n"
+msgstr "Ctrl+O        Ouvrir un fichier\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+S        Save file\n"
+msgstr "Ctrl+S        Sauver un fichier\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+U        Save selection as\n"
+msgstr "Ctrl+U        Sauver la sélection en tant que\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+C        Copy\n"
+msgstr "Ctrl+C        Copier\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+X        Cut\n"
+msgstr "Ctrl+X        Couper\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+D        Delete\n"
+msgstr "Ctrl+D        Effacer\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+V        Paste\n"
+msgstr "Ctrl+V        Coller\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+Z        Undo\n"
+msgstr "Ctrl+Z        Refaire\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+A        Select all\n"
+msgstr "Ctrl+A        Tout sélectionner\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+G        Position cursor (Go to)\n"
+msgstr "Ctrl+G        Positionner le curseur\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+H        Position cursor at file start\n"
+msgstr "Ctrl+H        Positionner le curseur au début du fichier\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+J        Position cursor at file end\n"
+msgstr "Ctrl+J        Positionner le curseur à la fin du fichier\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+K        Position cursor at selection start\n"
+msgstr "Ctrl+K        Positionner le curseur au début de la sélection\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+L        Position cursor at selection end\n"
+msgstr "Ctrl+L        Positionner le curseur à la fin de la sélection\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Y,U           Move cursor to nearest all-channel zero-crossing\n"
+msgstr "Ctrl+Q        Positionner le début de la sélection au curseur\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "I,O           Move cursor to nearest any-channel zero-crossing\n"
+msgstr "Ctrl+W        Positionner la fin de la sélection au curseur\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+Q        Selection start at cursor\n"
+msgstr "+,=           Zoomer\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+W        Selection end at cursor\n"
+msgstr "-             Dézoomer\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "+,=           Zoom in\n"
+msgstr ">             Zoomer à la sélection\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "-             Zoom out\n"
+msgstr "<             Zoomer l'entièreté\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid ">             Zoom to selection\n"
+msgstr "Touches des flèches    Défiler vers la gauche/droite\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "<             Zoom all\n"
+msgstr "<espace>       Lire/Stopper\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Arrow keys    Scroll left/right\n"
+msgstr ",             Lire depuis la position du curseur\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "<space>       Play/Stop\n"
+msgstr ".             Arrêter\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid ",             Play from cursor pos\n"
+msgstr "/             Lire la sélection\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid ".             Stop\n"
+msgstr "Ctrl+flèche    Avancer ou reculer d'un cran\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "/             Play selection\n"
+msgstr "(             Lire les 3 premières secondes de la sélection\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "H,J           Move cursor (and playback) 1/8 of view\n"
+msgstr ")             Lire les 3 dernières secondes de la sélection\n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "K,L           Move cursor one sample\n"
+msgstr " \n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "Ctrl+arrow    Move cursor (and playback) half second\n"
+msgstr " \n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid "(             Play first 3 seconds of selection\n"
+msgstr " \n"
+
+#: src/help.c:199
+#, fuzzy, no-c-format
+msgid ")             Play last 3 seconds of selection\n"
+msgstr " \n"
 
 #: src/help.c:248
 #, fuzzy, no-c-format
 msgid ""
-"\n"
 "If you find a bug or flaw in the program that's not mentioned in the BUGS "
 "file, report the bug in the bug tracker (see contact info) or mail a bug "
 "report describing the bug to: magnus.hjorth@home.se\n"
-"\n"
-"In case of a crash, please do not send me any core dumps. They are huge and "
-"completely useless to me. Instead, create a backtrace. Backtraces tell you "
-"exactly where the program crashed.\n"
-"\n"
-"How to create a backtrace:\n"
-"1. Enable core dumps: ulimit -c unlimited\n"
-"2. Run the program:   mhwaveedit\n"
-"3. Make the program crash. You should now get a file named core or core.1234 "
-"in the directory you're in.\n"
-"4. Run gdb with the program and core file: \n"
-"   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
-"5. After gdb has loaded, use the command: bt\n"
-"6. Quit gdb with the command: quit\n"
-"7. Now you should have a back trace in the file backtrace.txt\n"
 msgstr ""
-"\n"
 "Si vous trouvez des erreurs ou bogues dans le programme, premièrement passez "
 "sur le site de mhWaveEdit et sa lite de bogues trouvés après cette version "
 "du programme. Si cette erreur n'y est pas, envoyez un mail à magnus."
 "hjorth@home.so (en anglais) en déterminant le bogue le mieux possible.\n"
-"\n"
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid ""
+"In case of a crash, please do not send me any core dumps. They are huge and "
+"completely useless to me. Instead, create a backtrace. Backtraces tell you "
+"exactly where the program crashed.\n"
+msgstr ""
 "Si vous subissez un crash du programme, n'envoyez pas vos fichiers core. Ils "
 "sont très volumineux et complètement inutile. A la place, créez un "
 "'backtrace'. Cette technique définit où le programme s'est crashé "
 "précisément.\n"
-"\n"
-"Pour créer un 'backtrace':\n"
-"1. Activez la création de fichiers core: ulimit -c unlimited\n"
-"2: Lancer mhwaveedit\n"
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid "How to create a backtrace:\n"
+msgstr "Pour créer un 'backtrace':\n"
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid "1. Enable core dumps: ulimit -c unlimited\n"
+msgstr "1. Activez la création de fichiers core: ulimit -c unlimited\n"
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid "2. Run the program:   mhwaveedit\n"
+msgstr "2: Lancer mhwaveedit\n"
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid ""
+"3. Make the program crash. You should now get a file named core or core.1234 "
+"in the directory you're in.\n"
+msgstr ""
 "3. Faites recrasher le programme. Vous devriez maintenant avoir un fichier "
 "nommé core ou core.1234 dans le répertoire d'où vous avez lancé le "
 "programme.\n"
-"4. Lancez gdb avec le fichier core et mhwaveedit:\n"
-"   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid "4. Run gdb with the program and core file: \n"
+msgstr "4. Lancez gdb avec le fichier core et mhwaveedit:\n"
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid "   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
+msgstr "   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid "5. After gdb has loaded, use the command: bt\n"
+msgstr ""
 "   (Remplacez /usr/local/bin/mhwaveedit par le chemin où se trouve "
 "l'exécutable de mhWaveEdit)5. Après que gdb se soit chargé, utilisez la "
 "commande: bt\n"
-"6. Quittez gdb avec la commande: quit\n"
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid "6. Quit gdb with the command: quit\n"
+msgstr "6. Quittez gdb avec la commande: quit\n"
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid "7. Now you should have a back trace in the file backtrace.txt\n"
+msgstr ""
 "7. Maintenant vous devriez avec un 'backtrace' dans le fichier backtrace."
 "txt\n"
-
-#: src/help.c:264
-#, no-c-format
-msgid ""
-"\n"
-"There are plenty of things you can do if you want to help the development of "
-"mhWaveEdit. \n"
-"\n"
-"First of all, look for bugs and report all bugs you find into the bug "
-"tracker or through e-mail. Sometimes a bug can get overlooked for a long "
-"time because nobody reports it, so don't be afraid to report bugs that have "
-"been there for a few releases. You don't have to provide fixes or very "
-"detailed information, although it helps of course.\n"
-"\n"
-"Feature requests are also welcome, report them to the mailing list or to the "
-"bug tracker.\n"
-"\n"
-"If you speak a language other than English and mhWaveEdit isn't translated "
-"to your language, you can contribute a translation. To do that, copy the "
-"template mhwaveedit.pot in the po directory into a new file ll.po, where ll "
-"is your language code (see http://www.gnu.org/software/gettext/manual/"
-"html_node/gettext_221.html for a list of language codes). \n"
-"\n"
-"It's possible to edit po-files by hand, but I recommend a program such as "
-"poEdit (http://www.poedit.org) for editing translations. \n"
-"\n"
-"Note that for those translatable strings that look like \"RecordStatus|Paused"
-"\", you should ignore what's to the left and only translate the string to "
-"the right (\"Paused\" in this example). This convention is there to make it "
-"possible to translate the same string to different things depending on "
-"context. \n"
-"\n"
-"After you've filled in all the translations you want (you don't have to "
-"translate all the strings), mail in the po file to me (see contact info) and "
-"I'll add it to the next release. \n"
-"\n"
-"If a translation is incomplete, you're very welcome to translate the "
-"remaining untranslated messages and mail them in. Corrections to "
-"translations are also appreciated, but they may need to be checked with the "
-"previous translator before including them. \n"
-"\n"
-msgstr ""
-
-#: src/help.c:283
-#, no-c-format
-msgid ""
-"\n"
-"For bug reports, translation updates, patches and PayPal donations:\n"
-"magnus.hjorth@home.se\n"
-"\n"
-"Project page with bug tracker, mailing list membership:\n"
-"http://gna.org/projects/mhwaveedit\n"
-"\n"
-"Mailing list (you must be a subscriber before you can post messages):\n"
-"mhwaveedit-discuss@gna.org\n"
-"\n"
-msgstr ""
 
 #: src/inifile.c:84 src/inifile.c:91
 #, c-format
