@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mhwaveedit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-04 22:18+0200\n"
+"POT-Creation-Date: 2011-02-07 03:39+0100\n"
 "PO-Revision-Date: 2007-07-11 21:36+0800\n"
 "Last-Translator: lon <lon83129@126.com>\n"
 "Language-Team: LONCHINA 简体中文\n"
@@ -24,55 +24,43 @@ msgstr "转换取样率"
 msgid "Adjusting speed"
 msgstr "调整速率"
 
-#: src/chunk.c:285
-msgid "Removing channel"
-msgstr "删除声道"
-
-#: src/chunk.c:692
+#: src/chunk.c:701
 msgid "Mixing"
 msgstr "混合"
 
-#: src/chunk.c:747
+#: src/chunk.c:756
 #, c-format
 msgid "The mixed result was clipped %d times."
 msgstr "混合过程限幅 %d 时间。"
 
-#: src/chunk.c:887
+#: src/chunk.c:820
+#, fuzzy
+msgid "Combining channels"
+msgstr "[B] 合并声道"
+
+#: src/chunk.c:1081
 msgid "Mixing channels"
 msgstr "混合声道"
 
-#: src/chunk.c:891
-#, fuzzy
-msgid "Mapping channels"
-msgstr "映射声道"
-
-#: src/chunk.c:1272
+#: src/chunk.c:1469
 msgid "Calculating peak level"
 msgstr "计算峰值电平"
 
-#: src/chunk.c:1343 src/chunk.c:1353 src/chunk.c:1391 src/chunk.c:1401
+#: src/chunk.c:1540 src/chunk.c:1550 src/chunk.c:1588 src/chunk.c:1598
 #, fuzzy
 msgid "Finding zero-crossing"
 msgstr "查找交零"
 
-#: src/chunk.c:1429
+#: src/chunk.c:1626
 #, c-format
 msgid "Amplifying (by %3.1f%% / %+.1fdB)"
 msgstr ""
 
-#: src/chunk.c:1470
+#: src/chunk.c:1667
 msgid "Amplifying"
 msgstr "正在放大"
 
-#: src/chunk.c:1639
-msgid "Removing channels"
-msgstr "删除声道"
-
-#: src/chunk.c:1645
-msgid "Adding channels"
-msgstr "添加声道"
-
-#: src/chunk.c:1708
+#: src/chunk.c:1865
 #, fuzzy, c-format
 msgid "The input was clipped %d times during processing."
 msgstr "混合过程限幅 %d 时间。"
@@ -81,235 +69,239 @@ msgstr "混合过程限幅 %d 时间。"
 msgid "number of recent files"
 msgstr "最近文件数"
 
-#: src/configdialog.c:75
+#: src/configdialog.c:76
 msgid ""
 "Some of the settings you have changed will not be activated until you "
 "restart the program"
 msgstr "您更改了的一些设置不会被激活直到重新启动应用程序"
 
-#: src/configdialog.c:269
+#: src/configdialog.c:273
 msgid "Colors"
 msgstr "颜色"
 
-#: src/configdialog.c:306
+#: src/configdialog.c:310
 msgid "_Preview"
 msgstr "预览(_P)"
 
-#: src/configdialog.c:313 src/configdialog.c:1098
+#: src/configdialog.c:317 src/configdialog.c:1112
 msgid "_OK"
 msgstr "确定(_O)"
 
-#: src/configdialog.c:331
+#: src/configdialog.c:335
 msgid "_Cancel"
 msgstr "取消(_C)"
 
-#: src/configdialog.c:408
+#: src/configdialog.c:412
 msgid "Browse directory"
 msgstr "浏览目录"
 
-#: src/configdialog.c:458
+#: src/configdialog.c:462
 msgid "Preferences"
 msgstr "首选项"
 
-#: src/configdialog.c:517
+#: src/configdialog.c:521
 msgid "Show _time scale by default"
 msgstr "显示默认时间刻度(_T)"
 
-#: src/configdialog.c:527
+#: src/configdialog.c:531
 msgid "Show _horizontal zoom slider by default"
 msgstr "显示默认水平缩放滑块(_H)"
 
-#: src/configdialog.c:537
+#: src/configdialog.c:541
 msgid "Show _vertical zoom slider by default"
 msgstr "显示默认垂直缩放滑块(_V)"
 
-#: src/configdialog.c:547
+#: src/configdialog.c:551
 msgid "Show _speed slider by default"
 msgstr "显示默认速率滑块(_S)"
 
-#: src/configdialog.c:556
+#: src/configdialog.c:560
 msgid "_Settings"
 msgstr "设置(_S)"
 
-#: src/configdialog.c:566
+#: src/configdialog.c:570
 msgid "_Keep sound driver opened (to avoid start/stop clicks)"
 msgstr "保持声音驱动程序打开着(避免开启/关闭的卡嗒声)(_K)"
 
-#: src/configdialog.c:575
+#: src/configdialog.c:579
 msgid "_Byte-swap output (try this if playback sounds horrible)"
 msgstr "字节交换输出(如果回放声音难听尝试它)(_B)"
 
-#: src/configdialog.c:584
+#: src/configdialog.c:588
+msgid "Play _mono files as stereo"
+msgstr ""
+
+#: src/configdialog.c:596
 msgid "_Update cursor information while playing"
 msgstr "播放时更新光标信息(_U)"
 
-#: src/configdialog.c:592
+#: src/configdialog.c:604
 msgid "_Keep cursor in center of view when following playback"
 msgstr "再次回放时保持光标在视图中心(_K)"
 
-#: src/configdialog.c:602
+#: src/configdialog.c:614
 msgid "_Auto-start playback when jumping to mark"
 msgstr "跳到标记时自动启动回放(_A)"
 
-#: src/configdialog.c:610
+#: src/configdialog.c:622
 msgid "Enable _variable speed playback"
 msgstr "允许改变速率回放(_V)"
 
-#: src/configdialog.c:619
+#: src/configdialog.c:631
 msgid "Auto-_reset speed"
 msgstr "自动恢复速率(R)"
 
-#: src/configdialog.c:626
+#: src/configdialog.c:638
 msgid "Use fast and noisy method"
 msgstr "使用快速而且有噪音的方法"
 
-#: src/configdialog.c:634
+#: src/configdialog.c:646
 msgid "(H')MM:SS.t"
 msgstr "(H')MM:SS.t"
 
-#: src/configdialog.c:635
+#: src/configdialog.c:647
 msgid "(H')MM:SS.mmmm"
 msgstr "(H')MM:SS.mmmm"
 
-#: src/configdialog.c:636
+#: src/configdialog.c:648
 msgid "TimeDisplay|Samples"
 msgstr "时间|取样"
 
-#: src/configdialog.c:637
+#: src/configdialog.c:649
 #, fuzzy
 msgid "Time Code 24fps"
 msgstr "时间录音："
 
-#: src/configdialog.c:638
+#: src/configdialog.c:650
 msgid "Time Code 25fps (PAL)"
 msgstr ""
 
-#: src/configdialog.c:639
+#: src/configdialog.c:651
 msgid "Time Code 29.97fps (NTSC)"
 msgstr ""
 
-#: src/configdialog.c:640
+#: src/configdialog.c:652
 #, fuzzy
 msgid "Time Code 30fps"
 msgstr "时间录音："
 
-#: src/configdialog.c:653
+#: src/configdialog.c:665
 msgid "_Remember window sizes/positions"
 msgstr "记住窗口大小和位置(_R)"
 
-#: src/configdialog.c:662
+#: src/configdialog.c:674
 msgid "_Draw waveform a second time with improved quality"
 msgstr "绘制每一秒的波形以提高品质(_D)"
 
-#: src/configdialog.c:692
+#: src/configdialog.c:704
 msgid "_Remove"
 msgstr "删除(_R)"
 
-#: src/configdialog.c:700
+#: src/configdialog.c:712
 msgid "_Add"
 msgstr "添加(_A)"
 
-#: src/configdialog.c:707
+#: src/configdialog.c:719
 msgid "_Browse..."
 msgstr "浏览....(_B)"
 
-#: src/configdialog.c:714
+#: src/configdialog.c:726
 msgid "_Up"
 msgstr "向上(_U)"
 
-#: src/configdialog.c:722
+#: src/configdialog.c:734
 msgid "_Down"
 msgstr "向下(_D)"
 
-#: src/configdialog.c:735
+#: src/configdialog.c:747
 msgid "Keep main _window in front after applying effect"
 msgstr "应用特效之后保持主窗口常居顶端(_W)"
 
-#: src/configdialog.c:751
+#: src/configdialog.c:763
 msgid "_Use floating-point temporary files"
 msgstr "使用浮点临时文件(_U)"
 
-#: src/configdialog.c:760
+#: src/configdialog.c:772
 msgid "Enable _dithering for editing"
 msgstr "允许编辑抖动(_D)"
 
-#: src/configdialog.c:768
+#: src/configdialog.c:780
 msgid "Enable dithering for _playback"
 msgstr "允许回放抖动(_P)"
 
-#: src/configdialog.c:776
+#: src/configdialog.c:788
 msgid "Auto dete_ct driver on each start-up"
 msgstr "启动时自动检测驱动(_C)"
 
-#: src/configdialog.c:799
+#: src/configdialog.c:811
 msgid "Interface"
 msgstr "界面"
 
-#: src/configdialog.c:800
+#: src/configdialog.c:812
 msgid " Main window "
 msgstr "主窗口"
 
-#: src/configdialog.c:811
+#: src/configdialog.c:823
 msgid "Number of recent files in File menu: "
 msgstr "文件菜单中最近文件数："
 
-#: src/configdialog.c:816
+#: src/configdialog.c:828
 msgid " View "
 msgstr "视图"
 
-#: src/configdialog.c:827
+#: src/configdialog.c:839
 msgid "Customize co_lors..."
 msgstr "自定义颜色...(_L)"
 
-#: src/configdialog.c:834
+#: src/configdialog.c:846
 msgid " Window contents "
 msgstr "窗口内容"
 
-#: src/configdialog.c:851
+#: src/configdialog.c:863
 msgid "Sound"
 msgstr "声音"
 
-#: src/configdialog.c:852
+#: src/configdialog.c:864
 msgid " Driver options "
 msgstr "驱动设置"
 
-#: src/configdialog.c:860
+#: src/configdialog.c:872
 msgid "_Driver:"
 msgstr "驱动程序(_D)："
 
-#: src/configdialog.c:875
+#: src/configdialog.c:889
 msgid " Fallback format "
 msgstr "撤退格式"
 
-#: src/configdialog.c:880
+#: src/configdialog.c:894
 msgid "Sample format to try when the sound file's format isn't supported."
 msgstr "声音文件格式不支持时测试取样格式"
 
-#: src/configdialog.c:892
+#: src/configdialog.c:906
 msgid "Playback"
 msgstr "回放"
 
-#: src/configdialog.c:894
+#: src/configdialog.c:908
 msgid " Playback settings "
 msgstr "回放设置"
 
-#: src/configdialog.c:906
+#: src/configdialog.c:920
 msgid " Variable speed "
 msgstr "改变速率"
 
-#: src/configdialog.c:921 src/help.c:38
+#: src/configdialog.c:935 src/help.c:38
 msgid "Files"
 msgstr "文件"
 
-#: src/configdialog.c:923
+#: src/configdialog.c:937
 msgid " Temporary file directories "
 msgstr "临时文件目录"
 
-#: src/configdialog.c:949
+#: src/configdialog.c:963
 msgid " Temporary file settings "
 msgstr "临时文件设置"
 
-#: src/configdialog.c:954
+#: src/configdialog.c:968
 msgid ""
 "To avoid rounding errors when applying more than one effect on the same "
 "data, floating-point temporary files can be used. However, this will "
@@ -318,149 +310,149 @@ msgstr ""
 "当使用更多特效时为避免舍入错误，使用浮点临时文件。然而，这将增加磁盘和CPU的使"
 "用量。"
 
-#: src/configdialog.c:967 src/help.c:36
+#: src/configdialog.c:981 src/help.c:36
 msgid "Quality"
 msgstr "品质"
 
-#: src/configdialog.c:969
+#: src/configdialog.c:983
 msgid " Rate conversions "
 msgstr "速率转换"
 
-#: src/configdialog.c:976
+#: src/configdialog.c:990
 msgid "Varispeed: "
 msgstr "调整速率："
 
-#: src/configdialog.c:977
+#: src/configdialog.c:991
 msgid "Speed effect: "
 msgstr "速率特效："
 
-#: src/configdialog.c:984
+#: src/configdialog.c:998
 msgid " Dithering "
 msgstr "抖动 "
 
-#: src/configdialog.c:998
+#: src/configdialog.c:1012
 msgid "Other"
 msgstr "其它"
 
-#: src/configdialog.c:1000
+#: src/configdialog.c:1014
 msgid " Time format "
 msgstr "时间格式"
 
-#: src/configdialog.c:1009
+#: src/configdialog.c:1023
 msgid "Display t_imes as: "
 msgstr "显示时间为(_I)："
 
-#: src/configdialog.c:1020
+#: src/configdialog.c:1034
 #, fuzzy
 msgid "Times_cale format: "
 msgstr "时间格式"
 
-#: src/configdialog.c:1031
+#: src/configdialog.c:1045
 msgid " External applications "
 msgstr "外部程序"
 
-#: src/configdialog.c:1039
+#: src/configdialog.c:1053
 msgid "Mi_xer utility: "
 msgstr "混音程序："
 
-#: src/configdialog.c:1049
+#: src/configdialog.c:1063
 msgid "Advanced"
 msgstr "高级"
 
-#: src/configdialog.c:1050
+#: src/configdialog.c:1064
 msgid " Advanced settings "
 msgstr "高级设置"
 
-#: src/configdialog.c:1058
+#: src/configdialog.c:1072
 msgid "Disk editing _threshold: "
 msgstr "磁盘编辑阈值："
 
-#: src/configdialog.c:1069
+#: src/configdialog.c:1083
 msgid "View _quality:"
 msgstr "视图品质："
 
-#: src/configdialog.c:1075
+#: src/configdialog.c:1089
 msgid "samples/pixel"
 msgstr "取样/像素"
 
-#: src/configdialog.c:1081
+#: src/configdialog.c:1095
 msgid "Output _buffer size:"
 msgstr "输出缓冲区大小："
 
-#: src/configdialog.c:1087
+#: src/configdialog.c:1101
 msgid "bytes"
 msgstr "字节"
 
-#: src/configdialog.c:1112
+#: src/configdialog.c:1126
 msgid "_Close"
 msgstr "关闭(_C)"
 
-#: src/dataformat.c:426
+#: src/dataformat.c:444
 msgid "Floating-point (single)"
 msgstr "浮点(单精度)"
 
-#: src/dataformat.c:428
+#: src/dataformat.c:446
 msgid "Floating-point (double)"
 msgstr "浮点(双精度)"
 
-#: src/dataformat.c:430
+#: src/dataformat.c:448
 #, c-format
 msgid "PCM, %d bit, %s %s\n"
 msgstr "PCM, %d bit, %s %s\n"
 
-#: src/dataformat.c:431 src/formatselector.c:91
+#: src/dataformat.c:449 src/formatselector.c:74
 msgid "Signed"
 msgstr "有符号"
 
-#: src/dataformat.c:431 src/formatselector.c:90
+#: src/dataformat.c:449 src/formatselector.c:73
 msgid "Unsigned"
 msgstr "无符号"
 
-#: src/dataformat.c:432
+#: src/dataformat.c:450
 msgid "Big-endian"
 msgstr "Big-endian字节序(以高位结束一种存储方式)"
 
-#: src/dataformat.c:432
+#: src/dataformat.c:450
 msgid "Little-endian"
 msgstr "Little-endian字节序(以低位结束一种存储方式)"
 
-#: src/dataformat.c:479
+#: src/dataformat.c:497
 msgid "Testing ranges..."
 msgstr "测试范围...."
 
-#: src/dataformat.c:495
+#: src/dataformat.c:513
 msgid "Range test failed for format: "
 msgstr "范围检验失败的格式："
 
-#: src/dataformat.c:503
+#: src/dataformat.c:521
 msgid "Testing all conversions.."
 msgstr "测试全部转换..."
 
-#: src/dataformat.c:536
+#: src/dataformat.c:554
 msgid "(expected) "
 msgstr "(期望)"
 
-#: src/dataformat.c:537
+#: src/dataformat.c:555
 msgid "Conversion test failed, between: "
 msgstr "转换测试失败，介于："
 
-#: src/dataformat.c:539
+#: src/dataformat.c:557
 msgid "  and: "
 msgstr "和："
 
-#: src/dataformat.c:547
+#: src/dataformat.c:565
 msgid "No errors detected!"
 msgstr "没有检测出错误！"
 
-#: src/dataformat.c:581
+#: src/dataformat.c:599
 msgid "Preparing tests.."
 msgstr "准备测试..."
 
-#: src/dataformat.c:589
+#: src/dataformat.c:607
 msgid "Running tests.."
 msgstr "运行测试..."
 
-#: src/dataformat.c:629
+#: src/dataformat.c:647
 #, c-format
 msgid ""
 "\n"
@@ -471,149 +463,153 @@ msgstr ""
 "\n"
 "测试结果 (1时间单位 = %f 秒/取样)\n"
 
-#: src/datasource.c:309
+#: src/datasource.c:367
 #, c-format
 msgid "Couldn't open %s"
 msgstr "无法打开 %s"
 
-#: src/datasource.c:423
+#: src/datasource.c:500
 msgid "Unexpected end of file"
 msgstr "文件意外结束"
 
-#: src/datasource.c:424
+#: src/datasource.c:501
 #, c-format
 msgid "Error reading %s: %s"
 msgstr "读取错误 %s %s"
 
-#: src/datasource.c:442 src/datasource.c:490
+#: src/datasource.c:519 src/datasource.c:567
 #, c-format
 msgid "Error seeking in %s: %s"
 msgstr "查找错误在 %s: %s"
 
-#: src/effectbrowser.c:98
+#: src/effectbrowser.c:99
 msgid "Built-in"
 msgstr ""
 
-#: src/effectbrowser.c:101
+#: src/effectbrowser.c:102
 #, fuzzy
 msgid "Volume adjust/fade"
 msgstr "[B] 音量调整/淡入"
 
-#: src/effectbrowser.c:103
+#: src/effectbrowser.c:104
 #, fuzzy
 msgid "Convert samplerate"
 msgstr "转换取样率"
 
-#: src/effectbrowser.c:105
+#: src/effectbrowser.c:106
 #, fuzzy
 msgid "Convert sample format"
 msgstr "[B] 转换取样格式"
 
-#: src/effectbrowser.c:107
+#: src/effectbrowser.c:108
 msgid "Map channels"
 msgstr "映射声道"
 
-#: src/effectbrowser.c:109
+#: src/effectbrowser.c:110
 #, fuzzy
 msgid "Combine channels"
 msgstr "[B] 合并声道"
 
-#: src/effectbrowser.c:111
+#: src/effectbrowser.c:113
+msgid "Add channels from other file"
+msgstr ""
+
+#: src/effectbrowser.c:114
 #, fuzzy
 msgid "Speed"
 msgstr "速率："
 
-#: src/effectbrowser.c:112
+#: src/effectbrowser.c:115
 #, fuzzy
 msgid "Pipe through program"
 msgstr "[B] 管道程序"
 
-#: src/effectbrowser.c:246
+#: src/effectbrowser.c:250
 msgid "You have no open file to apply the effect to!"
 msgstr "您没有文件可应用这特效！"
 
-#: src/effectbrowser.c:271
+#: src/effectbrowser.c:275
 #, fuzzy
 msgid "This effect could not be loaded."
 msgstr "该特效没有选项。"
 
-#: src/effectbrowser.c:578
+#: src/effectbrowser.c:582
 msgid "/Move Up"
 msgstr ""
 
-#: src/effectbrowser.c:579
+#: src/effectbrowser.c:583
 msgid "/Move Down"
 msgstr ""
 
-#: src/effectbrowser.c:580
+#: src/effectbrowser.c:584
 msgid "/Move to Top"
 msgstr ""
 
-#: src/effectbrowser.c:581
+#: src/effectbrowser.c:585
 msgid "/Move to Bottom"
 msgstr ""
 
-#: src/effectbrowser.c:583
+#: src/effectbrowser.c:587
 msgid "/Sort by Name"
 msgstr ""
 
-#: src/effectbrowser.c:584
+#: src/effectbrowser.c:588
 msgid "/Sort by Type"
 msgstr ""
 
-#: src/effectbrowser.c:585
+#: src/effectbrowser.c:589
 msgid "/Sort by Location"
 msgstr ""
 
-#: src/effectbrowser.c:586
+#: src/effectbrowser.c:590
 msgid "/Sort by Author"
 msgstr ""
 
-#: src/effectbrowser.c:588
+#: src/effectbrowser.c:592
 msgid "/Restore Order"
 msgstr ""
 
-#: src/effectbrowser.c:589
+#: src/effectbrowser.c:593
 msgid "/Rebuild Effect List"
 msgstr ""
 
-#: src/effectbrowser.c:740
+#: src/effectbrowser.c:744
 msgid "Top"
 msgstr ""
 
-#: src/effectbrowser.c:747
+#: src/effectbrowser.c:751
 #, fuzzy
 msgid "Up"
 msgstr "向上(_U)"
 
-#: src/effectbrowser.c:754
+#: src/effectbrowser.c:758
 #, fuzzy
 msgid "Down"
 msgstr "向下(_D)"
 
-#: src/effectbrowser.c:761
+#: src/effectbrowser.c:765
 msgid "Bottom"
 msgstr ""
 
-#: src/effectbrowser.c:789
+#: src/effectbrowser.c:793
 msgid "Close dialog after applying effect"
 msgstr "关闭会话在应用特效后"
 
-#: src/effectbrowser.c:796 src/gotodialog.c:143
+#: src/effectbrowser.c:800 src/gotodialog.c:143
 msgid "Apply"
 msgstr "应用"
 
-#: src/effectbrowser.c:806 src/gotodialog.c:148 src/mainwindow.c:1360
-#: src/pipedialog.c:155 src/recorddialog.c:801 src/sound-esound.c:288
-#: src/sound-jack.c:260 src/sound-oss.c:420
+#: src/effectbrowser.c:810 src/gotodialog.c:148 src/mainwindow.c:1404
+#: src/pipedialog.c:166 src/recorddialog.c:603 src/recorddialog.c:979
+#: src/sound-esound.c:290 src/sound-jack.c:260 src/sound-oss.c:478
 msgid "Close"
 msgstr "关闭"
 
-#: src/effectbrowser.c:828 src/help.c:35
+#: src/effectbrowser.c:832 src/help.c:35
 msgid "Effects"
 msgstr "特效"
 
-#: src/effectbrowser.c:888
+#: src/effectbrowser.c:892
 msgid "Apply to: "
 msgstr "应用到："
 
@@ -723,72 +719,72 @@ msgstr "非法的取样格式或文件格式声道数"
 msgid "Failed to write to '%s'!"
 msgstr "写入 '%s' 错误！"
 
-#: src/filetypes.c:940
+#: src/filetypes.c:946
 msgid "Decoding"
 msgstr "译码"
 
-#: src/filetypes.c:1053
+#: src/filetypes.c:1066
 msgid "Variable bitrate (default)"
 msgstr "可变位速率(默认)"
 
-#: src/filetypes.c:1054
+#: src/filetypes.c:1067
 msgid "Average bitrate"
 msgstr "平均位速率"
 
-#: src/filetypes.c:1055
+#: src/filetypes.c:1068
 msgid "Constant bitrate"
 msgstr "固定位速率"
 
-#: src/filetypes.c:1056
+#: src/filetypes.c:1069
 msgid "Custom argument"
 msgstr "自定义参数"
 
-#: src/filetypes.c:1060
+#: src/filetypes.c:1073
 msgid "Standard (high quality)"
 msgstr "标准(高品质)"
 
-#: src/filetypes.c:1061
+#: src/filetypes.c:1074
 msgid "Extreme (higher quality)"
 msgstr "最大程度(高品质)"
 
-#: src/filetypes.c:1062
+#: src/filetypes.c:1075
 msgid "Insane (highest possible quality)"
 msgstr "疯狂(可能最高品质)"
 
-#: src/filetypes.c:1080
+#: src/filetypes.c:1093
 #, c-format
 msgid "%s kbit/s"
 msgstr "%s 千比特/秒 (kbit/s)"
 
-#: src/filetypes.c:1109
+#: src/filetypes.c:1122
 msgid "MP3 Preferences"
 msgstr "MP3首选项"
 
-#: src/filetypes.c:1120
+#: src/filetypes.c:1133
 msgid "Encoding type: "
 msgstr "编码类型："
 
-#: src/filetypes.c:1133
+#: src/filetypes.c:1146
 msgid "Quality: "
 msgstr "质量："
 
-#: src/filetypes.c:1142
+#: src/filetypes.c:1155
 msgid "Custom argument: "
 msgstr "自定义变量："
 
-#: src/filetypes.c:1148
+#: src/filetypes.c:1161
 msgid "Use this setting by default"
 msgstr "使用默认设置"
 
-#: src/filetypes.c:1153 src/gotodialog.c:135 src/mainwindow.c:1431
-#: src/rawdialog.c:99 src/recorddialog.c:367 src/sound-alsalib.c:78
-#: src/sound-esound.c:284 src/sound-jack.c:256 src/sound-oss.c:416
-#: src/um.c:107 src/um.c:140 src/um.c:336 src/um.c:434
+#: src/filetypes.c:1166 src/gotodialog.c:135 src/mainwindow.c:1475
+#: src/rawdialog.c:100 src/sound-alsalib.c:98 src/sound-esound.c:286
+#: src/sound-jack.c:256 src/sound-oss.c:474 src/um.c:108 src/um.c:141
+#: src/um.c:337 src/um.c:437
 msgid "OK"
 msgstr "确定"
 
-#: src/filetypes.c:1161 src/rawdialog.c:105 src/recorddialog.c:375
-#: src/sound-alsalib.c:82 src/um.c:131 src/um.c:148 src/um.c:340 src/um.c:443
+#: src/filetypes.c:1174 src/rawdialog.c:106 src/sound-alsalib.c:102
+#: src/um.c:132 src/um.c:149 src/um.c:341 src/um.c:446
 msgid "Cancel"
 msgstr "取消"
 
@@ -802,59 +798,59 @@ msgstr "'%s' 不是一个数字！"
 msgid "Value for '%s' must be a number between %f and %f"
 msgstr "'%s' 数值必需是一个 %f 和 %f 之间的数字"
 
-#: src/formatselector.c:74
+#: src/formatselector.c:57
 msgid "Sample type: "
 msgstr "取样类型："
 
-#: src/formatselector.c:76
+#: src/formatselector.c:59
 msgid "8 bit PCM"
 msgstr "8 bit PCM"
 
-#: src/formatselector.c:77
+#: src/formatselector.c:60
 msgid "16 bit PCM"
 msgstr "16 bit PCM"
 
-#: src/formatselector.c:78
+#: src/formatselector.c:61
 msgid "24 bit PCM"
 msgstr "24 bit PCM"
 
-#: src/formatselector.c:79
+#: src/formatselector.c:62
 msgid "32 bit PCM"
 msgstr "32 bit PCM"
 
-#: src/formatselector.c:80
+#: src/formatselector.c:63
 msgid "Floating-point, single"
 msgstr "浮点,单精度"
 
-#: src/formatselector.c:81
+#: src/formatselector.c:64
 msgid "Floating-point, double"
 msgstr "浮点,双精度"
 
-#: src/formatselector.c:88
+#: src/formatselector.c:71
 msgid "Signedness: "
 msgstr "有符号类型："
 
-#: src/formatselector.c:98
+#: src/formatselector.c:79
 msgid "Endianness: "
 msgstr "字节排序："
 
-#: src/formatselector.c:100
+#: src/formatselector.c:81
 msgid "Little endian"
 msgstr "Little-endian字节序(以低位结束一种存储方式)"
 
-#: src/formatselector.c:101
+#: src/formatselector.c:82
 msgid "Big endian"
 msgstr "Big-endian字节序(以高位结束一种存储方式)"
 
-#: src/formatselector.c:146
+#: src/formatselector.c:117
 msgid "Channels: "
 msgstr "声道："
 
-#: src/formatselector.c:155
+#: src/formatselector.c:126
 msgid "Sample rate: "
 msgstr "取样率："
 
-#: src/formatselector.c:219
+#: src/formatselector.c:203
 msgid "sample rate"
 msgstr "取样率"
 
@@ -862,8 +858,8 @@ msgstr "取样率"
 msgid "Place cursor "
 msgstr "定位光标"
 
-#: src/gotodialog.c:101 src/soxdialog.c:518 src/soxdialog.c:523
-#: src/soxdialog.c:553
+#: src/gotodialog.c:101 src/soxdialog.c:525 src/soxdialog.c:530
+#: src/soxdialog.c:560
 msgid " seconds"
 msgstr " 秒"
 
@@ -897,65 +893,65 @@ msgstr "(用一个负数定位光标代替之后选择点前面位置的点)"
 msgid "Position cursor"
 msgstr "定位光标"
 
-#: src/gtkfiles.c:47
+#: src/gtkfiles.c:48
 #, c-format
 msgid "Could not open %s: %s"
 msgstr "无法打开 %s: %s"
 
-#: src/gtkfiles.c:52
+#: src/gtkfiles.c:53
 #, c-format
 msgid "Warning: Unexpected error: %s"
 msgstr "警告：意外错误：%s"
 
-#: src/gtkfiles.c:109 src/gtkfiles.c:124
+#: src/gtkfiles.c:110 src/gtkfiles.c:125
 #, c-format
 msgid "Error closing %s: %s"
 msgstr "结束错误：%s: %s"
 
-#: src/gtkfiles.c:139
+#: src/gtkfiles.c:140
 #, c-format
 msgid "Could not seek in %s: %s"
 msgstr "无法查找 %s: %s"
 
-#: src/gtkfiles.c:158 src/gtkfiles.c:203
+#: src/gtkfiles.c:159 src/gtkfiles.c:204
 #, c-format
 msgid "Could not read from %s: %s"
 msgstr "无法读取  %s: %s"
 
-#: src/gtkfiles.c:177
+#: src/gtkfiles.c:178
 #, c-format
 msgid "Unexpected end of file reading from %s"
 msgstr "读取 %s 时意外终止"
 
-#: src/gtkfiles.c:195
+#: src/gtkfiles.c:196
 #, c-format
 msgid "Unable to write data to %s"
 msgstr "无法写入数据到 %s"
 
-#: src/gtkfiles.c:261
+#: src/gtkfiles.c:262
 #, c-format
 msgid "Could not get file position in %s: %s"
 msgstr "无法获得文件位置 %s: %s"
 
-#: src/gtkfiles.c:312 src/gtkfiles.c:472
+#: src/gtkfiles.c:313 src/gtkfiles.c:473
 msgid "File already exists. Overwrite?"
 msgstr "文件已存在。覆盖吗？"
 
-#: src/gtkfiles.c:320
+#: src/gtkfiles.c:321
 msgid "No file with that name!"
 msgstr "没有那名字的文件！"
 
-#: src/gtkfiles.c:704
+#: src/gtkfiles.c:705
 #, c-format
 msgid "Error reading from %s: %s"
 msgstr "读取错误 %s: %s"
 
-#: src/gtkfiles.c:736
+#: src/gtkfiles.c:737
 #, c-format
 msgid "Could not remove '%s': %s"
 msgstr "不能删除 '%s': %s"
 
-#: src/gtkfiles.c:756
+#: src/gtkfiles.c:757
 #, c-format
 msgid "Error creating link to '%s': %s"
 msgstr "创建链结到  '%s': %s 错误"
@@ -1003,28 +999,41 @@ msgstr "联系人"
 #: src/help.c:47
 #, no-c-format
 msgid ""
-"\n"
 "mhWaveEdit is a graphical program for editing sound files. It is completely "
 "free (GPL).\n"
-"\n"
-"You can find the latest release of mhWaveEdit at:\n"
-"http://gna.org/projects/mhwaveedit/\n"
 msgstr ""
 
-#: src/help.c:54
+#: src/help.c:49
+#, no-c-format
+msgid "You can find the latest release of mhWaveEdit at:\n"
+msgstr ""
+
+#: src/help.c:50
+#, no-c-format
+msgid "http://gna.org/projects/mhwaveedit/\n"
+msgstr ""
+
+#: src/help.c:55
 #, no-c-format
 msgid ""
-"\n"
 "The area where you 'see' the contents of the file you are editing, is called "
 "the 'sample view'. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:57
+#, no-c-format
+msgid ""
 "In the sample view there is a grey vertical bar called the 'cursor'. The "
 "cursor follows the sound wave when you play the sound. You can position the "
 "cursor by clicking with the right (2:nd) mouse button. If you do this while "
 "you're playing a file, the playing will continue from the new cursor "
 "position. You can also position the cursor more exact by using the 'Position "
 "Cursor...' command on the Edit menu.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:59
+#, no-c-format
+msgid ""
 "You can place marks in your file by holding down Ctrl and pressing a number "
 "from 0 to 9. This will place a mark (green vertical bar) with the same "
 "number at the current cursor position. You can later make the cursor go to "
@@ -1033,383 +1042,803 @@ msgid ""
 "it again.\n"
 msgstr ""
 
-#: src/help.c:62
+#: src/help.c:64
 #, no-c-format
 msgid ""
-"\n"
 "Playing a file is simple, just load the file and press the play button. The "
 "green play button plays from the current position. The yellow play button "
 "plays the current selection, or the entire file if nothing is selected. Stop "
 "the playback with the stop button (with the red square). \n"
-"\n"
-"The playback speed can be varied by adjusting the slider to the far right. \n"
-"\n"
-"You can do normal editing while the file is playing.\n"
 msgstr ""
 
-#: src/help.c:70
+#: src/help.c:66
 #, no-c-format
 msgid ""
-"\n"
+"The playback speed can be varied by adjusting the slider to the far right. \n"
+msgstr ""
+
+#: src/help.c:68
+#, no-c-format
+msgid "You can do normal editing while the file is playing.\n"
+msgstr ""
+
+#: src/help.c:73
+#, no-c-format
+msgid ""
 "Recording is done with 'Record...' on the Play menu, or the Record button "
 "(the red circle). A dialog box will pop up where you can select what format "
 "you want to record in. After selecting the format, meters and numbers will "
 "appear showing info about the volume level of the sound input. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:75
+#, no-c-format
+msgid ""
 "When you want to start recording, press the \"Start recording\" button. When "
 "you've recorded everything you wanted to, press the Finish button and the "
 "record dialog will disappear and newly recorded sound will show up in a new "
 "window.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:77
+#, no-c-format
+msgid ""
 "Currently it is impossible to play and record at the same time, so the "
 "playback will stop when you record.\n"
 msgstr ""
 
-#: src/help.c:78
+#: src/help.c:82
 #, no-c-format
 msgid ""
-"\n"
 "You make selections by dragging the mouse over the sample view. You can hear "
 "what you've currently selected by clicking on the \"play selection\" button "
 "(the button with the yellow arrow) or by selecting 'Play selection' from the "
 "Play menu.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:84
+#, no-c-format
+msgid ""
 "You can use the cursor to refine the selection. Use the 'Selection start at "
 "cursor' and 'Selection end at cursor' buttons to move the selection starting "
 "point or the selection end point to the current cursor position. You can "
 "also drag the selection endpoints using the mouse.\n"
-"\n"
-"The 'Cut' and 'Copy' functions work like in any other software. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:86
+#, no-c-format
+msgid "The 'Cut' and 'Copy' functions work like in any other software. \n"
+msgstr ""
+
+#: src/help.c:88
+#, no-c-format
+msgid ""
 "The 'Paste' function insert the clipboard contents at the cursor position. "
 "The 'Paste over' function works like 'Paste', except that it overwrites the "
 "data after the insert position. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:90
+#, fuzzy, no-c-format
+msgid ""
 "The 'Paste mix' function combines the clipboard data with the data at the "
 "cursor position.\n"
-"\n"
+msgstr "粘贴，覆盖当前光标位置之后的数据"
+
+#: src/help.c:92
+#, no-c-format
+msgid ""
 "The 'Paste as new' function opens a new window and puts the clipboard "
 "contents into it. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:94
+#, no-c-format
+msgid ""
 "The 'Crop' function deletes all parts of the file that are not selected.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:96
+#, no-c-format
+msgid ""
 "The 'Silence selection' function replaces the selected part with silence. To "
 "avoid clicks, the silent part is a line that meets the wave at the "
 "endpoints.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:98
+#, no-c-format
+msgid ""
 "All editing functions work non-destructively, that is, the file you're "
 "editing isn't actually changed until you save it (the effects also work this "
 "way).\n"
-"\n"
 msgstr ""
 
-#: src/help.c:99
+#: src/help.c:104
 #, no-c-format
 msgid ""
-"\n"
 "mhWaveEdit has a few simple effects, which are available from the 'Effects' "
 "menu. \n"
-"\n"
-" * Fade in/out\n"
-"\n"
-"   This creates a linear fade in or fade out effect.\n"
-"\n"
-" * Normalize, Normalize to...\n"
-"\n"
+msgstr ""
+
+#: src/help.c:106
+#, no-c-format
+msgid " * Fade in/out\n"
+msgstr ""
+
+#: src/help.c:108
+#, no-c-format
+msgid "   This creates a linear fade in or fade out effect.\n"
+msgstr ""
+
+#: src/help.c:110
+#, fuzzy, no-c-format
+msgid " * Normalize, Normalize to...\n"
+msgstr "标准化为..."
+
+#: src/help.c:112
+#, no-c-format
+msgid ""
 "   This amplifies the sound as much as possible without getting clipping "
 "distortion. The \"Normalize to...\" item lets you specify which level to "
 "normalize to.\n"
-"\n"
-" * Volume adjust/fade...\n"
-"\n"
+msgstr ""
+
+#: src/help.c:114
+#, fuzzy, no-c-format
+msgid " * Volume adjust/fade...\n"
+msgstr "[B] 音量调整/淡入"
+
+#: src/help.c:116
+#, no-c-format
+msgid ""
 "   This effect lets you select a starting volume and a ending volume and "
 "amplifies the selection fading from the starting volume to the ending "
 "volume.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:118
+#, no-c-format
+msgid ""
 "   Note that volumes above 100% may cause sound distortion. Use the 'Find "
 "top volume' to find out the maximum amplification possible without "
 "distortion. (You can use this for normalizing samples.) \n"
-"\n"
+msgstr ""
+
+#: src/help.c:120
+#, no-c-format
+msgid ""
 "   By setting starting volume and ending volume to the same value you get a "
 "simple amplification of the sound. \n"
-"\n"
-" * Convert samplerate...\n"
-"\n"
+msgstr ""
+
+#: src/help.c:122
+#, fuzzy, no-c-format
+msgid " * Convert samplerate...\n"
+msgstr "转换取样率"
+
+#: src/help.c:124
+#, no-c-format
+msgid ""
 "   This converts the samplerate of the entire file to one you specify. There "
 "are different methods for doing this, usually the one in the top has the "
 "best quality but can take longer than the other methode.\n"
-"\n"
-" * Convert sample format...\n"
-"\n"
-"   This converts the sample format of the entire file.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:126
+#, fuzzy, no-c-format
+msgid " * Convert sample format...\n"
+msgstr "[B] 转换取样格式"
+
+#: src/help.c:128
+#, fuzzy, no-c-format
+msgid "   This converts the sample format of the entire file.\n"
+msgstr ""
+"(整个文件此声道的取样率\n"
+"不一定正好是选择的)"
+
+#: src/help.c:130
+#, no-c-format
+msgid ""
 "   The 'Don't actually change the data' option can be used if the program "
 "was wrong about the file's format.\n"
-"\n"
-" * Byte swap\n"
-"\n"
+msgstr ""
+
+#: src/help.c:132
+#, no-c-format
+msgid " * Byte swap\n"
+msgstr ""
+
+#: src/help.c:134
+#, no-c-format
+msgid ""
 "   This \"byte swaps\" the selected part. It can be used to repair damaged "
 "files where the byte order is wrong. Note that if the sound looks alright "
 "but plays wrong, you should not use this option, instead you should use the "
 "\"byte-swap output\" option in the Preferences dialog.\n"
-"\n"
-" * Mix to mono\n"
-"\n"
-"   This mixes all channels of the file together to a mono sound.\n"
-"\n"
-" * Add channel\n"
-"\n"
+msgstr ""
+
+#: src/help.c:136
+#, fuzzy, no-c-format
+msgid " * Mix to mono\n"
+msgstr "混合成单声道(_M)"
+
+#: src/help.c:138
+#, no-c-format
+msgid "   This mixes all channels of the file together to a mono sound.\n"
+msgstr ""
+
+#: src/help.c:140
+#, fuzzy, no-c-format
+msgid " * Add channel\n"
+msgstr "%d 声道"
+
+#: src/help.c:142
+#, no-c-format
+msgid ""
 "   This copies the first channel to a new channel in the sound, converting "
 "mono to stereo etc.\n"
-"\n"
-" * Map channels...\n"
-"   \n"
+msgstr ""
+
+#: src/help.c:144
+#, fuzzy, no-c-format
+msgid " * Map channels...\n"
+msgstr "映射声道"
+
+#: src/help.c:145
+#, no-c-format
+msgid "   \n"
+msgstr ""
+
+#: src/help.c:146
+#, no-c-format
+msgid ""
 "   With this effect, you can change the number of channels in the file. You "
 "can also rearrange and add (i.e. mix) channels.\n"
-"\n"
-" * Combine channels...\n"
-"\n"
+msgstr ""
+
+#: src/help.c:148
+#, fuzzy, no-c-format
+msgid " * Combine channels...\n"
+msgstr "[B] 合并声道"
+
+#: src/help.c:150
+#, no-c-format
+msgid ""
 "   This effect lets you create a new sound by a linear combination of the "
 "old channels. This means you can do channel mixing / swapping / balance / "
 "panning / amplification etc. by entering different values. For example, to "
 "swap the left and right channel, you select that the new Channel 1 should be "
 "0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 "
 "should be 100% of the old Channel 1 and 0% of the old Channel 2 \n"
-"\n"
-" * Speed adjustment...\n"
-"\n"
+msgstr ""
+
+#: src/help.c:152
+#, fuzzy, no-c-format
+msgid " * Speed adjustment...\n"
+msgstr "速率调整(_S)"
+
+#: src/help.c:154
+#, no-c-format
+msgid ""
 "   This effect changes the speed of the selection. The tone will change as "
 "well.\n"
-" * Pipe through program...\n"
-" \n"
+msgstr ""
+
+#: src/help.c:155
+#, fuzzy, no-c-format
+msgid " * Pipe through program...\n"
+msgstr "[B] 管道程序"
+
+#: src/help.c:156
+#, no-c-format
+msgid " \n"
+msgstr ""
+
+#: src/help.c:157
+#, no-c-format
+msgid ""
 "   This effect is for advanced users wanting to pipe raw audio data through "
 "an external program. The output of the program is read back and replaces the "
 "processed part. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:159
+#, no-c-format
+msgid ""
 "mhWaveEdit supports LADSPA effects and can also make use of most of the SoX "
 "utility's effects. To find the LADSPA plugins the environment variable "
 "LADSPA_PATH must be properly set up. \n"
-"\n"
-"All supported effects can be found by choosing the 'Effects...' menu item. "
-"The effects are listed with names beginning with [B] for builtin effects, "
-"[L] for LADSPA effects, and [S] for SoX effects.\n"
-"\n"
 msgstr ""
 
 #: src/help.c:161
 #, no-c-format
 msgid ""
-"\n"
-"Some notes on sound quality.\n"
-"\n"
+"All supported effects can be found by choosing the 'Effects...' menu item. "
+"The effects are listed with names beginning with [B] for builtin effects, "
+"[L] for LADSPA effects, and [S] for SoX effects.\n"
+msgstr ""
+
+#: src/help.c:167
+#, no-c-format
+msgid "Some notes on sound quality.\n"
+msgstr ""
+
+#: src/help.c:169
+#, no-c-format
+msgid ""
 "The general rule when doing audio editing/processing is to not manipulate "
 "the data more than necessary and keep an original copy whenever you're "
 "processing your important files. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:171
+#, no-c-format
+msgid ""
 "Cut, copy and paste operations move the data around without modifying it, so "
 "these don't degrade the sound quality. Because of level differences, you may "
 "get a \"step\" at the start and end of the inserted part, which can cause a "
 "small clicking sound. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:173
+#, no-c-format
+msgid ""
 "The mix paste function doesn't decrease quality, unless the peaks become too "
 "high and you get clipping. In that case you will get a warning message.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:175
+#, no-c-format
+msgid ""
 "Sound data is normally stored as integer values. Therefore, whenever you "
 "normalize, adjust volume, decrease sample size or filter a sound, the result "
 "must be rounded. If you use 24 or 32 bit sample sizes, this is not really a "
 "problem, but if you use 8 or 16 bits sample size, this rounding causes a "
 "decrease in quality. \n"
-"\n"
-"The quality decrease that the rounding causes can be masked by adding a "
-"small amount of noise before rounding. This is called \"dithering\". "
-"mhWaveEdit supports basic triangular dithering and it's enabled by "
-"default. \n"
-"\n"
-"By default, mhWaveEdit uses floating-point temporary files for storing "
-"processed results to avoid rounding until the file is saved.\n"
 msgstr ""
 
 #: src/help.c:177
 #, no-c-format
 msgid ""
-"\n"
+"The quality decrease that the rounding causes can be masked by adding a "
+"small amount of noise before rounding. This is called \"dithering\". "
+"mhWaveEdit supports basic triangular dithering and it's enabled by "
+"default. \n"
+msgstr ""
+
+#: src/help.c:179
+#, no-c-format
+msgid ""
+"By default, mhWaveEdit uses floating-point temporary files for storing "
+"processed results to avoid rounding until the file is saved.\n"
+msgstr ""
+
+#: src/help.c:184
+#, no-c-format
+msgid ""
 "Even if mhWaveEdit was originally built for editing wav files, it's also "
 "possible to load and save in a few other formats. mhWaveEdit always supports "
 "wav and raw files, but if it's compiled with the libsndfile library, "
 "mhWaveEdit supports a couple of other formats as well. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:186
+#, no-c-format
+msgid ""
 "To save a file with a different file format, use \"Save as...\" and choose a "
 "format in the file type selection box. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:188
+#, no-c-format
+msgid ""
 "mhWaveEdit has basic support for mp3 and ogg formats. For this to work you "
 "need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg "
 "support. If you have these programs, you can open and save mp3/ogg files "
 "just like any other file format.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:190
+#, no-c-format
+msgid ""
 "If mplayer is installed, mhwaveedit can open all formats that it supports, "
 "for example the soundtrack of a video file. Since mplayer is only a player, "
 "these files can not be saved back after editing, you have to save the file "
 "into a supported format.\n"
 msgstr ""
 
-#: src/help.c:187
+#: src/help.c:195
 #, no-c-format
 msgid ""
-"\n"
 "mhWaveEdit creates a directory ~/.mhwaveedit where it stores configuration "
 "information. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:197
+#, no-c-format
+msgid ""
 "The configuration file is called config. It can be hand edited, but the "
 "easiest way is through 'Preferences' on the Edit menu.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:199
+#, no-c-format
+msgid ""
 "Each mhwaveedit process creates a session file in the .mhwaveedit directory "
 "called mhwaveedit-session-<pid>-<session>-<state>, where <session> is the "
 "session ID number and <state> is a character code showing the state of the "
 "session ('r' for running sessions). \n"
-"\n"
+msgstr ""
+
+#: src/help.c:201
+#, no-c-format
+msgid ""
 "Temporary files are by default also stored in the ~/.mhwaveedit directory. "
 "Which directories to use can be set through the preferences dialog. To get "
 "the best performance, you should have one temporary directory for each local "
 "filesystem. The temporary files have names of the form \"mhwaveedit-temp-"
 "<pid>-nnnn-<session>\". Do NOT open or remove temporary files with the same "
 "pid number as a currently running mhWaveEdit.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:203
+#, no-c-format
+msgid ""
 "mhWaveEdit checks on startup for leftover temporary files and lets the user "
 "open them. After opening a crashed session, the files can be saved or thrown "
 "away.\n"
 msgstr ""
 
-#: src/help.c:199
+#: src/help.c:208
 #, no-c-format
-msgid ""
-"\n"
-"F1            Help\n"
-"F12           Record\n"
-"\n"
-"Ctrl+(number) Set mark\n"
-"(number)      Goto mark\n"
-"\n"
-"Ctrl+P        Preferences\n"
-"Ctrl+E        Effects\n"
-"\n"
-"Ctrl+O        Open file\n"
-"Ctrl+S        Save file\n"
-"Ctrl+U        Save selection as\n"
-"\n"
-"Ctrl+C        Copy\n"
-"Ctrl+X        Cut\n"
-"Ctrl+D        Delete\n"
-"Ctrl+V        Paste\n"
-"Ctrl+Z        Undo\n"
-"Ctrl+A        Select all\n"
-"\n"
-"Ctrl+G        Position cursor (Go to)\n"
-"Ctrl+H        Position cursor at file start\n"
-"Ctrl+J        Position cursor at file end\n"
-"Ctrl+K        Position cursor at selection start\n"
-"Ctrl+L        Position cursor at selection end\n"
-"Y,U           Move cursor to nearest all-channel zero-crossing\n"
-"I,O           Move cursor to nearest any-channel zero-crossing\n"
-"\n"
-"Ctrl+Q        Selection start at cursor\n"
-"Ctrl+W        Selection end at cursor\n"
-"\n"
-"+,=           Zoom in\n"
-"-             Zoom out\n"
-">             Zoom to selection\n"
-"<             Zoom all\n"
-"Arrow keys    Scroll left/right\n"
-"\n"
-"<space>       Play/Stop\n"
-",             Play from cursor pos\n"
-".             Stop\n"
-"/             Play selection\n"
-"H,J           Move cursor (and playback) 1/8 of view\n"
-"K,L           Move cursor one sample\n"
-"Ctrl+arrow    Move cursor (and playback) half second\n"
-"(             Play first 3 seconds of selection\n"
-")             Play last 3 seconds of selection\n"
+msgid "F1            Help\n"
+msgstr ""
+
+#: src/help.c:209
+#, no-c-format
+msgid "F12           Record\n"
+msgstr ""
+
+#: src/help.c:211
+#, no-c-format
+msgid "Ctrl+(number) Set mark\n"
+msgstr ""
+
+#: src/help.c:212
+#, no-c-format
+msgid "(number)      Goto mark\n"
+msgstr ""
+
+#: src/help.c:214
+#, fuzzy, no-c-format
+msgid "Ctrl+P        Preferences\n"
+msgstr "MP3首选项"
+
+#: src/help.c:215
+#, no-c-format
+msgid "Ctrl+E        Effects\n"
+msgstr ""
+
+#: src/help.c:217
+#, no-c-format
+msgid "Ctrl+O        Open file\n"
+msgstr ""
+
+#: src/help.c:218
+#, no-c-format
+msgid "Ctrl+S        Save file\n"
+msgstr ""
+
+#: src/help.c:219
+#, fuzzy, no-c-format
+msgid "Ctrl+U        Save selection as\n"
+msgstr "选择另存为..."
+
+#: src/help.c:221
+#, no-c-format
+msgid "Ctrl+C        Copy\n"
+msgstr ""
+
+#: src/help.c:222
+#, no-c-format
+msgid "Ctrl+X        Cut\n"
+msgstr ""
+
+#: src/help.c:223
+#, no-c-format
+msgid "Ctrl+D        Delete\n"
+msgstr ""
+
+#: src/help.c:224
+#, no-c-format
+msgid "Ctrl+V        Paste\n"
+msgstr ""
+
+#: src/help.c:225
+#, no-c-format
+msgid "Ctrl+Z        Undo\n"
+msgstr ""
+
+#: src/help.c:226
+#, no-c-format
+msgid "Ctrl+A        Select all\n"
+msgstr ""
+
+#: src/help.c:228
+#, no-c-format
+msgid "Ctrl+G        Position cursor (Go to)\n"
+msgstr ""
+
+#: src/help.c:229
+#, no-c-format
+msgid "Ctrl+H        Position cursor at file start\n"
+msgstr ""
+
+#: src/help.c:230
+#, no-c-format
+msgid "Ctrl+J        Position cursor at file end\n"
+msgstr ""
+
+#: src/help.c:231
+#, fuzzy, no-c-format
+msgid "Ctrl+K        Position cursor at selection start\n"
+msgstr "设为选择开始"
+
+#: src/help.c:232
+#, no-c-format
+msgid "Ctrl+L        Position cursor at selection end\n"
+msgstr ""
+
+#: src/help.c:233
+#, no-c-format
+msgid "Y,U           Move cursor to nearest all-channel zero-crossing\n"
+msgstr ""
+
+#: src/help.c:234
+#, no-c-format
+msgid "I,O           Move cursor to nearest any-channel zero-crossing\n"
+msgstr ""
+
+#: src/help.c:236
+#, fuzzy, no-c-format
+msgid "Ctrl+Q        Selection start at cursor\n"
+msgstr "光标位置从选择的位置开始"
+
+#: src/help.c:237
+#, fuzzy, no-c-format
+msgid "Ctrl+W        Selection end at cursor\n"
+msgstr "光标位置从选择的位置结束"
+
+#: src/help.c:239
+#, no-c-format
+msgid "+,=           Zoom in\n"
+msgstr ""
+
+#: src/help.c:240
+#, no-c-format
+msgid "-             Zoom out\n"
+msgstr ""
+
+#: src/help.c:241
+#, fuzzy, no-c-format
+msgid ">             Zoom to selection\n"
+msgstr "缩放选择(_S)"
+
+#: src/help.c:242
+#, no-c-format
+msgid "<             Zoom all\n"
+msgstr ""
+
+#: src/help.c:243
+#, no-c-format
+msgid "Arrow keys    Scroll left/right\n"
+msgstr ""
+
+#: src/help.c:245
+#, no-c-format
+msgid "<space>       Play/Stop\n"
+msgstr ""
+
+#: src/help.c:246
+#, fuzzy, no-c-format
+msgid ",             Play from cursor pos\n"
+msgstr "从光标位置播放"
+
+#: src/help.c:247
+#, no-c-format
+msgid ".             Stop\n"
 msgstr ""
 
 #: src/help.c:248
+#, fuzzy, no-c-format
+msgid "/             Play selection\n"
+msgstr "播放已选(_L)"
+
+#: src/help.c:249
+#, no-c-format
+msgid "H,J           Move cursor (and playback) 1/8 of view\n"
+msgstr ""
+
+#: src/help.c:250
+#, no-c-format
+msgid "K,L           Move cursor one sample\n"
+msgstr ""
+
+#: src/help.c:251
+#, no-c-format
+msgid "Ctrl+arrow    Move cursor (and playback) half second\n"
+msgstr ""
+
+#: src/help.c:252
+#, no-c-format
+msgid "(             Play first 3 seconds of selection\n"
+msgstr ""
+
+#: src/help.c:253
+#, no-c-format
+msgid ")             Play last 3 seconds of selection\n"
+msgstr ""
+
+#: src/help.c:258
 #, no-c-format
 msgid ""
-"\n"
 "If you find a bug or flaw in the program that's not mentioned in the BUGS "
 "file, report the bug in the bug tracker (see contact info) or mail a bug "
 "report describing the bug to: magnus.hjorth@home.se\n"
-"\n"
+msgstr ""
+
+#: src/help.c:260
+#, no-c-format
+msgid ""
 "In case of a crash, please do not send me any core dumps. They are huge and "
 "completely useless to me. Instead, create a backtrace. Backtraces tell you "
 "exactly where the program crashed.\n"
-"\n"
-"How to create a backtrace:\n"
-"1. Enable core dumps: ulimit -c unlimited\n"
-"2. Run the program:   mhwaveedit\n"
-"3. Make the program crash. You should now get a file named core or core.1234 "
-"in the directory you're in.\n"
-"4. Run gdb with the program and core file: \n"
-"   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
-"5. After gdb has loaded, use the command: bt\n"
-"6. Quit gdb with the command: quit\n"
-"7. Now you should have a back trace in the file backtrace.txt\n"
+msgstr ""
+
+#: src/help.c:262
+#, no-c-format
+msgid "How to create a backtrace:\n"
+msgstr ""
+
+#: src/help.c:263
+#, no-c-format
+msgid "1. Enable core dumps: ulimit -c unlimited\n"
 msgstr ""
 
 #: src/help.c:264
 #, no-c-format
+msgid "2. Run the program:   mhwaveedit\n"
+msgstr ""
+
+#: src/help.c:265
+#, no-c-format
 msgid ""
-"\n"
+"3. Make the program crash. You should now get a file named core or core.1234 "
+"in the directory you're in.\n"
+msgstr ""
+
+#: src/help.c:266
+#, no-c-format
+msgid "4. Run gdb with the program and core file: \n"
+msgstr ""
+
+#: src/help.c:267
+#, no-c-format
+msgid "   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
+msgstr ""
+
+#: src/help.c:268
+#, no-c-format
+msgid "5. After gdb has loaded, use the command: bt\n"
+msgstr ""
+
+#: src/help.c:269
+#, no-c-format
+msgid "6. Quit gdb with the command: quit\n"
+msgstr ""
+
+#: src/help.c:270
+#, no-c-format
+msgid "7. Now you should have a back trace in the file backtrace.txt\n"
+msgstr ""
+
+#: src/help.c:275
+#, no-c-format
+msgid ""
 "There are plenty of things you can do if you want to help the development of "
 "mhWaveEdit. \n"
-"\n"
+msgstr ""
+
+#: src/help.c:277
+#, no-c-format
+msgid ""
 "First of all, look for bugs and report all bugs you find into the bug "
 "tracker or through e-mail. Sometimes a bug can get overlooked for a long "
 "time because nobody reports it, so don't be afraid to report bugs that have "
 "been there for a few releases. You don't have to provide fixes or very "
 "detailed information, although it helps of course.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:279
+#, no-c-format
+msgid ""
 "Feature requests are also welcome, report them to the mailing list or to the "
 "bug tracker.\n"
-"\n"
+msgstr ""
+
+#: src/help.c:281
+#, no-c-format
+msgid ""
 "If you speak a language other than English and mhWaveEdit isn't translated "
 "to your language, you can contribute a translation. To do that, copy the "
 "template mhwaveedit.pot in the po directory into a new file ll.po, where ll "
 "is your language code (see http://www.gnu.org/software/gettext/manual/"
 "html_node/gettext_221.html for a list of language codes). \n"
-"\n"
-"It's possible to edit po-files by hand, but I recommend a program such as "
-"poEdit (http://www.poedit.org) for editing translations. \n"
-"\n"
-"Note that for those translatable strings that look like \"RecordStatus|Paused"
-"\", you should ignore what's to the left and only translate the string to "
-"the right (\"Paused\" in this example). This convention is there to make it "
-"possible to translate the same string to different things depending on "
-"context. \n"
-"\n"
-"After you've filled in all the translations you want (you don't have to "
-"translate all the strings), mail in the po file to me (see contact info) and "
-"I'll add it to the next release. \n"
-"\n"
-"If a translation is incomplete, you're very welcome to translate the "
-"remaining untranslated messages and mail them in. Corrections to "
-"translations are also appreciated, but they may need to be checked with the "
-"previous translator before including them. \n"
-"\n"
 msgstr ""
 
 #: src/help.c:283
 #, no-c-format
 msgid ""
-"\n"
-"For bug reports, translation updates, patches and PayPal donations:\n"
-"magnus.hjorth@home.se\n"
-"\n"
-"Project page with bug tracker, mailing list membership:\n"
-"http://gna.org/projects/mhwaveedit\n"
-"\n"
-"Mailing list (you must be a subscriber before you can post messages):\n"
-"mhwaveedit-discuss@gna.org\n"
-"\n"
+"It's possible to edit po-files by hand, but I recommend a program such as "
+"poEdit (http://www.poedit.org) for editing translations. \n"
+msgstr ""
+
+#: src/help.c:285
+#, no-c-format
+msgid ""
+"Note that for those translatable strings that look like \"RecordStatus|Paused"
+"\", you should ignore what's to the left and only translate the string to "
+"the right (\"Paused\" in this example). This convention is there to make it "
+"possible to translate the same string to different things depending on "
+"context. \n"
+msgstr ""
+
+#: src/help.c:287
+#, no-c-format
+msgid ""
+"After you've filled in all the translations you want (you don't have to "
+"translate all the strings), mail in the po file to me (see contact info) and "
+"I'll add it to the next release. \n"
+msgstr ""
+
+#: src/help.c:289
+#, no-c-format
+msgid ""
+"If a translation is incomplete, you're very welcome to translate the "
+"remaining untranslated messages and mail them in. Corrections to "
+"translations are also appreciated, but they may need to be checked with the "
+"previous translator before including them. \n"
+msgstr ""
+
+#: src/help.c:295
+#, no-c-format
+msgid "For bug reports, translation updates, patches and PayPal donations:\n"
+msgstr ""
+
+#: src/help.c:296
+#, no-c-format
+msgid "magnus.hjorth@home.se\n"
+msgstr ""
+
+#: src/help.c:298
+#, no-c-format
+msgid "Project page with bug tracker, mailing list membership:\n"
+msgstr ""
+
+#: src/help.c:299
+#, no-c-format
+msgid "http://gna.org/projects/mhwaveedit\n"
+msgstr ""
+
+#: src/help.c:301
+#, no-c-format
+msgid "Mailing list (you must be a subscriber before you can post messages):\n"
+msgstr ""
+
+#: src/help.c:302
+#, no-c-format
+msgid "mhwaveedit-discuss@gna.org\n"
 msgstr ""
 
 #: src/inifile.c:84 src/inifile.c:91
@@ -1477,7 +1906,7 @@ msgstr "输入控制"
 msgid " Output controls "
 msgstr "输出控制"
 
-#: src/ladspadialog.c:309 src/recorddialog.c:204 src/recorddialog.c:496
+#: src/ladspadialog.c:309 src/recorddialog.c:310 src/recorddialog.c:732
 msgid "None"
 msgstr "无"
 
@@ -1493,167 +1922,167 @@ msgstr "输出音频"
 msgid "Keep data in unmapped output channels"
 msgstr "保持数据在非映射输出声道"
 
-#: src/main.c:134
+#: src/main.c:157
 #, c-format
 msgid "Syntax: %s [files]\n"
 msgstr "语法： %s [文件]\n"
 
-#: src/main.c:137
+#: src/main.c:160
 msgid "Testing conversion functions:"
 msgstr "测试转换功能："
 
-#: src/main.c:139
+#: src/main.c:162
 msgid "Testing conversion functions finished."
 msgstr "测试转换功能完成。"
 
-#: src/main.c:158
+#: src/main.c:181
 msgid "Expected driver name after --driver option"
 msgstr "期望驱动名称于 --驱动设置之后"
 
-#: src/main.c:164
+#: src/main.c:187
 #, c-format
 msgid "Unknown option '%s'"
 msgstr "未知设置 '%s'"
 
-#: src/main.c:303
+#: src/main.c:328
 msgid ""
 "Could not find home directory. Using current directory as home directory."
 msgstr "没有找到个人目录。使用当前目录为个人目录。"
 
-#: src/main.c:331
+#: src/main.c:356
 msgid "Black"
 msgstr "黑"
 
-#: src/main.c:332
+#: src/main.c:357
 msgid "White"
 msgstr "白"
 
-#: src/main.c:333
+#: src/main.c:358
 msgid "Background"
 msgstr "背景"
 
-#: src/main.c:334
+#: src/main.c:359
 msgid "L Waveform"
 msgstr "L 波形"
 
-#: src/main.c:335
+#: src/main.c:360
 msgid "R Waveform"
 msgstr "R 波形"
 
-#: src/main.c:336
+#: src/main.c:361
 msgid "Cursor"
 msgstr "光标"
 
-#: src/main.c:337
+#: src/main.c:362
 msgid "Marks"
 msgstr "标记"
 
-#: src/main.c:338
+#: src/main.c:363
 msgid "Selection"
 msgstr "选择"
 
-#: src/main.c:339
+#: src/main.c:364
 msgid "Progress bar"
 msgstr "进度栏"
 
-#: src/main.c:340
+#: src/main.c:365
 msgid "Zero-level"
 msgstr "零电平"
 
-#: src/main.c:463
+#: src/main.c:488
 #, c-format
 msgid "Error launching mixer: fork: %s"
 msgstr "启用混音错误：派生： %s"
 
-#: src/main.c:514 src/main.c:533
+#: src/main.c:539 src/main.c:558
 msgid "Mono"
 msgstr "单声道"
 
-#: src/main.c:515
+#: src/main.c:540
 msgid "Left"
 msgstr "左"
 
-#: src/main.c:516
+#: src/main.c:541
 msgid "Right"
 msgstr "右"
 
-#: src/main.c:518
+#: src/main.c:543
 #, c-format
 msgid "Ch%d"
 msgstr ""
 
-#: src/main.c:534
+#: src/main.c:559
 msgid "Stereo"
 msgstr "立体声"
 
-#: src/main.c:536
+#: src/main.c:561
 #, c-format
 msgid "%d channels"
 msgstr "%d 声道"
 
-#: src/main.c:1112
+#: src/main.c:1137
 msgid "Ignoring extreme old window size/position values\n"
 msgstr "忽略极旧的窗口大小/位置值\n"
 
-#: src/mainwindow.c:197
+#: src/mainwindow.c:206
 #, c-format
 msgid "mhWaveEdit: %s (%s): %d Hz, %s"
 msgstr "mhWaveEdit: %s (%s): %d Hz, %s"
 
-#: src/mainwindow.c:205 src/recorddialog.c:65
+#: src/mainwindow.c:214
 msgid "double"
 msgstr "双精度"
 
-#: src/mainwindow.c:205 src/recorddialog.c:63
+#: src/mainwindow.c:214
 msgid "float"
 msgstr "浮点"
 
-#: src/mainwindow.c:207
+#: src/mainwindow.c:216
 #, c-format
 msgid "mhWaveEdit: %s (%s): %d Hz, %d bit"
 msgstr "mhWaveEdit: %s (%s): %d Hz, %d bit"
 
-#: src/mainwindow.c:292
+#: src/mainwindow.c:301
 msgid "Use default settings"
 msgstr "使用默认设置"
 
-#: src/mainwindow.c:296
+#: src/mainwindow.c:305
 msgid "Auto-detect from extension"
 msgstr "自动检测扩展名"
 
-#: src/mainwindow.c:311
+#: src/mainwindow.c:320
 msgid "File type: "
 msgstr "文件类型："
 
-#: src/mainwindow.c:357
+#: src/mainwindow.c:366
 msgid ""
 "The file has not changed since last save. Press OK if you want to save it "
 "anyway?"
 msgstr "自上次保存文件没有改变。如果您硬要保存它请按确定？"
 
-#: src/mainwindow.c:366
+#: src/mainwindow.c:375
 msgid "Save File"
 msgstr "保存文件"
 
-#: src/mainwindow.c:391
+#: src/mainwindow.c:400
 #, c-format
 msgid "Save changes to %s?"
 msgstr "保存更改到 %s ？"
 
-#: src/mainwindow.c:751 src/mainwindow.c:755
+#: src/mainwindow.c:764 src/mainwindow.c:768
 msgid "Load File"
 msgstr "装入文件"
 
-#: src/mainwindow.c:780
+#: src/mainwindow.c:793
 msgid "Save selection as ..."
 msgstr "选择另存为..."
 
-#: src/mainwindow.c:1067
+#: src/mainwindow.c:1082
 #, c-format
 msgid "Chunk %p has opencount=%d\n"
 msgstr "块 %p 打开计数=%d\n"
 
-#: src/mainwindow.c:1150
+#: src/mainwindow.c:1165
 #, c-format
 msgid ""
 "\n"
@@ -1662,27 +2091,27 @@ msgstr ""
 "\n"
 "窗口 '%s'\n"
 
-#: src/mainwindow.c:1151
+#: src/mainwindow.c:1166
 msgid "  Current chunk:"
 msgstr "当前块："
 
-#: src/mainwindow.c:1153
+#: src/mainwindow.c:1168
 msgid "  History:"
 msgstr "历史："
 
-#: src/mainwindow.c:1208
+#: src/mainwindow.c:1223
 msgid "There already is only one channel!"
 msgstr "那早就是一个声道了！"
 
-#: src/mainwindow.c:1291
+#: src/mainwindow.c:1332
 msgid "mhWaveEdit Help"
 msgstr "mhWaveEdit 帮助"
 
-#: src/mainwindow.c:1387
+#: src/mainwindow.c:1431
 msgid "About mhWaveEdit"
 msgstr "关于 mhWaveEdit"
 
-#: src/mainwindow.c:1399
+#: src/mainwindow.c:1443
 msgid ""
 "Created by Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2007, Magnus Hjorth"
@@ -1697,23 +2126,23 @@ msgstr ""
 # msgstr ""
 # "由 Magnus Hjorth (magnus.hjorth@home.se) 创建\n"
 # "版权所有 2002-2006, Magnus Hjorth"
-#: src/mainwindow.c:1406
+#: src/mainwindow.c:1450
 #, c-format
 msgid "Current sound driver: %s"
 msgstr "当前声音驱动：%s"
 
-#: src/mainwindow.c:1414
+#: src/mainwindow.c:1458
 #, c-format
 msgid "Compiled %s %s"
 msgstr ""
 "编译于 %s %s\n"
 "中文化：李红昆 <lon83129@126.com>"
 
-#: src/mainwindow.c:1420
+#: src/mainwindow.c:1464
 msgid "Uses double-precision math"
 msgstr "使用双精度"
 
-#: src/mainwindow.c:1427
+#: src/mainwindow.c:1471
 msgid ""
 "Distributed under GNU General Public License.\n"
 "For information, see the file COPYING"
@@ -1721,244 +2150,244 @@ msgstr ""
 "发布在 GNU General Public License 协议下。\n"
 "关于信息，查看文件 COPYING 。"
 
-#: src/mainwindow.c:1541
+#: src/mainwindow.c:1590
 msgid "Seconds of silence: "
 msgstr "静音秒数："
 
-#: src/mainwindow.c:1541
+#: src/mainwindow.c:1590
 msgid "Insert Silence"
 msgstr "插入静音"
 
-#: src/mainwindow.c:1590
+#: src/mainwindow.c:1639
 msgid "Level: "
 msgstr "电平"
 
-#: src/mainwindow.c:1590
+#: src/mainwindow.c:1639
 msgid "Normalize to..."
 msgstr "标准化为..."
 
-#: src/mainwindow.c:1800
+#: src/mainwindow.c:1849
 msgid "/_File"
 msgstr "文件(_F)"
 
-#: src/mainwindow.c:1801
+#: src/mainwindow.c:1850
 msgid "/File/_Open..."
 msgstr "打开...(_O)"
 
-#: src/mainwindow.c:1802
+#: src/mainwindow.c:1851
 msgid "/File/_Save"
 msgstr "保存(_S)"
 
-#: src/mainwindow.c:1803
+#: src/mainwindow.c:1852
 msgid "/File/Save _as..."
 msgstr "另保存...(_A)"
 
-#: src/mainwindow.c:1804
+#: src/mainwindow.c:1853
 msgid "/File/Save selection as..."
 msgstr "选择另存为..."
 
-#: src/mainwindow.c:1805
+#: src/mainwindow.c:1854
 msgid "/_Edit"
 msgstr "编辑(_E)"
 
-#: src/mainwindow.c:1806
+#: src/mainwindow.c:1855
 msgid "/Edit/_Undo"
 msgstr "撤消(_U)"
 
-#: src/mainwindow.c:1807
+#: src/mainwindow.c:1856
 msgid "/Edit/_Redo"
 msgstr "重做(_R)"
 
-#: src/mainwindow.c:1808
+#: src/mainwindow.c:1857
 msgid "/Edit/sep1"
 msgstr "分离1"
 
-#: src/mainwindow.c:1809
+#: src/mainwindow.c:1858
 msgid "/Edit/Cu_t"
 msgstr "剪切(_T)"
 
-#: src/mainwindow.c:1810
+#: src/mainwindow.c:1859
 msgid "/Edit/_Copy"
 msgstr "复制(_C)"
 
-#: src/mainwindow.c:1811
+#: src/mainwindow.c:1860
 msgid "/Edit/_Paste"
 msgstr "粘贴(_P)"
 
-#: src/mainwindow.c:1812
+#: src/mainwindow.c:1861
 msgid "/Edit/Paste _over"
 msgstr "覆盖粘贴(_O)"
 
-#: src/mainwindow.c:1813
+#: src/mainwindow.c:1862
 msgid "/Edit/_Mix paste"
 msgstr "混合粘贴(_M)"
 
-#: src/mainwindow.c:1814
+#: src/mainwindow.c:1863
 msgid "/Edit/Insert _silence"
 msgstr "插入静音(_S)"
 
-#: src/mainwindow.c:1815
+#: src/mainwindow.c:1864
 msgid "/Edit/Paste to _new"
 msgstr "粘贴到新文件(_N)"
 
-#: src/mainwindow.c:1816
+#: src/mainwindow.c:1865
 msgid "/Edit/Cr_op"
 msgstr "栽剪(_O)"
 
-#: src/mainwindow.c:1817
+#: src/mainwindow.c:1866
 msgid "/Edit/_Delete"
 msgstr "删除(_D)"
 
-#: src/mainwindow.c:1818
+#: src/mainwindow.c:1867
 msgid "/Edit/Silence selection"
 msgstr "静音选择"
 
-#: src/mainwindow.c:1819
+#: src/mainwindow.c:1868
 msgid "/Edit/sep2"
 msgstr "分离2"
 
-#: src/mainwindow.c:1820
+#: src/mainwindow.c:1869
 msgid "/Edit/Select _all"
 msgstr "选择全部(_A)"
 
 # ============================================================#
-#: src/mainwindow.c:1821
+#: src/mainwindow.c:1870
 msgid "/Edit/Select none"
 msgstr "无选择"
 
-#: src/mainwindow.c:1822
+#: src/mainwindow.c:1871
 msgid "/Edit/sep3"
 msgstr "分离3"
 
-#: src/mainwindow.c:1823
+#: src/mainwindow.c:1872
 msgid "/Edit/Clear clipboard"
 msgstr "清除剪切板"
 
-#: src/mainwindow.c:1824
+#: src/mainwindow.c:1873
 msgid "/Edit/sep4"
 msgstr "分离4"
 
-#: src/mainwindow.c:1825
+#: src/mainwindow.c:1874
 msgid "/Edit/Preferences"
 msgstr "首选项"
 
-#: src/mainwindow.c:1826
+#: src/mainwindow.c:1875
 msgid "/_View"
 msgstr "视图(_V)"
 
-#: src/mainwindow.c:1827
+#: src/mainwindow.c:1876
 msgid "/View/Zoom _in"
 msgstr "放大(_I)"
 
-#: src/mainwindow.c:1828
+#: src/mainwindow.c:1877
 msgid "/View/Zoom _out"
 msgstr "缩小(_O)"
 
-#: src/mainwindow.c:1829
+#: src/mainwindow.c:1878
 msgid "/View/Zoom to _selection"
 msgstr "缩放选择(_S)"
 
-#: src/mainwindow.c:1830
+#: src/mainwindow.c:1879
 msgid "/View/sep1"
 msgstr "分离1"
 
-#: src/mainwindow.c:1831
+#: src/mainwindow.c:1880
 msgid "/View/Zoom _all"
 msgstr "缩放全部(_A)"
 
-#: src/mainwindow.c:1832
+#: src/mainwindow.c:1881
 msgid "/View/sep2"
 msgstr "分离2"
 
-#: src/mainwindow.c:1833
+#: src/mainwindow.c:1882
 msgid "/View/_Time scale"
 msgstr "时间标尺(_T)"
 
-#: src/mainwindow.c:1834
+#: src/mainwindow.c:1883
 msgid "/View/_Horizontal zoom"
 msgstr "水平缩放(_H)"
 
-#: src/mainwindow.c:1835
+#: src/mainwindow.c:1884
 msgid "/View/_Vertical zoom"
 msgstr "垂直缩放(_V)"
 
-#: src/mainwindow.c:1836
+#: src/mainwindow.c:1885
 msgid "/View/Sp_eed slider"
 msgstr "速率滑块(_E)"
 
-#: src/mainwindow.c:1837
+#: src/mainwindow.c:1886
 msgid "/_Cursor"
 msgstr "光标(_C)"
 
-#: src/mainwindow.c:1838
+#: src/mainwindow.c:1887
 msgid "/Cursor/Set selection start"
 msgstr "设为选择开始"
 
-#: src/mainwindow.c:1840
+#: src/mainwindow.c:1889
 msgid "/Cursor/Set selection end"
 msgstr "设为选择结束"
 
-#: src/mainwindow.c:1841
+#: src/mainwindow.c:1890
 msgid "/Cursor/sep1"
 msgstr "分离1"
 
-#: src/mainwindow.c:1842
+#: src/mainwindow.c:1891
 msgid "/Cursor/Move to"
 msgstr "移动到"
 
-#: src/mainwindow.c:1843
+#: src/mainwindow.c:1892
 msgid "/Cursor/Move to/Beginning"
 msgstr "开头"
 
-#: src/mainwindow.c:1845
+#: src/mainwindow.c:1894
 msgid "/Cursor/Move to/End"
 msgstr "结束"
 
-#: src/mainwindow.c:1846
+#: src/mainwindow.c:1895
 msgid "/Cursor/Move to/Selection start"
 msgstr "选择开始"
 
-#: src/mainwindow.c:1848
+#: src/mainwindow.c:1897
 msgid "/Cursor/Move to/Selection end"
 msgstr "选择结束"
 
-#: src/mainwindow.c:1850
+#: src/mainwindow.c:1899
 msgid "/Cursor/Move"
 msgstr "移动"
 
-#: src/mainwindow.c:1851
+#: src/mainwindow.c:1900
 msgid "/Cursor/Move/Left"
 msgstr "左"
 
-#: src/mainwindow.c:1852
+#: src/mainwindow.c:1901
 msgid "/Cursor/Move/Right"
 msgstr "右"
 
-#: src/mainwindow.c:1853
+#: src/mainwindow.c:1902
 msgid "/Cursor/Move/Left sample"
 msgstr "左取样"
 
-#: src/mainwindow.c:1854
+#: src/mainwindow.c:1903
 msgid "/Cursor/Move/Right sample"
 msgstr "右取样"
 
-#: src/mainwindow.c:1855
+#: src/mainwindow.c:1904
 msgid "/Cursor/Find zero-crossing"
 msgstr "查找交零"
 
-#: src/mainwindow.c:1856
+#: src/mainwindow.c:1905
 msgid "/Cursor/Find zero-crossing/Left (all channels)"
 msgstr "左(全部声道)"
 
-#: src/mainwindow.c:1858
+#: src/mainwindow.c:1907
 msgid "/Cursor/Find zero-crossing/Right (all channels)"
 msgstr "右(全部声道)"
 
-#: src/mainwindow.c:1860
+#: src/mainwindow.c:1909
 msgid "/Cursor/Find zero-crossing/Left (any channel)"
 msgstr "左(任一声道)"
 
-#: src/mainwindow.c:1862
+#: src/mainwindow.c:1911
 msgid "/Cursor/Find zero-crossing/Right (any channel)"
 msgstr "右(任一声道)"
 
@@ -1974,255 +2403,260 @@ msgstr "右(任一声道)"
 # #: src/mainwindow.c:1583
 # msgid "/Cursor/Move to/selection end"
 # msgstr "/光标/移动到/选择结束"
-#: src/mainwindow.c:1864
+#: src/mainwindow.c:1913
 msgid "/Cursor/sep2"
 msgstr "分离2"
 
-#: src/mainwindow.c:1865
+#: src/mainwindow.c:1914
 msgid "/Cursor/Position cursor..."
 msgstr "光标位置..."
 
-#: src/mainwindow.c:1867
+#: src/mainwindow.c:1916
 msgid "/_Play"
 msgstr "播放(_P)"
 
-#: src/mainwindow.c:1868
+#: src/mainwindow.c:1917
 msgid "/Play/_Play from cursor"
 msgstr "从光标处播放(_P)"
 
-#: src/mainwindow.c:1869
+#: src/mainwindow.c:1918
 msgid "/Play/Play _all"
 msgstr "播放全部(_A)"
 
-#: src/mainwindow.c:1870
+#: src/mainwindow.c:1919
 msgid "/Play/Play se_lection"
 msgstr "播放已选(_L)"
 
-#: src/mainwindow.c:1871
+#: src/mainwindow.c:1920
 msgid "/Play/_Stop"
 msgstr "停止(_S)"
 
-#: src/mainwindow.c:1872
+#: src/mainwindow.c:1921
 msgid "/Play/sep1"
 msgstr "分离1"
 
-#: src/mainwindow.c:1873
+#: src/mainwindow.c:1922
 msgid "/Play/_Record..."
 msgstr "录音...(_R)"
 
-#: src/mainwindow.c:1874
+#: src/mainwindow.c:1923
 msgid "/Effec_ts"
 msgstr "特效(_T)"
 
-#: src/mainwindow.c:1875
+#: src/mainwindow.c:1924
 msgid "/Effects/Fade _in"
 msgstr "淡入(_I)"
 
-#: src/mainwindow.c:1876
+#: src/mainwindow.c:1925
 msgid "/Effects/Fade o_ut"
 msgstr "淡出(_U)"
 
-#: src/mainwindow.c:1877
+#: src/mainwindow.c:1926
 msgid "/Effects/_Normalize"
 msgstr "标准化(_N)"
 
-#: src/mainwindow.c:1878
+#: src/mainwindow.c:1927
 msgid "/Effects/Normali_ze to..."
 msgstr "标准化为...(_Z)"
 
-#: src/mainwindow.c:1879
+#: src/mainwindow.c:1928
 msgid "/Effects/_Volume adjust (fade)..."
 msgstr "音量调整(淡入)...(_V)"
 
-#: src/mainwindow.c:1880
+#: src/mainwindow.c:1929
 msgid "/Effects/sep1"
 msgstr "分离1"
 
-#: src/mainwindow.c:1881
+#: src/mainwindow.c:1930
 msgid "/Effects/Convert sample_rate..."
 msgstr "变换取样速率...(_R)"
 
-#: src/mainwindow.c:1882
+#: src/mainwindow.c:1931
 msgid "/Effects/Convert sample _format..."
 msgstr "转换取样格式...(_F)"
 
-#: src/mainwindow.c:1884
+#: src/mainwindow.c:1933
 msgid "/Effects/B_yte swap"
 msgstr "字节交换(_Y)"
 
-#: src/mainwindow.c:1885
+#: src/mainwindow.c:1934
 msgid "/Effects/sep2"
 msgstr "分离2"
 
-#: src/mainwindow.c:1886
+#: src/mainwindow.c:1935
 msgid "/Effects/_Mix to mono"
 msgstr "混合成单声道(_M)"
 
-#: src/mainwindow.c:1887
+#: src/mainwindow.c:1936
 msgid "/Effects/Add channe_l"
 msgstr "添加声道(_L)"
 
-#: src/mainwindow.c:1888
+#: src/mainwindow.c:1937
 msgid "/Effects/Ma_p channels..."
 msgstr "映射声道...(_P)"
 
-#: src/mainwindow.c:1889
+#: src/mainwindow.c:1938
 msgid "/Effects/_Combine channels..."
 msgstr "合并声道...(_C)"
 
-#: src/mainwindow.c:1890
+#: src/mainwindow.c:1939
+#, fuzzy
+msgid "/Effects/Add channels from other file..."
+msgstr "添加声道(_L)"
+
+#: src/mainwindow.c:1940
 msgid "/Effects/sep3"
 msgstr "分离3"
 
-#: src/mainwindow.c:1891
+#: src/mainwindow.c:1941
 msgid "/Effects/_Speed adjustment..."
 msgstr "速率调整(_S)"
 
-#: src/mainwindow.c:1892
+#: src/mainwindow.c:1942
 msgid "/Effects/Pipe through program..."
 msgstr "管道程序..."
 
-#: src/mainwindow.c:1893
+#: src/mainwindow.c:1943
 msgid "/Effects/sep4"
 msgstr "分离4"
 
-#: src/mainwindow.c:1894
+#: src/mainwindow.c:1944
 msgid "/Effects/Effects dialog..."
 msgstr "特效对话框..."
 
-#: src/mainwindow.c:1896
+#: src/mainwindow.c:1946
 msgid "/Debug"
 msgstr "调试"
 
-#: src/mainwindow.c:1898
+#: src/mainwindow.c:1948
 msgid "/Debug/Dummy effect"
 msgstr "虚拟特效"
 
-#: src/mainwindow.c:1899
+#: src/mainwindow.c:1949
 msgid "/Debug/Check opencount"
 msgstr "检查打开计数"
 
-#: src/mainwindow.c:1900
+#: src/mainwindow.c:1950
 msgid "/Debug/Dump chunk info"
 msgstr "转储块信息"
 
-#: src/mainwindow.c:1902
+#: src/mainwindow.c:1952
 msgid "/_Help"
 msgstr "帮助(_H)"
 
-#: src/mainwindow.c:1903
+#: src/mainwindow.c:1953
 msgid "/Help/_Documentation"
 msgstr "文档(_D)"
 
-#: src/mainwindow.c:1904
+#: src/mainwindow.c:1954
 msgid "/Help/_About"
 msgstr "关于(_A)"
 
-#: src/mainwindow.c:1908
+#: src/mainwindow.c:1958
 msgid "/File/sep1"
 msgstr "分离1"
 
-#: src/mainwindow.c:1909
+#: src/mainwindow.c:1959
 msgid "/File/_Close"
 msgstr "关闭(_C)"
 
-#: src/mainwindow.c:1910
+#: src/mainwindow.c:1960
 msgid "/File/sep2"
 msgstr "分离2"
 
-#: src/mainwindow.c:1911
+#: src/mainwindow.c:1961
 msgid "/File/_Exit"
 msgstr "退出(_E)"
 
-#: src/mainwindow.c:2069
+#: src/mainwindow.c:2120
 msgid "Load a file from disk"
 msgstr "从磁盘装入文件"
 
-#: src/mainwindow.c:2076
+#: src/mainwindow.c:2127
 msgid "Save the current file to disk"
 msgstr "保存当前文件到磁盘"
 
-#: src/mainwindow.c:2085
+#: src/mainwindow.c:2136
 msgid "Undo the last change"
 msgstr "撤消最后改变"
 
-#: src/mainwindow.c:2093
+#: src/mainwindow.c:2144
 msgid "Redo the last undo operation"
 msgstr "重做最后撤消的改变"
 
-#: src/mainwindow.c:2103
+#: src/mainwindow.c:2154
 msgid "Cut out the current selection"
 msgstr "剪切出当前选择"
 
-#: src/mainwindow.c:2111
+#: src/mainwindow.c:2162
 msgid "Copy the current selection"
 msgstr "复制当前选择"
 
-#: src/mainwindow.c:2119
+#: src/mainwindow.c:2170
 msgid "Paste at cursor position"
 msgstr "粘贴在当前光标位置"
 
-#: src/mainwindow.c:2127
+#: src/mainwindow.c:2178
 msgid "Paste, overwriting the data after the cursor position"
 msgstr "粘贴，覆盖当前光标位置之后的数据"
 
-#: src/mainwindow.c:2137
+#: src/mainwindow.c:2188
 msgid "Delete the selection"
 msgstr "删除选择"
 
-#: src/mainwindow.c:2146
+#: src/mainwindow.c:2197
 msgid "Set selection start to cursor position"
 msgstr "光标位置从选择的位置开始"
 
-#: src/mainwindow.c:2155
+#: src/mainwindow.c:2206
 msgid "Set selection end to cursor position"
 msgstr "光标位置从选择的位置结束"
 
-#: src/mainwindow.c:2165
+#: src/mainwindow.c:2216
 msgid "Play from cursor position"
 msgstr "从光标位置播放"
 
-#: src/mainwindow.c:2174
+#: src/mainwindow.c:2225
 msgid "Play selected area"
 msgstr "播放选择区域"
 
-#: src/mainwindow.c:2183
+#: src/mainwindow.c:2234
 msgid "Stop playing"
 msgstr "停止播放"
 
-#: src/mainwindow.c:2193
+#: src/mainwindow.c:2244
 msgid "Loop mode (play over and over)"
 msgstr "循环模式(反复播放)"
 
-#: src/mainwindow.c:2203
+#: src/mainwindow.c:2254
 msgid "Follow cursor while playing"
 msgstr "播放时光标跟随"
 
-#: src/mainwindow.c:2216
+#: src/mainwindow.c:2267
 msgid "Auto return to playback start"
 msgstr "自动返回启动回放"
 
-#: src/mainwindow.c:2230 src/recorddialog.c:628
+#: src/mainwindow.c:2281 src/recorddialog.c:866
 msgid "Record"
 msgstr "录音"
 
-#: src/mainwindow.c:2239 src/recorddialog.c:797
+#: src/mainwindow.c:2290 src/recorddialog.c:975
 msgid "Launch mixer"
 msgstr "启动混音"
 
-#: src/pipedialog.c:93
+#: src/pipedialog.c:92
 msgid "Command line: "
 msgstr "命令行："
 
-#: src/pipedialog.c:100
+#: src/pipedialog.c:99
 msgid "Send wav header"
 msgstr "发送 wav 标题"
 
-#: src/pipedialog.c:147
+#: src/pipedialog.c:154
 msgid "Process output"
 msgstr "进程输出"
 
-#: src/pipedialog.c:168
+#: src/pipedialog.c:179
 #, c-format
 msgid ""
 "Output from command '%s':\n"
@@ -2231,30 +2665,30 @@ msgstr ""
 "输出格式命令 '%s':\n"
 "\n"
 
-#: src/pipedialog.c:190
+#: src/pipedialog.c:202
 #, c-format
 msgid "Could not create pipe: %s"
 msgstr "无法创建管道：%s"
 
-#: src/pipedialog.c:205
+#: src/pipedialog.c:217
 #, c-format
 msgid "Error: fork: %s"
 msgstr "错误：派生： %s"
 
-#: src/pipedialog.c:256
+#: src/pipedialog.c:269
 msgid "Should not reach this point!"
 msgstr "将无法达到这个点！"
 
-#: src/pipedialog.c:465
+#: src/pipedialog.c:479
 msgid "Command failed without returning any data"
 msgstr "命令失败没有返回数据"
 
-#: src/pipedialog.c:475
+#: src/pipedialog.c:489
 #, c-format
 msgid "Error: %s"
 msgstr "错误： %s"
 
-#: src/player.c:245
+#: src/player.c:273
 msgid "The sound format of this file is not supported for playing."
 msgstr "不支持此类声音格式文件的播放"
 
@@ -2303,15 +2737,15 @@ msgstr ""
 msgid "Sample repeat/skip (low quality)"
 msgstr ""
 
-#: src/rawdialog.c:41
+#: src/rawdialog.c:42
 msgid "header size"
 msgstr ""
 
-#: src/rawdialog.c:71
+#: src/rawdialog.c:72
 msgid "Unknown file format"
 msgstr "未知的文件格式"
 
-#: src/rawdialog.c:78
+#: src/rawdialog.c:79
 #, c-format
 msgid ""
 "The format of file '%s' could not be recognized.\n"
@@ -2322,50 +2756,35 @@ msgstr ""
 "\n"
 "请在下面指定取样格式。"
 
-#: src/rawdialog.c:90
+#: src/rawdialog.c:91
 msgid "Header bytes: "
 msgstr ""
 
-#: src/recorddialog.c:45
-msgid "Choose a sample format"
-msgstr "选择一个取样格式"
-
-#: src/recorddialog.c:61
-#, c-format
-msgid "%d-bit"
-msgstr "%d-bit"
-
-#: src/recorddialog.c:67
-#, c-format
-msgid "%s (%s %s %d Hz)"
-msgstr "%s (%s %s %d Hz)"
-
-#: src/recorddialog.c:71
-#, c-format
-msgid "%s %s %d Hz"
-msgstr "%s %s %d Hz"
-
-#: src/recorddialog.c:84
-msgid "Other format..."
-msgstr "其它格式..."
-
-#: src/recorddialog.c:101 src/recorddialog.c:426 src/recorddialog.c:732
+#: src/recorddialog.c:206 src/recorddialog.c:664 src/recorddialog.c:910
 msgid "(no limit)"
 msgstr "(无限制)"
 
-#: src/recorddialog.c:207
+#: src/recorddialog.c:313
 msgid "Mild"
 msgstr "柔和"
 
-#: src/recorddialog.c:209
+#: src/recorddialog.c:315
 msgid "Heavy"
 msgstr "强硬"
 
-#: src/recorddialog.c:328
+#: src/recorddialog.c:423
+msgid "Update preset"
+msgstr ""
+
+#: src/recorddialog.c:428
+msgid "Add preset"
+msgstr ""
+
+#: src/recorddialog.c:507
 msgid "Custom format"
 msgstr "自定义格式"
 
-#: src/recorddialog.c:345
+#: src/recorddialog.c:545
 msgid ""
 "The sign and endian-ness can usually be left at their defaults, but should "
 "be changed if you're unable to record or get bad sound."
@@ -2373,122 +2792,129 @@ msgstr ""
 "符号和字节存储次序通常为上面(#左边)默认值，但是您如果无法录音或音质很次时将改"
 "变它。"
 
-#: src/recorddialog.c:352
-msgid ""
-"To add this format to the presets, enter a name below. Otherwise, leave it "
-"blank."
-msgstr "添加预置格式，在下面输入一个名称。否则，离开返回。"
-
-#: src/recorddialog.c:358
+#: src/recorddialog.c:559
 msgid "Name :"
 msgstr "名称："
 
-#: src/recorddialog.c:409
+#: src/recorddialog.c:571
+msgid "Presets:"
+msgstr ""
+
+#: src/recorddialog.c:586
+#, fuzzy
+msgid "Set format"
+msgstr "文件格式"
+
+#: src/recorddialog.c:594
+msgid "Add/Update preset"
+msgstr ""
+
+#: src/recorddialog.c:647
 msgid ""
 "Invalid time value. Time must be specified in the form (HH')MM:SS(.mmmm)"
 msgstr ""
 
-#: src/recorddialog.c:452 src/recorddialog.c:762
+#: src/recorddialog.c:691 src/recorddialog.c:940
 msgid "Format not selected"
 msgstr "格式没有选择"
 
-#: src/recorddialog.c:458
+#: src/recorddialog.c:698
 msgid "This format is not supported by the input driver!"
 msgstr "输入驱动程序不支持此格式！"
 
-#: src/recorddialog.c:463
+#: src/recorddialog.c:703
 msgid "Ready for recording"
 msgstr "录音就绪"
 
-#: src/recorddialog.c:480
+#: src/recorddialog.c:716
 msgid "Peak: "
 msgstr "峰值："
 
-#: src/recorddialog.c:481
+#: src/recorddialog.c:717
 msgid "Peak max: "
 msgstr "最大峰值："
 
-#: src/recorddialog.c:482
+#: src/recorddialog.c:718
 msgid "RMS: "
 msgstr ""
 
-#: src/recorddialog.c:483
+#: src/recorddialog.c:719
 msgid "Clipping: "
 msgstr "限幅："
 
-#: src/recorddialog.c:557
+#: src/recorddialog.c:788
 msgid "Resume recording"
 msgstr "继续录音"
 
-#: src/recorddialog.c:557 src/recorddialog.c:570
+#: src/recorddialog.c:788 src/recorddialog.c:808
 msgid "Pause recording"
 msgstr "暂停录音"
 
-#: src/recorddialog.c:559
+#: src/recorddialog.c:790
 msgid "RecordStatus|Paused"
 msgstr "已暂停"
 
-#: src/recorddialog.c:560 src/recorddialog.c:578
+#: src/recorddialog.c:791 src/recorddialog.c:816
 msgid "RecordStatus|Recording"
 msgstr "正在录音"
 
-#: src/recorddialog.c:573
+#: src/recorddialog.c:811
 msgid "Finish"
 msgstr "完成"
 
-#: src/recorddialog.c:581
+#: src/recorddialog.c:819
 msgid "Overruns: "
 msgstr "超限："
 
-#: src/recorddialog.c:583
+#: src/recorddialog.c:821
 msgid "Bytes written: "
 msgstr "字节写入："
 
-#: src/recorddialog.c:584
+#: src/recorddialog.c:822
 msgid "Auto stop in: "
 msgstr "自动停止在："
 
-#: src/recorddialog.c:706
+#: src/recorddialog.c:886
 msgid "Recording settings"
 msgstr "录音设置"
 
-#: src/recorddialog.c:713
+#: src/recorddialog.c:893
 msgid "Sample format: "
 msgstr "取样格式："
 
-#: src/recorddialog.c:730
+#: src/recorddialog.c:908
 msgid "Time limit: "
 msgstr "时间限制："
 
-#: src/recorddialog.c:738
+#: src/recorddialog.c:916
 msgid "Disable"
 msgstr "禁用"
 
-#: src/recorddialog.c:744
+#: src/recorddialog.c:922
 msgid "Set"
 msgstr "设置"
 
-#: src/recorddialog.c:756
+#: src/recorddialog.c:934
 msgid "Input levels"
 msgstr "输入电平"
 
-#: src/recorddialog.c:761
+#: src/recorddialog.c:939
 msgid "Recording status: "
 msgstr "录音状态："
 
-#: src/recorddialog.c:766
+#: src/recorddialog.c:944
 msgid "Time recorded: "
 msgstr "时间录音："
 
-#: src/recorddialog.c:767
+#: src/recorddialog.c:945
 msgid "N/A"
 msgstr "不可用"
 
-#: src/recorddialog.c:780
+#: src/recorddialog.c:958
 msgid "Start recording"
 msgstr "开始录音"
 
-#: src/recorddialog.c:791
+#: src/recorddialog.c:969
 msgid "Reset max peaks"
 msgstr "重置最大峰值"
 
@@ -2508,70 +2934,82 @@ msgstr "新建取样率："
 msgid "Method: "
 msgstr "方法："
 
-#: src/samplesizedialog.c:82
+#: src/samplesizedialog.c:37
+msgid "File already has the selected sample format"
+msgstr ""
+
+#: src/samplesizedialog.c:86
 msgid ""
 "(This changes the sample type of the entire file, not just the selection)"
 msgstr "(整个文件此声道的取样类型，不一定正好是选择的)"
 
-#: src/samplesizedialog.c:94
+#: src/samplesizedialog.c:98
 msgid "Don't actually change the data (for repairing bad files etc)"
 msgstr "无法真正的改变这数据(如修复损坏文件等)"
 
-#: src/sound-alsalib.c:57
+#: src/sound-alsalib.c:73
 msgid "ALSA Preferences"
 msgstr "ALSA 首选项"
 
-#: src/sound-alsalib.c:65
+#: src/sound-alsalib.c:81
 msgid "Playback device: "
 msgstr "回放设备："
 
-#: src/sound-alsalib.c:69
+#: src/sound-alsalib.c:85
 msgid "Recording device: "
 msgstr "录音设备："
 
-#: src/sound-alsalib.c:101
+#: src/sound-alsalib.c:91
+msgid "Event driven I/O"
+msgstr ""
+
+#: src/sound-alsalib.c:123
 #, c-format
 msgid "Error opening ALSA device '%s' for recording: %s"
 msgstr ""
 
-#: src/sound-alsalib.c:103
+#: src/sound-alsalib.c:125
 #, c-format
 msgid "Error opening ALSA device '%s' for playback: %s"
 msgstr ""
 
-#: src/sound-alsalib.c:179
+#: src/sound-alsalib.c:260
 msgid "snd_pcm_hw_params_set_access failed"
 msgstr ""
 
-#: src/sound-alsalib.c:184
+#: src/sound-alsalib.c:265
 msgid "snd_pcm_hw_params_set_format failed"
 msgstr ""
 
-#: src/sound-alsalib.c:189
+#: src/sound-alsalib.c:270
 msgid "snd_pcm_hw_params_set_channels failed"
 msgstr ""
 
-#: src/sound-alsalib.c:194
+#: src/sound-alsalib.c:275
 msgid "snd_pcm_hw_params_set_rate failed"
 msgstr ""
 
-#: src/sound-alsalib.c:295 src/sound-alsalib.c:316
+#: src/sound-alsalib.c:280
+msgid "snd_pcm_hw_params_set_buffer_size_last failed"
+msgstr ""
+
+#: src/sound-alsalib.c:423 src/sound-alsalib.c:479
 msgid "<ALSA playback buffer underrun>"
 msgstr ""
 
-#: src/sound-alsalib.c:354
+#: src/sound-alsalib.c:523
 msgid "<ALSA recording buffer overrun>"
 msgstr ""
 
-#: src/sound.c:153
+#: src/sound.c:167
 msgid "SDL (output only)"
 msgstr ""
 
-#: src/sound.c:182
+#: src/sound.c:209
 msgid "Dummy (no sound)"
 msgstr ""
 
-#: src/sound.c:315
+#: src/sound.c:334
 #, c-format
 msgid ""
 "Invalid driver name: %s\n"
@@ -2585,54 +3023,54 @@ msgstr ""
 msgid "Couldn't connect to ESD daemon: %s"
 msgstr ""
 
-#: src/sound-esound.c:113
+#: src/sound-esound.c:114
 msgid "EsounD: Unable to open playback stream"
 msgstr ""
 
-#: src/sound-esound.c:128
+#: src/sound-esound.c:130
 msgid "EsounD: Unable to open recording stream"
 msgstr ""
 
-#: src/sound-esound.c:143 src/sound-esound.c:215
+#: src/sound-esound.c:145 src/sound-esound.c:217
 msgid "EsounD driver: select"
 msgstr ""
 
-#: src/sound-esound.c:155
+#: src/sound-esound.c:157
 msgid "EsounD driver: write"
 msgstr ""
 
-#: src/sound-esound.c:219
+#: src/sound-esound.c:221
 msgid "Esound connection closed by server"
 msgstr ""
 
-#: src/sound-esound.c:225
+#: src/sound-esound.c:227
 msgid "EsounD driver: read"
 msgstr ""
 
-#: src/sound-esound.c:239
+#: src/sound-esound.c:241
 msgid "jump delay"
 msgstr ""
 
-#: src/sound-esound.c:253
+#: src/sound-esound.c:255
 msgid "ESD preferences"
 msgstr ""
 
-#: src/sound-esound.c:261
+#: src/sound-esound.c:263
 #, fuzzy
 msgid ""
 "If the cursor starts running too early when jumping, this delay should be "
 "increased."
 msgstr "正在运行."
 
-#: src/sound-esound.c:267
+#: src/sound-esound.c:269
 msgid "Jump delay:"
 msgstr "跳跃延迟："
 
-#: src/sound-esound.c:272
+#: src/sound-esound.c:274
 msgid "seconds"
 msgstr "秒"
 
-#: src/sound-esound.c:276
+#: src/sound-esound.c:278
 msgid ""
 "Selecting the ESD host to connect to is done through the ESPEAKER "
 "environment variable."
@@ -2704,48 +3142,53 @@ msgstr ""
 msgid "Activation failed!"
 msgstr ""
 
-#: src/sound-jack.c:682
+#: src/sound-jack.c:714
 #, c-format
 msgid ""
 "With JACK, the only supported recording format is Floating-point, single "
 "precision, %d Hz"
 msgstr ""
 
-#: src/sound-oss.c:88
+#: src/sound-oss.c:96
 #, c-format
 msgid "Could not open '%s': %s"
 msgstr ""
 
-#: src/sound-oss.c:101
+#: src/sound-oss.c:109
 #, c-format
 msgid "Error in sound driver: ioctl failed: %s"
 msgstr ""
 
-#: src/sound-oss.c:191
+#: src/sound-oss.c:215
 #, c-format
 msgid "Error in sound driver: write failed: %s"
 msgstr ""
 
-#: src/sound-oss.c:204
+#: src/sound-oss.c:228
 #, c-format
 msgid "Error in sound driver: read failed: %s"
 msgstr ""
 
-#: src/sound-oss.c:228 src/sound-oss.c:340
+#: src/sound-oss.c:252 src/sound-oss.c:384
 #, c-format
 msgid "Error in sound driver: select failed: %s"
 msgstr ""
 
-#: src/sound-oss.c:390
+#: src/sound-oss.c:439
 msgid "OSS preferences"
 msgstr ""
 
-#: src/sound-oss.c:400
+#: src/sound-oss.c:449
 #, fuzzy
-msgid "Sound device file:"
-msgstr "声音 文件:"
+msgid "Playback device file:"
+msgstr "回放设备："
 
-#: src/sound-oss.c:406
+#: src/sound-oss.c:458
+#, fuzzy
+msgid "Recording device file:"
+msgstr "录音设备："
+
+#: src/sound-oss.c:464
 #, fuzzy
 msgid "Avoid select calls (try this if recording locks up)"
 msgstr "选择 测试 向上"
@@ -2760,12 +3203,12 @@ msgstr "无 输出 可用!"
 msgid "sound-portaudio: No input devices available!"
 msgstr "无 可用!"
 
-#: src/sound-portaudio.c:186 src/sound-portaudio.c:272
+#: src/sound-portaudio.c:186 src/sound-portaudio.c:273
 #, fuzzy, c-format
 msgid "Pa_OpenStream failed: %s\n"
 msgstr "失败 秒 n"
 
-#: src/sound-portaudio.c:246
+#: src/sound-portaudio.c:247
 msgid "Buffer overrun!"
 msgstr "缓冲器超限！"
 
@@ -2774,7 +3217,7 @@ msgstr "缓冲器超限！"
 msgid "Could not initialize SDL: %s"
 msgstr ""
 
-#: src/sound-sdl.c:88
+#: src/sound-sdl.c:89
 #, c-format
 msgid "SDL: Couldn't open audio: %s"
 msgstr ""
@@ -2792,350 +3235,350 @@ msgstr ""
 msgid "SunAudio: Error reading from sound device"
 msgstr ""
 
-#: src/soxdialog.c:52
+#: src/soxdialog.c:53
 msgid "Echo"
 msgstr ""
 
-#: src/soxdialog.c:53
+#: src/soxdialog.c:54
 msgid "Echo sequence"
 msgstr ""
 
-#: src/soxdialog.c:54
+#: src/soxdialog.c:55
 #, fuzzy
 msgid "Reverb"
 msgstr "余响时间："
 
-#: src/soxdialog.c:55
+#: src/soxdialog.c:56
 #, fuzzy
 msgid "Chorus"
 msgstr "颜色"
 
-#: src/soxdialog.c:56
+#: src/soxdialog.c:57
 msgid "Flanger"
 msgstr ""
 
-#: src/soxdialog.c:57
+#: src/soxdialog.c:58
 msgid "Phaser"
 msgstr ""
 
-#: src/soxdialog.c:58
+#: src/soxdialog.c:59
 msgid "Compress/Expand"
 msgstr ""
 
-#: src/soxdialog.c:59
+#: src/soxdialog.c:60
 msgid "Pitch adjust"
 msgstr ""
 
-#: src/soxdialog.c:60
+#: src/soxdialog.c:61
 msgid "Time stretch"
 msgstr ""
 
-#: src/soxdialog.c:61
+#: src/soxdialog.c:62
 msgid "DC Shift"
 msgstr ""
 
-#: src/soxdialog.c:62
+#: src/soxdialog.c:63
 msgid "Masking noise"
 msgstr ""
 
-#: src/soxdialog.c:63
+#: src/soxdialog.c:64
 #, fuzzy
 msgid "Reverse"
 msgstr "余响时间："
 
-#: src/soxdialog.c:64
+#: src/soxdialog.c:65
 msgid "Earwax"
 msgstr ""
 
-#: src/soxdialog.c:65
+#: src/soxdialog.c:66
 msgid "Vibro"
 msgstr ""
 
-#: src/soxdialog.c:66
+#: src/soxdialog.c:67
 msgid "Lowpass filter (single-pole)"
 msgstr ""
 
-#: src/soxdialog.c:67
+#: src/soxdialog.c:68
 msgid "Highpass filter (single-pole)"
 msgstr ""
 
-#: src/soxdialog.c:68
+#: src/soxdialog.c:69
 #, fuzzy
 msgid "Bandpass filter"
 msgstr "带通"
 
-#: src/soxdialog.c:69
+#: src/soxdialog.c:70
 msgid "Butterworth lowpass filter"
 msgstr ""
 
-#: src/soxdialog.c:70
+#: src/soxdialog.c:71
 msgid "Butterworth highpass filter"
 msgstr ""
 
-#: src/soxdialog.c:71
+#: src/soxdialog.c:72
 msgid "Butterworth bandpass filter"
 msgstr ""
 
-#: src/soxdialog.c:72
+#: src/soxdialog.c:73
 msgid "Butterworth bandreject filter"
 msgstr ""
 
-#: src/soxdialog.c:73
+#: src/soxdialog.c:74
 msgid "Sinc-windowed filter"
 msgstr ""
 
-#: src/soxdialog.c:300
+#: src/soxdialog.c:307
 msgid "Frequency: "
 msgstr "频率："
 
-#: src/soxdialog.c:305 src/soxdialog.c:312 src/soxdialog.c:471
-#: src/soxdialog.c:473
+#: src/soxdialog.c:312 src/soxdialog.c:319 src/soxdialog.c:478
+#: src/soxdialog.c:480
 msgid "Hz"
 msgstr ""
 
-#: src/soxdialog.c:315
+#: src/soxdialog.c:322
 msgid "Noise mode"
 msgstr "杂讯模式"
 
-#: src/soxdialog.c:375
+#: src/soxdialog.c:382
 msgid "Reverb time: "
 msgstr "余响时间："
 
-#: src/soxdialog.c:380
+#: src/soxdialog.c:387
 msgid "ms"
 msgstr "毫秒"
 
-#: src/soxdialog.c:385
+#: src/soxdialog.c:392
 msgid "Delay (ms)  "
 msgstr "延迟(毫秒)："
 
-#: src/soxdialog.c:388
+#: src/soxdialog.c:395
 msgid "Decay  "
 msgstr "延迟"
 
-#: src/soxdialog.c:392
+#: src/soxdialog.c:399
 msgid "Speed (Hz)  "
 msgstr "速率(Hz)"
 
-#: src/soxdialog.c:396
+#: src/soxdialog.c:403
 msgid "Depth (ms)  "
 msgstr "深度(毫秒)"
 
-#: src/soxdialog.c:400
+#: src/soxdialog.c:407
 msgid "Modulation  "
 msgstr "调音"
 
-#: src/soxdialog.c:403
+#: src/soxdialog.c:410
 msgid "Modulation|Sinusoidal"
 msgstr "正弦"
 
-#: src/soxdialog.c:404
+#: src/soxdialog.c:411
 msgid "Modulation|Triangular"
 msgstr "三角"
 
-#: src/soxdialog.c:417
+#: src/soxdialog.c:424
 msgid "(Lines with delay=0 will be ignored.)"
 msgstr "(行数显示=0 将被忽略)"
 
-#: src/soxdialog.c:436 src/soxdialog.c:438 src/soxdialog.c:442
-#: src/soxdialog.c:444 src/soxdialog.c:446
+#: src/soxdialog.c:443 src/soxdialog.c:445 src/soxdialog.c:449
+#: src/soxdialog.c:451 src/soxdialog.c:453
 msgid "Input gain: "
 msgstr "输入增益："
 
-#: src/soxdialog.c:440
+#: src/soxdialog.c:447
 msgid "Output gain: "
 msgstr "输出增益："
 
-#: src/soxdialog.c:452
+#: src/soxdialog.c:459
 msgid "Width: "
 msgstr "宽度："
 
-#: src/soxdialog.c:458 src/soxdialog.c:460
+#: src/soxdialog.c:465 src/soxdialog.c:467
 msgid "Bandwidth: "
 msgstr "带宽："
 
-#: src/soxdialog.c:469
+#: src/soxdialog.c:476
 msgid "Filter type: "
 msgstr "过滤器类型："
 
-#: src/soxdialog.c:470
+#: src/soxdialog.c:477
 #, fuzzy
 msgid "Low 6dB corner: "
 msgstr "低 "
 
-#: src/soxdialog.c:472
+#: src/soxdialog.c:479
 #, fuzzy
 msgid "High 6db corner: "
 msgstr "高 "
 
-#: src/soxdialog.c:474
+#: src/soxdialog.c:481
 msgid "Window length: "
 msgstr "窗口长度："
 
-#: src/soxdialog.c:475
+#: src/soxdialog.c:482
 msgid "samples"
 msgstr "取样率"
 
-#: src/soxdialog.c:476
+#: src/soxdialog.c:483
 msgid "Beta"
 msgstr "Beta"
 
-#: src/soxdialog.c:479
+#: src/soxdialog.c:486
 msgid "Lowpass"
 msgstr "低通"
 
-#: src/soxdialog.c:480
+#: src/soxdialog.c:487
 msgid "Highpass"
 msgstr "高通"
 
-#: src/soxdialog.c:481
+#: src/soxdialog.c:488
 msgid "Bandpass"
 msgstr "带通"
 
-#: src/soxdialog.c:514
+#: src/soxdialog.c:521
 msgid "Attack integration time: "
 msgstr "增益积分时间："
 
-#: src/soxdialog.c:519
+#: src/soxdialog.c:526
 msgid "Decay integration time: "
 msgstr "衰减积分时间："
 
-#: src/soxdialog.c:526
+#: src/soxdialog.c:533
 msgid "Input level (dB)"
 msgstr "输入电平(dB)"
 
-#: src/soxdialog.c:527
+#: src/soxdialog.c:534
 msgid "Output level (dB)"
 msgstr "输出电平(dB)"
 
-#: src/soxdialog.c:540
+#: src/soxdialog.c:547
 msgid "Post-processing gain: "
 msgstr "后期处理增益："
 
-#: src/soxdialog.c:544
+#: src/soxdialog.c:551
 msgid " dB"
 msgstr ""
 
-#: src/soxdialog.c:545
+#: src/soxdialog.c:552
 msgid "Initial volume: "
 msgstr "初始音量："
 
-#: src/soxdialog.c:549
+#: src/soxdialog.c:556
 msgid "Delay time: "
 msgstr "延迟时间："
 
-#: src/soxdialog.c:558
+#: src/soxdialog.c:565
 msgid "Shift amount: "
 msgstr "转换合计："
 
-#: src/soxdialog.c:562
+#: src/soxdialog.c:569
 msgid "Peak limiter"
 msgstr "峰值限制"
 
-#: src/soxdialog.c:566
+#: src/soxdialog.c:573
 msgid "Limiter gain: "
 msgstr "限制增益："
 
-#: src/soxdialog.c:579
+#: src/soxdialog.c:586
 msgid "Amount: "
 msgstr "合计："
 
-#: src/soxdialog.c:580
+#: src/soxdialog.c:587
 msgid " cents"
 msgstr "美分"
 
-#: src/soxdialog.c:581
+#: src/soxdialog.c:588
 msgid "Window width: "
 msgstr "窗口宽度："
 
-#: src/soxdialog.c:582 src/soxdialog.c:613
+#: src/soxdialog.c:589 src/soxdialog.c:620
 msgid " ms"
 msgstr "毫秒"
 
-#: src/soxdialog.c:583
+#: src/soxdialog.c:590
 msgid "Interpolation: "
 msgstr "内插："
 
-#: src/soxdialog.c:584
+#: src/soxdialog.c:591
 msgid "Fade: "
 msgstr "淡入："
 
-#: src/soxdialog.c:593
+#: src/soxdialog.c:600
 msgid "Interpolation|Cubic"
 msgstr "三次曲线"
 
-#: src/soxdialog.c:594
+#: src/soxdialog.c:601
 msgid "Interpolation|Linear"
 msgstr "线性"
 
-#: src/soxdialog.c:600
+#: src/soxdialog.c:607
 msgid "Fade|Cos"
 msgstr "余弦"
 
-#: src/soxdialog.c:601
+#: src/soxdialog.c:608
 msgid "Fade|Hamming"
 msgstr "加重平衡"
 
-#: src/soxdialog.c:602
+#: src/soxdialog.c:609
 msgid "Fade|Linear"
 msgstr "线性"
 
-#: src/soxdialog.c:603
+#: src/soxdialog.c:610
 msgid "Fade|Trapezoid"
 msgstr "不规则四边形"
 
-#: src/soxdialog.c:611
+#: src/soxdialog.c:618
 msgid "Factor: "
 msgstr "系数："
 
-#: src/soxdialog.c:612
+#: src/soxdialog.c:619
 msgid "Window size: "
 msgstr "窗口大小："
 
-#: src/soxdialog.c:624
+#: src/soxdialog.c:631
 #, fuzzy
 msgid "Speed: "
 msgstr "速度 "
 
-#: src/soxdialog.c:625
+#: src/soxdialog.c:632
 msgid " Hz"
 msgstr ""
 
-#: src/soxdialog.c:626
+#: src/soxdialog.c:633
 msgid "Depth: "
 msgstr "深度："
 
-#: src/soxdialog.c:637
+#: src/soxdialog.c:644
 #, fuzzy
 msgid "This effect has no options."
 msgstr "该特效没有选项。"
 
-#: src/soxdialog.c:710
+#: src/soxdialog.c:718
 msgid "Error creating pipe"
 msgstr ""
 
-#: src/soxdialog.c:717
+#: src/soxdialog.c:725
 msgid "Couldn't fork"
 msgstr ""
 
-#: src/soxdialog.c:732
+#: src/soxdialog.c:740
 #, c-format
 msgid "Error running 'sox -h': %s\n"
 msgstr ""
 
-#: src/soxdialog.c:734
+#: src/soxdialog.c:742
 msgid "Should not reach this point"
 msgstr ""
 
-#: src/soxdialog.c:749
+#: src/soxdialog.c:757
 msgid "Error reading sox output"
 msgstr ""
 
-#: src/soxdialog.c:764
+#: src/soxdialog.c:786
 msgid "Unable to detect supported SoX effects"
 msgstr ""
 
-#: src/soxdialog.c:800
+#: src/soxdialog.c:824
 msgid "Sox support couldn't be initialized"
 msgstr ""
 
@@ -3147,59 +3590,59 @@ msgstr "速率："
 msgid "(no file loaded)"
 msgstr "(没有文件载入)"
 
-#: src/statusbar.c:233
+#: src/statusbar.c:235
 msgid "Cursor: running"
 msgstr "光标：正在运行"
 
-#: src/statusbar.c:235
+#: src/statusbar.c:237
 msgid "Cursor: "
 msgstr "光标："
 
-#: src/statusbar.c:258
+#: src/statusbar.c:260
 #, c-format
 msgid "View: [ %s - %s ]"
 msgstr "视图： [ %s - %s ]"
 
-#: src/statusbar.c:279
+#: src/statusbar.c:281
 #, c-format
 msgid "Selection: %s+%s"
 msgstr "选择： %s+%s"
 
-#: src/statusbar.c:302
+#: src/statusbar.c:304
 msgid "Processing data"
 msgstr "处理数据"
 
-#: src/statusbar.c:304
+#: src/statusbar.c:306
 #, c-format
 msgid "%s... (Press ESC to cancel)"
 msgstr "%s... (按 ESC 取消)"
 
-#: src/um.c:49
+#: src/um.c:50
 msgid "mhWaveEdit: "
 msgstr "mhWaveEdit: "
 
-#: src/um.c:62
+#: src/um.c:63
 #, c-format
 msgid "mhWaveEdit: %s: %s\n"
 msgstr "mhWaveEdit: %s: %s\n"
 
-#: src/um.c:95
+#: src/um.c:96
 msgid "Message"
 msgstr "消息"
 
-#: src/um.c:115
+#: src/um.c:116
 msgid "Yes"
 msgstr "是"
 
-#: src/um.c:123
+#: src/um.c:124
 msgid "No"
 msgstr "否"
 
-#: src/um.c:316
+#: src/um.c:317
 msgid "Input"
 msgstr "输入"
 
-#: src/um.c:398
+#: src/um.c:401
 msgid "Choice"
 msgstr "选择"
 
@@ -3219,31 +3662,31 @@ msgstr "结束："
 msgid "Find top volume"
 msgstr "查找峰值音量"
 
-#: src/document.c:226
+#: src/document.c:229
 #, c-format
 msgid "untitled #%d"
 msgstr "无标题 #%d"
 
-#: src/document.c:278
+#: src/document.c:281
 msgid ""
 "Loading and then saving files with 'lossy' formats (like mp3 and ogg) leads "
 "to a quality loss, also for the unmodified parts of the file."
 msgstr ""
 
-#: src/session.c:84
+#: src/session.c:87
 msgid "Error opening session directory"
 msgstr ""
 
-#: src/session.c:101 src/session.c:161
+#: src/session.c:104 src/session.c:164
 #, c-format
 msgid "%s: Wrong file type"
 msgstr "%s：错误文件类型"
 
-#: src/session.c:236
+#: src/session.c:238
 msgid "Could not create session file"
 msgstr "无法创建会话文件"
 
-#: src/session.c:278
+#: src/session.c:280
 msgid ""
 "The files that belonged to the crashed session have been recovered. Any "
 "files that are not saved will be removed permanently.\n"
@@ -3254,41 +3697,46 @@ msgstr ""
 "\n"
 "(此信息只显示一次)"
 
-#: src/session.c:328
+#: src/session.c:380
 msgid "Suspended"
 msgstr "已挂起"
 
-#: src/session.c:328 src/session.c:329
+#: src/session.c:380 src/session.c:381
 msgid "Crash"
 msgstr "崩溃"
 
-#: src/session.c:329
+#: src/session.c:381
 msgid "Left files"
 msgstr ""
 
-#: src/session.c:338
+#: src/session.c:391
 #, c-format
 msgid "%s on %s(%d files, %ld bytes)"
 msgstr ""
 
-#: src/session.c:355
+#: src/session.c:409
 msgid "Sessions"
 msgstr "会话"
 
-#: src/session.c:365
+#: src/session.c:419
 msgid ""
 "Earlier sessions were found. Choose one to resume or start a new session."
 msgstr "发现以前的会话。选择一个再继续或开始一个新的会话。"
 
-#: src/session.c:384
+#: src/session.c:439
 msgid "Resume selected"
 msgstr "继续选择"
 
-#: src/session.c:394
+#: src/session.c:449
+#, fuzzy
+msgid "Delete selected"
+msgstr "删除选择"
+
+#: src/session.c:456
 msgid "Start new session"
 msgstr "开始新的会话"
 
-#: src/session.c:400
+#: src/session.c:462
 msgid "Exit"
 msgstr "退出"
 
@@ -3311,6 +3759,64 @@ msgstr "源"
 #: src/mapchannelsdialog.c:139
 msgid "Destination"
 msgstr "目标"
+
+#: src/sandwichdialog.c:107
+#, fuzzy
+msgid "Align beginning of files"
+msgstr "在文件开头之后"
+
+#: src/sandwichdialog.c:110
+#, fuzzy
+msgid "Align end of files"
+msgstr "在文件结束之后"
+
+#: src/sandwichdialog.c:113
+#, fuzzy
+msgid "Align at marker: "
+msgstr "客户名称："
+
+#: src/sandwichdialog.c:126
+#, fuzzy
+msgid "Add channels from: "
+msgstr "添加声道"
+
+#: src/sandwichdialog.c:130
+msgid "Alignment"
+msgstr ""
+
+#~ msgid "Removing channel"
+#~ msgstr "删除声道"
+
+#, fuzzy
+#~ msgid "Mapping channels"
+#~ msgstr "映射声道"
+
+#~ msgid "Removing channels"
+#~ msgstr "删除声道"
+
+#~ msgid "Choose a sample format"
+#~ msgstr "选择一个取样格式"
+
+#~ msgid "%d-bit"
+#~ msgstr "%d-bit"
+
+#~ msgid "%s (%s %s %d Hz)"
+#~ msgstr "%s (%s %s %d Hz)"
+
+#~ msgid "%s %s %d Hz"
+#~ msgstr "%s %s %d Hz"
+
+#~ msgid "Other format..."
+#~ msgstr "其它格式..."
+
+#~ msgid ""
+#~ "To add this format to the presets, enter a name below. Otherwise, leave "
+#~ "it blank."
+#~ msgstr "添加预置格式，在下面输入一个名称。否则，离开返回。"
+
+#, fuzzy
+#~ msgid "Sound device file:"
+#~ msgstr "声音 文件:"
 
 #~ msgid ""
 #~ "Environment variable LADSPA_PATH not set.\n"

@@ -1287,12 +1287,37 @@ static void edit_playall(GtkMenuItem *menuitem, gpointer user_data)
      do_play(w,0,w->doc->chunk->length,w->loopmode);
 }
 
+static gchar *get_help_page_contents(int page)
+{
+     const char **c;
+     char *ts[128];
+     int i,j,k,l,x;
+     gchar *r;
+     c = help_page_contents[page];
+     l = 0;
+     for (i=0; c[i]!=NULL && i<128; i++) {
+	  ts[i] = gettext(c[i]);
+	  l += strlen(ts[i]);
+     }
+     r = g_malloc(l+1);
+     k = 0;
+     for (j=0; j<i; j++) {
+	  x = strlen(ts[j]);
+	  memcpy(r+k, ts[j], x);
+	  k += x;
+     }
+     r[k] = 0;
+     g_assert(k==l);
+     return r;
+}
+
 static void help_readme(GtkMenuItem *menuitem, gpointer user_data)
 {
      GtkAccelGroup* ag;
      GtkWidget *window,*table,*notebook,*frame,*label,*button,*box1,*box2;
      int i;
      GtkWidget *scrolledwindow1, *viewport1, *label2;
+     gchar *c;
 #if GTK_MAJOR_VERSION == 2
      Mainwindow *mw = MAINWINDOW(user_data);
      PangoFontDescription *pfd;
@@ -1338,7 +1363,9 @@ static void help_readme(GtkMenuItem *menuitem, gpointer user_data)
 	gtk_widget_show (viewport1);
 	gtk_container_add (GTK_CONTAINER (scrolledwindow1), viewport1);
 
-	label2 = gtk_label_new (_(help_page_contents[i]));
+	c = get_help_page_contents(i);
+	label2 = gtk_label_new (c);
+	g_free(c);
 #if GTK_MAJOR_VERSION == 2
 if (i==HELP_PAGE_SHORTCUTS)	// Keyboard tab only
 {
