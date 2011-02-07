@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mhWaveEdit 1.4.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-07 02:11+0100\n"
+"POT-Creation-Date: 2011-02-07 03:39+0100\n"
 "PO-Revision-Date: 2007-09-05 10:41+0100\n"
 "Last-Translator: Georg Funke <schorsch.funke@freenet.de>\n"
 "Language-Team: German <Project-Id-Version: gtranslator 1.1.>\n"
@@ -599,7 +599,7 @@ msgstr "Schließe das Dialogfenster nach dem Anwenden der Effekte"
 msgid "Apply"
 msgstr "Anwenden"
 
-#: src/effectbrowser.c:810 src/gotodialog.c:148 src/mainwindow.c:1377
+#: src/effectbrowser.c:810 src/gotodialog.c:148 src/mainwindow.c:1404
 #: src/pipedialog.c:166 src/recorddialog.c:603 src/recorddialog.c:979
 #: src/sound-esound.c:290 src/sound-jack.c:260 src/sound-oss.c:478
 msgid "Close"
@@ -785,7 +785,7 @@ msgstr "Eigenes Argument: "
 msgid "Use this setting by default"
 msgstr "Benutzte standardmäßig diese Einstellung"
 
-#: src/filetypes.c:1166 src/gotodialog.c:135 src/mainwindow.c:1448
+#: src/filetypes.c:1166 src/gotodialog.c:135 src/mainwindow.c:1475
 #: src/rawdialog.c:100 src/sound-alsalib.c:98 src/sound-esound.c:286
 #: src/sound-jack.c:256 src/sound-oss.c:474 src/um.c:108 src/um.c:141
 #: src/um.c:337 src/um.c:437
@@ -1016,15 +1016,843 @@ msgstr ""
 "mhWaveEdit ist ein grafisches Programm zu Editieren von Musikdateien. Es ist "
 "komplett frei (GPL).\n"
 
-#: src/help.c:47
+#: src/help.c:49
 #, no-c-format
 msgid "You can find the latest release of mhWaveEdit at:\n"
 msgstr "Die neuste Version können von mhWaveEdit bekommen Sie auf:\n"
 
-#: src/help.c:47
+#: src/help.c:50
 #, no-c-format
 msgid "http://gna.org/projects/mhwaveedit/\n"
 msgstr "http://gna.org/projects/mhwaveedit/\n"
+
+#: src/help.c:55
+#, no-c-format
+msgid ""
+"The area where you 'see' the contents of the file you are editing, is called "
+"the 'sample view'. \n"
+msgstr ""
+
+#: src/help.c:57
+#, no-c-format
+msgid ""
+"In the sample view there is a grey vertical bar called the 'cursor'. The "
+"cursor follows the sound wave when you play the sound. You can position the "
+"cursor by clicking with the right (2:nd) mouse button. If you do this while "
+"you're playing a file, the playing will continue from the new cursor "
+"position. You can also position the cursor more exact by using the 'Position "
+"Cursor...' command on the Edit menu.\n"
+msgstr ""
+
+#: src/help.c:59
+#, no-c-format
+msgid ""
+"You can place marks in your file by holding down Ctrl and pressing a number "
+"from 0 to 9. This will place a mark (green vertical bar) with the same "
+"number at the current cursor position. You can later make the cursor go to "
+"that position again by just pressing the number. Setting and jumping to "
+"marks can be done while playing. To remove a mark, jump to the mark and set "
+"it again.\n"
+msgstr ""
+
+#: src/help.c:64
+#, no-c-format
+msgid ""
+"Playing a file is simple, just load the file and press the play button. The "
+"green play button plays from the current position. The yellow play button "
+"plays the current selection, or the entire file if nothing is selected. Stop "
+"the playback with the stop button (with the red square). \n"
+msgstr ""
+
+#: src/help.c:66
+#, no-c-format
+msgid ""
+"The playback speed can be varied by adjusting the slider to the far right. \n"
+msgstr ""
+
+#: src/help.c:68
+#, no-c-format
+msgid "You can do normal editing while the file is playing.\n"
+msgstr ""
+
+#: src/help.c:73
+#, no-c-format
+msgid ""
+"Recording is done with 'Record...' on the Play menu, or the Record button "
+"(the red circle). A dialog box will pop up where you can select what format "
+"you want to record in. After selecting the format, meters and numbers will "
+"appear showing info about the volume level of the sound input. \n"
+msgstr ""
+
+#: src/help.c:75
+#, no-c-format
+msgid ""
+"When you want to start recording, press the \"Start recording\" button. When "
+"you've recorded everything you wanted to, press the Finish button and the "
+"record dialog will disappear and newly recorded sound will show up in a new "
+"window.\n"
+msgstr ""
+
+#: src/help.c:77
+#, no-c-format
+msgid ""
+"Currently it is impossible to play and record at the same time, so the "
+"playback will stop when you record.\n"
+msgstr ""
+
+#: src/help.c:82
+#, no-c-format
+msgid ""
+"You make selections by dragging the mouse over the sample view. You can hear "
+"what you've currently selected by clicking on the \"play selection\" button "
+"(the button with the yellow arrow) or by selecting 'Play selection' from the "
+"Play menu.\n"
+msgstr ""
+
+#: src/help.c:84
+#, no-c-format
+msgid ""
+"You can use the cursor to refine the selection. Use the 'Selection start at "
+"cursor' and 'Selection end at cursor' buttons to move the selection starting "
+"point or the selection end point to the current cursor position. You can "
+"also drag the selection endpoints using the mouse.\n"
+msgstr ""
+
+#: src/help.c:86
+#, no-c-format
+msgid "The 'Cut' and 'Copy' functions work like in any other software. \n"
+msgstr ""
+
+#: src/help.c:88
+#, no-c-format
+msgid ""
+"The 'Paste' function insert the clipboard contents at the cursor position. "
+"The 'Paste over' function works like 'Paste', except that it overwrites the "
+"data after the insert position. \n"
+msgstr ""
+
+#: src/help.c:90
+#, fuzzy, no-c-format
+msgid ""
+"The 'Paste mix' function combines the clipboard data with the data at the "
+"cursor position.\n"
+msgstr "Einfügen, überschreiben der Daten hinter der Cursor Position"
+
+#: src/help.c:92
+#, no-c-format
+msgid ""
+"The 'Paste as new' function opens a new window and puts the clipboard "
+"contents into it. \n"
+msgstr ""
+
+#: src/help.c:94
+#, no-c-format
+msgid ""
+"The 'Crop' function deletes all parts of the file that are not selected.\n"
+msgstr ""
+
+#: src/help.c:96
+#, no-c-format
+msgid ""
+"The 'Silence selection' function replaces the selected part with silence. To "
+"avoid clicks, the silent part is a line that meets the wave at the "
+"endpoints.\n"
+msgstr ""
+
+#: src/help.c:98
+#, no-c-format
+msgid ""
+"All editing functions work non-destructively, that is, the file you're "
+"editing isn't actually changed until you save it (the effects also work this "
+"way).\n"
+msgstr ""
+
+#: src/help.c:104
+#, no-c-format
+msgid ""
+"mhWaveEdit has a few simple effects, which are available from the 'Effects' "
+"menu. \n"
+msgstr ""
+
+#: src/help.c:106
+#, no-c-format
+msgid " * Fade in/out\n"
+msgstr ""
+
+#: src/help.c:108
+#, no-c-format
+msgid "   This creates a linear fade in or fade out effect.\n"
+msgstr ""
+
+#: src/help.c:110
+#, fuzzy, no-c-format
+msgid " * Normalize, Normalize to...\n"
+msgstr "Normalisiere nach..."
+
+#: src/help.c:112
+#, no-c-format
+msgid ""
+"   This amplifies the sound as much as possible without getting clipping "
+"distortion. The \"Normalize to...\" item lets you specify which level to "
+"normalize to.\n"
+msgstr ""
+
+#: src/help.c:114
+#, fuzzy, no-c-format
+msgid " * Volume adjust/fade...\n"
+msgstr "Lautstärke verändern"
+
+#: src/help.c:116
+#, no-c-format
+msgid ""
+"   This effect lets you select a starting volume and a ending volume and "
+"amplifies the selection fading from the starting volume to the ending "
+"volume.\n"
+msgstr ""
+
+#: src/help.c:118
+#, no-c-format
+msgid ""
+"   Note that volumes above 100% may cause sound distortion. Use the 'Find "
+"top volume' to find out the maximum amplification possible without "
+"distortion. (You can use this for normalizing samples.) \n"
+msgstr ""
+
+#: src/help.c:120
+#, no-c-format
+msgid ""
+"   By setting starting volume and ending volume to the same value you get a "
+"simple amplification of the sound. \n"
+msgstr ""
+
+#: src/help.c:122
+#, fuzzy, no-c-format
+msgid " * Convert samplerate...\n"
+msgstr "Konvertiere Samplerate"
+
+#: src/help.c:124
+#, no-c-format
+msgid ""
+"   This converts the samplerate of the entire file to one you specify. There "
+"are different methods for doing this, usually the one in the top has the "
+"best quality but can take longer than the other methode.\n"
+msgstr ""
+
+#: src/help.c:126
+#, fuzzy, no-c-format
+msgid " * Convert sample format...\n"
+msgstr "Konvertiere Sampleformat"
+
+#: src/help.c:128
+#, fuzzy, no-c-format
+msgid "   This converts the sample format of the entire file.\n"
+msgstr ""
+"(Dies ändert die Samplerate der \n"
+"gesamten Datei, nicht nur der Markierung)"
+
+#: src/help.c:130
+#, no-c-format
+msgid ""
+"   The 'Don't actually change the data' option can be used if the program "
+"was wrong about the file's format.\n"
+msgstr ""
+
+#: src/help.c:132
+#, no-c-format
+msgid " * Byte swap\n"
+msgstr ""
+
+#: src/help.c:134
+#, no-c-format
+msgid ""
+"   This \"byte swaps\" the selected part. It can be used to repair damaged "
+"files where the byte order is wrong. Note that if the sound looks alright "
+"but plays wrong, you should not use this option, instead you should use the "
+"\"byte-swap output\" option in the Preferences dialog.\n"
+msgstr ""
+
+#: src/help.c:136
+#, fuzzy, no-c-format
+msgid " * Mix to mono\n"
+msgstr "/Effekte/Auf _Mono runtermischen"
+
+#: src/help.c:138
+#, no-c-format
+msgid "   This mixes all channels of the file together to a mono sound.\n"
+msgstr ""
+
+#: src/help.c:140
+#, fuzzy, no-c-format
+msgid " * Add channel\n"
+msgstr "%d Kanäle"
+
+#: src/help.c:142
+#, no-c-format
+msgid ""
+"   This copies the first channel to a new channel in the sound, converting "
+"mono to stereo etc.\n"
+msgstr ""
+
+#: src/help.c:144
+#, fuzzy, no-c-format
+msgid " * Map channels...\n"
+msgstr "Kombiniere Kanäle"
+
+#: src/help.c:145
+#, no-c-format
+msgid "   \n"
+msgstr ""
+
+#: src/help.c:146
+#, no-c-format
+msgid ""
+"   With this effect, you can change the number of channels in the file. You "
+"can also rearrange and add (i.e. mix) channels.\n"
+msgstr ""
+
+#: src/help.c:148
+#, fuzzy, no-c-format
+msgid " * Combine channels...\n"
+msgstr "Führe Kanäle zusammen"
+
+#: src/help.c:150
+#, no-c-format
+msgid ""
+"   This effect lets you create a new sound by a linear combination of the "
+"old channels. This means you can do channel mixing / swapping / balance / "
+"panning / amplification etc. by entering different values. For example, to "
+"swap the left and right channel, you select that the new Channel 1 should be "
+"0% of the old Channel 1 and 100% of the old Channel 2, and the new Channel 2 "
+"should be 100% of the old Channel 1 and 0% of the old Channel 2 \n"
+msgstr ""
+
+#: src/help.c:152
+#, fuzzy, no-c-format
+msgid " * Speed adjustment...\n"
+msgstr "/Effekte/Ge_schwindigkeit verändern..."
+
+#: src/help.c:154
+#, no-c-format
+msgid ""
+"   This effect changes the speed of the selection. The tone will change as "
+"well.\n"
+msgstr ""
+
+#: src/help.c:155
+#, fuzzy, no-c-format
+msgid " * Pipe through program...\n"
+msgstr "Pipe zu einem externen Programm"
+
+#: src/help.c:156
+#, no-c-format
+msgid " \n"
+msgstr ""
+
+#: src/help.c:157
+#, no-c-format
+msgid ""
+"   This effect is for advanced users wanting to pipe raw audio data through "
+"an external program. The output of the program is read back and replaces the "
+"processed part. \n"
+msgstr ""
+
+#: src/help.c:159
+#, no-c-format
+msgid ""
+"mhWaveEdit supports LADSPA effects and can also make use of most of the SoX "
+"utility's effects. To find the LADSPA plugins the environment variable "
+"LADSPA_PATH must be properly set up. \n"
+msgstr ""
+
+#: src/help.c:161
+#, no-c-format
+msgid ""
+"All supported effects can be found by choosing the 'Effects...' menu item. "
+"The effects are listed with names beginning with [B] for builtin effects, "
+"[L] for LADSPA effects, and [S] for SoX effects.\n"
+msgstr ""
+
+#: src/help.c:167
+#, no-c-format
+msgid "Some notes on sound quality.\n"
+msgstr ""
+
+#: src/help.c:169
+#, no-c-format
+msgid ""
+"The general rule when doing audio editing/processing is to not manipulate "
+"the data more than necessary and keep an original copy whenever you're "
+"processing your important files. \n"
+msgstr ""
+
+#: src/help.c:171
+#, no-c-format
+msgid ""
+"Cut, copy and paste operations move the data around without modifying it, so "
+"these don't degrade the sound quality. Because of level differences, you may "
+"get a \"step\" at the start and end of the inserted part, which can cause a "
+"small clicking sound. \n"
+msgstr ""
+
+#: src/help.c:173
+#, no-c-format
+msgid ""
+"The mix paste function doesn't decrease quality, unless the peaks become too "
+"high and you get clipping. In that case you will get a warning message.\n"
+msgstr ""
+
+#: src/help.c:175
+#, no-c-format
+msgid ""
+"Sound data is normally stored as integer values. Therefore, whenever you "
+"normalize, adjust volume, decrease sample size or filter a sound, the result "
+"must be rounded. If you use 24 or 32 bit sample sizes, this is not really a "
+"problem, but if you use 8 or 16 bits sample size, this rounding causes a "
+"decrease in quality. \n"
+msgstr ""
+
+#: src/help.c:177
+#, no-c-format
+msgid ""
+"The quality decrease that the rounding causes can be masked by adding a "
+"small amount of noise before rounding. This is called \"dithering\". "
+"mhWaveEdit supports basic triangular dithering and it's enabled by "
+"default. \n"
+msgstr ""
+
+#: src/help.c:179
+#, no-c-format
+msgid ""
+"By default, mhWaveEdit uses floating-point temporary files for storing "
+"processed results to avoid rounding until the file is saved.\n"
+msgstr ""
+
+#: src/help.c:184
+#, no-c-format
+msgid ""
+"Even if mhWaveEdit was originally built for editing wav files, it's also "
+"possible to load and save in a few other formats. mhWaveEdit always supports "
+"wav and raw files, but if it's compiled with the libsndfile library, "
+"mhWaveEdit supports a couple of other formats as well. \n"
+msgstr ""
+
+#: src/help.c:186
+#, no-c-format
+msgid ""
+"To save a file with a different file format, use \"Save as...\" and choose a "
+"format in the file type selection box. \n"
+msgstr ""
+
+#: src/help.c:188
+#, no-c-format
+msgid ""
+"mhWaveEdit has basic support for mp3 and ogg formats. For this to work you "
+"need to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg "
+"support. If you have these programs, you can open and save mp3/ogg files "
+"just like any other file format.\n"
+msgstr ""
+
+#: src/help.c:190
+#, no-c-format
+msgid ""
+"If mplayer is installed, mhwaveedit can open all formats that it supports, "
+"for example the soundtrack of a video file. Since mplayer is only a player, "
+"these files can not be saved back after editing, you have to save the file "
+"into a supported format.\n"
+msgstr ""
+
+#: src/help.c:195
+#, no-c-format
+msgid ""
+"mhWaveEdit creates a directory ~/.mhwaveedit where it stores configuration "
+"information. \n"
+msgstr ""
+
+#: src/help.c:197
+#, no-c-format
+msgid ""
+"The configuration file is called config. It can be hand edited, but the "
+"easiest way is through 'Preferences' on the Edit menu.\n"
+msgstr ""
+
+#: src/help.c:199
+#, no-c-format
+msgid ""
+"Each mhwaveedit process creates a session file in the .mhwaveedit directory "
+"called mhwaveedit-session-<pid>-<session>-<state>, where <session> is the "
+"session ID number and <state> is a character code showing the state of the "
+"session ('r' for running sessions). \n"
+msgstr ""
+
+#: src/help.c:201
+#, no-c-format
+msgid ""
+"Temporary files are by default also stored in the ~/.mhwaveedit directory. "
+"Which directories to use can be set through the preferences dialog. To get "
+"the best performance, you should have one temporary directory for each local "
+"filesystem. The temporary files have names of the form \"mhwaveedit-temp-"
+"<pid>-nnnn-<session>\". Do NOT open or remove temporary files with the same "
+"pid number as a currently running mhWaveEdit.\n"
+msgstr ""
+
+#: src/help.c:203
+#, no-c-format
+msgid ""
+"mhWaveEdit checks on startup for leftover temporary files and lets the user "
+"open them. After opening a crashed session, the files can be saved or thrown "
+"away.\n"
+msgstr ""
+
+#: src/help.c:208
+#, no-c-format
+msgid "F1            Help\n"
+msgstr ""
+
+#: src/help.c:209
+#, no-c-format
+msgid "F12           Record\n"
+msgstr ""
+
+#: src/help.c:211
+#, no-c-format
+msgid "Ctrl+(number) Set mark\n"
+msgstr ""
+
+#: src/help.c:212
+#, no-c-format
+msgid "(number)      Goto mark\n"
+msgstr ""
+
+#: src/help.c:214
+#, fuzzy, no-c-format
+msgid "Ctrl+P        Preferences\n"
+msgstr "MP3 Einstellungen"
+
+#: src/help.c:215
+#, no-c-format
+msgid "Ctrl+E        Effects\n"
+msgstr ""
+
+#: src/help.c:217
+#, no-c-format
+msgid "Ctrl+O        Open file\n"
+msgstr ""
+
+#: src/help.c:218
+#, no-c-format
+msgid "Ctrl+S        Save file\n"
+msgstr ""
+
+#: src/help.c:219
+#, fuzzy, no-c-format
+msgid "Ctrl+U        Save selection as\n"
+msgstr "Speichere Markierung als ..."
+
+#: src/help.c:221
+#, no-c-format
+msgid "Ctrl+C        Copy\n"
+msgstr ""
+
+#: src/help.c:222
+#, no-c-format
+msgid "Ctrl+X        Cut\n"
+msgstr ""
+
+#: src/help.c:223
+#, no-c-format
+msgid "Ctrl+D        Delete\n"
+msgstr ""
+
+#: src/help.c:224
+#, no-c-format
+msgid "Ctrl+V        Paste\n"
+msgstr ""
+
+#: src/help.c:225
+#, no-c-format
+msgid "Ctrl+Z        Undo\n"
+msgstr ""
+
+#: src/help.c:226
+#, no-c-format
+msgid "Ctrl+A        Select all\n"
+msgstr ""
+
+#: src/help.c:228
+#, no-c-format
+msgid "Ctrl+G        Position cursor (Go to)\n"
+msgstr ""
+
+#: src/help.c:229
+#, no-c-format
+msgid "Ctrl+H        Position cursor at file start\n"
+msgstr ""
+
+#: src/help.c:230
+#, no-c-format
+msgid "Ctrl+J        Position cursor at file end\n"
+msgstr ""
+
+#: src/help.c:231
+#, fuzzy, no-c-format
+msgid "Ctrl+K        Position cursor at selection start\n"
+msgstr "/Cursor/Setze Markierungsbeginn"
+
+#: src/help.c:232
+#, no-c-format
+msgid "Ctrl+L        Position cursor at selection end\n"
+msgstr ""
+
+#: src/help.c:233
+#, no-c-format
+msgid "Y,U           Move cursor to nearest all-channel zero-crossing\n"
+msgstr ""
+
+#: src/help.c:234
+#, no-c-format
+msgid "I,O           Move cursor to nearest any-channel zero-crossing\n"
+msgstr ""
+
+#: src/help.c:236
+#, fuzzy, no-c-format
+msgid "Ctrl+Q        Selection start at cursor\n"
+msgstr "Setze den Beginn der Markierung an die Cursor Position"
+
+#: src/help.c:237
+#, fuzzy, no-c-format
+msgid "Ctrl+W        Selection end at cursor\n"
+msgstr "Setze das Markierungsende an die Cursor Position"
+
+#: src/help.c:239
+#, no-c-format
+msgid "+,=           Zoom in\n"
+msgstr ""
+
+#: src/help.c:240
+#, no-c-format
+msgid "-             Zoom out\n"
+msgstr ""
+
+#: src/help.c:241
+#, fuzzy, no-c-format
+msgid ">             Zoom to selection\n"
+msgstr "/Ansicht/Markierung anzeigen"
+
+#: src/help.c:242
+#, no-c-format
+msgid "<             Zoom all\n"
+msgstr ""
+
+#: src/help.c:243
+#, no-c-format
+msgid "Arrow keys    Scroll left/right\n"
+msgstr ""
+
+#: src/help.c:245
+#, no-c-format
+msgid "<space>       Play/Stop\n"
+msgstr ""
+
+#: src/help.c:246
+#, fuzzy, no-c-format
+msgid ",             Play from cursor pos\n"
+msgstr "Spiele ab der Cursor Position"
+
+#: src/help.c:247
+#, no-c-format
+msgid ".             Stop\n"
+msgstr ""
+
+#: src/help.c:248
+#, fuzzy, no-c-format
+msgid "/             Play selection\n"
+msgstr "/Wiedergabe/Gebe Markierung wieder"
+
+#: src/help.c:249
+#, no-c-format
+msgid "H,J           Move cursor (and playback) 1/8 of view\n"
+msgstr ""
+
+#: src/help.c:250
+#, no-c-format
+msgid "K,L           Move cursor one sample\n"
+msgstr ""
+
+#: src/help.c:251
+#, no-c-format
+msgid "Ctrl+arrow    Move cursor (and playback) half second\n"
+msgstr ""
+
+#: src/help.c:252
+#, no-c-format
+msgid "(             Play first 3 seconds of selection\n"
+msgstr ""
+
+#: src/help.c:253
+#, no-c-format
+msgid ")             Play last 3 seconds of selection\n"
+msgstr ""
+
+#: src/help.c:258
+#, no-c-format
+msgid ""
+"If you find a bug or flaw in the program that's not mentioned in the BUGS "
+"file, report the bug in the bug tracker (see contact info) or mail a bug "
+"report describing the bug to: magnus.hjorth@home.se\n"
+msgstr ""
+
+#: src/help.c:260
+#, no-c-format
+msgid ""
+"In case of a crash, please do not send me any core dumps. They are huge and "
+"completely useless to me. Instead, create a backtrace. Backtraces tell you "
+"exactly where the program crashed.\n"
+msgstr ""
+
+#: src/help.c:262
+#, no-c-format
+msgid "How to create a backtrace:\n"
+msgstr ""
+
+#: src/help.c:263
+#, no-c-format
+msgid "1. Enable core dumps: ulimit -c unlimited\n"
+msgstr ""
+
+#: src/help.c:264
+#, no-c-format
+msgid "2. Run the program:   mhwaveedit\n"
+msgstr ""
+
+#: src/help.c:265
+#, no-c-format
+msgid ""
+"3. Make the program crash. You should now get a file named core or core.1234 "
+"in the directory you're in.\n"
+msgstr ""
+
+#: src/help.c:266
+#, no-c-format
+msgid "4. Run gdb with the program and core file: \n"
+msgstr ""
+
+#: src/help.c:267
+#, no-c-format
+msgid "   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt\n"
+msgstr ""
+
+#: src/help.c:268
+#, no-c-format
+msgid "5. After gdb has loaded, use the command: bt\n"
+msgstr ""
+
+#: src/help.c:269
+#, no-c-format
+msgid "6. Quit gdb with the command: quit\n"
+msgstr ""
+
+#: src/help.c:270
+#, no-c-format
+msgid "7. Now you should have a back trace in the file backtrace.txt\n"
+msgstr ""
+
+#: src/help.c:275
+#, no-c-format
+msgid ""
+"There are plenty of things you can do if you want to help the development of "
+"mhWaveEdit. \n"
+msgstr ""
+
+#: src/help.c:277
+#, no-c-format
+msgid ""
+"First of all, look for bugs and report all bugs you find into the bug "
+"tracker or through e-mail. Sometimes a bug can get overlooked for a long "
+"time because nobody reports it, so don't be afraid to report bugs that have "
+"been there for a few releases. You don't have to provide fixes or very "
+"detailed information, although it helps of course.\n"
+msgstr ""
+
+#: src/help.c:279
+#, no-c-format
+msgid ""
+"Feature requests are also welcome, report them to the mailing list or to the "
+"bug tracker.\n"
+msgstr ""
+
+#: src/help.c:281
+#, no-c-format
+msgid ""
+"If you speak a language other than English and mhWaveEdit isn't translated "
+"to your language, you can contribute a translation. To do that, copy the "
+"template mhwaveedit.pot in the po directory into a new file ll.po, where ll "
+"is your language code (see http://www.gnu.org/software/gettext/manual/"
+"html_node/gettext_221.html for a list of language codes). \n"
+msgstr ""
+
+#: src/help.c:283
+#, no-c-format
+msgid ""
+"It's possible to edit po-files by hand, but I recommend a program such as "
+"poEdit (http://www.poedit.org) for editing translations. \n"
+msgstr ""
+
+#: src/help.c:285
+#, no-c-format
+msgid ""
+"Note that for those translatable strings that look like \"RecordStatus|Paused"
+"\", you should ignore what's to the left and only translate the string to "
+"the right (\"Paused\" in this example). This convention is there to make it "
+"possible to translate the same string to different things depending on "
+"context. \n"
+msgstr ""
+
+#: src/help.c:287
+#, no-c-format
+msgid ""
+"After you've filled in all the translations you want (you don't have to "
+"translate all the strings), mail in the po file to me (see contact info) and "
+"I'll add it to the next release. \n"
+msgstr ""
+
+#: src/help.c:289
+#, no-c-format
+msgid ""
+"If a translation is incomplete, you're very welcome to translate the "
+"remaining untranslated messages and mail them in. Corrections to "
+"translations are also appreciated, but they may need to be checked with the "
+"previous translator before including them. \n"
+msgstr ""
+
+#: src/help.c:295
+#, no-c-format
+msgid "For bug reports, translation updates, patches and PayPal donations:\n"
+msgstr ""
+
+#: src/help.c:296
+#, no-c-format
+msgid "magnus.hjorth@home.se\n"
+msgstr ""
+
+#: src/help.c:298
+#, no-c-format
+msgid "Project page with bug tracker, mailing list membership:\n"
+msgstr ""
+
+#: src/help.c:299
+#, fuzzy, no-c-format
+msgid "http://gna.org/projects/mhwaveedit\n"
+msgstr "http://gna.org/projects/mhwaveedit/\n"
+
+#: src/help.c:301
+#, no-c-format
+msgid "Mailing list (you must be a subscriber before you can post messages):\n"
+msgstr ""
+
+#: src/help.c:302
+#, no-c-format
+msgid "mhwaveedit-discuss@gna.org\n"
+msgstr ""
 
 #: src/inifile.c:84 src/inifile.c:91
 #, c-format
@@ -1294,15 +2122,15 @@ msgstr "  Geschichte:"
 msgid "There already is only one channel!"
 msgstr "Es ist bereits nur ein Kanal vorhanden!"
 
-#: src/mainwindow.c:1307
+#: src/mainwindow.c:1332
 msgid "mhWaveEdit Help"
 msgstr "mhWaveEdit Hilfe"
 
-#: src/mainwindow.c:1404
+#: src/mainwindow.c:1431
 msgid "About mhWaveEdit"
 msgstr "Über mhWaveEdit"
 
-#: src/mainwindow.c:1416
+#: src/mainwindow.c:1443
 msgid ""
 "Created by Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2007, Magnus Hjorth"
@@ -1310,21 +2138,21 @@ msgstr ""
 "Programmiert von Magnus Hjorth (magnus.hjorth@home.se)\n"
 "Copyright 2002-2007, Magnus Hjorth"
 
-#: src/mainwindow.c:1423
+#: src/mainwindow.c:1450
 #, c-format
 msgid "Current sound driver: %s"
 msgstr "Aktueller Musik Treiber: %s"
 
-#: src/mainwindow.c:1431
+#: src/mainwindow.c:1458
 #, c-format
 msgid "Compiled %s %s"
 msgstr "Kompiliert %s %s"
 
-#: src/mainwindow.c:1437
+#: src/mainwindow.c:1464
 msgid "Uses double-precision math"
 msgstr "Benutzt doppelt genau Berechnungen"
 
-#: src/mainwindow.c:1444
+#: src/mainwindow.c:1471
 msgid ""
 "Distributed under GNU General Public License.\n"
 "For information, see the file COPYING"
@@ -1332,491 +2160,491 @@ msgstr ""
 "Veröffentlicht unter der GNU General Public License.\n"
 "Für mehr Informationen siehe die Datei COPYING"
 
-#: src/mainwindow.c:1563
+#: src/mainwindow.c:1590
 msgid "Seconds of silence: "
 msgstr "Sekunden der Lautlosigkeit: "
 
-#: src/mainwindow.c:1563
+#: src/mainwindow.c:1590
 msgid "Insert Silence"
 msgstr "Füge Lautlosigkeit ein"
 
-#: src/mainwindow.c:1612
+#: src/mainwindow.c:1639
 msgid "Level: "
 msgstr "Niveau:"
 
-#: src/mainwindow.c:1612
+#: src/mainwindow.c:1639
 msgid "Normalize to..."
 msgstr "Normalisiere nach..."
 
-#: src/mainwindow.c:1822
+#: src/mainwindow.c:1849
 msgid "/_File"
 msgstr "/Datei"
 
-#: src/mainwindow.c:1823
+#: src/mainwindow.c:1850
 msgid "/File/_Open..."
 msgstr "/Datei/Öffnen..."
 
-#: src/mainwindow.c:1824
+#: src/mainwindow.c:1851
 msgid "/File/_Save"
 msgstr "/Datei/_Speichern"
 
-#: src/mainwindow.c:1825
+#: src/mainwindow.c:1852
 msgid "/File/Save _as..."
 msgstr "/Datei/Speichern als..."
 
-#: src/mainwindow.c:1826
+#: src/mainwindow.c:1853
 msgid "/File/Save selection as..."
 msgstr "/Datei/Speichere Markierung als..."
 
-#: src/mainwindow.c:1827
+#: src/mainwindow.c:1854
 msgid "/_Edit"
 msgstr "/B_earbeiten"
 
-#: src/mainwindow.c:1828
+#: src/mainwindow.c:1855
 msgid "/Edit/_Undo"
 msgstr "/Bearbeiten/Rückgängig"
 
-#: src/mainwindow.c:1829
+#: src/mainwindow.c:1856
 msgid "/Edit/_Redo"
 msgstr "/Bearbeiten/Wiede_rholen"
 
-#: src/mainwindow.c:1830
+#: src/mainwindow.c:1857
 msgid "/Edit/sep1"
 msgstr "/Bearbeiten/sep1"
 
-#: src/mainwindow.c:1831
+#: src/mainwindow.c:1858
 msgid "/Edit/Cu_t"
 msgstr "/Bearbeite/Ausschneiden"
 
-#: src/mainwindow.c:1832
+#: src/mainwindow.c:1859
 msgid "/Edit/_Copy"
 msgstr "/Bearbeiten/Kopieren"
 
-#: src/mainwindow.c:1833
+#: src/mainwindow.c:1860
 msgid "/Edit/_Paste"
 msgstr "/Bearbeiten/Einfügen"
 
-#: src/mainwindow.c:1834
+#: src/mainwindow.c:1861
 msgid "/Edit/Paste _over"
 msgstr "/Bearbeiten/Einfügen (überschreiben)"
 
-#: src/mainwindow.c:1835
+#: src/mainwindow.c:1862
 msgid "/Edit/_Mix paste"
 msgstr "/Bearbeiten/Einfügen (_Mischen)"
 
-#: src/mainwindow.c:1836
+#: src/mainwindow.c:1863
 msgid "/Edit/Insert _silence"
 msgstr "/Bearbeiten/Füge Lautlosigkeit ein"
 
-#: src/mainwindow.c:1837
+#: src/mainwindow.c:1864
 msgid "/Edit/Paste to _new"
 msgstr "/Bearbeiten/Einfügen (Neue Datei)"
 
-#: src/mainwindow.c:1838
+#: src/mainwindow.c:1865
 msgid "/Edit/Cr_op"
 msgstr "/Bearbeiten/Unmarkierte Bereiche löschen"
 
-#: src/mainwindow.c:1839
+#: src/mainwindow.c:1866
 msgid "/Edit/_Delete"
 msgstr "/Bearbeiten/Löschen"
 
-#: src/mainwindow.c:1840
+#: src/mainwindow.c:1867
 msgid "/Edit/Silence selection"
 msgstr "/Bearbeiten/Mit Lautlosigkeit ersetzen"
 
-#: src/mainwindow.c:1841
+#: src/mainwindow.c:1868
 msgid "/Edit/sep2"
 msgstr "/Bearbeiten/sep2"
 
-#: src/mainwindow.c:1842
+#: src/mainwindow.c:1869
 msgid "/Edit/Select _all"
 msgstr "/Bearbeiten/Markiere _alles"
 
-#: src/mainwindow.c:1843
+#: src/mainwindow.c:1870
 msgid "/Edit/Select none"
 msgstr "/Auswahl/Nichts auswählen"
 
-#: src/mainwindow.c:1844
+#: src/mainwindow.c:1871
 msgid "/Edit/sep3"
 msgstr "/Bearbeiten/sep3"
 
-#: src/mainwindow.c:1845
+#: src/mainwindow.c:1872
 msgid "/Edit/Clear clipboard"
 msgstr "/Bearbeiten/Lösche Zwischenablage"
 
-#: src/mainwindow.c:1846
+#: src/mainwindow.c:1873
 msgid "/Edit/sep4"
 msgstr "/Bearbeiten/sep4"
 
-#: src/mainwindow.c:1847
+#: src/mainwindow.c:1874
 msgid "/Edit/Preferences"
 msgstr "/Bearbeiten/Einstellungen"
 
-#: src/mainwindow.c:1848
+#: src/mainwindow.c:1875
 msgid "/_View"
 msgstr "/Ansicht"
 
-#: src/mainwindow.c:1849
+#: src/mainwindow.c:1876
 msgid "/View/Zoom _in"
 msgstr "/Ansicht/Vergrößern"
 
-#: src/mainwindow.c:1850
+#: src/mainwindow.c:1877
 msgid "/View/Zoom _out"
 msgstr "/Ansicht/Verkleinern"
 
-#: src/mainwindow.c:1851
+#: src/mainwindow.c:1878
 msgid "/View/Zoom to _selection"
 msgstr "/Ansicht/Markierung anzeigen"
 
-#: src/mainwindow.c:1852
+#: src/mainwindow.c:1879
 msgid "/View/sep1"
 msgstr "/Ansicht/sep1"
 
-#: src/mainwindow.c:1853
+#: src/mainwindow.c:1880
 msgid "/View/Zoom _all"
 msgstr "/Ansicht/_Alles"
 
-#: src/mainwindow.c:1854
+#: src/mainwindow.c:1881
 msgid "/View/sep2"
 msgstr "/Ansicht/sep2"
 
-#: src/mainwindow.c:1855
+#: src/mainwindow.c:1882
 msgid "/View/_Time scale"
 msgstr "/Ansicht/Zei_tskala"
 
-#: src/mainwindow.c:1856
+#: src/mainwindow.c:1883
 msgid "/View/_Horizontal zoom"
 msgstr "/Ansicht/Horinzontal vergrößern"
 
-#: src/mainwindow.c:1857
+#: src/mainwindow.c:1884
 msgid "/View/_Vertical zoom"
 msgstr "/Ansicht/_Vertikal vergrößern"
 
-#: src/mainwindow.c:1858
+#: src/mainwindow.c:1885
 msgid "/View/Sp_eed slider"
 msgstr "/Ansicht/G_eschwindigkeitsregler"
 
-#: src/mainwindow.c:1859
+#: src/mainwindow.c:1886
 msgid "/_Cursor"
 msgstr "/_Cursor"
 
-#: src/mainwindow.c:1860
+#: src/mainwindow.c:1887
 msgid "/Cursor/Set selection start"
 msgstr "/Cursor/Setze Markierungsbeginn"
 
-#: src/mainwindow.c:1862
+#: src/mainwindow.c:1889
 msgid "/Cursor/Set selection end"
 msgstr "/Cursor/Setze Markierungsende"
 
-#: src/mainwindow.c:1863
+#: src/mainwindow.c:1890
 msgid "/Cursor/sep1"
 msgstr "/Cursor/sep1"
 
-#: src/mainwindow.c:1864
+#: src/mainwindow.c:1891
 msgid "/Cursor/Move to"
 msgstr "/Cursor/Bewegen zum"
 
-#: src/mainwindow.c:1865
+#: src/mainwindow.c:1892
 msgid "/Cursor/Move to/Beginning"
 msgstr "/Cursor/Bewegen zum/Anfang"
 
-#: src/mainwindow.c:1867
+#: src/mainwindow.c:1894
 msgid "/Cursor/Move to/End"
 msgstr "/Cursor/Bewegen zum/Ende"
 
-#: src/mainwindow.c:1868
+#: src/mainwindow.c:1895
 msgid "/Cursor/Move to/Selection start"
 msgstr "/Cursor/Bewegen zum/Anfang der Markierung"
 
-#: src/mainwindow.c:1870
+#: src/mainwindow.c:1897
 msgid "/Cursor/Move to/Selection end"
 msgstr "/Cursor/Bewegen zum/Ende der Markierung"
 
-#: src/mainwindow.c:1872
+#: src/mainwindow.c:1899
 msgid "/Cursor/Move"
 msgstr "/Cursor/Bewegen"
 
-#: src/mainwindow.c:1873
+#: src/mainwindow.c:1900
 msgid "/Cursor/Move/Left"
 msgstr "/Cursor/Bewegen/Nach Links"
 
-#: src/mainwindow.c:1874
+#: src/mainwindow.c:1901
 msgid "/Cursor/Move/Right"
 msgstr "/Cursor/Bewegen/ Nach Rechts"
 
-#: src/mainwindow.c:1875
+#: src/mainwindow.c:1902
 msgid "/Cursor/Move/Left sample"
 msgstr "/Cursor/Bewegen/Ein Sample nach Links"
 
-#: src/mainwindow.c:1876
+#: src/mainwindow.c:1903
 msgid "/Cursor/Move/Right sample"
 msgstr "/Cursor/Bewegen/Ein Sample nach Rechts"
 
-#: src/mainwindow.c:1877
+#: src/mainwindow.c:1904
 msgid "/Cursor/Find zero-crossing"
 msgstr "/Cursor/Finde eine Stelle wo die Null Linie gekreuzt wird"
 
-#: src/mainwindow.c:1878
+#: src/mainwindow.c:1905
 msgid "/Cursor/Find zero-crossing/Left (all channels)"
 msgstr ""
 "/Cursor/Finde eine Stelle wo die Null Linie gekreuzt wird/Links (alle Kanäle)"
 
-#: src/mainwindow.c:1880
+#: src/mainwindow.c:1907
 msgid "/Cursor/Find zero-crossing/Right (all channels)"
 msgstr ""
 "/Cursor/Finde eine Stelle wo die Null Linie gekreuzt wird/Rechts (alle "
 "Kanäle)"
 
-#: src/mainwindow.c:1882
+#: src/mainwindow.c:1909
 msgid "/Cursor/Find zero-crossing/Left (any channel)"
 msgstr ""
 "/Cursor/Finde eine Stelle wo die Null Linie gekreuzt wird/Links (irgendein "
 "Kanal)"
 
-#: src/mainwindow.c:1884
+#: src/mainwindow.c:1911
 msgid "/Cursor/Find zero-crossing/Right (any channel)"
 msgstr ""
 "/Cursor/Finde eine Stelle wo die Null Linie gekreuzt wird/Rechts (irgendein "
 "Kanal)"
 
-#: src/mainwindow.c:1886
+#: src/mainwindow.c:1913
 msgid "/Cursor/sep2"
 msgstr "Cursor/sep2"
 
-#: src/mainwindow.c:1887
+#: src/mainwindow.c:1914
 msgid "/Cursor/Position cursor..."
 msgstr "/Cursor/Positioniere Cursor..."
 
-#: src/mainwindow.c:1889
+#: src/mainwindow.c:1916
 msgid "/_Play"
 msgstr "Wiedergabe"
 
-#: src/mainwindow.c:1890
+#: src/mainwindow.c:1917
 msgid "/Play/_Play from cursor"
 msgstr "/Wiedergabe/An der Cursor Position beginnen"
 
-#: src/mainwindow.c:1891
+#: src/mainwindow.c:1918
 msgid "/Play/Play _all"
 msgstr "/Wiedergabe/Alles wiedergeben"
 
-#: src/mainwindow.c:1892
+#: src/mainwindow.c:1919
 msgid "/Play/Play se_lection"
 msgstr "/Wiedergabe/Gebe Markierung wieder"
 
-#: src/mainwindow.c:1893
+#: src/mainwindow.c:1920
 msgid "/Play/_Stop"
 msgstr "/Wiedergabe/_Stoppen"
 
-#: src/mainwindow.c:1894
+#: src/mainwindow.c:1921
 msgid "/Play/sep1"
 msgstr "/Wiedergabe/sep1"
 
-#: src/mainwindow.c:1895
+#: src/mainwindow.c:1922
 msgid "/Play/_Record..."
 msgstr "/Wiedergabe/Aufnehmen..."
 
-#: src/mainwindow.c:1896
+#: src/mainwindow.c:1923
 msgid "/Effec_ts"
 msgstr "/Effek_te"
 
-#: src/mainwindow.c:1897
+#: src/mainwindow.c:1924
 msgid "/Effects/Fade _in"
 msgstr "/Effekte/E_inblenden"
 
-#: src/mainwindow.c:1898
+#: src/mainwindow.c:1925
 msgid "/Effects/Fade o_ut"
 msgstr "/Effekte/Ausblenden"
 
-#: src/mainwindow.c:1899
+#: src/mainwindow.c:1926
 msgid "/Effects/_Normalize"
 msgstr "/Effekte/_Normalisieren"
 
-#: src/mainwindow.c:1900
+#: src/mainwindow.c:1927
 msgid "/Effects/Normali_ze to..."
 msgstr "/Effekte/Normalisiere nach..."
 
-#: src/mainwindow.c:1901
+#: src/mainwindow.c:1928
 msgid "/Effects/_Volume adjust (fade)..."
 msgstr "/Efffekte/_Lautstärke verändern..."
 
-#: src/mainwindow.c:1902
+#: src/mainwindow.c:1929
 msgid "/Effects/sep1"
 msgstr "/Effekte/sep1"
 
-#: src/mainwindow.c:1903
+#: src/mainwindow.c:1930
 msgid "/Effects/Convert sample_rate..."
 msgstr "/Effekte/Ändere Samplerate..."
 
-#: src/mainwindow.c:1904
+#: src/mainwindow.c:1931
 msgid "/Effects/Convert sample _format..."
 msgstr "/Effekte/Ändere Sampleformat..."
 
-#: src/mainwindow.c:1906
+#: src/mainwindow.c:1933
 msgid "/Effects/B_yte swap"
 msgstr "/Effekte/B_yte tauschen"
 
-#: src/mainwindow.c:1907
+#: src/mainwindow.c:1934
 msgid "/Effects/sep2"
 msgstr "/Effekte/sep2"
 
-#: src/mainwindow.c:1908
+#: src/mainwindow.c:1935
 msgid "/Effects/_Mix to mono"
 msgstr "/Effekte/Auf _Mono runtermischen"
 
-#: src/mainwindow.c:1909
+#: src/mainwindow.c:1936
 msgid "/Effects/Add channe_l"
 msgstr "/Effekte/Füge Kana_l hinzu"
 
-#: src/mainwindow.c:1910
+#: src/mainwindow.c:1937
 msgid "/Effects/Ma_p channels..."
 msgstr "/Effekte/Kombiniere Kanäle..."
 
-#: src/mainwindow.c:1911
+#: src/mainwindow.c:1938
 msgid "/Effects/_Combine channels..."
 msgstr "/Effekte/Führe  Kanäle zusammen..."
 
-#: src/mainwindow.c:1912
+#: src/mainwindow.c:1939
 #, fuzzy
 msgid "/Effects/Add channels from other file..."
 msgstr "/Effekte/Füge Kana_l hinzu"
 
-#: src/mainwindow.c:1913
+#: src/mainwindow.c:1940
 msgid "/Effects/sep3"
 msgstr "/Effekte/sep3"
 
-#: src/mainwindow.c:1914
+#: src/mainwindow.c:1941
 msgid "/Effects/_Speed adjustment..."
 msgstr "/Effekte/Ge_schwindigkeit verändern..."
 
-#: src/mainwindow.c:1915
+#: src/mainwindow.c:1942
 msgid "/Effects/Pipe through program..."
 msgstr "/Effekte/Pipe zu einer anderen Anwendung..."
 
-#: src/mainwindow.c:1916
+#: src/mainwindow.c:1943
 msgid "/Effects/sep4"
 msgstr "/Effekte/sep4"
 
-#: src/mainwindow.c:1917
+#: src/mainwindow.c:1944
 msgid "/Effects/Effects dialog..."
 msgstr "/Effekte/Effekte Dialog..."
 
-#: src/mainwindow.c:1919
+#: src/mainwindow.c:1946
 msgid "/Debug"
 msgstr "/Debug"
 
-#: src/mainwindow.c:1921
+#: src/mainwindow.c:1948
 msgid "/Debug/Dummy effect"
 msgstr "/Debug/Dummy effect"
 
-#: src/mainwindow.c:1922
+#: src/mainwindow.c:1949
 msgid "/Debug/Check opencount"
 msgstr "/Debug/Check opencount"
 
-#: src/mainwindow.c:1923
+#: src/mainwindow.c:1950
 msgid "/Debug/Dump chunk info"
 msgstr "/Debug/Dump chunk info"
 
-#: src/mainwindow.c:1925
+#: src/mainwindow.c:1952
 msgid "/_Help"
 msgstr "/_Hilfe"
 
-#: src/mainwindow.c:1926
+#: src/mainwindow.c:1953
 msgid "/Help/_Documentation"
 msgstr "/Hilfe/_Dokumentation"
 
-#: src/mainwindow.c:1927
+#: src/mainwindow.c:1954
 msgid "/Help/_About"
 msgstr "/Hilfe/Info"
 
-#: src/mainwindow.c:1931
+#: src/mainwindow.c:1958
 msgid "/File/sep1"
 msgstr "/Datei/sep1"
 
-#: src/mainwindow.c:1932
+#: src/mainwindow.c:1959
 msgid "/File/_Close"
 msgstr "/Datei/S_chließen"
 
-#: src/mainwindow.c:1933
+#: src/mainwindow.c:1960
 msgid "/File/sep2"
 msgstr "/Datei/sep2"
 
-#: src/mainwindow.c:1934
+#: src/mainwindow.c:1961
 msgid "/File/_Exit"
 msgstr "/Datei/B_eenden"
 
-#: src/mainwindow.c:2093
+#: src/mainwindow.c:2120
 msgid "Load a file from disk"
 msgstr "Lade Datei vom Speichermedium"
 
-#: src/mainwindow.c:2100
+#: src/mainwindow.c:2127
 msgid "Save the current file to disk"
 msgstr "Speichere die aktuelle Datei ab"
 
-#: src/mainwindow.c:2109
+#: src/mainwindow.c:2136
 msgid "Undo the last change"
 msgstr "Nehme die letzte Änderung zurück"
 
-#: src/mainwindow.c:2117
+#: src/mainwindow.c:2144
 msgid "Redo the last undo operation"
 msgstr "Wiederhole die letzte 'Rückgängig' Aktion"
 
-#: src/mainwindow.c:2127
+#: src/mainwindow.c:2154
 msgid "Cut out the current selection"
 msgstr "Schneide die aktuelle Markierung raus"
 
-#: src/mainwindow.c:2135
+#: src/mainwindow.c:2162
 msgid "Copy the current selection"
 msgstr "Kopiere die aktuelle Markierung"
 
-#: src/mainwindow.c:2143
+#: src/mainwindow.c:2170
 msgid "Paste at cursor position"
 msgstr "Füge an der Cursor Position ein"
 
-#: src/mainwindow.c:2151
+#: src/mainwindow.c:2178
 msgid "Paste, overwriting the data after the cursor position"
 msgstr "Einfügen, überschreiben der Daten hinter der Cursor Position"
 
-#: src/mainwindow.c:2161
+#: src/mainwindow.c:2188
 msgid "Delete the selection"
 msgstr "Lösche die Markierung"
 
-#: src/mainwindow.c:2170
+#: src/mainwindow.c:2197
 msgid "Set selection start to cursor position"
 msgstr "Setze den Beginn der Markierung an die Cursor Position"
 
-#: src/mainwindow.c:2179
+#: src/mainwindow.c:2206
 msgid "Set selection end to cursor position"
 msgstr "Setze das Markierungsende an die Cursor Position"
 
-#: src/mainwindow.c:2189
+#: src/mainwindow.c:2216
 msgid "Play from cursor position"
 msgstr "Spiele ab der Cursor Position"
 
-#: src/mainwindow.c:2198
+#: src/mainwindow.c:2225
 msgid "Play selected area"
 msgstr "Spiele markierten Bereich"
 
-#: src/mainwindow.c:2207
+#: src/mainwindow.c:2234
 msgid "Stop playing"
 msgstr "Wiedergabe stoppen"
 
-#: src/mainwindow.c:2217
+#: src/mainwindow.c:2244
 msgid "Loop mode (play over and over)"
 msgstr "Schleifen Modus (Immer wieder von neuem abspielen)"
 
-#: src/mainwindow.c:2227
+#: src/mainwindow.c:2254
 msgid "Follow cursor while playing"
 msgstr "Folge dem Cursor bei der Wiedergabe"
 
-#: src/mainwindow.c:2240
+#: src/mainwindow.c:2267
 msgid "Auto return to playback start"
 msgstr "Automatische Rückkehr zum Wiedergabebeginn"
 
-#: src/mainwindow.c:2254 src/recorddialog.c:866
+#: src/mainwindow.c:2281 src/recorddialog.c:866
 msgid "Record"
 msgstr "Aufnahme"
 
-#: src/mainwindow.c:2263 src/recorddialog.c:975
+#: src/mainwindow.c:2290 src/recorddialog.c:975
 msgid "Launch mixer"
 msgstr "Starte Mixer"
 
