@@ -62,7 +62,7 @@ static guint floatbox_signals[LAST_SIGNAL] = { 0 };
 static void floatbox_update_text(Floatbox *box)
 {
      char e[30];
-     g_snprintf(e,sizeof(e),"%.7g",box->val);
+     format_float(box->val, e, sizeof(e));
      gtk_entry_set_text(GTK_ENTRY(box),e);
 }
 

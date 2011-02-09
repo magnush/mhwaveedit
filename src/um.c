@@ -370,7 +370,7 @@ gboolean user_input_float(gchar *label, gchar *title, gfloat defvalue,
 			  GtkWindow *below, gfloat *result)
 {
      gchar *c,d[128],*e;
-     g_snprintf(d,sizeof(d),"%f",defvalue);
+     format_float(defvalue, d, sizeof(d));
      c = user_input(label,title,d,user_input_float_validator,below);
      if (!c) return TRUE;
      *result = (gfloat)strtod(c,&e);

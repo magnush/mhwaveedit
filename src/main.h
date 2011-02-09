@@ -245,6 +245,7 @@ void geometry_stack_push(GtkWindow *w, gchar *extra, GSList **stackp);
  */
 char *translate_strip(const char *s);
 
+void format_float(float f, char *r, int maxsz);
 
 
 /* Variables that choose dither methods. Doesn't really belong in this 

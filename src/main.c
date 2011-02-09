@@ -1182,3 +1182,15 @@ char *translate_strip(const char *s)
      } else
 	  return c;
 }
+
+void format_float(float f, char *r, int maxsz)
+{
+     gchar *c;
+     g_snprintf(r,maxsz,"%#.7g",f);
+     c = strchr(r,0);
+     c-=2;
+     while (c>=r && isdigit(c[0]) && c[1]=='0') {
+	  c[1] = 0;
+	  c--;
+     }     
+}
