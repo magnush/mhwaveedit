@@ -115,8 +115,6 @@ static void floatbox_init(Floatbox *fbox)
      gtk_widget_set_usize(GTK_WIDGET(fbox),req.width/3,req.height);
 #endif
      fbox->adj = NULL;
-     fbox->val = 1.0; /* To force update */
-     floatbox_set(fbox,0.0);
 }
 
 GtkType floatbox_get_type(void)
@@ -150,6 +148,7 @@ GtkWidget *floatbox_new(float val)
 {
      Floatbox *box;
      box=gtk_type_new(floatbox_get_type());
+     box->val = val-1.0; /* To force update */
      floatbox_set(box,val);
      return GTK_WIDGET(box);
 }

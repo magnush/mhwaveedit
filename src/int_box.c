@@ -115,8 +115,6 @@ static void intbox_init(Intbox *fbox)
      gtk_widget_set_usize(GTK_WIDGET(fbox),req.width/3,req.height);
 #endif
      fbox->adj = NULL;
-     fbox->val=1;
-     intbox_set(fbox,0);
 }
 
 GtkType intbox_get_type(void)
@@ -152,6 +150,7 @@ GtkWidget *intbox_new(long val)
 {
 Intbox *box;
 box=gtk_type_new(intbox_get_type());
+box->val=val-1;
 intbox_set(box,val);
 return GTK_WIDGET(box);
 }
