@@ -265,12 +265,14 @@ void ladspa_dialog_setup(EffectDialog *ed)
 			      x = intbox_create_scale(INTBOX(e),(long)l,
 						      (long)u);
 			      gtk_box_pack_end(GTK_BOX(d),x,FALSE,FALSE,0);
+			      gtk_widget_set_can_focus(x,FALSE);
 			 }
 		    } else {
 			 e = floatbox_new(f);
 			 if (want_scale) {
 			      x = floatbox_create_scale(FLOATBOX(e),l,u);
 			      gtk_box_pack_end(GTK_BOX(d),x,FALSE,FALSE,0);
+			      gtk_widget_set_can_focus(x,FALSE);
 			 }
 		    }
 			 

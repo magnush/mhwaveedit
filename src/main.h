@@ -46,6 +46,8 @@
 #define gtk_widget_set_size_request gtk_widget_set_usize
 #define gtk_entry_set_width_chars(e,w) gtk_widget_set_usize(GTK_WIDGET(e),w*10,-1)
 void gdk_gc_set_rgb_fg_color(GdkGC *gc, GdkColor *clr);
+#define gtk_adjustment_get_lower(adj) ((adj)->lower)
+#define gtk_adjustment_get_upper(adj) ((adj)->upper)
 #else
 #define GTK_WINDOW_DIALOG GTK_WINDOW_TOPLEVEL
 #define gtk_object_class_add_signals(x,y,z)
@@ -53,6 +55,7 @@ void gdk_gc_set_rgb_fg_color(GdkGC *gc, GdkColor *clr);
 
 #if GTK_MAJOR_VERSION == 1 || (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 18)
 void gtk_widget_set_has_window(GtkWidget *w, gboolean has_window);
+void gtk_widget_set_can_focus(GtkWidget *w, gboolean can_focus);
 #endif
 
 /* Global stuff */

@@ -83,6 +83,20 @@ static void floatbox_activate(GtkEditable *editable)
      if (parent_class->activate) parent_class->activate(editable);
 }
 
+static gint floatbox_focus_out(GtkWidget *widget, GdkEventFocus *event)
+{
+     char *c,*d;
+     float f;
+     Floatbox *b = FLOATBOX(widget);
+     c=(char *)gtk_entry_get_text(GTK_ENTRY(widget));
+     f=strtod(c,&d);
+     if (*d==0 && b->adj!=NULL && f>=gtk_adjustment_get_lower(b->adj) &&
+	 f<=gtk_adjustment_get_upper(b->adj)) {
+	  gtk_adjustment_set_value(b->adj,f);
+     }
+     return GTK_WIDGET_CLASS(parent_class)->focus_out_event(widget,event);
+}
+
 static void floatbox_class_init(FloatboxClass *klass)
 {
      parent_class = gtk_type_class(gtk_entry_get_type());
@@ -92,6 +106,7 @@ static void floatbox_class_init(FloatboxClass *klass)
 #else
      GTK_EDITABLE_CLASS(klass)->activate = floatbox_activate;
 #endif
+     GTK_WIDGET_CLASS(klass)->focus_out_event = floatbox_focus_out;
      klass->numchange=NULL;
 
      floatbox_signals[NUMCHANGED_SIGNAL] = 
@@ -135,7 +150,10 @@ GtkType floatbox_get_type(void)
 void floatbox_set(Floatbox *box, float val)
 {
      if (box->val == val) return;
-     if (box->adj != NULL) {
+     if (box->adj != NULL && 
+	 val >= gtk_adjustment_get_lower(box->adj) && 
+	 val <= gtk_adjustment_get_upper(box->adj)) {
+
 	  gtk_adjustment_set_value(box->adj, val);
 	  return;
      }
