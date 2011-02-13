@@ -317,10 +317,6 @@ static void colors_click(GtkButton *button, gpointer user_data)
      key = gtk_label_parse_uline(GTK_LABEL(GTK_BIN(d)->child),_("_OK"));
      gtk_widget_add_accelerator (d, "clicked", ag, key, GDK_MOD1_MASK,
 				 (GtkAccelFlags) 0);
-     gtk_widget_add_accelerator (d, "clicked", ag, GDK_KP_Enter, 0,
-				 (GtkAccelFlags) 0);
-     gtk_widget_add_accelerator (d, "clicked", ag, GDK_Return, 0, 
-				 (GtkAccelFlags) 0);
      gtk_signal_connect(GTK_OBJECT(d),"clicked",GTK_SIGNAL_FUNC(color_apply),
 			ctable);
      gtk_signal_connect(GTK_OBJECT(d),"clicked",GTK_SIGNAL_FUNC(save_colors),
@@ -331,6 +327,9 @@ static void colors_click(GtkButton *button, gpointer user_data)
      gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
 			       GTK_SIGNAL_FUNC(g_free),(GtkObject *)ctable);
      gtk_container_add(GTK_CONTAINER(c),d);
+     GTK_WIDGET_SET_FLAGS(d,GTK_CAN_DEFAULT);
+     gtk_widget_grab_default(d);
+
      d = gtk_button_new_with_label("");
      key = gtk_label_parse_uline(GTK_LABEL(GTK_BIN(d)->child),_("_Cancel"));
      gtk_widget_add_accelerator (d, "clicked", ag, key, GDK_MOD1_MASK,

@@ -329,6 +329,9 @@ gchar *user_input(gchar *label, gchar *title, gchar *defvalue,
      }
      ent = gtk_entry_new();
      gtk_entry_set_text(GTK_ENTRY(ent),defvalue);
+#if GTK_MAJOR_VERSION > 1
+     gtk_entry_set_activates_default(GTK_ENTRY(ent),TRUE);
+#endif
      gtk_box_pack_start(GTK_BOX(b),ent,FALSE,FALSE,0);
      c = gtk_hseparator_new();
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,3);
@@ -338,6 +341,8 @@ gchar *user_input(gchar *label, gchar *title, gchar *defvalue,
      gtk_signal_connect(GTK_OBJECT(d),"clicked",
 			GTK_SIGNAL_FUNC(user_input_ok),&uid);
      gtk_container_add(GTK_CONTAINER(c),d);
+     GTK_WIDGET_SET_FLAGS(d,GTK_CAN_DEFAULT);
+     gtk_widget_grab_default(d);
      d = gtk_button_new_with_label(_("Cancel"));
      gtk_signal_connect(GTK_OBJECT(d),"clicked",GTK_SIGNAL_FUNC(modal_callback),
 			(gpointer)MR_CANCEL);

@@ -799,8 +799,6 @@ static void effect_browser_init(EffectBrowser *eb)
 #else
      b251 = gtk_button_new_with_label(_("Apply"));
 #endif
-     gtk_widget_add_accelerator (b251, "clicked", ag, GDK_KP_Enter, 0, (GtkAccelFlags) 0);
-     gtk_widget_add_accelerator (b251, "clicked", ag, GDK_Return, 0, (GtkAccelFlags) 0);
      gtk_signal_connect(GTK_OBJECT(b251),"clicked",(GtkSignalFunc)apply_click,
 			eb);
 
@@ -851,6 +849,8 @@ static void effect_browser_init(EffectBrowser *eb)
      }
      gtk_container_set_border_width(GTK_CONTAINER(eb),5);
      gtk_container_add(GTK_CONTAINER(eb),b);
+     GTK_WIDGET_SET_FLAGS(GTK_WIDGET(b251),GTK_CAN_DEFAULT);
+     gtk_widget_grab_default(GTK_WIDGET(b251));
      gtk_widget_show_all(b);
 }
 
