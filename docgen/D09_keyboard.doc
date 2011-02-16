@@ -16,6 +16,7 @@ Ctrl+U        Save selection as
 Ctrl+C        Copy
 Ctrl+X        Cut
 Ctrl+D        Delete
+Delete        Delete
 Ctrl+V        Paste
 Ctrl+Z        Undo
 Ctrl+A        Select all
@@ -37,7 +38,13 @@ Ctrl+W        Selection end at cursor
 <             Zoom all
 Arrow keys    Scroll left/right
 
-<space>       Play/Stop
+Home          Move view to file start
+End           Move view to file end
+Tab           Move view to cursor
+Ctrl+Tab      Move cursor to center of view
+
+Space         Play/Stop
+Shift+Space   Play all
 ,             Play from cursor pos
 .             Stop
 /             Play selection

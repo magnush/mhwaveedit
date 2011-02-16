@@ -548,6 +548,9 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 		    document_set_cursor(w->doc,o);
 	       }
 	       return TRUE;
+	  case GDK_Tab:
+	       o = (w->doc->viewstart + w->doc->viewend) / 2;
+	       document_set_cursor(w->doc,o);
 	  }
      else 
 	  switch (event->keyval) {	       
@@ -580,7 +583,9 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 	  case GDK_period: edit_stop(NULL,widget); return TRUE;
 	  case GDK_slash: edit_playselection(NULL, widget); return TRUE;
 	  case GDK_space:
-	       if (playing_document == w->doc) 
+	       if ((event->state & GDK_SHIFT_MASK) != 0)
+		    do_play(w,0,w->doc->chunk->length,w->loopmode);
+	       else if (playing_document == w->doc) 
 		    document_stop(w->doc,w->bouncemode);
 	       else if (w->doc != NULL)
 		    do_play(w,w->doc->cursorpos,w->doc->chunk->length,
@@ -621,6 +626,17 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 	       else
 		    do_play(w,w->doc->selend-o,w->doc->selend,FALSE);
 	       return TRUE;		    
+	  case GDK_Home:
+	       document_set_view(w->doc,0,w->doc->viewend-w->doc->viewstart);
+	       return TRUE;
+	  case GDK_End:
+	       document_scroll(w->doc,w->doc->chunk->length);
+	       return TRUE;
+	  case GDK_Tab:
+	       document_scroll(w->doc,
+			       w->doc->cursorpos-
+			       (w->doc->viewend+w->doc->viewstart)/2);
+	       return TRUE;
 	  }
      return GTK_WIDGET_CLASS(parent_class)->key_press_event(widget,event);
 }
@@ -2075,6 +2091,9 @@ static GtkWidget *create_menu(Mainwindow *w)
 							  
      item = gtk_item_factory_get_item(item_factory,"/Play/Record...");
      gtk_widget_set_sensitive(item,input_supported());
+
+     item = gtk_item_factory_get_item(item_factory,"/Edit/Delete");
+     gtk_widget_add_accelerator(item, "activate", accel_group, GDK_Delete, 0, 0);
 
      return gtk_item_factory_get_widget(item_factory,"<main>");
 }
