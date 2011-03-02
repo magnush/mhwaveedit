@@ -593,13 +593,19 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 	       return TRUE;	       
 	  case GDK_Left:
 	  case GDK_KP_Left:
-	       document_scroll(w->doc, 
-			       -(w->doc->viewend - w->doc->viewstart)/MAINWINDOW_SCROLL_DELTA_RATIO);
+	       if (playing_document==w->doc && w->doc->followmode)
+		    player_nudge(-0.5);
+	       else
+		    document_scroll(w->doc,
+				    -(w->doc->viewend - w->doc->viewstart)/MAINWINDOW_SCROLL_DELTA_RATIO);
 	       return TRUE;
 	  case GDK_Right:
 	  case GDK_KP_Right:
-	       document_scroll(w->doc,
-			       (w->doc->viewend - w->doc->viewstart)/MAINWINDOW_SCROLL_DELTA_RATIO);
+	       if (playing_document==w->doc && w->doc->followmode)
+		    player_nudge(+0.5);
+	       else
+		    document_scroll(w->doc,
+				    (w->doc->viewend - w->doc->viewstart)/MAINWINDOW_SCROLL_DELTA_RATIO);
 	       return TRUE;
 	  case GDK_parenleft:
 	       o = 3*w->doc->chunk->format.samplerate;
@@ -628,9 +634,15 @@ static gint mainwindow_keypress(GtkWidget *widget, GdkEventKey *event)
 	       return TRUE;		    
 	  case GDK_Home:
 	       document_set_view(w->doc,0,w->doc->viewend-w->doc->viewstart);
+	       if (playing_document != w->doc || w->doc->followmode)
+		    document_set_cursor(w->doc,0);
 	       return TRUE;
 	  case GDK_End:
+	       /* Stop playback to prevent cursor jumping back to start point */
+	       document_stop(w->doc,FALSE);
 	       document_scroll(w->doc,w->doc->chunk->length);
+	       if (playing_document != w->doc || w->doc->followmode)
+		    document_set_cursor(w->doc,w->doc->chunk->length);
 	       return TRUE;
 	  case GDK_Tab:
 	       document_scroll(w->doc,
@@ -2270,7 +2282,7 @@ static GtkWidget *create_toolbar(Mainwindow *w)
      b = gtk_pixmap_new(p, bmp);
      r = gtk_toolbar_append_element(
 	  GTK_TOOLBAR(t),GTK_TOOLBAR_CHILD_TOGGLEBUTTON,NULL,NULL,
-	  _("Follow cursor while playing"),"X",b,
+	  _("Keep view and playback together"),"X",b,
 	  GTK_SIGNAL_FUNC(followmode_toggle),w);
      if ( inifile_get_gboolean("followMode",FALSE) ) {
 	  gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(r), TRUE);
