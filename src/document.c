@@ -354,18 +354,14 @@ void document_play_selection(Document *d, gboolean loopmode, gfloat speed)
 
 void document_stop(Document *d, gboolean do_return)
 {
-     off_t o;
+     off_t s,e;
      g_assert(d != NULL);
      if (d != playing_document) return;
+     player_get_range(&s,&e);
      player_stop();
-     if (!do_return) {
-	  if (playing_document != NULL)
-	       gtk_object_unref(GTK_OBJECT(playing_document));
-	  playing_document = NULL;
-	  o = d->cursorpos;
-	  d->cursorpos = -1;
-	  document_set_cursor(d,o);
-     }
+     g_assert(playing_document == NULL);
+     if (do_return)
+	  document_set_cursor(d,s);     
 }
 
 /* Make sure the current state is stored properly in history */
