@@ -616,7 +616,7 @@ static void document_set_cursor_main(Document *d, off_t cursorpos,
      }
 
 	  
-     if (d->followmode) {
+     if (d->followmode && playslave) {
 	  dist = d->viewend - d->viewstart;
 	  if (view_follow_strict_flag) {
 	       vs = cursorpos - dist/2;
