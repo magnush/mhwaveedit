@@ -1,3 +1,14 @@
+New features in version 1.4.21:
+
+ * A few new keyboard shortcuts added for navigation
+ * In follow mode, left,right,home,end also move playback
+ * Extended playback auto-conversion to include channel and sample rate
+ * Select distance unit (seconds or samples) in position cursor dialog
+ * Bug fixes for building and wav header parsing on x86_64
+ * Various bug fixes
+ * New translation: Polish (pl)
+ * Updated translation: it
+
 New features in version 1.4.20:
 
  * Fixed Alsa playback regressions
