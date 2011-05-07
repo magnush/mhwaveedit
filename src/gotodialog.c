@@ -32,7 +32,7 @@ static gboolean goto_dialog_apply(GotoDialog *gd)
      off_t p=0,q;
      off_t o;
      Document *d = gd->mw->doc;
-     int i;
+     int i, j;
      if (d == NULL) return FALSE;
      if (floatbox_check(gd->offset)) return TRUE;
      for (i=0; i<5; i++)
@@ -58,7 +58,12 @@ static gboolean goto_dialog_apply(GotoDialog *gd)
       g_assert_not_reached();
      }
 
-     o = ((float)(d->chunk->format.samplerate))*gd->offset->val;
+     for (j=0; j<2; j++)
+          if (gtk_toggle_button_get_active(gd->unitbuttons[j]))
+               break;
+     o = gd->offset->val;
+     if (j == GOTO_DIALOG_UNIT_SECONDS)
+          o *= ((float)(d->chunk->format.samplerate));
      q = p+o;
 
      if(q > d->chunk->length) {
@@ -71,6 +76,7 @@ static gboolean goto_dialog_apply(GotoDialog *gd)
 
      inifile_set_gfloat("gotoOffset",gd->offset->val);
      inifile_set_guint32("gotoRel",i);
+     inifile_set_guint32("gotoUnits",j);
      return FALSE;
 }
 
@@ -98,7 +104,12 @@ static void goto_dialog_init(GotoDialog *gd)
      c = floatbox_new(inifile_get_gfloat("gotoOffset",0.0));
      gd->offset = FLOATBOX(c);
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
-     c = gtk_label_new(_(" seconds"));
+     c = gtk_radio_button_new_with_label(NULL, _("seconds"));
+     gd->unitbuttons[GOTO_DIALOG_UNIT_SECONDS] = GTK_TOGGLE_BUTTON(c);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
+     c = gtk_radio_button_new_with_label_from_widget(
+          GTK_RADIO_BUTTON(c), _("samples"));
+     gd->unitbuttons[GOTO_DIALOG_UNIT_SAMPLES] = GTK_TOGGLE_BUTTON(c);
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
 
      b = gtk_radio_button_new_with_label(NULL,_("after beginning of file"));
@@ -158,6 +169,10 @@ static void goto_dialog_init(GotoDialog *gd)
      i = inifile_get_guint32("gotoRel",0);
      if (i>4) i=0;
      gtk_toggle_button_set_active(gd->relbuttons[i],TRUE);
+
+     i = inifile_get_guint32("gotoUnits",0);
+     if (i>2) i=0;
+     gtk_toggle_button_set_active(gd->unitbuttons[i],TRUE);
 
      gtk_widget_show_all(a);
      gtk_window_set_title(GTK_WINDOW(gd),_("Position cursor"));

@@ -36,11 +36,15 @@
 #define GOTO_DIALOG_POS_AFTER_BEG_SEL 3
 #define GOTO_DIALOG_POS_AFTER_END_SEL 4
 
+#define GOTO_DIALOG_UNIT_SECONDS 0
+#define GOTO_DIALOG_UNIT_SAMPLES 1
+
 typedef struct _GotoDialog {
      GtkWindow parent;
      Mainwindow *mw;
      Floatbox *offset;
      GtkToggleButton *relbuttons[5];
+     GtkToggleButton *unitbuttons[2];
 } GotoDialog;
 
 typedef struct _GotoDialogClass {
