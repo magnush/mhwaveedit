@@ -412,17 +412,42 @@ static void mhjack_autoconnect(jack_port_t **ports, int typeflag,
      g_free(c);
 }
 
+static void silent_error_callback(const char *msg)
+{
+}
+
+static void normal_error_callback(const char *msg)
+{
+     fprintf(stderr,"%s\n",msg);
+}
+
 static void mhjack_connect(gboolean silent)
 {
      gchar *c;
+     jack_status_t s;
      if (mhjack.myself == NULL) {
+
+	  if (silent)
+	       jack_set_error_function(silent_error_callback);
+
 	  /* Connect to the JACK server */
-	  mhjack.myself = jack_client_new(mhjack.client_name);
-	  if (mhjack.myself == NULL) {
+	  mhjack.myself = jack_client_open(mhjack.client_name,
+					   JackNoStartServer|JackUseExactName,
+					   &s);
+	  /* All versions of Jack don't seem to set JackNameNotUnique properly.
+	   * Testing with Jack 1.9.4 gave JackServerError|JackFailure even
+	   * though JackUseExactName was the cause of the error */
+	  if (mhjack.myself == NULL /* && (s & JackNameNotUnique) != 0 */ ) {
 	       c = g_strdup_printf("%s%d",mhjack.client_name,getpid());
-	       mhjack.myself = jack_client_new(c);
+	       if (!silent)
+		    fprintf(stderr,"Retrying with Jack client name %s\n",c);
+	       mhjack.myself = jack_client_open(c,JackNoStartServer,&s);
 	       g_free(c);
 	  }
+
+	  if (silent)
+	       jack_set_error_function(normal_error_callback);
+
 	  if (mhjack.myself == NULL) {
 	       if (!silent)
 		    user_error(_("Could not connect to the JACK server."));
