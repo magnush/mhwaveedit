@@ -1368,7 +1368,7 @@ static void help_readme(GtkMenuItem *menuitem, gpointer user_data)
      gtk_box_pack_start (GTK_BOX (box1), box2, TRUE, TRUE, 0);
      gtk_widget_show (box2);
 
-     table = gtk_table_new (3, 6, FALSE);
+     table = gtk_table_new (4, 6, FALSE);
      gtk_box_pack_start (GTK_BOX (box2), table, TRUE, TRUE, 0);
 
      notebook = gtk_notebook_new ();
@@ -1588,9 +1588,11 @@ static void view_vertzoom(GtkCheckMenuItem *checkmenuitem, gpointer user_data)
      if (checkmenuitem->active) {
 	  gtk_widget_show(w->vzoom_icon);
 	  gtk_widget_show(w->vzoom_slider);
+	  gtk_widget_show(GTK_WIDGET(w->vzoom_label));
      } else {
 	  gtk_widget_hide(w->vzoom_icon);
 	  gtk_widget_hide(w->vzoom_slider);
+	  gtk_widget_hide(GTK_WIDGET(w->vzoom_label));
      }
 }
 
@@ -2424,8 +2426,18 @@ static void mainwindow_vertical_zoom_changed(GtkAdjustment *adjustment,
 {
      gfloat s;
      Mainwindow *w = MAINWINDOW(user_data);
+     gchar c[32],d[32];
+     int ndec;
      s = pow(100.0, adjustment->value);
      chunk_view_set_scale(w->view, s);
+     ndec = 3-(int)(adjustment->value*2.0);
+     if (ndec > 0) {
+	  g_snprintf(d,sizeof(d),"V: %%.0%df",ndec);
+	  g_snprintf(c,sizeof(c),d,(float) s);
+     } else {
+	  g_snprintf(c,sizeof(c),"V: %d",(int)s);
+     }
+     gtk_label_set_text(w->vzoom_label,c);
 }
 
 static void mainwindow_speed_changed(GtkAdjustment *adjustment,
@@ -2440,7 +2452,7 @@ static void mainwindow_speed_changed(GtkAdjustment *adjustment,
 #endif
      if (w->doc == playing_document)
 	  player_set_speed(f);
-     g_snprintf(c,sizeof(c),"%d%%",(int)(f*100.0+0.5));
+    g_snprintf(c,sizeof(c),"S: %d%%",(int)(f*100.0+0.5));
      gtk_label_set_text(w->speed_label,c);
 }
 
@@ -2549,10 +2561,14 @@ static void mainwindow_init(Mainwindow *obj)
      obj->vzoom_icon = obj->vzoom_slider = NULL;
      obj->hzoom_icon = obj->hzoom_slider = NULL;
      obj->speed_icon = obj->speed_slider = NULL;
-     obj->speed_label = GTK_LABEL(gtk_label_new("500%"));     
-     gtk_misc_set_alignment(GTK_MISC(obj->speed_label),1.0,0.0);
+     obj->speed_label = GTK_LABEL(gtk_label_new("S: 500%"));
+     gtk_misc_set_alignment(GTK_MISC(obj->speed_label),0.0,0.0);
      gtk_widget_size_request(GTK_WIDGET(obj->speed_label),&req);
      gtk_widget_set_usize(GTK_WIDGET(obj->speed_label),req.width,req.height);
+     obj->vzoom_label = GTK_LABEL(gtk_label_new("V: 1.000"));
+     gtk_misc_set_alignment(GTK_MISC(obj->vzoom_label),0.0,0.0);
+     gtk_widget_size_request(GTK_WIDGET(obj->vzoom_label),&req);
+     gtk_widget_set_usize(GTK_WIDGET(obj->vzoom_label),req.width,req.height);
 
      obj->need_chunk_items = NULL;
      obj->need_selection_items = NULL;
@@ -2610,7 +2626,7 @@ static void mainwindow_init(Mainwindow *obj)
 #endif
      gtk_scale_set_digits(GTK_SCALE(c),3);
      gtk_scale_set_draw_value (GTK_SCALE(c), FALSE);
-     gtk_table_attach(GTK_TABLE(b),c,2,3,1,2,GTK_FILL,GTK_EXPAND|GTK_FILL,0,0);
+     gtk_table_attach(GTK_TABLE(b),c,2,3,1,2,0,GTK_EXPAND|GTK_FILL,0,0);
      obj->need_chunk_items = g_list_append(obj->need_chunk_items,c);
      obj->hzoom_slider = c;
 
@@ -2622,7 +2638,7 @@ static void mainwindow_init(Mainwindow *obj)
 #endif
      gtk_scale_set_digits(GTK_SCALE(c),3);
      gtk_scale_set_draw_value (GTK_SCALE(c), FALSE);
-     gtk_table_attach(GTK_TABLE(b),c,1,2,1,2,GTK_FILL,GTK_EXPAND|GTK_FILL,0,0);
+     gtk_table_attach(GTK_TABLE(b),c,1,2,1,2,0,GTK_EXPAND|GTK_FILL,0,0);
      obj->need_chunk_items = g_list_append(obj->need_chunk_items,c);
      obj->vzoom_slider = c;
 
@@ -2638,7 +2654,7 @@ static void mainwindow_init(Mainwindow *obj)
 #ifndef INV_SPEED
      gtk_range_set_inverted(GTK_RANGE(c),TRUE);
 #endif
-     gtk_table_attach(GTK_TABLE(b),c,3,4,1,2,GTK_FILL,GTK_EXPAND|GTK_FILL,0,0);
+     gtk_table_attach(GTK_TABLE(b),c,3,4,1,2,0,GTK_EXPAND|GTK_FILL,0,0);
      obj->need_chunk_items = g_list_append(obj->need_chunk_items,c);
      obj->speed_slider = c;
 
@@ -2646,15 +2662,23 @@ static void mainwindow_init(Mainwindow *obj)
      gtk_table_attach(GTK_TABLE(b),c,0,1,2,3,GTK_FILL,0,0,0);
 
      c = GTK_WIDGET(obj->speed_label);
-     gtk_table_attach(GTK_TABLE(b),c,1,4,2,3,GTK_FILL,0,0,0);
+     gtk_table_attach(GTK_TABLE(b),c,1,4,3,4,GTK_FILL,0,2,0);
 
-     gtk_box_pack_start(GTK_BOX(a),GTK_WIDGET(obj->statusbar),FALSE,TRUE,0);
+     c = gtk_event_box_new();
+     gtk_container_add(GTK_CONTAINER(c),GTK_WIDGET (obj->statusbar));
+     gtk_table_attach(GTK_TABLE(b),c,0,1,3,4,GTK_FILL,0,0,0);
+
+     c = GTK_WIDGET(obj->vzoom_label);
+     gtk_table_attach(GTK_TABLE(b),c,1,4,2,3,GTK_FILL,0,2,0);
+
      gtk_adjustment_value_changed(obj->speed_adj);
+     gtk_adjustment_value_changed(obj->vertical_zoom_adj);
      gtk_widget_show_all(a);
 
      if (!inifile_get_gboolean(INI_SETTING_VZOOM,INI_SETTING_VZOOM_DEFAULT)) {
 	  gtk_widget_hide(obj->vzoom_icon);
 	  gtk_widget_hide(obj->vzoom_slider);
+	  gtk_widget_hide(GTK_WIDGET(obj->vzoom_label));
      }
 
      if (!inifile_get_gboolean(INI_SETTING_HZOOM,INI_SETTING_HZOOM_DEFAULT)) {
