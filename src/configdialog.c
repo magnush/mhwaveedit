@@ -22,6 +22,8 @@
 #include <config.h>
 #include <gdk/gdkkeysyms.h>
 
+#include <math.h>
+
 #include "sound.h"
 #include "inifile.h"
 #include "main.h"
@@ -60,6 +62,7 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
 	intbox_check(cd->view_quality) ||
 	intbox_check_limit(cd->recent_files,0,MAINWINDOW_RECENT_MAX,
 			   _("number of recent files")) ||
+        intbox_check_limit(cd->vzoom_max,1,9999, _("maximum vertical zoom")) ||
 	format_selector_check(cd->fallback_format))
         return;
     /* c = (gchar *)gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(cd->sound_driver)->entry)); */
@@ -136,6 +139,8 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
     g_list_free(lb);
 
     inifile_set_guint32("recentFiles",cd->recent_files->val);
+
+    inifile_set_guint32("vzoomMax",cd->vzoom_max->val);
 
     format_selector_get(cd->fallback_format,&player_fallback_format);
     format_selector_save_to_inifile(cd->fallback_format,"playerFallback");
@@ -740,6 +745,9 @@ static void config_dialog_init(ConfigDialog *cd)
 
     w = intbox_new(inifile_get_guint32("recentFiles",4));
     cd->recent_files = INTBOX(w);
+
+    w = intbox_new(inifile_get_guint32("vzoomMax",100));
+    cd->vzoom_max = INTBOX(w);
     
     w = gtk_check_button_new_with_label("");
     key = gtk_label_parse_uline(GTK_LABEL (GTK_BIN (w)->child), 
@@ -849,12 +857,20 @@ static void config_dialog_init(ConfigDialog *cd)
     gtk_container_add(GTK_CONTAINER(d),e);
     f = GTK_WIDGET(cd->time_scale_default);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
-    f = GTK_WIDGET(cd->hzoom_default);
-    gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
     f = GTK_WIDGET(cd->vzoom_default);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
     f = GTK_WIDGET(cd->speed_default);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
+    f = gtk_hbox_new(FALSE,3);
+    gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
+    f = gtk_hbox_new(FALSE,3);
+    gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
+    g = gtk_label_new(_("Vertical zoom limit: "));
+    gtk_box_pack_start(GTK_BOX(f),g,FALSE,FALSE,0);
+    g = GTK_WIDGET(cd->vzoom_max);
+    gtk_box_pack_start(GTK_BOX(f),g,FALSE,FALSE,8);
+    g = gtk_label_new(_("x"));
+    gtk_box_pack_start(GTK_BOX(f),g,FALSE,FALSE,0);
 
 
     c = gtk_vbox_new(FALSE,14);

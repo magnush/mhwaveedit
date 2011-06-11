@@ -44,6 +44,7 @@ typedef struct {
      GtkToggleButton *varispeed_fast,*dither_editing,*dither_playback;
      GtkToggleButton *driver_autodetect,*output_stereo;
      Intbox *recent_files;
+     Intbox *vzoom_max;
      Intbox *view_quality;
      Combo *time_display,*time_display_timescale,*varispeed_method,
 	  *speed_method;

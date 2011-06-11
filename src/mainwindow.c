@@ -2535,7 +2535,7 @@ static void mainwindow_init(Mainwindow *obj)
      gtk_signal_connect( GTK_OBJECT(obj->zoom_adj), "value-changed",
 			 GTK_SIGNAL_FUNC(mainwindow_zoom_changed), obj);
      obj->vertical_zoom_adj = 
-	  GTK_ADJUSTMENT(gtk_adjustment_new( 0.0,0.0,1.2,0.01,0.1,0.2) );
+       GTK_ADJUSTMENT(gtk_adjustment_new ( 0, 0, 0.2 + log (inifile_get_guint32 ("vzoomMax", 100)) / log (100.0), 0.01, 0.1, 0.2 ));
      gtk_signal_connect( GTK_OBJECT(obj->vertical_zoom_adj), "value-changed",
 			 GTK_SIGNAL_FUNC(mainwindow_vertical_zoom_changed),
 			 obj);
