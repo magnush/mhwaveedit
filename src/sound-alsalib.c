@@ -230,7 +230,7 @@ static int iogroup_ready_func(gpointer iogroup, int fd, gushort revents,
      alsa_data.ready_func();
      alsa_data.inside_ready_func = FALSE;     
      if (alsa_data.rw_call_count == i) return -1;
-     if (!alsa_data.eventdriv && alsa_output_want_data()) {
+     if (!alsa_data.eventdriv && alsa_data.whand!=NULL && alsa_output_want_data()) {
 	  if (alsa_data.csource == NULL) 
 	       alsa_data.csource = mainloop_constant_source_add(csource_func,NULL,FALSE);
 	  mainloop_constant_source_enable(alsa_data.csource,TRUE);
