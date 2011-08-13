@@ -31,6 +31,7 @@ static gboolean goto_dialog_apply(GotoDialog *gd)
 {
      off_t p=0,q;
      off_t o;
+     float f;
      Document *d = gd->mw->doc;
      int i, j;
      if (d == NULL) return FALSE;
@@ -61,10 +62,10 @@ static gboolean goto_dialog_apply(GotoDialog *gd)
      for (j=0; j<2; j++)
           if (gtk_toggle_button_get_active(gd->unitbuttons[j]))
                break;
-     o = gd->offset->val;
+     f = gd->offset->val;
      if (j == GOTO_DIALOG_UNIT_SECONDS)
-          o *= ((float)(d->chunk->format.samplerate));
-     q = p+o;
+          f *= ((float)(d->chunk->format.samplerate));
+     q = p+(off_t)f;
 
      if(q > d->chunk->length) {
           q = d->chunk->length;
