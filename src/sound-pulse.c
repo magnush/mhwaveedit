@@ -396,6 +396,7 @@ static struct {
      gboolean recursing_mainloop;
      gpointer ready_constsource;
      GVoidFunc ready_func;
+     gboolean stopping;
 } pulse_data = { 0 };
 
 static void pulse_context_state_cb(pa_context *c, void *userdata)
@@ -642,7 +643,8 @@ static int ready_constsource_cb(gpointer csource, gpointer user_data)
 
 static void pulse_ready_func(pa_stream *p, size_t bytes, void *userdata)
 {
-     mainloop_constant_source_enable(pulse_data.ready_constsource, TRUE);
+     if (!pulse_data.stopping)
+          mainloop_constant_source_enable(pulse_data.ready_constsource, TRUE);
 }
 
 static void ready_constsource_setup(void)
@@ -752,6 +754,7 @@ static gboolean pulse_output_stop(gboolean must_flush)
      /* puts("pulse_output_stop"); */
      if (pulse_data.ready_constsource != NULL)
 	  mainloop_constant_source_enable(pulse_data.ready_constsource,FALSE);
+     pulse_data.stopping = 1;
 
      if (pulse_data.stream != NULL) {
 	  if (must_flush || pulse_flush_in_progress()) {
@@ -772,6 +775,7 @@ static gboolean pulse_output_stop(gboolean must_flush)
 	  pulse_data.recursing_mainloop = FALSE;
 
      }
+     pulse_data.stopping = 0;
      return FALSE;
 }
 
