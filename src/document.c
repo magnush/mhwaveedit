@@ -326,11 +326,17 @@ void document_play(Document *d, off_t start, off_t end, gboolean loop,
      } else {
 
 	  /* General case */
-	  if (player_play(d->chunk,start,end,loop,cursor_cb)) return;
+	  /* playing_document must be setup before calling player_play,
+	   * since for very short files the cursor_cb might be called
+	   * immediately with is_running==FALSE */
 	  if (playing_document != NULL)
 	       gtk_object_unref(GTK_OBJECT(playing_document));
 	  playing_document = d;
 	  gtk_object_ref(GTK_OBJECT(d));
+	  if (player_play(d->chunk,start,end,loop,cursor_cb)) {
+	       playing_document = NULL;
+	       gtk_object_unref(GTK_OBJECT(d));
+	  }
      }
 
      /* This sets the speed to the proper value */
