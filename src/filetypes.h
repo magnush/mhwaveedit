@@ -41,6 +41,9 @@ gchar *fileformat_name(guint fileformat);
 gchar *fileformat_extension(guint fileformat);
 gboolean fileformat_has_options(guint fileformat);
 
+/* Indicate if libsndfile has ogg support */
+gboolean sndfile_ogg_supported();
+
 /* Loads a document from a specified file. */
 
 Chunk *chunk_load(gchar *filename, int dither_mode, StatusBar *bar);

@@ -34,6 +34,7 @@
 #include "player.h"
 #include "rateconv.h"
 #include "gettext.h"
+#include "filetypes.h"
 
 static GtkObjectClass *parent_class;
 
@@ -171,6 +172,11 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
     inifile_set_guint32("ditherPlayback",
 			dither_playback?DITHER_TRIANGULAR:DITHER_NONE);
     gtk_widget_destroy(GTK_WIDGET(cd));
+
+    if (sndfile_ogg_supported())
+	 inifile_set_guint32("sndfileOggMode",
+			     combo_selected_index(cd->oggmode));
+
     mainwindow_update_texts();
 }
 
@@ -803,6 +809,19 @@ static void config_dialog_init(ConfigDialog *cd)
     gtk_signal_connect(GTK_OBJECT(w),"toggled",
 		       GTK_SIGNAL_FUNC(driver_autodetect_toggled),cd);
 
+    w = combo_new();
+    l = NULL;
+    l = g_list_append(l,_("Direct access"));
+    l = g_list_append(l,_("Decompress"));
+    l = g_list_append(l,_("Bypass"));
+    combo_set_items(COMBO(w),l,inifile_get_guint32("sndfileOggMode",1));
+    g_list_free(l);
+    if (!sndfile_ogg_supported()) {
+	 combo_set_selection(COMBO(w),2);
+	 gtk_widget_set_sensitive(w,FALSE);
+    }
+    cd->oggmode = COMBO(w);
+
     /* Layout the window */
     
     a = gtk_vbox_new(FALSE,5);
@@ -988,8 +1007,17 @@ static void config_dialog_init(ConfigDialog *cd)
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
     f = GTK_WIDGET(cd->floating_tempfiles);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
-
-
+    f = gtk_label_new(_("Some versions of libsndfile supports accessing "
+			"Ogg files without decompressing to a temporary "
+			"file."));
+    gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
+    gtk_label_set_line_wrap(GTK_LABEL(f),TRUE);
+    f = gtk_hbox_new(FALSE,3);
+    gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
+    g = gtk_label_new("Libsndfile ogg handling: ");
+    gtk_box_pack_start(GTK_BOX(f),g,FALSE,FALSE,0);
+    g = GTK_WIDGET(cd->oggmode);
+    gtk_box_pack_start(GTK_BOX(f),g,TRUE,TRUE,0);
 
     c = gtk_vbox_new(FALSE,14);
     gtk_container_set_border_width(GTK_CONTAINER(c),8);

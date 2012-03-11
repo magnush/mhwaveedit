@@ -56,6 +56,7 @@ typedef struct {
      GtkEntry *tempdir_add_entry;
      FormatSelector *fallback_format;
      GtkToggleButton *floating_tempfiles;
+     Combo *oggmode;
 } ConfigDialog;
 
 typedef struct {

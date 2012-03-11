@@ -75,6 +75,7 @@ static gint sndfile_save(Chunk *chunk, gchar *filename, gpointer settings,
 static gboolean sndfile_save_main(Chunk *chunk, gchar *filename, 
 				  int format, int dither_mode, StatusBar *bar,
 				  gboolean *fatal);
+static gboolean sndfile_ogg_flag = FALSE;
 #endif
 
 static Chunk *raw_load(gchar *filename, int dither_mode, StatusBar *bar);
@@ -163,6 +164,8 @@ static void setup_types(void)
 	  }
 	  if ((info.format&SF_FORMAT_TYPEMASK) == SF_FORMAT_RAW ||
 	      (info.format&SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV) continue;
+	  if ((info.format&SF_FORMAT_TYPEMASK) == SF_FORMAT_OGG)
+	       sndfile_ogg_flag=TRUE;
 	  snprintf(buf,sizeof(buf),".%s",info.extension);
 	  register_file_type((gchar *)info.name, buf, FALSE, sndfile_check, 
 			     sndfile_load, sndfile_save, 
@@ -695,7 +698,9 @@ static gboolean sndfile_check(gchar *filename)
      SNDFILE *s;
      s = sf_open(filename, SFM_READ, &info);
      if (s) sf_close(s);
-     return (s!=NULL && ((info.format&SF_FORMAT_SUBMASK) != SF_FORMAT_RAW));
+     return (s!=NULL && ((info.format&SF_FORMAT_SUBMASK) != SF_FORMAT_RAW)
+	     && ((info.format&SF_FORMAT_SUBMASK) != SF_FORMAT_VORBIS ||
+		 inifile_get_guint32("sndfileOggMode",1)!=2));
 }
 
 static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar)
@@ -729,6 +734,12 @@ static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar)
      case SF_FORMAT_PCM_16: f.sign=TRUE; f.samplesize=2;break;
 	  /*     case SF_FORMAT_PCM_24: f.sign=TRUE; f.samplesize=3;raw_readable=FALSE;break;
 		 case SF_FORMAT_PCM_32: f.sign=TRUE; f.samplesize=4;raw_readable=FALSE;break; */
+
+     case SF_FORMAT_VORBIS:
+	  if (inifile_get_guint32("sndfileOggMode",1)!=0)
+	       info.seekable = 0;
+	  /* (Fall through on purpose) */
+
 	  /* Default to floating point */	  
      default: f.type = DATAFORMAT_FLOAT; f.samplesize=sizeof(sample_t); break;
      }
@@ -909,6 +920,16 @@ static gint sndfile_save(Chunk *chunk, gchar *filename, gpointer settings,
 }
 
 #endif
+
+gboolean sndfile_ogg_supported(void)
+{
+#if defined(HAVE_LIBSNDFILE)
+     setup_types();
+     return sndfile_ogg_flag;
+#else
+     return FALSE;
+#endif
+}
 
 /* OGG and MP3 */
 
