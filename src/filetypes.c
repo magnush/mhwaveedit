@@ -167,6 +167,11 @@ static void setup_types(void)
 	  register_file_type((gchar *)info.name, buf, FALSE, sndfile_check, 
 			     sndfile_load, sndfile_save, 
 			     info.format&SF_FORMAT_TYPEMASK);
+	  if (!strcmp(info.extension,"oga"))
+	       register_file_type((gchar *)info.name, ".ogg", FALSE,
+				  sndfile_check,
+				  sndfile_load, sndfile_save,
+				  info.format&SF_FORMAT_TYPEMASK);
      }
 #endif
      if (program_exists("oggenc") || program_exists("oggdec"))
