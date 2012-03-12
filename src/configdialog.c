@@ -171,11 +171,12 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
     dither_playback = gtk_toggle_button_get_active(cd->dither_playback);
     inifile_set_guint32("ditherPlayback",
 			dither_playback?DITHER_TRIANGULAR:DITHER_NONE);
-    gtk_widget_destroy(GTK_WIDGET(cd));
 
     if (sndfile_ogg_supported())
 	 inifile_set_guint32("sndfileOggMode",
 			     combo_selected_index(cd->oggmode));
+
+    gtk_widget_destroy(GTK_WIDGET(cd));
 
     mainwindow_update_texts();
 }
