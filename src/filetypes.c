@@ -885,7 +885,7 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
 	       *fatal = TRUE;
 	       return -1;
 	  }
-	  clipcount += unnormalized_count(samplebuf,n*chunk->format.channels);
+	  clipcount += unnormalized_count(samplebuf,n*chunk->format.channels,&(chunk->format));
 	  if (sf_writef_sample_t(s,samplebuf,n) != n) {
 	       c = g_strdup_printf(_("Failed to write to '%s'!"),filename);
 	       user_error(c);

@@ -176,6 +176,9 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
 	 inifile_set_guint32("sndfileOggMode",
 			     combo_selected_index(cd->oggmode));
 
+    sample_convert_mode = combo_selected_index(cd->convmode);
+    inifile_set_guint32("sampleMode",sample_convert_mode);
+
     gtk_widget_destroy(GTK_WIDGET(cd));
 
     mainwindow_update_texts();
@@ -823,6 +826,14 @@ static void config_dialog_init(ConfigDialog *cd)
     }
     cd->oggmode = COMBO(w);
 
+    w = combo_new();
+    l = NULL;
+    l = g_list_append(l,_("Biased"));
+    l = g_list_append(l,_("Pure-Scaled"));
+    combo_set_items(COMBO(w),l,sample_convert_mode);
+    g_list_free(l);
+    cd->convmode = COMBO(w);
+
     /* Layout the window */
     
     a = gtk_vbox_new(FALSE,5);
@@ -1050,6 +1061,17 @@ static void config_dialog_init(ConfigDialog *cd)
     f = GTK_WIDGET(cd->dither_playback);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
 
+    d = gtk_frame_new(_(" Sample conversion "));
+    gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
+    e = gtk_vbox_new(FALSE,3);
+    gtk_container_add(GTK_CONTAINER(d),e);
+    gtk_container_set_border_width(GTK_CONTAINER(e),5);
+    f = gtk_hbox_new(FALSE,0);
+    gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
+    g = gtk_label_new(_("Normalization mode: "));
+    gtk_box_pack_start(GTK_BOX(f),g,FALSE,FALSE,0);
+    g = GTK_WIDGET(cd->convmode);
+    gtk_box_pack_start(GTK_BOX(f),g,TRUE,TRUE,0);
 
     c = gtk_vbox_new(FALSE,14);
     gtk_container_set_border_width(GTK_CONTAINER(c),8);

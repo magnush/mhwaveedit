@@ -670,9 +670,11 @@ static guint datasource_read_array_main(Datasource *source,
 	  u = datasource_read_array_fp(source->data.clone, sampleno, u, 
 				       (gpointer)c,dither_mode,clipcount);
 	  if (u > 0) {
+	       apply_convert_factor(&(source->data.clone->format), &(source->format),
+				    (sample_t *)c, u*source->format.channels);
 	       if (clipcount != NULL)
 		    *clipcount += 
-			 unnormalized_count(c,u*source->format.channels);
+			 unnormalized_count(c,u*source->format.channels,&(source->format));
 	       convert_array(c,&dataformat_sample_t,buffer,&(source->format),
 			     u*source->format.channels,dither_mode);
 	  }
@@ -750,9 +752,14 @@ guint datasource_read_array_fp(Datasource *source, off_t sampleno,
 					       buffer);
      case DATASOURCE_REF:
      case DATASOURCE_CONVERT:
-	  return datasource_read_array_fp(source->data.clone,sampleno,
-					  samples,buffer,dither_mode,
-					  clipcount);
+	  g_assert(source->type == DATASOURCE_CONVERT ||
+		   dataformat_equal(&(source->format), &(source->data.clone->format)));
+	  x = datasource_read_array_fp(source->data.clone,sampleno,
+				       samples,buffer,dither_mode,
+				       clipcount);
+	  apply_convert_factor(&(source->data.clone->format), &(source->format),
+			       buffer, x*source->format.channels);
+	  return x;
      default:
 	  if (source->format.type == DATAFORMAT_FLOAT &&
 	      source->format.samplesize == sizeof(sample_t))

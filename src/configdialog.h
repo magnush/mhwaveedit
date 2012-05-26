@@ -57,6 +57,7 @@ typedef struct {
      FormatSelector *fallback_format;
      GtkToggleButton *floating_tempfiles;
      Combo *oggmode;
+     Combo *convmode;
 } ConfigDialog;
 
 typedef struct {

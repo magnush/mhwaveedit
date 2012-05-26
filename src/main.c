@@ -220,6 +220,9 @@ int main(int argc, char **argv)
      dither_playback = inifile_get_gboolean("ditherPlayback",DITHER_NONE);
      if (dither_playback < 0 || dither_playback > DITHER_MAX)
 	  dither_playback = DITHER_NONE;
+     sample_convert_mode = inifile_get_guint32("sampleMode",CONVERT_MODE_NOOFFS);
+     if (sample_convert_mode < 0 || sample_convert_mode > CONVERT_MODE_MAX)
+	  sample_convert_mode = CONVERT_MODE_NOOFFS;
 
      gtk_hbutton_box_set_layout_default(GTK_BUTTONBOX_END);
 

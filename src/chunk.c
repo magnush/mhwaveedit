@@ -355,7 +355,7 @@ static gboolean convert_back_write(WriteoutID id, gpointer data, guint length)
      struct convert_back *cbp = (struct convert_back *)id;
      guint i;
      i = length / sizeof(sample_t);
-     *(cbp->clipcount) += unnormalized_count(data,i);
+     *(cbp->clipcount) += unnormalized_count(data,i,cbp->tofmt);
      convert_array(data,&dataformat_sample_t,cbp->buf,cbp->tofmt,i,
 		   cbp->dither_mode);
      return tempfile_write(cbp->tmp,cbp->buf,i*cbp->tofmt->samplesize);

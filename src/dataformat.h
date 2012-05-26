@@ -48,6 +48,12 @@ typedef struct {
 extern Dataformat dataformat_sample_t;
 extern Dataformat dataformat_single;
 
+#define CONVERT_MODE_BIASED    0
+#define CONVERT_MODE_NOOFFS    1
+#define CONVERT_MODE_MAX       1
+
+extern gint sample_convert_mode;
+
 extern gboolean ieee_le_compatible,ieee_be_compatible;
 
 #define FORMAT_IS_SAMPLET(fmtp) ((fmtp)->type == DATAFORMAT_FLOAT && (fmtp)->samplesize == sizeof(sample_t))
@@ -105,12 +111,16 @@ typedef gfloat sample_t;
  */
 
 #define maximum_float_value(x) (1.0)
+sample_t minimum_float_value(Dataformat *x);
 
 void convert_array(void *indata, Dataformat *indata_format,
 		   void *outdata, Dataformat *outdata_format,
 		   guint count, int dither_mode);
 
-gint unnormalized_count(sample_t *buf, gint buflen);
+sample_t apply_convert_factor(Dataformat *infmt, Dataformat *outfmt,
+			      sample_t *buffer, guint count);
+
+gint unnormalized_count(sample_t *buf, gint buflen, Dataformat *target);
 
 void conversion_selftest(void);
 void conversion_performance_test(void);

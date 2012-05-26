@@ -34,6 +34,7 @@
 
 Dataformat dataformat_sample_t,dataformat_single;
 gboolean ieee_le_compatible,ieee_be_compatible;
+gint sample_convert_mode;
 
 void floating_point_check(void)
 {
@@ -172,6 +173,8 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 /* PCM<->FLOAT SAMPLE CONVERSION ROUTINES */
 /* These routines could really use some optimizing if anyone feels like it. */
 
+/* 1) single-float, max-range */
+
 #define FTYPE float
 
 #ifdef HAVE_LRINTF
@@ -210,6 +213,8 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define C_FLOAT_PCM32UBE convert_float_pcm32ube
 
 #include "convert_inc.c"
+
+/* 2) double-float, max-range */
 
 #define FTYPE double
 
@@ -250,9 +255,93 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 
 #include "convert_inc.c"
 
+/* 3) single-float, preserve-zero */
+
+#define PZMODE
+#define FTYPE float
+
+#ifdef HAVE_LRINTF
+#define RINT(x) lrintf(x)
+#else
+#define RINT(x) ((long int)((x<0)?(x-0.5000001):(x+0.5000001)))
+#endif
+
+#define C_PCM8S_FLOAT convert_pcm8s_float_pz
+#define C_PCM8U_FLOAT convert_pcm8u_float_pz
+#define C_PCM16SLE_FLOAT convert_pcm16sle_float_pz
+#define C_PCM16SBE_FLOAT convert_pcm16sbe_float_pz
+#define C_PCM16ULE_FLOAT convert_pcm16ule_float_pz
+#define C_PCM16UBE_FLOAT convert_pcm16ube_float_pz
+#define C_PCM24SLE_FLOAT convert_pcm24sle_float_pz
+#define C_PCM24SBE_FLOAT convert_pcm24sbe_float_pz
+#define C_PCM24ULE_FLOAT convert_pcm24ule_float_pz
+#define C_PCM24UBE_FLOAT convert_pcm24ube_float_pz
+#define C_PCM32SLE_FLOAT convert_pcm32sle_float_pz
+#define C_PCM32SBE_FLOAT convert_pcm32sbe_float_pz
+#define C_PCM32ULE_FLOAT convert_pcm32ule_float_pz
+#define C_PCM32UBE_FLOAT convert_pcm32ube_float_pz
+#define C_FLOAT_PCM8S convert_float_pcm8s_pz
+#define C_FLOAT_PCM8U convert_float_pcm8u_pz
+#define C_FLOAT_PCM16SLE convert_float_pcm16sle_pz
+#define C_FLOAT_PCM16SBE convert_float_pcm16sbe_pz
+#define C_FLOAT_PCM16ULE convert_float_pcm16ule_pz
+#define C_FLOAT_PCM16UBE convert_float_pcm16ube_pz
+#define C_FLOAT_PCM24SLE convert_float_pcm24sle_pz
+#define C_FLOAT_PCM24SBE convert_float_pcm24sbe_pz
+#define C_FLOAT_PCM24ULE convert_float_pcm24ule_pz
+#define C_FLOAT_PCM24UBE convert_float_pcm24ube_pz
+#define C_FLOAT_PCM32SLE convert_float_pcm32sle_pz
+#define C_FLOAT_PCM32SBE convert_float_pcm32sbe_pz
+#define C_FLOAT_PCM32ULE convert_float_pcm32ule_pz
+#define C_FLOAT_PCM32UBE convert_float_pcm32ube_pz
+
+#include "convert_inc.c"
+
+/* 4) double-float, preserve-zero */
+
+#define PZMODE
+#define FTYPE double
+
+#ifdef HAVE_LRINT
+#define RINT(x) lrint(x)
+#else
+#define RINT(x) ((long int)((x<0)?(x-0.5000001):(x+0.5000001)))
+#endif
+
+#define C_PCM8S_FLOAT convert_pcm8s_double_pz
+#define C_PCM8U_FLOAT convert_pcm8u_double_pz
+#define C_PCM16SLE_FLOAT convert_pcm16sle_double_pz
+#define C_PCM16SBE_FLOAT convert_pcm16sbe_double_pz
+#define C_PCM16ULE_FLOAT convert_pcm16ule_double_pz
+#define C_PCM16UBE_FLOAT convert_pcm16ube_double_pz
+#define C_PCM24SLE_FLOAT convert_pcm24sle_double_pz
+#define C_PCM24SBE_FLOAT convert_pcm24sbe_double_pz
+#define C_PCM24ULE_FLOAT convert_pcm24ule_double_pz
+#define C_PCM24UBE_FLOAT convert_pcm24ube_double_pz
+#define C_PCM32SLE_FLOAT convert_pcm32sle_double_pz
+#define C_PCM32SBE_FLOAT convert_pcm32sbe_double_pz
+#define C_PCM32ULE_FLOAT convert_pcm32ule_double_pz
+#define C_PCM32UBE_FLOAT convert_pcm32ube_double_pz
+#define C_FLOAT_PCM8S convert_double_pcm8s_pz
+#define C_FLOAT_PCM8U convert_double_pcm8u_pz
+#define C_FLOAT_PCM16SLE convert_double_pcm16sle_pz
+#define C_FLOAT_PCM16SBE convert_double_pcm16sbe_pz
+#define C_FLOAT_PCM16ULE convert_double_pcm16ule_pz
+#define C_FLOAT_PCM16UBE convert_double_pcm16ube_pz
+#define C_FLOAT_PCM24SLE convert_double_pcm24sle_pz
+#define C_FLOAT_PCM24SBE convert_double_pcm24sbe_pz
+#define C_FLOAT_PCM24ULE convert_double_pcm24ule_pz
+#define C_FLOAT_PCM24UBE convert_double_pcm24ube_pz
+#define C_FLOAT_PCM32SLE convert_double_pcm32sle_pz
+#define C_FLOAT_PCM32SBE convert_double_pcm32sbe_pz
+#define C_FLOAT_PCM32ULE convert_double_pcm32ule_pz
+#define C_FLOAT_PCM32UBE convert_double_pcm32ube_pz
+
+#include "convert_inc.c"
+
 typedef void (*convert_function)(void *in, void *out, guint count);
 
-/* (PCM size) (PCM sign) (PCM endian) (FP isdouble) */
+/* (PZ-mode) (PCM size) (PCM sign) (PCM endian) (FP isdouble) */
 static convert_function pcm_fp_functions[] = {
      (convert_function)convert_pcm8u_float,
      (convert_function)convert_pcm8u_double,
@@ -285,10 +374,42 @@ static convert_function pcm_fp_functions[] = {
      (convert_function)convert_pcm32sle_float,
      (convert_function)convert_pcm32sle_double,
      (convert_function)convert_pcm32sbe_float,
-     (convert_function)convert_pcm32sbe_double
+     (convert_function)convert_pcm32sbe_double,
+     (convert_function)convert_pcm8u_float_pz,
+     (convert_function)convert_pcm8u_double_pz,
+     (convert_function)convert_pcm8u_float_pz,
+     (convert_function)convert_pcm8u_double_pz,
+     (convert_function)convert_pcm8s_float_pz,
+     (convert_function)convert_pcm8s_double_pz,
+     (convert_function)convert_pcm8s_float_pz,
+     (convert_function)convert_pcm8s_double_pz,
+     (convert_function)convert_pcm16ule_float_pz,
+     (convert_function)convert_pcm16ule_double_pz,
+     (convert_function)convert_pcm16ube_float_pz,
+     (convert_function)convert_pcm16ube_double_pz,
+     (convert_function)convert_pcm16sle_float_pz,
+     (convert_function)convert_pcm16sle_double_pz,
+     (convert_function)convert_pcm16sbe_float_pz,
+     (convert_function)convert_pcm16sbe_double_pz,
+     (convert_function)convert_pcm24ule_float_pz,
+     (convert_function)convert_pcm24ule_double_pz,
+     (convert_function)convert_pcm24ube_float_pz,
+     (convert_function)convert_pcm24ube_double_pz,
+     (convert_function)convert_pcm24sle_float_pz,
+     (convert_function)convert_pcm24sle_double_pz,
+     (convert_function)convert_pcm24sbe_float_pz,
+     (convert_function)convert_pcm24sbe_double_pz,
+     (convert_function)convert_pcm32ule_float_pz,
+     (convert_function)convert_pcm32ule_double_pz,
+     (convert_function)convert_pcm32ube_float_pz,
+     (convert_function)convert_pcm32ube_double_pz,
+     (convert_function)convert_pcm32sle_float_pz,
+     (convert_function)convert_pcm32sle_double_pz,
+     (convert_function)convert_pcm32sbe_float_pz,
+     (convert_function)convert_pcm32sbe_double_pz
 };
 
-/* (PCM size) (PCM sign) (PCM endian) (FP isdouble) */	  
+/* (PZ-mode) (PCM size) (PCM sign) (PCM endian) (FP isdouble) */
 static convert_function fp_pcm_functions[] = {
      (convert_function)convert_float_pcm8u,
      (convert_function)convert_double_pcm8u,
@@ -321,7 +442,39 @@ static convert_function fp_pcm_functions[] = {
      (convert_function)convert_float_pcm32sle,
      (convert_function)convert_double_pcm32sle,
      (convert_function)convert_float_pcm32sbe,
-     (convert_function)convert_double_pcm32sbe     
+     (convert_function)convert_double_pcm32sbe,
+     (convert_function)convert_float_pcm8u_pz,
+     (convert_function)convert_double_pcm8u_pz,
+     (convert_function)convert_float_pcm8u_pz,
+     (convert_function)convert_double_pcm8u_pz,
+     (convert_function)convert_float_pcm8s_pz,
+     (convert_function)convert_double_pcm8s_pz,
+     (convert_function)convert_float_pcm8s_pz,
+     (convert_function)convert_double_pcm8s_pz,
+     (convert_function)convert_float_pcm16ule_pz,
+     (convert_function)convert_double_pcm16ule_pz,
+     (convert_function)convert_float_pcm16ube_pz,
+     (convert_function)convert_double_pcm16ube_pz,
+     (convert_function)convert_float_pcm16sle_pz,
+     (convert_function)convert_double_pcm16sle_pz,
+     (convert_function)convert_float_pcm16sbe_pz,
+     (convert_function)convert_double_pcm16sbe_pz,
+     (convert_function)convert_float_pcm24ule_pz,
+     (convert_function)convert_double_pcm24ule_pz,
+     (convert_function)convert_float_pcm24ube_pz,
+     (convert_function)convert_double_pcm24ube_pz,
+     (convert_function)convert_float_pcm24sle_pz,
+     (convert_function)convert_double_pcm24sle_pz,
+     (convert_function)convert_float_pcm24sbe_pz,
+     (convert_function)convert_double_pcm24sbe_pz,
+     (convert_function)convert_float_pcm32ule_pz,
+     (convert_function)convert_double_pcm32ule_pz,
+     (convert_function)convert_float_pcm32ube_pz,
+     (convert_function)convert_double_pcm32ube_pz,
+     (convert_function)convert_float_pcm32sle_pz,
+     (convert_function)convert_double_pcm32sle_pz,
+     (convert_function)convert_float_pcm32sbe_pz,
+     (convert_function)convert_double_pcm32sbe_pz
 };
 
 static void dither_convert_float(float *indata, char *outdata, int count,
@@ -364,6 +517,38 @@ static void dither_convert_double(double *indata, char *outdata, int count,
      }
 }
 
+sample_t minimum_float_value(Dataformat *x)
+{
+     static const sample_t tbl[4] = {
+	  (-128.0/127.0), (-32768.0/32767.0),
+	  (-8388608.0/8388607.0), (-2147483648.0/2147483647.0) };
+
+     if (sample_convert_mode==0 || x->type!=DATAFORMAT_PCM)
+	  return -1.0;
+     else
+	  return tbl[x->samplesize - 1];
+}
+
+sample_t convert_factor(Dataformat *infmt, Dataformat *outfmt)
+{
+     sample_t fpos, fneg;
+     fneg = minimum_float_value(outfmt) / minimum_float_value(infmt);
+     if (fneg < 1.0) return fneg; else return 1.0;
+}
+
+sample_t apply_convert_factor(Dataformat *infmt, Dataformat *outfmt,
+			      sample_t *buffer, guint count)
+{
+     sample_t f;
+     guint i;
+     if (sample_convert_mode == 0 || infmt->type!=DATAFORMAT_PCM ||
+	 outfmt->type!=DATAFORMAT_PCM || outfmt->samplesize <= infmt->samplesize)
+	  return;
+     f = convert_factor(infmt,outfmt);
+     for (i=0; i<count; i++)
+	  buffer[i] *= f;
+}
+
 void convert_array(void *indata, Dataformat *indata_format,
 		   void *outdata, Dataformat *outdata_format,
 		   guint count, int dither_mode)
@@ -380,14 +565,17 @@ void convert_array(void *indata, Dataformat *indata_format,
 	       c = g_malloc(count * sizeof(sample_t));	       
 	       convert_array(indata,indata_format,c,&dataformat_sample_t,
 			     count,dither_mode);
+	       apply_convert_factor(indata_format,outdata_format,
+				    (sample_t *)c, count);
 	       convert_array(c,&dataformat_sample_t,outdata,outdata_format,
 			     count,dither_mode);
 	       g_free(c);
 	  } else {
 	       /* PCM -> FP conversion */
-	       i = (indata_format->samplesize-1)*8 + 
+	       i = (sample_convert_mode ? 32:0) +
+		    (indata_format->samplesize-1)*8 +
 		    (indata_format->sign?4:0) +
-		    (indata_format->bigendian?2:0) + 
+		    (indata_format->bigendian?2:0) +
 		    (outdata_format->samplesize/sizeof(double));
 	       /* printf("convert_array: i=%d\n",i); */
 	       g_assert(i<ARRAY_LENGTH(pcm_fp_functions));
@@ -395,9 +583,10 @@ void convert_array(void *indata, Dataformat *indata_format,
 	  }
      } else if (outdata_format->type == DATAFORMAT_PCM) {
 	  /* FP -> PCM conversion */
-	  i = (outdata_format->samplesize-1)*8 + 
+	  i = (sample_convert_mode ? 32:0) +
+	       (outdata_format->samplesize-1)*8 +
 	       (outdata_format->sign?4:0) +
-	       (outdata_format->bigendian?2:0) + 
+	       (outdata_format->bigendian?2:0) +
 	       (indata_format->samplesize/sizeof(double));
 	  g_assert(i < ARRAY_LENGTH(fp_pcm_functions));
 	  g_assert(dither_mode != DITHER_UNSPEC);
@@ -428,11 +617,14 @@ void convert_array(void *indata, Dataformat *indata_format,
      }
 }
 
-gint unnormalized_count(sample_t *buf, gint count)
+gint unnormalized_count(sample_t *buf, gint count, Dataformat *target)
 {
      gint i,c=0;
+     sample_t maxval,minval;
+     maxval = maximum_float_value(target);
+     minval = minimum_float_value(target);
      for (i=0; i<count; i++)
-	  if (buf[i] > 1.0 || buf[i] < -1.0)
+	  if (buf[i] > maxval || buf[i] < minval)
 	       c++;
      return c;
 }
