@@ -488,7 +488,7 @@ static void dither_convert_float(float *indata, char *outdata, int count,
 	  i = MIN(count,ARRAY_LENGTH(databuf));
 	  memcpy(databuf,indata,i*sizeof(float));
 	  for (j=0; j<i; j++)
-	       databuf[j] += (((float)(rand()/2 + rand()/2))/
+	       databuf[j] += (((float)(rand()/2 - rand()/2))/
 			      ((float)RAND_MAX)) * amp_factor;
 	  fn(databuf,outdata,i);
 	  indata += i;
@@ -508,7 +508,7 @@ static void dither_convert_double(double *indata, char *outdata, int count,
 	  i = MIN(count,ARRAY_LENGTH(databuf));
 	  memcpy(databuf,indata,i*sizeof(double));
 	  for (j=0; j<i; j++)
-	       databuf[j] += (((double)(rand()/2 + rand()/2))/
+	       databuf[j] += (((double)(rand()/2 - rand()/2))/
 			      ((double)RAND_MAX)) * amp_factor;
 	  fn(databuf,outdata,i);
 	  indata += i;
