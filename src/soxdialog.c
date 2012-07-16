@@ -48,6 +48,7 @@ static gchar *supported_effects[] = {
 
 static gboolean sox_support_map[22] = { FALSE };
 static gboolean v13_mode = FALSE;
+static gboolean v14_mode = FALSE;
 
 static gchar *supported_effect_names[] = { 
      N_("Echo"),
@@ -84,7 +85,11 @@ void sox_dialog_format_string(gchar *buf, guint bufsize, Dataformat *fmt)
 {
      g_assert(fmt->type == DATAFORMAT_PCM && fmt->samplesize != 3);
 
-     if (v13_mode)
+     if (v14_mode)
+	  g_snprintf(buf,bufsize,"-t raw -r %d -e %s -b %d -c %d",fmt->samplerate,
+		     fmt->sign?"signed":"unsigned",(8 * fmt->samplesize),
+		     fmt->channels);
+     else if (v13_mode)
 	  g_snprintf(buf,bufsize,"-t raw -r %d %s %s -c %d",fmt->samplerate,
 		     fmt->sign?"-s":"-u",samplesize_switch_v13[fmt->samplesize],
 		     fmt->channels);
@@ -99,7 +104,7 @@ static Chunk *sox_dialog_apply_proc_main(Chunk *chunk, StatusBar *bar,
 {
      SoxDialog *sd = SOX_DIALOG(user_data);
      EffectDialog *ed = &(sd->ed);
-     gchar fmt_buf[30];
+     gchar fmt_buf[45];
      gchar cmd_buf[512],*c;
      gchar *t1,*t2;
      gfloat f;
@@ -769,7 +774,10 @@ gboolean sox_dialog_register_main(gchar source_tag)
 	  if (d != NULL) sox_maj = strtol(d+12,NULL,10);
 	  d = strstr(linebuf,"SoX v");
 	  if (d != NULL && sox_maj==0) sox_maj = strtol(d+5,NULL,10);
-	  if (sox_maj > 12) {
+	  if (sox_maj > 13) {
+	       /* printf("SoX version %d detected\n",sox_maj); */
+	       v14_mode = TRUE;
+	  } else if (sox_maj > 12) {
 	       /* printf("SoX version %d detected\n",sox_maj); */
 	       v13_mode = TRUE;
 	  }
