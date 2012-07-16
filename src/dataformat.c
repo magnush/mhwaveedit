@@ -560,7 +560,7 @@ void convert_array(void *indata, Dataformat *indata_format,
      } else if (indata_format->type == DATAFORMAT_PCM) {
 	  if (outdata_format->type == DATAFORMAT_PCM) {
 	       /* PCM -> PCM conversion */
-	       if (outdata_format->samplesize > indata_format->samplesize)
+	       if (outdata_format->samplesize > indata_format->samplesize && sample_convert_mode==CONVERT_MODE_NOOFFS)
 		    dither_mode = DITHER_NONE;
 	       c = g_malloc(count * sizeof(sample_t));	       
 	       convert_array(indata,indata_format,c,&dataformat_sample_t,
