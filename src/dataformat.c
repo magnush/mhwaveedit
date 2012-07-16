@@ -176,6 +176,7 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 /* 1) single-float, max-range */
 
 #define FTYPE float
+#define FTYPE_IS_FLOAT
 
 #ifdef HAVE_LRINTF
 #define RINT(x) lrintf(x)
@@ -217,6 +218,7 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 /* 2) double-float, max-range */
 
 #define FTYPE double
+#undef FTYPE_IS_FLOAT
 
 #ifdef HAVE_LRINT
 #define RINT(x) lrint(x)
@@ -259,6 +261,7 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 
 #define PZMODE
 #define FTYPE float
+#define FTYPE_IS_FLOAT
 
 #ifdef HAVE_LRINTF
 #define RINT(x) lrintf(x)
@@ -301,6 +304,7 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 
 #define PZMODE
 #define FTYPE double
+#undef FTYPE_IS_FLOAT
 
 #ifdef HAVE_LRINT
 #define RINT(x) lrint(x)

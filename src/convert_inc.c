@@ -439,12 +439,31 @@ static void C_PCM32SOE_FLOAT(guint32 *in, FTYPE *out, int count)
 
 static void C_PCM32UNE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
+#ifdef FTYPE_IS_FLOAT
+     gint32 x;
+     for (; count>0; count--,in++,out++) {
+	  x = (gint32)(*in ^ 0x80000000);
+	  *out = NORM32S(x);
+     }
+#else
      for (; count>0; count--,in++,out++)
 	  *out = NORM32U(*in);
+#endif
 }
 
 static void C_PCM32UOE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
+#ifdef FTYPE_IS_FLOAT
+     guint32 i,x;
+     gint32 xi;
+     for (; count>0; count--,in++,out++) {
+	  i = *in;
+	  x = (i<<CASTU32(24)) + ((i<<CASTU32(8)) & CASTU32(0xFF0000)) +
+	       ((i>>CASTU32(8)) & CASTU32(0xFF00)) + (i>>CASTU32(24));
+	  xi = (gint32)(x ^ 0x80000000);
+	  *out = NORM32S(xi);
+     }
+#else
      guint32 i,x;
      for (; count>0; count--,in++,out++) {
 	  i = *in;
@@ -453,6 +472,7 @@ static void C_PCM32UOE_FLOAT(guint32 *in, FTYPE *out, int count)
 	       
 	  *out = NORM32U(x);
      }
+#endif
 }
 
 static void C_FLOAT_PCM8S(FTYPE *in, signed char *out, int count)
