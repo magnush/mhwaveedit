@@ -477,13 +477,40 @@ static convert_function fp_pcm_functions[] = {
      (convert_function)convert_double_pcm32sbe_pz
 };
 
+
+/* The values in these tables correspond to one LSB step and are used as
+ * amplitude for the dithering, adjusted to avoid numerical (double
+ * rounding) problems. These exact values were found using a test program. */
+
+static const float dither_amp_biased_float[4] = {
+     /* (1.0/127.5), (1.0/32767.5), (1.0/8388607.5), (1.0/2147483647.5)  */
+     0.007843077, 3.039837e-5, 0.0, 0.0
+};
+static const float dither_amp_scaled_float[4] = {
+     /* (1.0/127.0), (1.0/32767.0), (1.0/8388607.0), (1.0/2147483647.0)  */
+     0.007873892, 3.039837e-5, 0.0, 0.0
+};
+
+static const double dither_amp_biased_double[4] = {
+     /* (1.0/127.5), (1.0/32767.5), (1.0/8388607.5), (1.0/2147483647.5)  */
+     0.007843137258554065, 3.051804380749278e-05, 1.192092966006974e-07, 4.656611765022771e-10
+};
+static const float dither_amp_scaled_double[4] = {
+     /* (1.0/127.0), (1.0/32767.0), (1.0/8388607.0), (1.0/2147483647.0)  */
+     0.007874015751697883, 3.051850948998556e-05, 1.192093035951025e-07, 4.656611765022771e-10
+};
+
 static void dither_convert_float(float *indata, char *outdata, int count,
 				 convert_function fn, int outdata_ssize)
 {
      float amp_factor;
      float databuf[4096];
      int i,j;
-     amp_factor = powf(2.0f,(float)(1-outdata_ssize*8));
+     /* amp_factor = powf(2.0f,(float)(1-outdata_ssize*8)); */
+     if (sample_convert_mode == CONVERT_MODE_BIASED)
+	  amp_factor = dither_amp_biased_float[outdata_ssize-1];
+     else
+	  amp_factor = dither_amp_scaled_float[outdata_ssize-1];
      while (count > 0) {
 	  i = MIN(count,ARRAY_LENGTH(databuf));
 	  memcpy(databuf,indata,i*sizeof(float));
@@ -503,7 +530,11 @@ static void dither_convert_double(double *indata, char *outdata, int count,
      double amp_factor;
      double databuf[4096];
      int i,j;
-     amp_factor = pow(2.0,(double)(1-outdata_ssize*8));
+     /* amp_factor = pow(2.0,(double)(1-outdata_ssize*8)); */
+     if (sample_convert_mode == CONVERT_MODE_BIASED)
+	  amp_factor = dither_amp_biased_double[outdata_ssize-1];
+     else
+	  amp_factor = dither_amp_scaled_double[outdata_ssize-1];
      while (count > 0) {
 	  i = MIN(count,ARRAY_LENGTH(databuf));
 	  memcpy(databuf,indata,i*sizeof(double));
@@ -589,6 +620,8 @@ void convert_array(void *indata, Dataformat *indata_format,
 	       (outdata_format->bigendian?2:0) +
 	       (indata_format->samplesize/sizeof(double));
 	  g_assert(i < ARRAY_LENGTH(fp_pcm_functions));
+	  if (indata_format->samplesize == sizeof(float) && outdata_format->samplesize > 2) 
+	       dither_mode = DITHER_NONE;
 	  g_assert(dither_mode != DITHER_UNSPEC);
 	  if (dither_mode != DITHER_NONE) {
 	       if (indata_format->samplesize == sizeof(float))
