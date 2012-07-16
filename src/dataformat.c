@@ -533,7 +533,7 @@ sample_t convert_factor(Dataformat *infmt, Dataformat *outfmt)
 {
      sample_t fpos, fneg;
      fneg = minimum_float_value(outfmt) / minimum_float_value(infmt);
-     if (fneg < 1.0) return fneg; else return 1.0;
+     return fneg;
 }
 
 sample_t apply_convert_factor(Dataformat *infmt, Dataformat *outfmt,
@@ -542,7 +542,7 @@ sample_t apply_convert_factor(Dataformat *infmt, Dataformat *outfmt,
      sample_t f;
      guint i;
      if (sample_convert_mode == 0 || infmt->type!=DATAFORMAT_PCM ||
-	 outfmt->type!=DATAFORMAT_PCM || outfmt->samplesize <= infmt->samplesize)
+	 outfmt->type!=DATAFORMAT_PCM)
 	  return;
      f = convert_factor(infmt,outfmt);
      for (i=0; i<count; i++)
