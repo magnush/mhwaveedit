@@ -716,76 +716,100 @@ void conversion_selftest(void)
      return;
 #endif
 
-     /* Generate full range in sample_t buffer */
-     for (j=0; j<SBUFLEN; j++)
-	  sbuf[j] = 2.0*(sample_t)j/(sample_t)(SBUFLEN-1) - 1.0;
-
      /* puts(""); */
      
      /* Perform tests */
-     puts(_("Testing ranges..."));
-     for (i=0; i<ARRAY_LENGTH(samplesizes); i++) {
-	  fmt[0].type = types[i];
-	  fmt[0].samplesize = samplesizes[i];
-	  fmt[0].sign = signs[i];
-	  fmt[0].bigendian = endians[i];
-	  convert_array(sbuf,&dataformat_sample_t,pcm_buf2,fmt,
-			ARRAY_LENGTH(sbuf),DITHER_NONE);
-	  convert_array(pcm_buf2,fmt,sbuf2,&dataformat_sample_t,
-			ARRAY_LENGTH(sbuf),DITHER_NONE);
-	  convert_array(sbuf2,&dataformat_sample_t,pcm_buf3,fmt,
-			ARRAY_LENGTH(sbuf),DITHER_NONE);
+     for (dm=0; dm<2; dm++) {
+	  for (scm=0; scm<2; scm++) {
+	       printf("Dither mode: %d, Convert mode: %d\n",dm,scm);
+	       sample_convert_mode = scm;
+	       puts(_("  Testing ranges..."));
 
-	  if (fabs(sbuf2[0] - -1.0) > 0.000001 || 
-	      fabs(sbuf2[SBUFLEN-1] - 1.0) > 0.000001 ||
-	      memcmp(pcm_buf2,pcm_buf3,SBUFLEN*fmt[0].samplesize)) {
-	       fputs(_("Range test failed for format: "),stdout);
-	       print_format(fmt);
-	       printf("   %f -> %f, %f -> %f\n",sbuf[0],sbuf2[0],
-		      sbuf[SBUFLEN-1],sbuf2[SBUFLEN-1]);
-	       err = TRUE;
-	  }
-     }
+	       /* Generate full range in sample_t buffer */
+	       for (j=0; j<SBUFLEN; j++)
+		    sbuf[j] = 2.0*(sample_t)j/(sample_t)(SBUFLEN-1) - 1.0;
 
-     puts(_("Testing all conversions.."));
+	       for (i=0; i<ARRAY_LENGTH(samplesizes); i++) {
+		    fmt[0].type = types[i];
+		    fmt[0].samplesize = samplesizes[i];
+		    fmt[0].sign = signs[i];
+		    fmt[0].bigendian = endians[i];
+		    fmt[0].samplebytes = fmt[0].samplesize;
+		    fmt[0].channels = 1;
+		    convert_array(sbuf,&dataformat_sample_t,pcm_buf2,fmt,
+				  SBUFLEN,dm);
+		    convert_array(pcm_buf2,fmt,sbuf2,&dataformat_sample_t,
+				  SBUFLEN,dm);
+		    convert_array(sbuf2,&dataformat_sample_t,pcm_buf3,fmt,
+				  SBUFLEN,dm);
 
-     /* Generate random numbers in sbuf vector */
-     for (i=0; i<ARRAY_LENGTH(sbuf); i++)
-	  sbuf[i] = 2.0 * (float)rand() / (float)RAND_MAX - 1.0;
-     
+		    if ((sbuf2[0] != -1.0) ||
+			(sbuf2[SBUFLEN-1] != 1.0) ||
+			memcmp(pcm_buf2,pcm_buf3,SBUFLEN*fmt[0].samplesize)) {
+			 fputs(_("Range test failed for format: "),stdout);
+			 print_format(fmt);
+			 printf("   %.10f -> %.10f, %.10f -> %.10f\n",sbuf[0],sbuf2[0],
+				sbuf[SBUFLEN-1],sbuf2[SBUFLEN-1]);
+			 for (j=0,k=0; j<SBUFLEN; j++,k+=fmt[0].samplesize) {
+			      printf("%.10f %02x %02x %02x %02x %.10f %02x %02x %02x %02x %c\n",
+				     sbuf [j], pcm_buf2[k], pcm_buf2[k+1], pcm_buf2[k+2], pcm_buf2[k+3], 
+				     sbuf2[j], pcm_buf3[k], pcm_buf3[k+1], pcm_buf3[k+2], pcm_buf3[k+3],
+				     (memcmp(pcm_buf2+k,pcm_buf3+k,fmt[0].samplesize) ? '!':' '));
+			 }
+			 err = TRUE;
+		    }
+	       }
 
-     for (i=0; i<ARRAY_LENGTH(samplesizes); i++) {
-	  fmt[0].type = types[i];
-	  fmt[0].samplesize = samplesizes[i];
-	  fmt[0].sign = signs[i];
-	  fmt[0].bigendian = endians[i];
-	  convert_array(sbuf,&dataformat_sample_t,pcm_buf,fmt,
-		       ARRAY_LENGTH(sbuf),DITHER_NONE);
-	  for (j=0; j<ARRAY_LENGTH(samplesizes); j++) {
-	       fmt[1].type = types[j];
-	       fmt[1].samplesize = samplesizes[j];
-	       fmt[1].sign = signs[j];
-	       fmt[1].bigendian = endians[j];
-	       if ((fmt[0].type == DATAFORMAT_PCM && 
-		    fmt[1].type == DATAFORMAT_FLOAT && 
-		    fmt[0].samplesize == 4 && fmt[1].samplesize == 4) || 
-		   fmt[0].samplesize > fmt[1].samplesize)
-		    expect_fail = TRUE;
-	       else
-		    expect_fail = FALSE;
-	       if (expect_fail) continue;
-	       convert_array(pcm_buf,fmt,pcm_buf2,fmt+1,ARRAY_LENGTH(sbuf),
-			     DITHER_NONE);
-	       convert_array(pcm_buf2,fmt+1,pcm_buf3,fmt,ARRAY_LENGTH(sbuf),
-			     DITHER_NONE);
-	       if (memcmp(pcm_buf,pcm_buf3,
-			  ARRAY_LENGTH(sbuf)*fmt[0].samplesize)) {
-		    if (expect_fail) fputs(_("(expected) "),stdout);
-		    fputs(_("Conversion test failed, between: "),stdout);
-		    print_format(fmt);
-		    fputs(_("  and: "),stdout);
-		    print_format(fmt+1);
-		    err = TRUE;
+	       puts(_("  Testing all conversions.."));
+
+	       /* Generate random numbers in sbuf vector */
+	       for (i=0; i<ARRAY_LENGTH(sbuf); i++)
+		    sbuf[i] = 2.0 * (float)rand() / (float)RAND_MAX - 1.0;
+
+	       for (i=0; i<ARRAY_LENGTH(samplesizes); i++) {
+		    fmt[0].type = types[i];
+		    fmt[0].samplesize = samplesizes[i];
+		    fmt[0].sign = signs[i];
+		    fmt[0].bigendian = endians[i];
+		    convert_array(sbuf,&dataformat_sample_t,pcm_buf,fmt,
+				  ARRAY_LENGTH(sbuf),dm);
+		    for (j=0; j<ARRAY_LENGTH(samplesizes); j++) {
+			 fmt[1].type = types[j];
+			 fmt[1].samplesize = samplesizes[j];
+			 fmt[1].sign = signs[j];
+			 fmt[1].bigendian = endians[j];
+			 if ((fmt[0].type == DATAFORMAT_PCM &&
+			      fmt[1].type == DATAFORMAT_FLOAT &&
+			      fmt[0].samplesize == 4 && fmt[1].samplesize == 4) ||
+			     (fmt[1].type == DATAFORMAT_PCM &&
+			      fmt[0].type == DATAFORMAT_FLOAT &&
+			      fmt[0].samplesize == 4 && fmt[1].samplesize == 4) ||
+			     fmt[0].samplesize > fmt[1].samplesize)
+			      expect_fail = TRUE;
+			 else
+			      expect_fail = FALSE;
+			 if (expect_fail) continue;
+			 convert_array(pcm_buf,fmt,pcm_buf2,fmt+1,ARRAY_LENGTH(sbuf),
+				       dm);
+			 convert_array(pcm_buf2,fmt+1,pcm_buf3,fmt,ARRAY_LENGTH(sbuf),
+				       dm);
+			 if (memcmp(pcm_buf,pcm_buf3,
+				    ARRAY_LENGTH(sbuf)*fmt[0].samplesize)) {
+			      if (expect_fail) fputs(_("(expected) "),stdout);
+			      fputs(_("Conversion test failed, between: "),stdout);
+			      print_format(fmt);
+			      fputs(_("  and: "),stdout);
+			      print_format(fmt+1);
+			      for (j=0,k=0; j<SBUFLEN; j++,k+=fmt[0].samplesize) {
+				   printf("%.10f %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %c\n",
+					  sbuf [j], pcm_buf[k], pcm_buf[k+1], pcm_buf[k+2], pcm_buf[k+3], 
+					  pcm_buf2[k], pcm_buf2[k+1], pcm_buf2[k+2], pcm_buf2[k+3],
+					  pcm_buf3[k], pcm_buf3[k+1], pcm_buf3[k+2], pcm_buf3[k+3],
+					  (memcmp(pcm_buf+k,pcm_buf3+k,fmt[0].samplesize) ? '!':' '));
+			      }
+			      err = TRUE;
+			 }
+		    }
 	       }
 	  }
 	  
