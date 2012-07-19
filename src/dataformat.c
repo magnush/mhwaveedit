@@ -851,9 +851,10 @@ void conversion_selftest(void)
 		      DATAFORMAT_PCM, DATAFORMAT_FLOAT, DATAFORMAT_FLOAT }; 
      guchar pcm_buf[SBUFLEN*8],pcm_buf2[SBUFLEN*8],pcm_buf3[SBUFLEN*8];
      sample_t sbuf[SBUFLEN],sbuf2[SBUFLEN];
-     guint i,j;
+     guint i,j,k;
      Dataformat fmt[2];
      gboolean expect_fail, err=FALSE;
+     int dm,scm;
 
 #if 0
      fmt[0].type = DATAFORMAT_PCM;
