@@ -739,8 +739,8 @@ static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar)
      case SF_FORMAT_PCM_U8: f.sign=FALSE;f.samplesize=1;raw_readable=TRUE;break;
      case SF_FORMAT_PCM_S8: f.sign=TRUE; f.samplesize=1;raw_readable=TRUE;break;
      case SF_FORMAT_PCM_16: f.sign=TRUE; f.samplesize=2;break;
-	  /*     case SF_FORMAT_PCM_24: f.sign=TRUE; f.samplesize=3;raw_readable=FALSE;break;
-		 case SF_FORMAT_PCM_32: f.sign=TRUE; f.samplesize=4;raw_readable=FALSE;break; */
+     case SF_FORMAT_PCM_24: f.sign=TRUE; f.samplesize=4; f.packing=1; break;
+     case SF_FORMAT_PCM_32: f.sign=TRUE; f.samplesize=4; break;
 
      case SF_FORMAT_VORBIS:
 	  if (inifile_get_guint32("sndfileOggMode",1)!=0)
@@ -856,9 +856,12 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
      guint n;
      SNDFILE *s;
      SF_INFO info;
-     sample_t *samplebuf;
+     void *samplebuf;
      ChunkHandle *ch;
      off_t clipcount = 0;
+     Dataformat fmt;
+     Chunk *convchunk;
+     sf_count_t wc;
 
      if (find_nearest_sndfile_format(&(chunk->format),format,&info,filename)) 
 	  return -1;
@@ -871,50 +874,89 @@ static gboolean sndfile_save_main(Chunk *chunk, gchar *filename,
           return -1;
      }
 
-     sf_command ( s, SFC_SET_NORM_FLOAT, NULL, SF_TRUE );
-     sf_command ( s, SFC_SET_NORM_DOUBLE, NULL, SF_TRUE );
+     /* Decide on a format suitable for passing into one of the
+      * sndfile_write functions (byte,short,int or float) */
+     memcpy(&fmt,&(chunk->format),sizeof(fmt));
+     fmt.bigendian = IS_BIGENDIAN;
+     if (fmt.samplesize > 1) {
+	  fmt.sign = TRUE;
+	  if (fmt.samplesize == 3) {
+	       fmt.samplesize = 4;
+	       fmt.packing = 1;
+	  }
+	  if (fmt.packing == 2) fmt.packing=1;
+	  fmt.samplebytes = fmt.samplesize * fmt.channels;
+     }
+     if (dataformat_samples_equal(&fmt,&(chunk->format))) {
+	  convchunk = chunk;
+	  gtk_object_ref(GTK_OBJECT(convchunk));
+     } else {
+	  convchunk = chunk_convert_sampletype(chunk, &fmt);
+	  gtk_object_ref(GTK_OBJECT(convchunk));
+	  gtk_object_sink(GTK_OBJECT(convchunk));
+     }
 
-     ch = chunk_open(chunk);
+     ch = chunk_open(convchunk);
      if (ch == NULL) {
+	  gtk_object_unref(GTK_OBJECT(convchunk));
 	  sf_close(s);
 	  return -1;
      }
 
-     /* We could speed this up a LOT esp. on output to PCM files. */
-     samplebuf = g_malloc(sizeof(sample_t) * chunk->format.channels * 1024);
+     samplebuf = g_malloc(fmt.samplebytes * 1024);
 
-     for (i=0; i<chunk->length; i+=n) {
-	  /* FIXME: Use chunk_read_array for FP chunks */
-	  n = chunk_read_array_fp(ch,i,1024,samplebuf,dither_mode,&clipcount);
+     for (i=0; i<convchunk->length; i+=n) {
+	  n = chunk_read_array(ch,i,1024*fmt.samplebytes,samplebuf,dither_mode,&clipcount);
 	  if (!n) {
 	       chunk_close(ch);
 	       sf_close(s);
 	       g_free(samplebuf);
+	       gtk_object_unref(GTK_OBJECT(convchunk));
 	       *fatal = TRUE;
 	       return -1;
 	  }
-	  clipcount += unnormalized_count(samplebuf,n*chunk->format.channels,&(chunk->format));
-	  if (sf_writef_sample_t(s,samplebuf,n) != n) {
+	  n /= fmt.samplebytes;
+	  if (fmt.type == DATAFORMAT_FLOAT) {
+	       if (fmt.samplesize == sizeof(float)) {
+		    wc = sf_writef_float(s,samplebuf,n);
+	       } else {
+		    wc = sf_writef_double(s,samplebuf,n);
+	       }
+	  } else if (fmt.type == DATAFORMAT_PCM) {
+	       if (fmt.samplesize == 1) {
+		    wc = sf_write_raw(s,samplebuf,n*fmt.samplebytes);
+		    wc /= fmt.samplebytes;
+	       } else if (fmt.samplesize == 2) {
+		    wc = sf_writef_short(s,samplebuf,n);
+	       } else {
+		    wc = sf_writef_int(s,samplebuf,n);
+	       }
+	  }
+
+	  if (wc != n) {
 	       c = g_strdup_printf(_("Failed to write to '%s'!"),filename);
 	       user_error(c);
 	       g_free(c);
 	       chunk_close(ch);
 	       sf_close(s);
 	       g_free(samplebuf);
+	       gtk_object_unref(GTK_OBJECT(convchunk));
 	       *fatal = TRUE;
 	       return -1;  
 	  }
-	  if (status_bar_progress(bar, n*chunk->format.samplebytes)) {
+	  if (status_bar_progress(bar, n*fmt.samplebytes)) {
 	       chunk_close(ch);
 	       sf_close(s);
 	       g_free(samplebuf);
 	       xunlink(filename);
+	       gtk_object_unref(GTK_OBJECT(convchunk));
 	       return -1;
 	  }
      }
      chunk_close(ch);
      sf_close(s);
      g_free(samplebuf);
+     gtk_object_unref(GTK_OBJECT(convchunk));
      return clipwarn(clipcount,TRUE);
 
 }

@@ -506,14 +506,13 @@ static void sndfile_read_error(sf_count_t x, Datasource *source)
 }
 #endif
 
-static guint datasource_sndfile_read_array_pcm(Datasource *source, 
-					       off_t sampleno, guint size,
-					       gpointer buffer)
+static guint datasource_sndfile_read_array(Datasource *source,
+					   off_t sampleno, guint size,
+					   gpointer buffer)
 {
 #if defined(HAVE_LIBSNDFILE)
      gchar c[256],*d;
-     sf_count_t x;
-     g_assert(source->format.type == DATAFORMAT_PCM);
+     sf_count_t samples,x;
      if (source->data.sndfile.pos != sampleno) {
 	  if (sf_seek(source->data.sndfile.handle,sampleno,SEEK_SET) == -1) {
 	       sf_error_str(source->data.sndfile.handle,c,sizeof(c));
@@ -525,63 +524,31 @@ static guint datasource_sndfile_read_array_pcm(Datasource *source,
 	  }
 	  source->data.sndfile.pos = sampleno;
      }
-     if (source->data.sndfile.raw_readable) {
+     samples = size / source->format.samplebytes;
+     if (source->format.type == DATAFORMAT_FLOAT) {
+	  x = sf_readf_sample_t(source->data.sndfile.handle,buffer,samples);
+     } else if (source->data.sndfile.raw_readable) {
 	  /* Read raw */
-	  x = sf_read_raw(source->data.sndfile.handle,buffer,size);	  
-	  if (x>0) source->data.sndfile.pos += x/source->format.samplebytes;
-	  if (x<size) {
-	       sndfile_read_error(x,source);
-	       return 0;
-	  }
-	  return x;
+	  x = sf_read_raw(source->data.sndfile.handle,buffer,size);
+	  x /= source->format.samplebytes;
      } else if (source->format.samplesize==2 && source->format.sign) {
 	  /* Read as short */
-	  x = sf_readf_short(source->data.sndfile.handle,buffer,
-			     size / source->format.samplebytes);
-	  if (x>0) source->data.sndfile.pos += x;
-	  if (x < size / source->format.samplebytes) {
-	       sndfile_read_error(x,source);
-	       return 0;
-	  }
-	  return x * source->format.samplebytes;
-     } else {	  
+	  x = sf_readf_short(source->data.sndfile.handle,buffer,samples);
+     } else if (source->format.samplesize==4 && source->format.sign &&
+		source->format.packing < 2) {
+	  /* Read as int */
+	  /* TODO: Handle archs with sizeof(int)>4 */
+	  x = sf_readf_int(source->data.sndfile.handle,buffer,samples);
+     } else {
 	  g_assert_not_reached();
 	  return 0;
      } 
-#else
-     g_assert_not_reached();
-     return 0;
-#endif
-}
-
-static guint datasource_sndfile_read_array_fp(Datasource *source, 
-					      off_t sampleno, guint samples,
-					      sample_t *buffer)
-{
-#if defined(HAVE_LIBSNDFILE)
-     gchar c[256],*d;
-     sf_count_t x;
-
-     if (source->data.sndfile.pos != sampleno) {
-	  if (sf_seek(source->data.sndfile.handle,sampleno,SEEK_SET) == -1) {
-	       sf_error_str(source->data.sndfile.handle,c,sizeof(c));
-	       d = g_strdup_printf(_("Error seeking in %s: %s"),
-				   source->data.sndfile.filename, c);
-	       user_error(d);
-	       g_free(d);
-	       return 0;
-	  }
-	  source->data.sndfile.pos = sampleno;
-     }
-
-     x = sf_readf_sample_t(source->data.sndfile.handle,buffer,samples);
      if (x>0) source->data.sndfile.pos += x;
      if (x<samples) {
 	  sndfile_read_error(x,source);
 	  return 0;		    
      }
-     return x;
-
+     return x * source->format.samplebytes;
 #else
      g_assert_not_reached();
      return 0;
@@ -640,13 +607,7 @@ static guint datasource_read_array_main(Datasource *source,
 	  return size;
      case DATASOURCE_SNDFILE:
      case DATASOURCE_SNDFILE_TEMPORARY:
-	  if (source->format.type == DATAFORMAT_PCM)
-	       return datasource_sndfile_read_array_pcm(source,sampleno,size,
-							buffer);
-	  else
-	       return datasource_sndfile_read_array_fp
-		    (source,sampleno,size/source->format.samplebytes,buffer) * 
-		    source->format.samplebytes;
+	  return datasource_sndfile_read_array(source,sampleno,size,buffer);
      case DATASOURCE_REF:
 	  return datasource_read_array_main(source->data.clone,sampleno,size,
 					    buffer,dither_mode,clipcount);
@@ -747,10 +708,6 @@ guint datasource_read_array_fp(Datasource *source, off_t sampleno,
      case DATASOURCE_SILENCE:
 	  memset(buffer,0,samples*source->format.channels*sizeof(sample_t));
 	  return samples;
-     case DATASOURCE_SNDFILE:
-     case DATASOURCE_SNDFILE_TEMPORARY:
-       return datasource_sndfile_read_array_fp(source,sampleno,samples,
-					       buffer);
      case DATASOURCE_REF:
      case DATASOURCE_CONVERT:
 	  g_assert(source->type == DATASOURCE_CONVERT ||
