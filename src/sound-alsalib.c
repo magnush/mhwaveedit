@@ -176,12 +176,23 @@ static snd_pcm_format_t alsa_get_format(Dataformat *format)
 	       return format->bigendian ? SND_PCM_FORMAT_U24_3BE : 
 		    SND_PCM_FORMAT_U24_3LE;	       
      case 4:
-	  if (format->sign) 
-	       return format->bigendian?
-		    SND_PCM_FORMAT_S32_BE:SND_PCM_FORMAT_S32_LE;
-	  else 
-	       return format->bigendian?
-		    SND_PCM_FORMAT_U32_BE:SND_PCM_FORMAT_U32_LE;
+	  switch (format->packing) {
+	  case 0:
+	  case 1: /* Use 32-bit for 24-in-32 with data in MSB */
+	       if (format->sign)
+		    return format->bigendian?
+			 SND_PCM_FORMAT_S32_BE:SND_PCM_FORMAT_S32_LE;
+	       else
+		    return format->bigendian?
+			 SND_PCM_FORMAT_U32_BE:SND_PCM_FORMAT_U32_LE;
+	  case 2:
+	       if (format->sign)
+		    return format->bigendian?
+			 SND_PCM_FORMAT_S24_BE:SND_PCM_FORMAT_S24_LE;
+	       else
+		    return format->bigendian?
+			 SND_PCM_FORMAT_U24_BE:SND_PCM_FORMAT_S24_LE;
+	  }
      }
      g_assert_not_reached();
      return SND_PCM_FORMAT_UNKNOWN;

@@ -135,6 +135,7 @@ static gint oss_try_format(Dataformat *format, gboolean input, gboolean silent)
      case 3:
      case 4:
 	  if (!format->sign) return -1;
+	  if (format->packing == 2) return -1;
 	  /* This is really hairy, but the AFMT_S32-constants don't seem to be 
 	   * defined in all soundcard.h files */
 	  if (format->bigendian) {

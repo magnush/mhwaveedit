@@ -475,9 +475,14 @@ static gboolean format_to_pulse(Dataformat *format, pa_sample_spec *ss_out)
 	  else if (format->samplesize == 3 && format->sign == TRUE)
 	       sf = (format->bigendian)?PA_SAMPLE_S24BE:PA_SAMPLE_S24LE;
 #endif
-	  else if (format->samplesize == 4 && format->sign == TRUE)
-	       sf = (format->bigendian)?PA_SAMPLE_S32BE:PA_SAMPLE_S32LE;
-	  else
+	  else if (format->samplesize == 4 && format->sign == TRUE) {
+	       if (format->packing == 0 || format->packing == 1)
+		    sf = (format->bigendian)?PA_SAMPLE_S32BE:PA_SAMPLE_S32LE;
+#ifdef HAS24
+	       else
+		    sf = (format->bigendian)?PA_SAMPLE_S24_32LE:PA_SAMPLE_S24_32BE;
+#endif
+	  } else
 	       return TRUE;
      } else if (format->type == DATAFORMAT_FLOAT && format->samplesize == 4) {
 	  if (ieee_le_compatible)
@@ -513,15 +518,19 @@ static gboolean pa_format_from_pulse(pa_sample_spec *ss, Dataformat *format_out)
      case PA_SAMPLE_S32LE:
      case PA_SAMPLE_S32BE:
 	  f.type = DATAFORMAT_PCM;
+	  f.packing = 0;
 	  if (i == PA_SAMPLE_U8) 
 	       f.samplesize = 1;
-	  else if (i == PA_SAMPLE_S16LE || i == PA_SAMPLE_S16BE) 
+	  else if (i == PA_SAMPLE_S16LE || i == PA_SAMPLE_S16BE) {
 	       f.samplesize = 2;
 #ifdef HAS24
-	  else if (i == PA_SAMPLE_S24LE || i == PA_SAMPLE_S24BE)
+	  } else if (i == PA_SAMPLE_S24LE || i == PA_SAMPLE_S24BE)
 	       f.samplesize = 3;
+	  else if (i == PA_SAMPLE_S24_32LE || i == PA_SAMPLE_S24_32LE) {
+	       f.samplesize = 4;
+	       f.packing = 2;
 #endif
-	  else
+	  } else
 	       f.samplesize = 4;
 	  f.sign = !(i == PA_SAMPLE_U8);
 	  if (i == PA_SAMPLE_S16BE || i == PA_SAMPLE_S32BE

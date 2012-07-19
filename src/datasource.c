@@ -51,6 +51,7 @@ static void datasource_init(Datasource *obj)
      obj->format.type = DATAFORMAT_PCM;
      obj->format.samplerate=44100;
      obj->format.samplesize=2;
+     obj->format.packing=0;
      obj->format.channels=2;
      obj->format.sign=1;
      obj->format.bigendian = IS_BIGENDIAN;
@@ -889,7 +890,8 @@ Datasource *datasource_convert(Datasource *source, Dataformat *new_format)
      if (source->format.type == DATAFORMAT_PCM && 
 	 new_format->type == DATAFORMAT_PCM && 
 	 source->format.samplesize == new_format->samplesize &&
-	 source->format.sign == new_format->sign) {	  
+	 source->format.sign == new_format->sign &&
+	 source->format.packing == new_format->packing) {
 	  return datasource_byteswap(source);
      }
 

@@ -91,21 +91,37 @@
 #define C_PCM16UNE_FLOAT C_PCM16UBE_FLOAT
 #define C_PCM32SNE_FLOAT C_PCM32SBE_FLOAT
 #define C_PCM32UNE_FLOAT C_PCM32UBE_FLOAT
+#define C_PCM24SNEPM_FLOAT C_PCM24SBEPM_FLOAT
+#define C_PCM24UNEPM_FLOAT C_PCM24UBEPM_FLOAT
+#define C_PCM24SNEPL_FLOAT C_PCM24SBEPL_FLOAT
+#define C_PCM24UNEPL_FLOAT C_PCM24UBEPL_FLOAT
 
 #define C_PCM16SOE_FLOAT C_PCM16SLE_FLOAT
 #define C_PCM16UOE_FLOAT C_PCM16ULE_FLOAT
 #define C_PCM32SOE_FLOAT C_PCM32SLE_FLOAT
 #define C_PCM32UOE_FLOAT C_PCM32ULE_FLOAT
+#define C_PCM24SOEPM_FLOAT C_PCM24SLEPM_FLOAT
+#define C_PCM24UOEPM_FLOAT C_PCM24ULEPM_FLOAT
+#define C_PCM24SOEPL_FLOAT C_PCM24SLEPL_FLOAT
+#define C_PCM24UOEPL_FLOAT C_PCM24ULEPL_FLOAT
 
 #define C_FLOAT_PCM16SNE C_FLOAT_PCM16SBE
 #define C_FLOAT_PCM16UNE C_FLOAT_PCM16UBE
 #define C_FLOAT_PCM32SNE C_FLOAT_PCM32SBE
 #define C_FLOAT_PCM32UNE C_FLOAT_PCM32UBE
+#define C_FLOAT_PCM24SNEPM C_FLOAT_PCM32SBEPM
+#define C_FLOAT_PCM24UNEPM C_FLOAT_PCM32UBEPM
+#define C_FLOAT_PCM24SNEPL C_FLOAT_PCM32SBEPL
+#define C_FLOAT_PCM24UNEPL C_FLOAT_PCM32UBEPL
 
 #define C_FLOAT_PCM16SOE C_FLOAT_PCM16SLE
 #define C_FLOAT_PCM16UOE C_FLOAT_PCM16ULE
 #define C_FLOAT_PCM32SOE C_FLOAT_PCM32SLE
 #define C_FLOAT_PCM32UOE C_FLOAT_PCM32ULE
+#define C_FLOAT_PCM24SOE C_FLOAT_PCM24SLEPM
+#define C_FLOAT_PCM24UOE C_FLOAT_PCM24ULEPM
+#define C_FLOAT_PCM24SOE C_FLOAT_PCM24SLEPL
+#define C_FLOAT_PCM24UOE C_FLOAT_PCM24ULEPL
 
 static void C_PCM24SLE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
@@ -231,21 +247,37 @@ static void C_PCM24UBE_FLOAT(guint32 *in, FTYPE *out, int count)
 #define C_PCM16UNE_FLOAT C_PCM16ULE_FLOAT
 #define C_PCM32SNE_FLOAT C_PCM32SLE_FLOAT
 #define C_PCM32UNE_FLOAT C_PCM32ULE_FLOAT
+#define C_PCM24SNEPM_FLOAT C_PCM24SLEPM_FLOAT
+#define C_PCM24UNEPM_FLOAT C_PCM24ULEPM_FLOAT
+#define C_PCM24SNEPL_FLOAT C_PCM24SLEPL_FLOAT
+#define C_PCM24UNEPL_FLOAT C_PCM24ULEPL_FLOAT
 
 #define C_PCM16SOE_FLOAT C_PCM16SBE_FLOAT
 #define C_PCM16UOE_FLOAT C_PCM16UBE_FLOAT
 #define C_PCM32SOE_FLOAT C_PCM32SBE_FLOAT
 #define C_PCM32UOE_FLOAT C_PCM32UBE_FLOAT
+#define C_PCM24SOEPM_FLOAT C_PCM24SBEPM_FLOAT
+#define C_PCM24UOEPM_FLOAT C_PCM24UBEPM_FLOAT
+#define C_PCM24SOEPL_FLOAT C_PCM24SBEPL_FLOAT
+#define C_PCM24UOEPL_FLOAT C_PCM24UBEPL_FLOAT
 
 #define C_FLOAT_PCM16SNE C_FLOAT_PCM16SLE
 #define C_FLOAT_PCM16UNE C_FLOAT_PCM16ULE
 #define C_FLOAT_PCM32SNE C_FLOAT_PCM32SLE
 #define C_FLOAT_PCM32UNE C_FLOAT_PCM32ULE
+#define C_FLOAT_PCM24SNEPM C_FLOAT_PCM24SLEPM
+#define C_FLOAT_PCM24UNEPM C_FLOAT_PCM24ULEPM
+#define C_FLOAT_PCM24SNEPL C_FLOAT_PCM24SLEPL
+#define C_FLOAT_PCM24UNEPL C_FLOAT_PCM24ULEPL
 
 #define C_FLOAT_PCM16SOE C_FLOAT_PCM16SBE
 #define C_FLOAT_PCM16UOE C_FLOAT_PCM16UBE
 #define C_FLOAT_PCM32SOE C_FLOAT_PCM32SBE
 #define C_FLOAT_PCM32UOE C_FLOAT_PCM32UBE
+#define C_FLOAT_PCM24SOEPM C_FLOAT_PCM24SBEPM
+#define C_FLOAT_PCM24UOEPM C_FLOAT_PCM24UBEPM
+#define C_FLOAT_PCM24SOEPL C_FLOAT_PCM24SBEPL
+#define C_FLOAT_PCM24UOEPL C_FLOAT_PCM24UBEPL
 
 static void C_PCM24SLE_FLOAT(guint32 *in, FTYPE *out, int count)
 {
@@ -475,6 +507,84 @@ static void C_PCM32UOE_FLOAT(guint32 *in, FTYPE *out, int count)
 #endif
 }
 
+static void C_PCM24SNEPM_FLOAT(guint32 *in, FTYPE *out, int count)
+{
+     unsigned long l;
+     for (; count>0; count--,in++,out++) {
+	  l = (*in >> 8) ^ 0x800000;
+	  *out = NORM24U(l);
+     }
+}
+
+static void C_PCM24SOEPM_FLOAT(guint32 *in, FTYPE *out, int count)
+{
+     guint32 i,x;
+     for (; count>0; count--,in++,out++) {
+	  i = *in;
+	  x = ((i << 16) & 0xFF0000) | (i & 0xFF00) | ((i >> 16) & 0xFF);
+	  x ^= 0x800000;
+	  *out = NORM24U(x);
+     }
+}
+
+static void C_PCM24UNEPM_FLOAT(guint32 *in, FTYPE *out, int count)
+{
+     unsigned long l;
+     for (; count>0; count--,in++,out++) {
+	  l = *in >> 8;
+	  *out = NORM24U(l);
+     }
+}
+
+static void C_PCM24UOEPM_FLOAT(guint32 *in, FTYPE *out, int count)
+{
+     guint32 i,x;
+     for (; count>0; count--,in++,out++) {
+	  i = *in;
+	  x = ((i << 16) & 0xFF0000) | (i & 0xFF00) | ((i >> 16) & 0xFF);
+	  *out = NORM24U(x);
+     }
+}
+
+static void C_PCM24SNEPL_FLOAT(guint32 *in, FTYPE *out, int count)
+{
+     unsigned long l;
+     for (; count>0; count--,in++,out++) {
+	  l = (*in & 0xFFFFFF) ^ 0x800000;
+	  *out = NORM24U(l);
+     }
+}
+
+static void C_PCM24SOEPL_FLOAT(guint32 *in, FTYPE *out, int count)
+{
+     guint32 i,x;
+     for (; count>0; count--,in++,out++) {
+	  i = *in;
+	  x = ((i << 8) & 0xFF0000) | ((i >> 8) & 0xFF00) | ((i >> 24) & 0xFF);
+	  x ^= 0x800000;
+	  *out = NORM24U(x);
+     }
+}
+
+static void C_PCM24UNEPL_FLOAT(guint32 *in, FTYPE *out, int count)
+{
+     unsigned long l;
+     for (; count>0; count--,in++,out++) {
+	  l = *in & 0xFFFFFF;
+	  *out = NORM24U(l);
+     }
+}
+
+static void C_PCM24UOEPL_FLOAT(guint32 *in, FTYPE *out, int count)
+{
+     guint32 i,x;
+     for (; count>0; count--,in++,out++) {
+	  i = *in;
+	  x = ((i << 8) & 0xFF0000) | ((i >> 8) & 0xFF00) | ((i >> 24) & 0xFF);
+	  *out = NORM24U(x);
+     }
+}
+
 static void C_FLOAT_PCM8S(FTYPE *in, signed char *out, int count)
 {
      long int l;
@@ -615,6 +725,73 @@ static void C_FLOAT_PCM32UOE(FTYPE *in, guint32 *out, int count)
      byteswap(out,4,count*4);
 }
 
+static void C_FLOAT_PCM24SNEPM(FTYPE *in, guint32 *out, int count)
+{
+     long l;
+     for (; count>0; count--,in++,out++) {
+	  l = RINT(UNNORM24S(*in));
+	  if (l > 0x7FFFFF) l = 0x7FFFFF;
+	  else if (l < -0x800000) l = -0x800000;
+	  *out = l << 8;
+     }
+}
+
+static void C_FLOAT_PCM24SOEPM(FTYPE *in, guint32 *out, int count)
+{
+     C_FLOAT_PCM24SNEPM(in,out,count);
+     byteswap(out,4,count*4);
+}
+
+static void C_FLOAT_PCM24UNEPM(FTYPE *in, guint32 *out, int count)
+{
+     unsigned long l;
+     for (; count>0; count--,in++,out++) {
+	  l = RINT(UNNORM24U(*in));
+	  if (l > 0xFFFFFF) l = 0xFFFFFF; else if (l < 0) l = 0;
+	  *out = l << 8;
+     }
+}
+
+static void C_FLOAT_PCM24UOEPM(FTYPE *in, guint32 *out, int count)
+{
+     C_FLOAT_PCM24UNEPM(in,out,count);
+     byteswap(out,4,count*4);
+}
+
+static void C_FLOAT_PCM24SNEPL(FTYPE *in, guint32 *out, int count)
+{
+     long l;
+     for (; count>0; count--,in++,out++) {
+	  l = RINT(UNNORM24S(*in));
+	  if (l > 0x7FFFFF) l = 0x7FFFFF;
+	  else if (l < -0x800000) l = -0x800000;
+	  *out = l;
+     }
+}
+
+static void C_FLOAT_PCM24SOEPL(FTYPE *in, guint32 *out, int count)
+{
+     C_FLOAT_PCM24SOEPL(in,out,count);
+     byteswap(out,4,count*4);
+}
+
+static void C_FLOAT_PCM24UNEPL(FTYPE *in, guint32 *out, int count)
+{
+     unsigned long l;
+     for (; count>0; count--,in++,out++) {
+	  l = RINT(UNNORM24U(*in));
+	  if (l > 0xFFFFFF) l = 0xFFFFFF; else if (l < 0) l = 0;
+	  *out = l;
+     }
+}
+
+static void C_FLOAT_PCM24UOEPL(FTYPE *in, guint32 *out, int count)
+{
+     C_FLOAT_PCM24UNEPL(in,out,count);
+     byteswap(out,4,count*4);
+}
+
+
 /* Defined in this file. */
 #undef C_PCM16SNE_FLOAT
 #undef C_PCM16SOE_FLOAT
@@ -624,6 +801,14 @@ static void C_FLOAT_PCM32UOE(FTYPE *in, guint32 *out, int count)
 #undef C_PCM32SOE_FLOAT
 #undef C_PCM32UNE_FLOAT
 #undef C_PCM32UOE_FLOAT
+#undef C_PCM24SNEPM_FLOAT
+#undef C_PCM24SOEPM_FLOAT
+#undef C_PCM24UNEPM_FLOAT
+#undef C_PCM24UOEPM_FLOAT
+#undef C_PCM24SNEPL_FLOAT
+#undef C_PCM24SOEPL_FLOAT
+#undef C_PCM24UNEPL_FLOAT
+#undef C_PCM24UOEPL_FLOAT
 #undef C_FLOAT_PCM16SNE
 #undef C_FLOAT_PCM16SOE
 #undef C_FLOAT_PCM16UNE
@@ -632,6 +817,14 @@ static void C_FLOAT_PCM32UOE(FTYPE *in, guint32 *out, int count)
 #undef C_FLOAT_PCM32SOE
 #undef C_FLOAT_PCM32UNE
 #undef C_FLOAT_PCM32UOE
+#undef C_FLOAT_PCM24SNEPM
+#undef C_FLOAT_PCM24SOEPM
+#undef C_FLOAT_PCM24UNEPM
+#undef C_FLOAT_PCM24UOEPM
+#undef C_FLOAT_PCM24SNEPL
+#undef C_FLOAT_PCM24SOEPL
+#undef C_FLOAT_PCM24UNEPL
+#undef C_FLOAT_PCM24UOEPL
 #undef MUL
 #undef DIV
 #undef MULADD
@@ -665,6 +858,14 @@ static void C_FLOAT_PCM32UOE(FTYPE *in, guint32 *out, int count)
 #undef C_PCM24SBE_FLOAT
 #undef C_PCM24ULE_FLOAT
 #undef C_PCM24UBE_FLOAT
+#undef C_PCM24SLEPM_FLOAT
+#undef C_PCM24SBEPM_FLOAT
+#undef C_PCM24ULEPM_FLOAT
+#undef C_PCM24UBEPM_FLOAT
+#undef C_PCM24SLEPL_FLOAT
+#undef C_PCM24SBEPL_FLOAT
+#undef C_PCM24ULEPL_FLOAT
+#undef C_PCM24UBEPL_FLOAT
 #undef C_PCM32SLE_FLOAT
 #undef C_PCM32SBE_FLOAT
 #undef C_PCM32ULE_FLOAT
@@ -679,6 +880,14 @@ static void C_FLOAT_PCM32UOE(FTYPE *in, guint32 *out, int count)
 #undef C_FLOAT_PCM24SBE
 #undef C_FLOAT_PCM24ULE
 #undef C_FLOAT_PCM24UBE
+#undef C_FLOAT_PCM24SLEPM
+#undef C_FLOAT_PCM24SBEPM
+#undef C_FLOAT_PCM24ULEPM
+#undef C_FLOAT_PCM24UBEPM
+#undef C_FLOAT_PCM24SLEPL
+#undef C_FLOAT_PCM24SBEPL
+#undef C_FLOAT_PCM24ULEPL
+#undef C_FLOAT_PCM24UBEPL
 #undef C_FLOAT_PCM32SLE
 #undef C_FLOAT_PCM32SBE
 #undef C_FLOAT_PCM32ULE

@@ -40,6 +40,7 @@ static void samplesize_changed(Combo *obj, gpointer user_data)
      i = combo_selected_index(obj);
      gtk_widget_set_sensitive(GTK_WIDGET(fs->sign_combo),(i<4));
      gtk_widget_set_sensitive(GTK_WIDGET(fs->endian_combo),(i<4));
+     gtk_widget_set_sensitive(GTK_WIDGET(fs->packing_combo),(i==2));
      if (i == 0)
 	  combo_set_selection(fs->sign_combo,0);	  
      else if (i < 4)
@@ -84,6 +85,16 @@ static void format_selector_init(GtkWidget *widget)
      g_list_free(l);
      fs->endian_combo = COMBO(b);
      gtk_table_attach(GTK_TABLE(a),b,1,2,3,4,GTK_FILL,0,0,0);
+     attach_label(_("Alignment:"),a,4,0);
+     b = combo_new();
+     l = g_list_append(NULL,_("Packed"));
+     l = g_list_append(l, _("Top bytes"));
+     l = g_list_append(l, _("Bottom bytes"));
+     combo_set_items(COMBO(b),l,0);
+     g_list_free(l);
+     fs->packing_combo = COMBO(b);
+     gtk_widget_set_sensitive(b, FALSE);
+     gtk_table_attach(GTK_TABLE(a),b,1,2,4,5,GTK_FILL,0,0,0);
      
      fs->channel_combo = NULL;
      fs->rate_box = NULL;
@@ -123,9 +134,9 @@ static void format_selector_show_full(FormatSelector *fs)
      gtk_table_attach(GTK_TABLE(fs),b,1,2,0,1,GTK_FILL,0,0,0);
      fs->channel_combo = COMBO(b);
      gtk_widget_show(b);
-     attach_label(_("Sample rate: "),a,4,0);
+     attach_label(_("Sample rate: "),a,5,0);
      b = gtk_alignment_new(0.0,0.5,0.0,1.0);
-     gtk_table_attach(GTK_TABLE(fs),b,1,2,4,5,GTK_FILL,0,0,0);
+     gtk_table_attach(GTK_TABLE(fs),b,1,2,5,6,GTK_FILL,0,0,0);
      gtk_widget_show(b);
      c = intbox_new(DEFAULT_RATE);
      fs->rate_box = INTBOX(c);
@@ -143,7 +154,11 @@ GtkWidget *format_selector_new(gboolean show_full)
 void format_selector_set(FormatSelector *fs, Dataformat *fmt)
 {
      if (fmt->type == DATAFORMAT_PCM) {
-	  combo_set_selection(fs->samplesize_combo, fmt->samplesize-1);
+	  if (fmt->samplesize == 4 && fmt->packing != 0) {
+	       combo_set_selection(fs->samplesize_combo, 2);
+	       combo_set_selection(fs->packing_combo, fmt->packing);
+	  } else
+	       combo_set_selection(fs->samplesize_combo, fmt->samplesize-1);
 	  combo_set_selection(fs->sign_combo, fmt->sign?1:0);
 	  combo_set_selection(fs->endian_combo, fmt->bigendian?1:0);
      } else {
@@ -164,7 +179,13 @@ void format_selector_get(FormatSelector *fs, Dataformat *result)
      i = combo_selected_index(fs->samplesize_combo);
      if (i<4) {
 	  result->type = DATAFORMAT_PCM;
-	  result->samplesize = i+1;
+	  if (i == 2) {
+	       result->packing = combo_selected_index(fs->packing_combo);
+	       result->samplesize = (result->packing != 0)?4:3;
+	  } else {
+	       result->samplesize = i+1;
+	       result->packing = 0;
+	  }
      } else {
 	  result->type = DATAFORMAT_FLOAT;
 	  result->samplesize = (i>4)?sizeof(double):sizeof(float);

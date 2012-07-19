@@ -102,7 +102,12 @@ static PaSampleFormat portaudio_fmtparse(Dataformat *format)
      case 3:
 	  return format->sign ? paPackedInt24 : 0;
      case 4:
-	  return format->sign ? paInt32 : 0;
+	  if (format->packing == 0)
+	       return format->sign ? paInt32 : 0;
+	  else if (format->packing == 1)
+	       return format->sign ? paInt24 : 0;
+	  else
+	       return 0;
      default:
 	  g_assert_not_reached();
 	  return 0;

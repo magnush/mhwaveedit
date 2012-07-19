@@ -66,7 +66,8 @@ gboolean dataformat_equal(Dataformat *f1, Dataformat *f2)
 		f1->channels==f2->channels && 
 		(f1->type != DATAFORMAT_PCM || 
 		 (f1->sign==f2->sign && 
-		  (f1->samplesize == 1 || f1->bigendian == f2->bigendian))));
+		  (f1->samplesize == 1 || f1->bigendian == f2->bigendian) &&
+		  (f1->samplesize != 4 || f1->packing == f2->packing))));
 }
 
 gboolean dataformat_samples_equal(Dataformat *f1, Dataformat *f2)
@@ -74,28 +75,29 @@ gboolean dataformat_samples_equal(Dataformat *f1, Dataformat *f2)
      return (f1->type == f2->type && f1->samplesize==f2->samplesize &&
 	     (f1->type != DATAFORMAT_PCM || 
 	      (f1->sign==f2->sign && 
-	       (f1->samplesize == 1 || f1->bigendian == f2->bigendian))));
+	       (f1->samplesize == 1 || f1->bigendian == f2->bigendian) &&
+	       (f1->samplesize != 4 || f1->packing == f2->packing))));
 }
 
-const gchar *sampletype_name(int sampletype, guint samplesize)
+const gchar *sampletype_name(Dataformat *fmt)
 {
-     if (sampletype == DATAFORMAT_FLOAT) {
-	  if (samplesize == sizeof(double)) return "double";
+     if (fmt->type == DATAFORMAT_FLOAT) {
+	  if (fmt->samplesize == sizeof(double)) return "double";
 	  else return "float";
      }
-     switch (samplesize) {
+     switch (fmt->samplesize) {
      case 1: return "8 bit";
      case 2: return "16 bit";
      case 3: return "24 bit";
      default:
-     case 4: return "32 bit";
+     case 4: if (fmt->packing != 0) return "24+8 bit"; else return "32 bit";
      }
 }
 
 gboolean dataformat_get_from_inifile(gchar *ini_prefix, gboolean full,
 				     Dataformat *result)
 {
-     guint t,ss,chn;
+     guint t,ss,chn,pack=0;
      guint32 sr;
      gboolean sign=FALSE,end=FALSE;
      gchar *c,*d;
@@ -106,7 +108,16 @@ gboolean dataformat_get_from_inifile(gchar *ini_prefix, gboolean full,
      switch (d[0]) {
      case '1': t=DATAFORMAT_PCM; ss=1; break;
      case '2': t=DATAFORMAT_PCM; ss=2; break;
-     case '3': t=DATAFORMAT_PCM; ss=3; break;
+     case '3':
+	  switch (d[1]) {
+	  case 'm':
+	       t=DATAFORMAT_PCM; ss=4; pack=1; break;
+	  case 'l':
+	       t=DATAFORMAT_PCM; ss=4; pack=2; break;
+	  case 'p':
+	  default:
+	       t=DATAFORMAT_PCM; ss=3; break;
+	  }
      case '4': t=DATAFORMAT_PCM; ss=4; break;
      case 's': t=DATAFORMAT_FLOAT; ss=sizeof(float); break;
      case 'd': t=DATAFORMAT_FLOAT; ss=sizeof(double); break;
@@ -122,6 +133,7 @@ gboolean dataformat_get_from_inifile(gchar *ini_prefix, gboolean full,
      }
      result->type = t;
      result->samplesize = ss;
+     result->packing = pack;
      result->sign = sign;
      result->bigendian = end;
      if (full) {
@@ -141,11 +153,11 @@ gboolean dataformat_get_from_inifile(gchar *ini_prefix, gboolean full,
 void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format, 
 				gboolean full)
 {
-     char *s[4] = { "1","2","3","4" };
+     char *s[6] = { "1","2","3p","4","3m","3l" };
      gchar *c;
      c = g_strdup_printf("%s_SampleSize",ini_prefix);
      if (format->type == DATAFORMAT_PCM) {
-	  inifile_set(c,s[format->samplesize-1]);
+	  inifile_set(c,s[format->samplesize+format->packing-1]);
 	  g_free(c);
 	  c = g_strdup_printf("%s_Signed",ini_prefix);	  
 	  inifile_set_gboolean(c,format->sign);
@@ -182,6 +194,7 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define RINT(x) lrintf(x)
 #else 
 #define RINT(x) ((long int)((x<0)?(x-0.5000001):(x+0.5000001)))
+#warning "Using fallback for lrintf, losing accuracy"
 #endif
 
 #define C_PCM8S_FLOAT convert_pcm8s_float
@@ -194,6 +207,14 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define C_PCM24SBE_FLOAT convert_pcm24sbe_float
 #define C_PCM24ULE_FLOAT convert_pcm24ule_float
 #define C_PCM24UBE_FLOAT convert_pcm24ube_float
+#define C_PCM24SLEPM_FLOAT convert_pcm24slepm_float
+#define C_PCM24SBEPM_FLOAT convert_pcm24sbepm_float
+#define C_PCM24ULEPM_FLOAT convert_pcm24ulepm_float
+#define C_PCM24UBEPM_FLOAT convert_pcm24ubepm_float
+#define C_PCM24SLEPL_FLOAT convert_pcm24slepl_float
+#define C_PCM24SBEPL_FLOAT convert_pcm24sbepl_float
+#define C_PCM24ULEPL_FLOAT convert_pcm24ulepl_float
+#define C_PCM24UBEPL_FLOAT convert_pcm24ubepl_float
 #define C_PCM32SLE_FLOAT convert_pcm32sle_float
 #define C_PCM32SBE_FLOAT convert_pcm32sbe_float
 #define C_PCM32ULE_FLOAT convert_pcm32ule_float
@@ -208,6 +229,14 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define C_FLOAT_PCM24SBE convert_float_pcm24sbe
 #define C_FLOAT_PCM24ULE convert_float_pcm24ule
 #define C_FLOAT_PCM24UBE convert_float_pcm24ube
+#define C_FLOAT_PCM24SLEPM convert_float_pcm24slepm
+#define C_FLOAT_PCM24SBEPM convert_float_pcm24sbepm
+#define C_FLOAT_PCM24ULEPM convert_float_pcm24ulepm
+#define C_FLOAT_PCM24UBEPM convert_float_pcm24ubepm
+#define C_FLOAT_PCM24SLEPL convert_float_pcm24slepl
+#define C_FLOAT_PCM24SBEPL convert_float_pcm24sbepl
+#define C_FLOAT_PCM24ULEPL convert_float_pcm24ulepl
+#define C_FLOAT_PCM24UBEPL convert_float_pcm24ubepl
 #define C_FLOAT_PCM32SLE convert_float_pcm32sle
 #define C_FLOAT_PCM32SBE convert_float_pcm32sbe
 #define C_FLOAT_PCM32ULE convert_float_pcm32ule
@@ -224,6 +253,7 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define RINT(x) lrint(x)
 #else 
 #define RINT(x) ((long int)((x<0)?(x-0.5000001):(x+0.5000001)))
+#warning "Using fallback for lrint, losing accuracy"
 #endif
 
 #define C_PCM8S_FLOAT convert_pcm8s_double
@@ -236,6 +266,14 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define C_PCM24SBE_FLOAT convert_pcm24sbe_double
 #define C_PCM24ULE_FLOAT convert_pcm24ule_double
 #define C_PCM24UBE_FLOAT convert_pcm24ube_double
+#define C_PCM24SLEPM_FLOAT convert_pcm24slepm_double
+#define C_PCM24SBEPM_FLOAT convert_pcm24sbepm_double
+#define C_PCM24ULEPM_FLOAT convert_pcm24ulepm_double
+#define C_PCM24UBEPM_FLOAT convert_pcm24ubepm_double
+#define C_PCM24SLEPL_FLOAT convert_pcm24slepl_double
+#define C_PCM24SBEPL_FLOAT convert_pcm24sbepl_double
+#define C_PCM24ULEPL_FLOAT convert_pcm24ulepl_double
+#define C_PCM24UBEPL_FLOAT convert_pcm24ubepl_double
 #define C_PCM32SLE_FLOAT convert_pcm32sle_double
 #define C_PCM32SBE_FLOAT convert_pcm32sbe_double
 #define C_PCM32ULE_FLOAT convert_pcm32ule_double
@@ -250,6 +288,14 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define C_FLOAT_PCM24SBE convert_double_pcm24sbe
 #define C_FLOAT_PCM24ULE convert_double_pcm24ule
 #define C_FLOAT_PCM24UBE convert_double_pcm24ube
+#define C_FLOAT_PCM24SLEPM convert_double_pcm24slepm
+#define C_FLOAT_PCM24SBEPM convert_double_pcm24sbepm
+#define C_FLOAT_PCM24ULEPM convert_double_pcm24ulepm
+#define C_FLOAT_PCM24UBEPM convert_double_pcm24ubepm
+#define C_FLOAT_PCM24SLEPL convert_double_pcm24slepl
+#define C_FLOAT_PCM24SBEPL convert_double_pcm24sbepl
+#define C_FLOAT_PCM24ULEPL convert_double_pcm24ulepl
+#define C_FLOAT_PCM24UBEPL convert_double_pcm24ubepl
 #define C_FLOAT_PCM32SLE convert_double_pcm32sle
 #define C_FLOAT_PCM32SBE convert_double_pcm32sbe
 #define C_FLOAT_PCM32ULE convert_double_pcm32ule
@@ -279,6 +325,14 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define C_PCM24SBE_FLOAT convert_pcm24sbe_float_pz
 #define C_PCM24ULE_FLOAT convert_pcm24ule_float_pz
 #define C_PCM24UBE_FLOAT convert_pcm24ube_float_pz
+#define C_PCM24SLEPM_FLOAT convert_pcm24slepm_float_pz
+#define C_PCM24SBEPM_FLOAT convert_pcm24sbepm_float_pz
+#define C_PCM24ULEPM_FLOAT convert_pcm24ulepm_float_pz
+#define C_PCM24UBEPM_FLOAT convert_pcm24ubepm_float_pz
+#define C_PCM24SLEPL_FLOAT convert_pcm24slepl_float_pz
+#define C_PCM24SBEPL_FLOAT convert_pcm24sbepl_float_pz
+#define C_PCM24ULEPL_FLOAT convert_pcm24ulepl_float_pz
+#define C_PCM24UBEPL_FLOAT convert_pcm24ubepl_float_pz
 #define C_PCM32SLE_FLOAT convert_pcm32sle_float_pz
 #define C_PCM32SBE_FLOAT convert_pcm32sbe_float_pz
 #define C_PCM32ULE_FLOAT convert_pcm32ule_float_pz
@@ -293,6 +347,14 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define C_FLOAT_PCM24SBE convert_float_pcm24sbe_pz
 #define C_FLOAT_PCM24ULE convert_float_pcm24ule_pz
 #define C_FLOAT_PCM24UBE convert_float_pcm24ube_pz
+#define C_FLOAT_PCM24SLEPM convert_float_pcm24slepm_pz
+#define C_FLOAT_PCM24SBEPM convert_float_pcm24sbepm_pz
+#define C_FLOAT_PCM24ULEPM convert_float_pcm24ulepm_pz
+#define C_FLOAT_PCM24UBEPM convert_float_pcm24ubepm_pz
+#define C_FLOAT_PCM24SLEPL convert_float_pcm24slepl_pz
+#define C_FLOAT_PCM24SBEPL convert_float_pcm24sbepl_pz
+#define C_FLOAT_PCM24ULEPL convert_float_pcm24ulepl_pz
+#define C_FLOAT_PCM24UBEPL convert_float_pcm24ubepl_pz
 #define C_FLOAT_PCM32SLE convert_float_pcm32sle_pz
 #define C_FLOAT_PCM32SBE convert_float_pcm32sbe_pz
 #define C_FLOAT_PCM32ULE convert_float_pcm32ule_pz
@@ -322,6 +384,14 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define C_PCM24SBE_FLOAT convert_pcm24sbe_double_pz
 #define C_PCM24ULE_FLOAT convert_pcm24ule_double_pz
 #define C_PCM24UBE_FLOAT convert_pcm24ube_double_pz
+#define C_PCM24SLEPM_FLOAT convert_pcm24slepm_double_pz
+#define C_PCM24SBEPM_FLOAT convert_pcm24sbepm_double_pz
+#define C_PCM24ULEPM_FLOAT convert_pcm24ulepm_double_pz
+#define C_PCM24UBEPM_FLOAT convert_pcm24ubepm_double_pz
+#define C_PCM24SLEPL_FLOAT convert_pcm24slepl_double_pz
+#define C_PCM24SBEPL_FLOAT convert_pcm24sbepl_double_pz
+#define C_PCM24ULEPL_FLOAT convert_pcm24ulepl_double_pz
+#define C_PCM24UBEPL_FLOAT convert_pcm24ubepl_double_pz
 #define C_PCM32SLE_FLOAT convert_pcm32sle_double_pz
 #define C_PCM32SBE_FLOAT convert_pcm32sbe_double_pz
 #define C_PCM32ULE_FLOAT convert_pcm32ule_double_pz
@@ -336,6 +406,14 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 #define C_FLOAT_PCM24SBE convert_double_pcm24sbe_pz
 #define C_FLOAT_PCM24ULE convert_double_pcm24ule_pz
 #define C_FLOAT_PCM24UBE convert_double_pcm24ube_pz
+#define C_FLOAT_PCM24SLEPM convert_double_pcm24slepm_pz
+#define C_FLOAT_PCM24SBEPM convert_double_pcm24sbepm_pz
+#define C_FLOAT_PCM24ULEPM convert_double_pcm24ulepm_pz
+#define C_FLOAT_PCM24UBEPM convert_double_pcm24ubepm_pz
+#define C_FLOAT_PCM24SLEPL convert_double_pcm24slepl_pz
+#define C_FLOAT_PCM24SBEPL convert_double_pcm24sbepl_pz
+#define C_FLOAT_PCM24ULEPL convert_double_pcm24ulepl_pz
+#define C_FLOAT_PCM24UBEPL convert_double_pcm24ubepl_pz
 #define C_FLOAT_PCM32SLE convert_double_pcm32sle_pz
 #define C_FLOAT_PCM32SBE convert_double_pcm32sbe_pz
 #define C_FLOAT_PCM32ULE convert_double_pcm32ule_pz
@@ -379,6 +457,22 @@ static convert_function pcm_fp_functions[] = {
      (convert_function)convert_pcm32sle_double,
      (convert_function)convert_pcm32sbe_float,
      (convert_function)convert_pcm32sbe_double,
+     (convert_function)convert_pcm24ulepm_float,
+     (convert_function)convert_pcm24ulepm_double,
+     (convert_function)convert_pcm24ubepm_float,
+     (convert_function)convert_pcm24ubepm_double,
+     (convert_function)convert_pcm24slepm_float,
+     (convert_function)convert_pcm24slepm_double,
+     (convert_function)convert_pcm24sbepm_float,
+     (convert_function)convert_pcm24sbepm_double,
+     (convert_function)convert_pcm24ulepl_float,
+     (convert_function)convert_pcm24ulepl_double,
+     (convert_function)convert_pcm24ubepl_float,
+     (convert_function)convert_pcm24ubepl_double,
+     (convert_function)convert_pcm24slepl_float,
+     (convert_function)convert_pcm24slepl_double,
+     (convert_function)convert_pcm24sbepl_float,
+     (convert_function)convert_pcm24sbepl_double,
      (convert_function)convert_pcm8u_float_pz,
      (convert_function)convert_pcm8u_double_pz,
      (convert_function)convert_pcm8u_float_pz,
@@ -410,7 +504,23 @@ static convert_function pcm_fp_functions[] = {
      (convert_function)convert_pcm32sle_float_pz,
      (convert_function)convert_pcm32sle_double_pz,
      (convert_function)convert_pcm32sbe_float_pz,
-     (convert_function)convert_pcm32sbe_double_pz
+     (convert_function)convert_pcm32sbe_double_pz,
+     (convert_function)convert_pcm24ulepm_float_pz,
+     (convert_function)convert_pcm24ulepm_double_pz,
+     (convert_function)convert_pcm24ubepm_float_pz,
+     (convert_function)convert_pcm24ubepm_double_pz,
+     (convert_function)convert_pcm24slepm_float_pz,
+     (convert_function)convert_pcm24slepm_double_pz,
+     (convert_function)convert_pcm24sbepm_float_pz,
+     (convert_function)convert_pcm24sbepm_double_pz,
+     (convert_function)convert_pcm24ulepl_float_pz,
+     (convert_function)convert_pcm24ulepl_double_pz,
+     (convert_function)convert_pcm24ubepl_float_pz,
+     (convert_function)convert_pcm24ubepl_double_pz,
+     (convert_function)convert_pcm24slepl_float_pz,
+     (convert_function)convert_pcm24slepl_double_pz,
+     (convert_function)convert_pcm24sbepl_float_pz,
+     (convert_function)convert_pcm24sbepl_double_pz
 };
 
 /* (PZ-mode) (PCM size) (PCM sign) (PCM endian) (FP isdouble) */
@@ -447,6 +557,22 @@ static convert_function fp_pcm_functions[] = {
      (convert_function)convert_double_pcm32sle,
      (convert_function)convert_float_pcm32sbe,
      (convert_function)convert_double_pcm32sbe,
+     (convert_function)convert_float_pcm24ulepm,
+     (convert_function)convert_double_pcm24ulepm,
+     (convert_function)convert_float_pcm24ubepm,
+     (convert_function)convert_double_pcm24ubepm,
+     (convert_function)convert_float_pcm24slepm,
+     (convert_function)convert_double_pcm24slepm,
+     (convert_function)convert_float_pcm24sbepm,
+     (convert_function)convert_double_pcm24sbepm,
+     (convert_function)convert_float_pcm24ulepl,
+     (convert_function)convert_double_pcm24ulepl,
+     (convert_function)convert_float_pcm24ubepl,
+     (convert_function)convert_double_pcm24ubepl,
+     (convert_function)convert_float_pcm24slepl,
+     (convert_function)convert_double_pcm24slepl,
+     (convert_function)convert_float_pcm24sbepl,
+     (convert_function)convert_double_pcm24sbepl,
      (convert_function)convert_float_pcm8u_pz,
      (convert_function)convert_double_pcm8u_pz,
      (convert_function)convert_float_pcm8u_pz,
@@ -478,7 +604,23 @@ static convert_function fp_pcm_functions[] = {
      (convert_function)convert_float_pcm32sle_pz,
      (convert_function)convert_double_pcm32sle_pz,
      (convert_function)convert_float_pcm32sbe_pz,
-     (convert_function)convert_double_pcm32sbe_pz
+     (convert_function)convert_double_pcm32sbe_pz,
+     (convert_function)convert_float_pcm24ulepm_pz,
+     (convert_function)convert_double_pcm24ulepm_pz,
+     (convert_function)convert_float_pcm24ubepm_pz,
+     (convert_function)convert_double_pcm24ubepm_pz,
+     (convert_function)convert_float_pcm24slepm_pz,
+     (convert_function)convert_double_pcm24slepm_pz,
+     (convert_function)convert_float_pcm24sbepm_pz,
+     (convert_function)convert_double_pcm24sbepm_pz,
+     (convert_function)convert_float_pcm24ulepl_pz,
+     (convert_function)convert_double_pcm24ulepl_pz,
+     (convert_function)convert_float_pcm24ubepl_pz,
+     (convert_function)convert_double_pcm24ubepl_pz,
+     (convert_function)convert_float_pcm24slepl_pz,
+     (convert_function)convert_double_pcm24slepl_pz,
+     (convert_function)convert_float_pcm24sbepl_pz,
+     (convert_function)convert_double_pcm24sbepl_pz
 };
 
 
@@ -552,6 +694,14 @@ static void dither_convert_double(double *indata, char *outdata, int count,
      }
 }
 
+static int real_ssize(Dataformat *f)
+{
+     if (f->type == DATAFORMAT_PCM &&
+	 f->samplesize == 4 &&
+	 f->packing != 0) return 3;
+     else return f->samplesize;
+}
+
 sample_t minimum_float_value(Dataformat *x)
 {
      static const sample_t tbl[4] = {
@@ -561,7 +711,7 @@ sample_t minimum_float_value(Dataformat *x)
      if (sample_convert_mode==0 || x->type!=DATAFORMAT_PCM)
 	  return -1.0;
      else
-	  return tbl[x->samplesize - 1];
+	  return tbl[real_ssize(x) - 1];
 }
 
 sample_t convert_factor(Dataformat *infmt, Dataformat *outfmt)
@@ -595,7 +745,7 @@ void convert_array(void *indata, Dataformat *indata_format,
      } else if (indata_format->type == DATAFORMAT_PCM) {
 	  if (outdata_format->type == DATAFORMAT_PCM) {
 	       /* PCM -> PCM conversion */
-	       if (outdata_format->samplesize > indata_format->samplesize && sample_convert_mode==CONVERT_MODE_NOOFFS)
+	       if (real_ssize(outdata_format) >= real_ssize(indata_format) && sample_convert_mode==CONVERT_MODE_NOOFFS)
 		    dither_mode = DITHER_NONE;
 	       c = g_malloc(count * sizeof(sample_t));	       
 	       convert_array(indata,indata_format,c,&dataformat_sample_t,
@@ -607,22 +757,24 @@ void convert_array(void *indata, Dataformat *indata_format,
 	       g_free(c);
 	  } else {
 	       /* PCM -> FP conversion */
-	       i = (sample_convert_mode ? 32:0) +
+	       i = (sample_convert_mode ? 48:0) +
 		    (indata_format->samplesize-1)*8 +
 		    (indata_format->sign?4:0) +
 		    (indata_format->bigendian?2:0) +
 		    (outdata_format->samplesize/sizeof(double));
+	       if (indata_format->samplesize == 4) i += 8*outdata_format->packing;
 	       /* printf("convert_array: i=%d\n",i); */
 	       g_assert(i<ARRAY_LENGTH(pcm_fp_functions));
 	       pcm_fp_functions[i](indata,outdata,count);
 	  }
      } else if (outdata_format->type == DATAFORMAT_PCM) {
 	  /* FP -> PCM conversion */
-	  i = (sample_convert_mode ? 32:0) +
+	  i = (sample_convert_mode ? 48:0) +
 	       (outdata_format->samplesize-1)*8 +
 	       (outdata_format->sign?4:0) +
 	       (outdata_format->bigendian?2:0) +
 	       (indata_format->samplesize/sizeof(double));
+	  if (outdata_format->samplesize == 4) i += 8*outdata_format->packing;
 	  g_assert(i < ARRAY_LENGTH(fp_pcm_functions));
 	  if (indata_format->samplesize == sizeof(float) && outdata_format->samplesize > 2) 
 	       dither_mode = DITHER_NONE;
@@ -631,11 +783,11 @@ void convert_array(void *indata, Dataformat *indata_format,
 	       if (indata_format->samplesize == sizeof(float))
 		    dither_convert_float(indata,outdata,count,
 					 fp_pcm_functions[i],
-					 outdata_format->samplesize);
+					 real_ssize(outdata_format));
 	       else
 		    dither_convert_double(indata,outdata,count,
 					  fp_pcm_functions[i],
-					  outdata_format->samplesize);
+					  real_ssize(outdata_format));
 	  } else
 	       fp_pcm_functions[i](indata,outdata,count);
      } else {
@@ -674,7 +826,7 @@ static void print_format(Dataformat *fmt)
 	  else
 	       puts(_("Floating-point (double)"));
      } else {
-	  printf(_("PCM, %d bit, %s %s\n"),fmt->samplesize*8,
+	  printf(_("PCM, %d bit, %s %s\n"), real_ssize(fmt)*8,
 		 fmt->sign?_("Signed"):_("Unsigned"),
 		 fmt->bigendian?_("Big-endian"):_("Little-endian"));
      }
@@ -708,6 +860,7 @@ void conversion_selftest(void)
      fmt[0].samplesize = 1;
      fmt[0].sign = FALSE;
      fmt[0].bigendian = TRUE;
+     fmt[0].packing = 0;
      for (i=0; i<256; i++) pcm_buf[i] = i;	  
      convert_array(pcm_buf,fmt,sbuf,&dataformat_sample_t,256);
      convert_array(sbuf,&dataformat_sample_t,pcm_buf2,fmt,256);
@@ -736,6 +889,7 @@ void conversion_selftest(void)
 		    fmt[0].bigendian = endians[i];
 		    fmt[0].samplebytes = fmt[0].samplesize;
 		    fmt[0].channels = 1;
+		    fmt[0].packing = 0;
 		    convert_array(sbuf,&dataformat_sample_t,pcm_buf2,fmt,
 				  SBUFLEN,dm);
 		    convert_array(pcm_buf2,fmt,sbuf2,&dataformat_sample_t,
@@ -771,6 +925,7 @@ void conversion_selftest(void)
 		    fmt[0].samplesize = samplesizes[i];
 		    fmt[0].sign = signs[i];
 		    fmt[0].bigendian = endians[i];
+		    fmt[0].packing = 0;
 		    convert_array(sbuf,&dataformat_sample_t,pcm_buf,fmt,
 				  ARRAY_LENGTH(sbuf),dm);
 		    for (j=0; j<ARRAY_LENGTH(samplesizes); j++) {
@@ -778,6 +933,7 @@ void conversion_selftest(void)
 			 fmt[1].samplesize = samplesizes[j];
 			 fmt[1].sign = signs[j];
 			 fmt[1].bigendian = endians[j];
+			 fmt[1].packing = 0;
 			 if ((fmt[0].type == DATAFORMAT_PCM &&
 			      fmt[1].type == DATAFORMAT_FLOAT &&
 			      fmt[0].samplesize == 4 && fmt[1].samplesize == 4) ||
@@ -864,12 +1020,14 @@ void conversion_performance_test(void)
 	  fmt[0].samplesize = samplesizes[i];
 	  fmt[0].sign = signs[i];
 	  fmt[0].bigendian = endians[i];
+	  fmt[0].packing = 0;
 	  convert_array(sbuf,&dataformat_sample_t,buf,fmt,SBUFLEN,DITHER_NONE);
 	  for (j=0; j<FORMATS; j++) {
 	       fmt[1].type = types[j];
 	       fmt[1].samplesize = samplesizes[j];
 	       fmt[1].sign = signs[j];
 	       fmt[1].bigendian = endians[j];
+	       fmt[1].packing = 0;
 	       fputs(".",stdout);
 	       fflush(stdout);
 	       convert_array(buf,fmt,buf2,fmt+1,SBUFLEN,DITHER_NONE);

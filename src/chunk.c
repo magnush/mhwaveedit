@@ -84,6 +84,7 @@ static void chunk_init(Chunk *object)
      object->format.type = DATAFORMAT_PCM;
      object->format.samplerate=44100;
      object->format.samplesize=2;
+     object->format.packing=0;
      object->format.channels=2;
      object->format.sign=1;
      object->format.bigendian = IS_BIGENDIAN;

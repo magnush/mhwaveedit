@@ -279,7 +279,7 @@ static gboolean player_play_main(Chunk *chk, off_t spos, off_t epos,
      /* printf("true_speed: %f\n",(float)true_speed); */
      if (recursed > 0) {
 	  c = g_strdup_printf("playing file as %d Hz, %s, %s",fmt.samplerate,
-			      sampletype_name(chk->format.type,chk->format.samplesize),
+			      sampletype_name(&(chk->format)),
 			      channel_format_name(chk->format.channels));
 	  console_message(c);
 	  g_free(c);

@@ -35,7 +35,7 @@ typedef struct {
 
      GtkTable table;
 
-     Combo *samplesize_combo,*sign_combo,*endian_combo;
+     Combo *samplesize_combo,*sign_combo,*endian_combo,*packing_combo;
      Combo *channel_combo;
      Intbox *rate_box;
 

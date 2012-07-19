@@ -36,6 +36,10 @@ typedef struct {
      guint32 samplerate;         /* Samples/sec */
      unsigned samplesize;           /* bytes (PCM: 1,2,3 or 4, 
 				  * float: sizeof(gfloat) or sizeof(gdouble))*/
+     int packing;               /* For non-packed 24-in-32 samples,
+				 * set samplesize to 4 and packing to 1 (data in
+				 * MSB) or 2 (data in LSB)
+				 * For other types, this should be 0 */
      int channels;              /* Number of channels (1-8) */
      int samplebytes;           /* should always be samplesize*channels */
 
@@ -75,7 +79,7 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 				gboolean full);
 
 
-const gchar *sampletype_name(int sampletype, guint samplesize);
+const gchar *sampletype_name(Dataformat *fmt);
 
 
 /* -------------------

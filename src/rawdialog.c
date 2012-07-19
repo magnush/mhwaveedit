@@ -58,6 +58,7 @@ Dataformat *rawdialog_execute(gchar *filename, gint filesize, guint *offset)
      GtkWidget *a,*b,*c;
      gchar *ch;
      
+     memset(&fmt,0,sizeof(fmt));
      fmt.type = DATAFORMAT_PCM;
      fmt.samplerate = 22050;
      fmt.channels = 1;

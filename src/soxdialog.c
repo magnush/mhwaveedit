@@ -83,7 +83,7 @@ static gchar *samplesize_switch_v13[] = { NULL,"-1","-2","-3","-4" };
 
 void sox_dialog_format_string(gchar *buf, guint bufsize, Dataformat *fmt)
 {
-     g_assert(fmt->type == DATAFORMAT_PCM && fmt->samplesize != 3);
+     g_assert(fmt->type == DATAFORMAT_PCM && fmt->samplesize != 3 && fmt->packing != 0);
 
      if (v14_mode)
 	  g_snprintf(buf,bufsize,"-t raw -r %d -e %s -b %d -c %d",fmt->samplerate,
@@ -261,7 +261,7 @@ static Chunk *sox_dialog_apply_proc(Chunk *chunk, StatusBar *bar,
      Dataformat stype = { DATAFORMAT_PCM, 44100, 4, 1, 4, TRUE, IS_BIGENDIAN };
      if ((chunk->format.type == DATAFORMAT_FLOAT) || 
 	 (chunk->format.type == DATAFORMAT_PCM && 
-	  chunk->format.samplesize == 3)) {
+	  (chunk->format.samplesize == 3 && chunk->format.packing!=0))) {
 	  c = chunk_convert_sampletype(chunk,&stype);
 	  d = sox_dialog_apply_proc_main(c,bar,user_data);
 	  gtk_object_sink(GTK_OBJECT(c));

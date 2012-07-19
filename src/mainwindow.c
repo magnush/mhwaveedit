@@ -201,27 +201,13 @@ static void fix_title(Mainwindow *wnd)
 {
      gchar *c;
      if (wnd->doc != NULL) {
-	  if (wnd->doc->chunk->format.type == DATAFORMAT_FLOAT)
-	       
-	       c = g_strdup_printf ( _("mhWaveEdit: %s (%s): %d Hz, "
-				     "%s"), 
-				     wnd->doc->titlename, 
-				     chunk_get_time(wnd->doc->chunk,
-						    wnd->doc->chunk->length,
-						    NULL),
-				     wnd->doc->chunk->format.samplerate,
-				     (wnd->doc->chunk->format.samplesize >
-				      sizeof(float))?_("double"):_("float"));
-	  else
-	       c = g_strdup_printf ( _("mhWaveEdit: %s (%s): %d Hz, "
-				     "%d bit"), 
-				     wnd->doc->titlename, 
-				     chunk_get_time(wnd->doc->chunk,
-						    wnd->doc->chunk->length,
-						    NULL),
-				     wnd->doc->chunk->format.samplerate,
-				     wnd->doc->chunk->format.samplesize*8);
-
+	  c = g_strdup_printf ( _("mhWaveEdit: %s (%s): %d Hz, %s"),
+				wnd->doc->titlename,
+				chunk_get_time(wnd->doc->chunk,
+					       wnd->doc->chunk->length,
+					       NULL),
+				wnd->doc->chunk->format.samplerate,
+				sampletype_name(&(wnd->doc->chunk->format)));
      } else 
 	  c = g_strdup(PROGRAM_VERSION_STRING);
      gtk_window_set_title ( GTK_WINDOW ( wnd ), c );

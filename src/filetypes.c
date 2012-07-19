@@ -518,6 +518,7 @@ static Chunk *wav_load(char *filename, int dither_mode, StatusBar *bar)
      fmt.samplebytes = fmt.samplesize * fmt.channels;
      fmt.sign = (bits>8);
      fmt.bigendian = rifx;
+     fmt.packing = 0;
 
      ds = gtk_type_new(datasource_get_type());
 
@@ -566,10 +567,15 @@ static gboolean wav_save(Chunk *chunk, char *filename, gpointer settings,
 	  /* Check that the sign and endian-ness is correct */
 	  if (fmt->samplesize == 1) q = FALSE;
 	  else q = TRUE;
-	  if (XOR(fmt->sign,q) || fmt->bigendian) {
+	  if (XOR(fmt->sign,q) || fmt->bigendian || fmt->packing!=0) {
 	       memcpy(&cfmt,fmt,sizeof(cfmt));
 	       cfmt.sign = q;
 	       cfmt.bigendian = FALSE;
+	       if (cfmt.packing != 0) {
+		    g_assert(cfmt.samplesize == 4);
+		    cfmt.samplesize = 3;
+		    cfmt.packing = 0;
+	       }
 	       c = chunk_convert(chunk,&cfmt,DITHER_UNSPEC,bar);
 	       b = wav_save(c,filename,settings,type,dither_mode,bar,fatal);
 	       gtk_object_sink(GTK_OBJECT(c));
@@ -723,6 +729,7 @@ static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar)
           return NULL;
      }
      /* printf("info.seekable = %d, info.samples = %d\n",info.seekable,info.samples); */
+     memset(&f,0,sizeof(f));
      f.type = DATAFORMAT_PCM;
      f.samplerate = info.samplerate;
      f.channels = info.channels;
@@ -801,6 +808,7 @@ static gboolean find_nearest_sndfile_format(Dataformat *fmt, int format,
      /* Try suggestions first... */
      if (fmt->type == DATAFORMAT_PCM) {
 	  i = fmt->samplesize;
+	  if (fmt->packing != 0) i--;
 	  if (i == 1) i--;
      } else if (fmt->samplesize == sizeof(float)) 
 	  i = 5;
@@ -1035,6 +1043,7 @@ static gboolean ogg_save(Chunk *chunk, gchar *filename, gpointer settings,
 	  memcpy(&fmt,&(chunk->format),sizeof(Dataformat));
 	  fmt.type = DATAFORMAT_PCM;
 	  fmt.samplesize = 4;
+	  fmt.packing = 0;
 	  fmt.samplebytes = fmt.samplesize * fmt.channels;
 	  x = chunk_convert_sampletype(chunk,&fmt);
 	  g_assert(x != NULL);
@@ -1278,7 +1287,7 @@ static Chunk *mp3_load(gchar *filename, int dither_mode, StatusBar *bar)
 static gboolean wav_regular_format(Dataformat *fmt)
 {
      if (fmt->type == DATAFORMAT_FLOAT) return FALSE;
-     return (XOR(fmt->samplesize == 1, fmt->sign));
+     return (XOR(fmt->samplesize == 1, fmt->sign) && fmt->packing == 0);
 }
 
 static gint mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
@@ -1303,9 +1312,10 @@ static gint mp3_save(Chunk *chunk, gchar *filename, gpointer settings,
 				    &clipcount);
      else {
 	  memcpy(&fmt,&(chunk->format),sizeof(Dataformat));
-	  if (fmt.type == DATAFORMAT_FLOAT || fmt.samplesize == 3) {
+	  if (fmt.type == DATAFORMAT_FLOAT || fmt.samplesize == 3 || fmt.packing!=0) {
 	       fmt.type = DATAFORMAT_PCM;
 	       fmt.samplesize = 4;
+	       fmt.packing = 0;
 	  }
 	  fmt.sign = (fmt.samplesize > 1);
 	  fmt.bigendian = FALSE;
