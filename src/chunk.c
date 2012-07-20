@@ -416,8 +416,8 @@ Chunk *chunk_filter_tofmt(Chunk *chunk, chunk_filter_tofmt_proc proc,
      convert_back = convert && !chunk_filter_use_floating_tempfiles;
 
      if (convert) {
-	  informat.type = outformat.type = DATAFORMAT_FLOAT;
-	  informat.samplesize = outformat.samplesize = sizeof(sample_t);
+	  memcpy(&informat,&dataformat_sample_t,sizeof(Dataformat));
+	  memcpy(&outformat,&dataformat_sample_t,sizeof(Dataformat));
 	  informat.channels = chunk->format.channels;
 	  outformat.channels = tofmt->channels;
 	  informat.samplebytes = informat.samplesize * informat.channels;
@@ -691,6 +691,7 @@ Chunk *chunk_mix(Chunk *c1, Chunk *c2, int dither_mode, StatusBar *bar)
      memcpy(&format,&(c1->format),sizeof(Dataformat));
      format.type = DATAFORMAT_FLOAT;
      format.samplesize = sizeof(sample_t);
+     format.bigendian = dataformat_sample_t.bigendian;
      format.samplebytes = format.samplesize * format.channels;
 
      /* Prepare for processing */

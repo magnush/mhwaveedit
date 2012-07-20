@@ -48,12 +48,14 @@ void floating_point_check(void)
 
      dataformat_sample_t.type = DATAFORMAT_FLOAT;
      dataformat_sample_t.samplesize = sizeof(sample_t);
+     dataformat_sample_t.bigendian = ieee_be_compatible;
      dataformat_sample_t.channels = 0;
      dataformat_sample_t.samplebytes = 0;
      dataformat_sample_t.samplerate = 0;
      
      dataformat_single.type = DATAFORMAT_FLOAT;
      dataformat_single.samplesize = sizeof(float);
+     dataformat_single.bigendian = ieee_be_compatible;
      dataformat_single.channels = 0;
      dataformat_single.samplebytes = 0;
      dataformat_single.samplerate = 0;
@@ -64,18 +66,18 @@ gboolean dataformat_equal(Dataformat *f1, Dataformat *f2)
 	return (f1->type == f2->type && f1->samplerate==f2->samplerate && 
 		f1->samplesize==f2->samplesize && 
 		f1->channels==f2->channels && 
+		(f1->samplesize == 1 || BOOLEQ(f1->bigendian,f2->bigendian)) &&
 		(f1->type != DATAFORMAT_PCM || 
 		 (f1->sign==f2->sign && 
-		  (f1->samplesize == 1 || f1->bigendian == f2->bigendian) &&
 		  (f1->samplesize != 4 || f1->packing == f2->packing))));
 }
 
 gboolean dataformat_samples_equal(Dataformat *f1, Dataformat *f2)
 {
      return (f1->type == f2->type && f1->samplesize==f2->samplesize &&
+	     (f1->samplesize == 1 || BOOLEQ(f1->bigendian,f2->bigendian)) &&
 	     (f1->type != DATAFORMAT_PCM || 
 	      (f1->sign==f2->sign && 
-	       (f1->samplesize == 1 || f1->bigendian == f2->bigendian) &&
 	       (f1->samplesize != 4 || f1->packing == f2->packing))));
 }
 
@@ -123,12 +125,12 @@ gboolean dataformat_get_from_inifile(gchar *ini_prefix, gboolean full,
      case 'd': t=DATAFORMAT_FLOAT; ss=sizeof(double); break;
      default: return FALSE;
      }     
+     c = g_strdup_printf("%s_BigEndian",ini_prefix);
+     end=inifile_get_gboolean(c,ieee_be_compatible && t==DATAFORMAT_FLOAT);
+     g_free(c);
      if (t == DATAFORMAT_PCM) {
 	  c = g_strdup_printf("%s_Signed",ini_prefix);
 	  sign=inifile_get_gboolean(c,FALSE);
-	  g_free(c);
-	  c = g_strdup_printf("%s_BigEndian",ini_prefix);
-	  end=inifile_get_gboolean(c,FALSE);
 	  g_free(c);
      }
      result->type = t;
@@ -161,14 +163,14 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 	  g_free(c);
 	  c = g_strdup_printf("%s_Signed",ini_prefix);	  
 	  inifile_set_gboolean(c,format->sign);
-	  g_free(c);
-	  c = g_strdup_printf("%s_BigEndian",ini_prefix);
-	  inifile_set_gboolean(c,format->bigendian);	  
      } else if (format->samplesize == sizeof(float)) {
 	  inifile_set(c,"s");
      } else {
 	  inifile_set(c,"d");
      }
+     g_free(c);
+     c = g_strdup_printf("%s_BigEndian",ini_prefix);
+     inifile_set_gboolean(c,format->bigendian);
      g_free(c);
      if (full) {
 	  c = g_strdup_printf("%s_SampleRate",ini_prefix);
@@ -766,9 +768,16 @@ void convert_array(void *indata, Dataformat *indata_format,
 	       /* printf("convert_array: i=%d\n",i); */
 	       g_assert(i<ARRAY_LENGTH(pcm_fp_functions));
 	       pcm_fp_functions[i](indata,outdata,count);
+	       if (XOR(outdata_format->bigendian, dataformat_sample_t.bigendian))
+		    byteswap(outdata,outdata_format->samplesize,
+			     count*outdata_format->samplesize);
 	  }
      } else if (outdata_format->type == DATAFORMAT_PCM) {
 	  /* FP -> PCM conversion */
+	  if (XOR(indata_format->bigendian, dataformat_sample_t.bigendian)) {
+	       byteswap(indata,indata_format->samplesize,
+			count*indata_format->samplesize);
+	  }
 	  i = (sample_convert_mode ? 48:0) +
 	       (outdata_format->samplesize-1)*8 +
 	       (outdata_format->sign?4:0) +
@@ -790,19 +799,41 @@ void convert_array(void *indata, Dataformat *indata_format,
 					  real_ssize(outdata_format));
 	  } else
 	       fp_pcm_functions[i](indata,outdata,count);
+	  if (XOR(indata_format->bigendian, dataformat_sample_t.bigendian)) {
+	       byteswap(indata,indata_format->samplesize,
+			count*indata_format->samplesize);
+	  }
      } else {
 	  /* FP -> FP conversion */
+	  if (indata_format->samplesize == outdata_format->samplesize) {
+	       g_assert(XOR(indata_format->bigendian, outdata_format->bigendian));
+	       memcpy(outdata,indata,count*indata_format->samplesize);
+	       byteswap(outdata,count,count*indata_format->samplesize);
+	       return;
+	  }
+
+	  if (XOR(indata_format->bigendian, dataformat_sample_t.bigendian))
+	       byteswap(indata,indata_format->samplesize,
+			count*indata_format->samplebytes);
 	  if (indata_format->samplesize == sizeof(float)) {
+	       g_assert(outdata_format->samplesize == sizeof(double));
 	       float *f = indata;
 	       double *d = outdata;
 	       for (; count>0; count--,f++,d++)
 		    *d = (double)(*f);
 	  } else {
+	       g_assert(outdata_format->samplesize == sizeof(float));
 	       double *d = indata;
 	       float *f = outdata;
 	       for (; count>0; count--,f++,d++)
 		    *f = (float)(*d);
 	  }
+	  if (XOR(indata_format->bigendian, dataformat_sample_t.bigendian))
+	       byteswap(indata,indata_format->samplesize,
+			count*indata_format->samplebytes);
+	  if (XOR(outdata_format->bigendian, dataformat_sample_t.bigendian))
+	       byteswap(outdata,outdata_format->samplesize,
+			count*outdata_format->samplebytes);
      }
 }
 

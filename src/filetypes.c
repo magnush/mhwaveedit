@@ -731,8 +731,6 @@ static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar)
      /* printf("info.seekable = %d, info.samples = %d\n",info.seekable,info.samples); */
      memset(&f,0,sizeof(f));
      f.type = DATAFORMAT_PCM;
-     f.samplerate = info.samplerate;
-     f.channels = info.channels;
      f.bigendian = IS_BIGENDIAN;
      /* Fix samplesize parameter */
      switch (info.format&SF_FORMAT_SUBMASK) {
@@ -748,8 +746,10 @@ static Chunk *sndfile_load(gchar *filename, int dither_mode, StatusBar *bar)
 	  /* (Fall through on purpose) */
 
 	  /* Default to floating point */	  
-     default: f.type = DATAFORMAT_FLOAT; f.samplesize=sizeof(sample_t); break;
+     default: memcpy(&f,&dataformat_sample_t,sizeof(f)); break;
      }
+     f.samplerate = info.samplerate;
+     f.channels = info.channels;
      f.samplebytes = f.channels * f.samplesize;
      ds = gtk_type_new(datasource_get_type());
      ds->type = DATASOURCE_SNDFILE;

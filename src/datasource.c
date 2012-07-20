@@ -621,8 +621,7 @@ static guint datasource_read_array_main(Datasource *source,
 	  return u;
      case DATASOURCE_CONVERT:
 	  u = size / source->format.samplebytes;
-	  if (source->format.type == DATAFORMAT_FLOAT && 
-	      source->format.samplesize == sizeof(sample_t)) 
+	  if (dataformat_samples_equal(&(source->format),&dataformat_sample_t))
 	       return datasource_read_array_fp(source->data.clone,sampleno,u,
 					       buffer,dither_mode,clipcount) *
 		    source->format.samplebytes ;
@@ -719,9 +718,7 @@ guint datasource_read_array_fp(Datasource *source, off_t sampleno,
 			       buffer, x*source->format.channels);
 	  return x;
      default:
-	  if (source->format.type == DATAFORMAT_FLOAT &&
-	      source->format.samplesize == sizeof(sample_t))
-	       
+	  if (dataformat_samples_equal(&(source->format),&dataformat_sample_t))
 	       return datasource_read_array(source,sampleno,
 					    samples*source->format.samplebytes,
 					    buffer, dither_mode, clipcount) 
@@ -849,6 +846,13 @@ Datasource *datasource_convert(Datasource *source, Dataformat *new_format)
 	 source->format.samplesize == new_format->samplesize &&
 	 source->format.sign == new_format->sign &&
 	 source->format.packing == new_format->packing) {
+	  g_assert(XOR(source->format.bigendian,new_format->bigendian));
+	  return datasource_byteswap(source);
+     }
+     if (source->format.type == DATAFORMAT_FLOAT &&
+	 new_format->type == DATAFORMAT_FLOAT &&
+	 source->format.samplesize == new_format->samplesize) {
+	  g_assert(XOR(source->format.bigendian,new_format->bigendian));
 	  return datasource_byteswap(source);
      }
 

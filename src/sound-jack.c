@@ -520,7 +520,8 @@ static gint mhjack_output_select_format(Dataformat *format, gboolean silent,
      if (!mhjack.is_activated) return silent ? -1 : +1;
 
      if (format->type != DATAFORMAT_FLOAT ||
-	 format->samplesize != sizeof(float))
+	 format->samplesize != sizeof(float) ||
+	 XOR(format->bigendian,ieee_be_compatible))
 	  return -1;
 
      if (format->samplerate != jack_get_sample_rate(mhjack.myself)) return -1;
@@ -546,6 +547,7 @@ static gboolean mhjack_output_suggest_format(Dataformat *format,
      memcpy(result,format,sizeof(Dataformat));
      result->type = DATAFORMAT_FLOAT;
      result->samplesize = sizeof(float);
+     result->bigendian = ieee_be_compatible;
      result->samplebytes = result->samplesize * result->channels;
      result->samplerate = jack_get_sample_rate(mhjack.myself);
      return TRUE;

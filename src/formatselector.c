@@ -39,12 +39,14 @@ static void samplesize_changed(Combo *obj, gpointer user_data)
      FormatSelector *fs = FORMAT_SELECTOR(user_data);
      i = combo_selected_index(obj);
      gtk_widget_set_sensitive(GTK_WIDGET(fs->sign_combo),(i<4));
-     gtk_widget_set_sensitive(GTK_WIDGET(fs->endian_combo),(i<4));
      gtk_widget_set_sensitive(GTK_WIDGET(fs->packing_combo),(i==2));
      if (i == 0)
-	  combo_set_selection(fs->sign_combo,0);	  
+	  combo_set_selection(fs->sign_combo,0);
      else if (i < 4)
 	  combo_set_selection(fs->sign_combo,1);
+     else
+	  combo_set_selection(fs->endian_combo,
+			      dataformat_sample_t.bigendian?1:0);
 }
 
 static void format_selector_init(GtkWidget *widget)
@@ -160,13 +162,13 @@ void format_selector_set(FormatSelector *fs, Dataformat *fmt)
 	  } else
 	       combo_set_selection(fs->samplesize_combo, fmt->samplesize-1);
 	  combo_set_selection(fs->sign_combo, fmt->sign?1:0);
-	  combo_set_selection(fs->endian_combo, fmt->bigendian?1:0);
      } else {
 	  if (fmt->samplesize == sizeof(float))
 	       combo_set_selection(fs->samplesize_combo, 4);
 	  else
 	       combo_set_selection(fs->samplesize_combo, 5);
      }     
+     combo_set_selection(fs->endian_combo, fmt->bigendian?1:0);
      if (fs->channel_combo != NULL)
 	  combo_set_selection(fs->channel_combo, fmt->channels-1);
      if (fs->rate_box != NULL)

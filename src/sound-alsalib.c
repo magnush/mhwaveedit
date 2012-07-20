@@ -151,9 +151,11 @@ static snd_pcm_format_t alsa_get_format(Dataformat *format)
 {
      if (format->type == DATAFORMAT_FLOAT) {
 	  if (format->samplesize == sizeof(float))
-	       return SND_PCM_FORMAT_FLOAT;
+	       return format->bigendian ? SND_PCM_FORMAT_FLOAT_BE :
+		    SND_PCM_FORMAT_FLOAT_LE;
 	  else
-	       return SND_PCM_FORMAT_FLOAT64;
+	       return format->bigendian ? SND_PCM_FORMAT_FLOAT64_BE :
+		    SND_PCM_FORMAT_FLOAT64_LE;
      }
      switch (format->samplesize) {
      case 1:

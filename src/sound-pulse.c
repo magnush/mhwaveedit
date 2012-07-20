@@ -485,12 +485,12 @@ static gboolean format_to_pulse(Dataformat *format, pa_sample_spec *ss_out)
 	  } else
 	       return TRUE;
      } else if (format->type == DATAFORMAT_FLOAT && format->samplesize == 4) {
-	  if (ieee_le_compatible)
-	       sf = PA_SAMPLE_FLOAT32LE;
-	  else if (ieee_be_compatible)
+	  if (!ieee_le_compatible && !ieee_be_compatible)
+	       return TRUE;
+	  else if (format->bigendian)
 	       sf = PA_SAMPLE_FLOAT32BE;
 	  else
-	       return TRUE;
+	       sf = PA_SAMPLE_FLOAT32LE;
      } else 
 	  return TRUE;
 
@@ -543,14 +543,16 @@ static gboolean pa_format_from_pulse(pa_sample_spec *ss, Dataformat *format_out)
 	       f.bigendian = FALSE;	  
 	  break;
      case PA_SAMPLE_FLOAT32LE:
-	  if (!ieee_le_compatible) return TRUE;
+	  if (!ieee_le_compatible && !ieee_be_compatible) return TRUE;
 	  f.type = DATAFORMAT_FLOAT;
 	  f.samplesize = 4;
+	  f.bigendian = FALSE;
 	  break;
      case PA_SAMPLE_FLOAT32BE:
-	  if (!ieee_be_compatible) return TRUE;
+	  if (!ieee_le_compatible && !ieee_be_compatible) return TRUE;
 	  f.type = DATAFORMAT_FLOAT;
 	  f.samplesize = 4;
+	  f.bigendian = TRUE;
 	  break;
      default:
 	  return TRUE;
