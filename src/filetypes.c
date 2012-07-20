@@ -554,15 +554,6 @@ static gboolean wav_save(Chunk *chunk, char *filename, gpointer settings,
 
      /* Check if the format is OK */     
 
-#ifndef HAVE_LIBSNDFILE
-     if (chunk->format.type == DATAFORMAT_FLOAT &&
-	 !ieee_le_compatible) {
-	  user_error(_("On this system, libsndfile is required to save "
-		     "floating-point wav files."));
-	  return TRUE;
-     }
-#endif
-
      if (fmt->type == DATAFORMAT_PCM) {
 	  /* Check that the sign and endian-ness is correct */
 	  if (fmt->samplesize == 1) q = FALSE;
@@ -581,8 +572,29 @@ static gboolean wav_save(Chunk *chunk, char *filename, gpointer settings,
 	       gtk_object_sink(GTK_OBJECT(c));
 	       return b;
 	  }
+     } else if (ieee_le_compatible || ieee_be_compatible) {
+	  if (fmt->bigendian) {
+	       memcpy(&cfmt,fmt,sizeof(cfmt));
+	       cfmt.bigendian = FALSE;
+	       c = chunk_convert(chunk,&cfmt,DITHER_UNSPEC,bar);
+	       b = wav_save(c,filename,settings,type,dither_mode,bar,fatal);
+	       gtk_object_sink(GTK_OBJECT(c));
+	       return b;
+	  }
      }
 
+     /* If we can't handle it, delegate the FP chunk saving to libsndfile. */
+     if (chunk->format.type == DATAFORMAT_FLOAT &&
+	 !ieee_le_compatible && !ieee_be_compatible) {
+#ifdef HAVE_LIBSNDFILE
+	  return sndfile_save_main(chunk,filename,SF_FORMAT_WAV,dither_mode,
+				   bar,fatal);
+#else
+	  user_error(_("On this system, libsndfile is required to save "
+		     "floating-point wav files."));
+	  return TRUE;
+#endif
+     }
      
      if (fmt->type == DATAFORMAT_PCM && fmt->samplesize==1 && fmt->sign) {
 	  /* user_error(_("8-bit wav-files must be in unsigned format!")); */
@@ -630,12 +642,6 @@ static gboolean wav_save(Chunk *chunk, char *filename, gpointer settings,
           /* Regular saving */
 
 
-     /* By default, delegate the FP chunk saving to libsndfile. */
-#ifdef HAVE_LIBSNDFILE
-     if (chunk->format.type == DATAFORMAT_FLOAT)
-	  return sndfile_save_main(chunk,filename,SF_FORMAT_WAV,dither_mode,
-				   bar,fatal);
-#endif
 
 	  f = e_fopen(filename,EFILE_WRITE);
 	  if (!f) return TRUE;
