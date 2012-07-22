@@ -261,7 +261,7 @@ static Chunk *sox_dialog_apply_proc(Chunk *chunk, StatusBar *bar,
      Dataformat stype = { DATAFORMAT_PCM, 44100, 4, 1, 4, TRUE, IS_BIGENDIAN };
      if ((chunk->format.type == DATAFORMAT_FLOAT) || 
 	 (chunk->format.type == DATAFORMAT_PCM && 
-	  (chunk->format.samplesize == 3 && chunk->format.packing!=0))) {
+	  (chunk->format.samplesize == 3 || chunk->format.packing!=0))) {
 	  c = chunk_convert_sampletype(chunk,&stype);
 	  d = sox_dialog_apply_proc_main(c,bar,user_data);
 	  gtk_object_sink(GTK_OBJECT(c));
