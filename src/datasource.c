@@ -374,8 +374,6 @@ static gboolean datasource_open_sndfile(Datasource *ds)
      ds->data.sndfile.handle = s;
      ds->data.sndfile.pos = 0;
 
-     sf_command ( s, SFC_SET_NORM_FLOAT, NULL, SF_TRUE );
-     sf_command ( s, SFC_SET_NORM_DOUBLE, NULL, SF_TRUE );
      return FALSE;
 #else
      g_assert_not_reached();
