@@ -219,8 +219,6 @@ Datasource *datasource_clone_df(Datasource *source, Dataformat *format)
 {
      Datasource *df;
 
-     g_assert(source->format.type == DATAFORMAT_PCM);
-
      if (source->type == DATASOURCE_REAL ||
 	 source->type == DATASOURCE_SILENCE ||
 	 source->type == DATASOURCE_CLONE) {
