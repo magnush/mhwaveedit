@@ -649,6 +649,18 @@ static const float dither_amp_scaled_double[4] = {
      0.007874015751697883, 3.051850948998556e-05, 1.192093035951025e-07, 4.656611765022771e-10
 };
 
+static float frand(void)
+{
+     long l;
+     float f;
+     l = rand();
+     l &= ~1;
+     f = ((float)l) / ((float)RAND_MAX);
+     f -= 0.5;
+     /* g_assert(f >= -0.5 && f <= 0.5); */
+     return f;
+}
+
 static int dither_convert_float(float *indata, char *outdata, int count,
 				convert_function_fp fn, int outdata_ssize)
 {
@@ -664,14 +676,25 @@ static int dither_convert_float(float *indata, char *outdata, int count,
 	  i = MIN(count,ARRAY_LENGTH(databuf));
 	  memcpy(databuf,indata,i*sizeof(float));
 	  for (j=0; j<i; j++)
-	       databuf[j] += (((float)(rand()/2 - rand()/2))/
-			      ((float)RAND_MAX)) * amp_factor;
+	       databuf[j] += frand() * amp_factor;
 	  r += fn(databuf,outdata,i);
 	  indata += i;
 	  outdata += outdata_ssize * i;
 	  count -= i;
      }
      return r;
+}
+
+static double drand(void)
+{
+     long l;
+     double d;
+     l = rand();
+     l &= ~1;
+     d = ((double)l) / ((double)RAND_MAX);
+     d -= 0.5;
+     /* g_assert (d >= -0.5 && d <= 0.5); */
+     return d;
 }
 
 static int dither_convert_double(double *indata, char *outdata, int count,
@@ -689,8 +712,7 @@ static int dither_convert_double(double *indata, char *outdata, int count,
 	  i = MIN(count,ARRAY_LENGTH(databuf));
 	  memcpy(databuf,indata,i*sizeof(double));
 	  for (j=0; j<i; j++)
-	       databuf[j] += (((double)(rand()/2 - rand()/2))/
-			      ((double)RAND_MAX)) * amp_factor;
+	       databuf[j] += drand() * amp_factor;
 	  r += fn(databuf,outdata,i);
 	  indata += i;
 	  outdata += outdata_ssize * i;

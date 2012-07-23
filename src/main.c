@@ -214,9 +214,9 @@ int main(int argc, char **argv)
 				 &player_fallback_format);
      chunk_filter_use_floating_tempfiles = 
 	  inifile_get_gboolean("tempfilesFP",TRUE);
-     dither_editing = inifile_get_guint32("ditherEditing",DITHER_TRIANGULAR);
+     dither_editing = inifile_get_guint32("ditherEditing",DITHER_MINIMAL);
      if (dither_editing < 0 || dither_editing > DITHER_MAX)
-	  dither_editing = DITHER_TRIANGULAR;
+	  dither_editing = DITHER_MINIMAL;
      dither_playback = inifile_get_gboolean("ditherPlayback",DITHER_NONE);
      if (dither_playback < 0 || dither_playback > DITHER_MAX)
 	  dither_playback = DITHER_NONE;

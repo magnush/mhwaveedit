@@ -101,7 +101,7 @@ typedef gfloat sample_t;
 #endif
 
 #define DITHER_NONE       0
-#define DITHER_TRIANGULAR 1
+#define DITHER_MINIMAL    1
 #define DITHER_MAX        1
 /* This constant can be used to indicate that dithering should not
  * be necessary. If this is given when an FP->PCM conversion is done,

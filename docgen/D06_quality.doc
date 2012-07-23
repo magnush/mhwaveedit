@@ -10,6 +10,6 @@ The mix paste function doesn't decrease quality, unless the peaks become too hig
 
 Sound data is normally stored as integer values. Therefore, whenever you normalize, adjust volume, decrease sample size or filter a sound, the result must be rounded. If you use 24 or 32 bit sample sizes, this is not really a problem, but if you use 8 or 16 bits sample size, this rounding causes a decrease in quality. 
 
-The quality decrease that the rounding causes can be masked by adding a small amount of noise before rounding. This is called "dithering". mhWaveEdit supports basic triangular dithering and it's enabled by default. 
+The quality decrease that the rounding causes can be masked by adding a small amount of noise before rounding. This is called "dithering". mhWaveEdit supports basic dithering and it's enabled by default.
 
 By default, mhWaveEdit uses floating-point temporary files for storing processed results to avoid rounding until the file is saved.
