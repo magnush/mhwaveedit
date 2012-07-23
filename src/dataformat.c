@@ -629,24 +629,26 @@ static convert_function_fp fp_pcm_functions[96] = {
 
 /* The values in these tables correspond to one LSB step and are used as
  * amplitude for the dithering, adjusted to avoid numerical (double
- * rounding) problems. These exact values were found using a test program. */
+ * rounding) problems. These exact values were found by changing so
+ * frand/drand return constant +/- 0.5 and adjusting until the self-test
+ * passes. */
 
 static const float dither_amp_biased_float[4] = {
      /* (1.0/127.5), (1.0/32767.5), (1.0/8388607.5), (1.0/2147483647.5)  */
-     0.007843077, 3.039837e-5, 0.0, 0.0
+     0.007842957, 3.033876e-5, 0.0, 0.0
 };
 static const float dither_amp_scaled_float[4] = {
      /* (1.0/127.0), (1.0/32767.0), (1.0/8388607.0), (1.0/2147483647.0)  */
-     0.007873892, 3.039837e-5, 0.0, 0.0
+     0.007873832, 3.033876e-5, 0.0, 0.0
 };
 
 static const double dither_amp_biased_double[4] = {
      /* (1.0/127.5), (1.0/32767.5), (1.0/8388607.5), (1.0/2147483647.5)  */
-     0.007843137258554065, 3.051804380749278e-05, 1.192092966006974e-07, 4.656611765022771e-10
+     0.007843137254901598, 3.051804379305967e-05, 1.192092963231417e-07, 4.656611762854367e-10
 };
 static const float dither_amp_scaled_double[4] = {
      /* (1.0/127.0), (1.0/32767.0), (1.0/8388607.0), (1.0/2147483647.0)  */
-     0.007874015751697883, 3.051850948998556e-05, 1.192093035951025e-07, 4.656611765022771e-10
+     0.007874015751697883, 3.051850948998556e-05, 1.192092966562086e-07, 4.656610513853464e-10
 };
 
 static float frand(void)
