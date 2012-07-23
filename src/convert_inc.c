@@ -589,9 +589,11 @@ static int C_FLOAT_PCM8S(FTYPE *in, signed char *out, int count)
 {
      long int l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out++) {
-	  l = RINT(UNNORM8S(*in));
-	  if (l > 127) { l = 127; cc++; } else if (l < -128) { l = -128; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM8S(f));
+	  if (l > 127 || f > 2.0) { l = 127; cc++; } else if (l < -128 || f < -2.0) { l = -128; cc++; }
 	  *out = l;
      }
      return cc;
@@ -601,9 +603,11 @@ static int C_FLOAT_PCM8U(FTYPE *in, unsigned char *out, int count)
 {
      long int l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out++) {
-	  l = RINT(UNNORM8U(*in));
-	  if (l > 255) { l = 255; cc++; } else if (l < 0) { l = 0; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM8U(f));
+	  if (l > 255 || f > 2.0) { l = 255; cc++; } else if (l < 0 || f < -2.0) { l = 0; cc++; }
 	  *out = l;
      }
      return cc;
@@ -613,9 +617,11 @@ static int C_FLOAT_PCM16SNE(FTYPE *in, signed short *out, int count)
 {
      long int l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out++) {
-	  l = RINT(UNNORM16S(*in));
-	  if (l > 32767 ) { l = 32767; cc++; } else if (l < -32768) { l=-32768; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM16S(f));
+	  if (l > 32767 || f > 2.0) { l = 32767; cc++; } else if (l < -32768 || f < -2.0) { l=-32768; cc++; }
 	  *out = l;
      }
      return cc;
@@ -633,9 +639,11 @@ static int C_FLOAT_PCM16UNE(FTYPE *in, unsigned short *out, int count)
 {
      long int l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out++) {
-	  l = RINT(UNNORM16U(*in));
-	  if (l > 65535) { l = 65535; cc++; } else if (l < 0) { l = 0; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM16U(f));
+	  if (l > 65535 || f > 2.0) { l = 65535; cc++; } else if (l < 0 || f < -2.0) { l = 0; cc++; }
 	  *out = l;
      }
      return cc;
@@ -653,10 +661,12 @@ static int C_FLOAT_PCM24SLE(FTYPE *in, unsigned char *out, int count)
 {
      long int l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out+=3) {
-	  l = RINT(UNNORM24S(*in));
-	  if (l > 0x7FFFFF) { l = 0x7FFFFF; cc++; }
-	  else if (l < -0x800000) { l = -0x800000; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM24S(f));
+	  if (l > 0x7FFFFF || f > 2.0) { l = 0x7FFFFF; cc++; }
+	  else if (l < -0x800000 || f < -2.0) { l = -0x800000; cc++; }
 	  out[0] = l & 0xFF;
 	  out[1] = (l & 0xFF00) >> 8;
 	  out[2] = (l & 0xFF0000) >> 16;
@@ -668,10 +678,12 @@ static int C_FLOAT_PCM24SBE(FTYPE *in, unsigned char *out, int count)
 {
      long int l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out+=3) {
-	  l = RINT(UNNORM24S(*in));
-	  if (l > 0x7FFFFF) { l = 0x7FFFFF; cc++; }
-	  else if (l < -0x800000) { l = -0x800000; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM24S(f));
+	  if (l > 0x7FFFFF || f > 2.0) { l = 0x7FFFFF; cc++; }
+	  else if (l < -0x800000 || f < -2.0) { l = -0x800000; cc++; }
 	  out[0] = (l & 0xFF0000) >> 16;
 	  out[1] = (l & 0xFF00) >> 8;
 	  out[2] = l & 0xFF;
@@ -683,9 +695,11 @@ static int C_FLOAT_PCM24ULE(FTYPE *in, unsigned char *out, int count)
 {
      long int l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out+=3) {
-	  l = RINT(UNNORM24U(*in));
-	  if (l > 0xFFFFFF) { l = 0xFFFFFF; cc++; } else if (l < 0) { l = 0; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM24U(f));
+	  if (l > 0xFFFFFF || f > 2.0) { l = 0xFFFFFF; cc++; } else if (l < 0 || f < -2.0) { l = 0; cc++; }
 	  out[0] = l & 0xFF;
 	  out[1] = (l & 0xFF00) >> 8;
 	  out[2] = (l & 0xFF0000) >> 16;
@@ -697,9 +711,11 @@ static int C_FLOAT_PCM24UBE(FTYPE *in, unsigned char *out, int count)
 {
      long int l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out+=3) {
-	  l = RINT(UNNORM24U(*in));
-	  if (l > 0xFFFFFF) { l = 0xFFFFFF; cc++; } else if (l < 0) { l = 0; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM24U(f));
+	  if (l > 0xFFFFFF || f > 2.0) { l = 0xFFFFFF; cc++; } else if (l < 0 || f < -2.0) { l = 0; cc++; }
 	  out[0] = (l & 0xFF0000) >> 16;
 	  out[1] = (l & 0xFF00) >> 8;
 	  out[2] = l & 0xFF;
@@ -710,12 +726,14 @@ static int C_FLOAT_PCM24UBE(FTYPE *in, unsigned char *out, int count)
 static int C_FLOAT_PCM32SNE(FTYPE *in, gint32 *out, int count)
 {
      FTYPE f;
+     gint32 i;
      int cc=0;
      for (; count>0; count--,in++,out++) {
 	  f = *in;
-	  if (f >= 1.0) { *out = 0x7FFFFFFF; cc++; }
-	  else if (f <= -1.0) { *out = -0x80000000; cc++; }
-	  else *out = RINT(UNNORM32S(f));
+	  i = RINT(UNNORM32S(f));
+	  if (f > 1.25 || (f >= 1.0 && i<0x7FFFFFFF)) { i = 0x7FFFFFFF; cc++; }
+	  else if (f < -1.25 || (f <= -1.0 && i>-0x7FFFFFFF)) { i = -0x80000000; cc++; }
+	  *out = i;
      }
      return cc;
 }
@@ -731,16 +749,14 @@ static int C_FLOAT_PCM32SOE(FTYPE *in, gint32 *out, int count)
 static int C_FLOAT_PCM32UNE(FTYPE *in, guint32 *out, int count)
 {
      FTYPE f;
-     gint32 l;
+     gint32 i;
      int cc=0;
      for (; count>0; count--,in++,out++) {
 	  f = *in;
-	  if (f >= 1.0) { *out = 0xFFFFFFFF; cc++; }
-	  else if (f <= -1.0) { *out = -0; cc++; }
-	  else {
-	       l = RINT(UNNORM32S(f));
-	       *out = (guint32)(l + 0x80000000);
-	  }
+	  i = RINT(UNNORM32S(f));
+	  if (f > 1.25 || (f >= 1.0 && i<0x7FFFFFFF)) { i = 0x7FFFFFFF; cc++; }
+	  else if (f < -1.25 || (f <= -1.0 && i>-0x7FFFFFFF)) { i = -0x80000000; cc++; }
+	  *out = (guint32)i ^ 0x80000000;
      }
      return cc;
 }
@@ -757,10 +773,12 @@ static int C_FLOAT_PCM24SNEPM(FTYPE *in, guint32 *out, int count)
 {
      long l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out++) {
-	  l = RINT(UNNORM24S(*in));
-	  if (l > 0x7FFFFF) { l = 0x7FFFFF; cc++; }
-	  else if (l < -0x800000) { l = -0x800000; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM24S(f));
+	  if (l > 0x7FFFFF || f > 2.0) { l = 0x7FFFFF; cc++; }
+	  else if (l < -0x800000 || f < -2.0) { l = -0x800000; cc++; }
 	  *out = l << 8;
      }
      return cc;
@@ -778,9 +796,11 @@ static int C_FLOAT_PCM24UNEPM(FTYPE *in, guint32 *out, int count)
 {
      unsigned long l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out++) {
-	  l = RINT(UNNORM24U(*in));
-	  if (l > 0xFFFFFF) { l = 0xFFFFFF; cc++; } else if (l < 0) { l = 0; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM24U(f));
+	  if (l > 0xFFFFFF || f > 2.0) { l = 0xFFFFFF; cc++; } else if (l < 0 || f < -2.0) { l = 0; cc++; }
 	  *out = l << 8;
      }
      return cc;
@@ -798,10 +818,12 @@ static int C_FLOAT_PCM24SNEPL(FTYPE *in, guint32 *out, int count)
 {
      long l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out++) {
-	  l = RINT(UNNORM24S(*in));
-	  if (l > 0x7FFFFF) { l = 0x7FFFFF; cc++; }
-	  else if (l < -0x800000) { l = -0x800000; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM24S(f));
+	  if (l > 0x7FFFFF || f > 2.0) { l = 0x7FFFFF; cc++; }
+	  else if (l < -0x800000 || f < -2.0) { l = -0x800000; cc++; }
 	  *out = l;
      }
      return cc;
@@ -819,9 +841,11 @@ static int C_FLOAT_PCM24UNEPL(FTYPE *in, guint32 *out, int count)
 {
      unsigned long l;
      int cc=0;
+     FTYPE f;
      for (; count>0; count--,in++,out++) {
-	  l = RINT(UNNORM24U(*in));
-	  if (l > 0xFFFFFF) { l = 0xFFFFFF; cc++; } else if (l < 0) { l = 0; cc++; }
+	  f = *in;
+	  l = RINT(UNNORM24U(f));
+	  if (l > 0xFFFFFF || f > 2.0) { l = 0xFFFFFF; cc++; } else if (l < 0 || f < -2.0) { l = 0; cc++; }
 	  *out = l;
      }
      return cc;
