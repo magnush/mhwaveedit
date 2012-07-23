@@ -1595,11 +1595,27 @@ static void view_speed(GtkCheckMenuItem *checkmenuitem, gpointer user_data)
      if (checkmenuitem->active) {
 	  gtk_widget_show(w->speed_icon);
 	  gtk_widget_show(w->speed_slider);
-	  gtk_widget_show(GTK_WIDGET(w->speed_label));
+	  if (w->show_labels) gtk_widget_show(GTK_WIDGET(w->speed_label));
      } else {
 	  gtk_widget_hide(w->speed_icon);
 	  gtk_widget_hide(w->speed_slider);
 	  gtk_widget_hide(GTK_WIDGET(w->speed_label));
+     }
+}
+
+static void view_sliderlabels(GtkCheckMenuItem *checkmenuitem, gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW(user_data);
+     w->show_labels = checkmenuitem->active;
+     if (w->vzoom_slider == NULL) return;
+     if (w->show_labels) {
+	  if (GTK_WIDGET_VISIBLE(w->vzoom_slider))
+	       gtk_widget_show(GTK_WIDGET(w->vzoom_label));
+	  if (GTK_WIDGET_VISIBLE(w->speed_slider))
+	       gtk_widget_show(GTK_WIDGET(w->speed_label));
+     } else {
+	  gtk_widget_hide(GTK_WIDGET(w->vzoom_label));
+	  gtk_widget_hide(GTK_WIDGET(w->speed_label));	  
      }
 }
 
@@ -1905,6 +1921,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/View/_Horizontal zoom"),NULL,  view_horizoom,  0, "<CheckItem>" },
 	  { N_("/View/_Vertical zoom"),NULL,    view_vertzoom,  0, "<CheckItem>" },
 	  { N_("/View/Sp_eed slider"),NULL,     view_speed,     0, "<CheckItem>" },
+	  { N_("/View/Slider labels"),NULL,     view_sliderlabels,0,"<CheckItem>"},
 	  { N_("/_Cursor"),       NULL,         NULL,           0, "<Branch>"    },
 	  {N_("/Cursor/Set selection start"),"<control>Q",edit_selstartcursor,0,
 	   NULL},
@@ -2096,6 +2113,11 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  (GTK_CHECK_MENU_ITEM(item),
 	   inifile_get_gboolean(INI_SETTING_SPEED,INI_SETTING_SPEED_DEFAULT));
 							  
+     item = gtk_item_factory_get_item(item_factory,"/View/Slider labels");
+     gtk_check_menu_item_set_active
+	  (GTK_CHECK_MENU_ITEM(item),
+	   inifile_get_gboolean(INI_SETTING_SLABELS,INI_SETTING_SLABELS_DEFAULT));
+
      item = gtk_item_factory_get_item(item_factory,"/Play/Record...");
      gtk_widget_set_sensitive(item,input_supported());
 
@@ -2682,6 +2704,12 @@ static void mainwindow_init(Mainwindow *obj)
      if (!inifile_get_gboolean(INI_SETTING_SPEED,INI_SETTING_SPEED_DEFAULT)) {
 	  gtk_widget_hide(obj->speed_icon);
 	  gtk_widget_hide(obj->speed_slider);
+	  gtk_widget_hide(GTK_WIDGET(obj->speed_label));
+     }
+
+     obj->show_labels = inifile_get_gboolean(INI_SETTING_SLABELS,INI_SETTING_SLABELS_DEFAULT);
+     if (!obj->show_labels) {
+	  gtk_widget_hide(GTK_WIDGET(obj->vzoom_label));
 	  gtk_widget_hide(GTK_WIDGET(obj->speed_label));
      }
 

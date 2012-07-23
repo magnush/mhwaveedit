@@ -48,6 +48,7 @@ typedef struct _Mainwindow {
      GtkWidget *vzoom_icon,*vzoom_slider,*hzoom_icon,*hzoom_slider;
      GtkWidget *speed_icon,*speed_slider;
      GtkLabel *vzoom_label, *speed_label;
+     gboolean show_labels;
      gboolean esc_pressed_flag;
 
      GList *need_chunk_items;

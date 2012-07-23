@@ -38,7 +38,7 @@ typedef struct {
      Intbox *sound_buffer_size;
      GtkEntry *mixer_utility;
      GtkToggleButton *time_scale_default,*sound_lock,*roll_cursor,*improve;
-     GtkToggleButton *vzoom_default, *hzoom_default,*speed_default;
+     GtkToggleButton *vzoom_default, *hzoom_default,*speed_default,*labels_default;
      GtkToggleButton *output_bswap,*center_cursor,*mark_autoplay;
      GtkToggleButton *mainwin_front,*varispeed_enable,*varispeed_autoreset;
      GtkToggleButton *varispeed_fast,*dither_editing,*dither_playback;
