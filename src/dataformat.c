@@ -883,11 +883,11 @@ static void print_format(Dataformat *fmt)
 {
      if (fmt->type == DATAFORMAT_FLOAT) {
 	  if (fmt->samplesize == sizeof(float))
-	       puts(_("Floating-point (single)"));
+	       printf(_("Floating-point (single %s)\n"),fmt->bigendian?_("Big-endian"):_("Little-endian"));
 	  else
-	       puts(_("Floating-point (double)"));
+	       printf(_("Floating-point (double %s)\n"),fmt->bigendian?_("Big-endian"):_("Little-endian"));
      } else {
-	  printf(_("PCM, %d bit, %s %s\n"), real_ssize(fmt)*8,
+	  printf(_("PCM, %d(%d) bit, %s %s\n"), real_ssize(fmt)*8, fmt->samplesize*8,
 		 fmt->sign?_("Signed"):_("Unsigned"),
 		 fmt->bigendian?_("Big-endian"):_("Little-endian"));
      }
@@ -897,25 +897,36 @@ static void print_format(Dataformat *fmt)
 void conversion_selftest(void)
 {    
      guint samplesizes[] = { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 
-			     sizeof(float), sizeof(double) };
+			     4, 4, 4, 4, 4, 4, 4, 4,
+			     sizeof(float), sizeof(float), sizeof(double), sizeof(double) };
      gboolean signs[] = { FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE,
 			  FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE,
-			  FALSE, FALSE };
+			  FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE,
+			  FALSE, FALSE, FALSE, FALSE };
      gboolean endians[] = { FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE,
 			    FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE,
-			    FALSE, FALSE };
+			    FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE,
+			    FALSE, TRUE, FALSE, TRUE };
+     gint packings[] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			 1,1,1,1,2,2,2,2,
+			 0,0,0,0 };
      gint types[] = { DATAFORMAT_PCM, DATAFORMAT_PCM, DATAFORMAT_PCM, 
 		      DATAFORMAT_PCM, DATAFORMAT_PCM, DATAFORMAT_PCM,
 		      DATAFORMAT_PCM, DATAFORMAT_PCM, DATAFORMAT_PCM,
 		      DATAFORMAT_PCM, DATAFORMAT_PCM, DATAFORMAT_PCM,
 		      DATAFORMAT_PCM, DATAFORMAT_PCM, DATAFORMAT_PCM,
-		      DATAFORMAT_PCM, DATAFORMAT_FLOAT, DATAFORMAT_FLOAT }; 
+		      DATAFORMAT_PCM, DATAFORMAT_PCM, DATAFORMAT_PCM,
+		      DATAFORMAT_PCM, DATAFORMAT_PCM, DATAFORMAT_PCM,
+		      DATAFORMAT_PCM, DATAFORMAT_PCM, DATAFORMAT_PCM,
+		      DATAFORMAT_FLOAT, DATAFORMAT_FLOAT,
+		      DATAFORMAT_FLOAT, DATAFORMAT_FLOAT};
      guchar pcm_buf[SBUFLEN*8],pcm_buf2[SBUFLEN*8],pcm_buf3[SBUFLEN*8];
-     sample_t sbuf[SBUFLEN],sbuf2[SBUFLEN];
+     sample_t sbuf[SBUFLEN],sbuf2[SBUFLEN],sbuf3[SBUFLEN],sbuf4[SBUFLEN],s,s2;
      guint i,j,k;
      Dataformat fmt[2];
      gboolean expect_fail, err=FALSE;
      int dm,scm;
+     off_t cc;
 
 #if 0
      fmt[0].type = DATAFORMAT_PCM;
@@ -951,7 +962,7 @@ void conversion_selftest(void)
 		    fmt[0].bigendian = endians[i];
 		    fmt[0].samplebytes = fmt[0].samplesize;
 		    fmt[0].channels = 1;
-		    fmt[0].packing = 0;
+		    fmt[0].packing = packings[i];
 		    convert_array(sbuf,&dataformat_sample_t,pcm_buf2,fmt,
 				  SBUFLEN,dm,NULL);
 		    convert_array(pcm_buf2,fmt,sbuf2,&dataformat_sample_t,
@@ -987,7 +998,10 @@ void conversion_selftest(void)
 		    fmt[0].samplesize = samplesizes[i];
 		    fmt[0].sign = signs[i];
 		    fmt[0].bigendian = endians[i];
-		    fmt[0].packing = 0;
+		    fmt[0].packing = packings[i];
+		    memset(pcm_buf,0,sizeof(pcm_buf));
+		    memset(pcm_buf2,0,sizeof(pcm_buf));
+		    memset(pcm_buf3,0,sizeof(pcm_buf));
 		    convert_array(sbuf,&dataformat_sample_t,pcm_buf,fmt,
 				  ARRAY_LENGTH(sbuf),dm,NULL);
 		    for (j=0; j<ARRAY_LENGTH(samplesizes); j++) {
@@ -995,14 +1009,16 @@ void conversion_selftest(void)
 			 fmt[1].samplesize = samplesizes[j];
 			 fmt[1].sign = signs[j];
 			 fmt[1].bigendian = endians[j];
-			 fmt[1].packing = 0;
+			 fmt[1].packing = packings[i];
 			 if ((fmt[0].type == DATAFORMAT_PCM &&
 			      fmt[1].type == DATAFORMAT_FLOAT &&
 			      fmt[0].samplesize == 4 && fmt[1].samplesize == 4) ||
 			     (fmt[1].type == DATAFORMAT_PCM &&
 			      fmt[0].type == DATAFORMAT_FLOAT &&
 			      fmt[0].samplesize == 4 && fmt[1].samplesize == 4) ||
-			     fmt[0].samplesize > fmt[1].samplesize)
+			     fmt[0].samplesize > fmt[1].samplesize ||
+			     (fmt[0].samplesize != fmt[1].samplesize &&
+			      dm != 0 && scm == 0))
 			      expect_fail = TRUE;
 			 else
 			      expect_fail = FALSE;
@@ -1029,12 +1045,72 @@ void conversion_selftest(void)
 			 }
 		    }
 	       }
+
+	       puts("  Testing dithering...");
+	       for (i=0; i<ARRAY_LENGTH(samplesizes); i++) {
+		    if (types[i] != DATAFORMAT_PCM || (samplesizes[i]>2 && sizeof(sample_t)<8)) continue;
+		    fmt[0].type = types[i];
+		    fmt[0].samplesize = samplesizes[i];
+		    fmt[0].sign = signs[i];
+		    fmt[0].bigendian = endians[i];
+		    fmt[0].packing = packings[i];
+		    /* print_format(fmt); */
+		    /* Get FP values for minimum and minimum+1 */
+		    int sgnloc = (packings[i] == 2) ? 1 : 0;
+		    int lsbloc = (packings[i] == 1) ? 2 : (samplesizes[i]-1);
+		    if (!endians[i]) { sgnloc=samplesizes[i]-1-sgnloc; lsbloc=samplesizes[i]-1-lsbloc; }
+		    memset(pcm_buf,0,8);
+		    if (signs[i]) {
+			 pcm_buf[sgnloc] = 0x80;
+			 pcm_buf[samplesizes[i]+sgnloc] = 0x80;
+		    }
+		    pcm_buf[samplesizes[i]+lsbloc] += 1;
+		    convert_array(pcm_buf,fmt,sbuf,&dataformat_sample_t,2,DITHER_NONE,NULL);
+		    /* printf("%02x %02x %02x %02x %02x %02x %02x %02x %f %f\n",
+			   pcm_buf[0], pcm_buf[1], pcm_buf[2], pcm_buf[3], pcm_buf[4], pcm_buf[5], pcm_buf[6], pcm_buf[7],
+			   sbuf[0],sbuf[1]); */
+		    g_assert(sbuf[0] <= -1.0 && sbuf[1]>sbuf[0]);
+		    s = sbuf[1];
+		    sbuf[SBUFLEN-1] = s;
+		    s = (s-sbuf[0]) / ((sample_t)(SBUFLEN-1));
+		    s2 = sbuf[0];
+		    for (j=0; j<SBUFLEN-1; j++,s2+=s)
+			 sbuf[j] = s2;
+		    memset(sbuf3,0,sizeof(sbuf3));
+		    memset(sbuf4,0,sizeof(sbuf4));
+		    for (k=0; k<10000; k++) {
+			 cc = 0;
+			 convert_array(sbuf,&dataformat_sample_t,pcm_buf,fmt,SBUFLEN,dm,&cc);
+			 convert_array(pcm_buf,fmt,sbuf2,&dataformat_sample_t,SBUFLEN,dm,&cc);
+			 g_assert(cc == 0);
+			 for (j=0; j<SBUFLEN; j++) {
+			      s = (sbuf2[j]-sbuf[j])/(sbuf[SBUFLEN-1]-sbuf[0])*0.0001;
+			      sbuf3[j] += s;
+			      sbuf4[j] += s*s;
+			 }
+		    }
+		    for (j=0; j<SBUFLEN; j++) {
+			 s = sbuf4[j]-sbuf3[j]*sbuf3[j]*0.0001;
+			 if (dm == DITHER_NONE) {
+			      if (sbuf3[j] < -0.5001 || sbuf3[j] > 0.5001 || s > 1e-7) break;
+			 } else {
+			      if (sbuf3[j] < -0.02 || sbuf3[j] > 0.02 || s > 1e-4) break;
+			 }
+		    }
+		    if (j < SBUFLEN) {
+			 err = TRUE;
+			 printf("Dither test failed for mode %d format: ",dm);
+			 print_format(fmt);
+			 for (j=0; j<SBUFLEN; j++) {
+			      printf("%.10f %.10f %.10f\n",sbuf[j],sbuf3[j],(sbuf4[j]-sbuf3[j]*sbuf3[j]*0.01));
+			 }
+		    }
+	       }
 	  }
-	  
      }
 
      if (!err) puts(_("No errors detected!"));
-#undef SBUFLEN     
+#undef SBUFLEN
 }
 
 void conversion_performance_test(void)
