@@ -1090,6 +1090,12 @@ static void debug_dummy(GtkMenuItem *menuitem, gpointer user_data)
      document_apply(w->doc,dummy_proc,NULL,CHUNK_FILTER_MANY,FALSE,"DUMMY");
 }
 
+static void debug_dummy2(GtkMenuItem *menuitem, gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW(user_data);
+     document_apply(w->doc,dummy_proc,NULL,CHUNK_FILTER_MANY,TRUE,"DUMMY");
+}
+
 static void checkoc_proc(Chunk *chunk, gpointer user_data)
 {
      if (chunk->opencount > 0) 
@@ -1962,6 +1968,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/Debug"),         NULL,         NULL,           0, "<Branch>"    },
 	  /*	  { N_("/Debug/Mark as modified"),NULL, debug_mark,     0, NULL          }, */
 	  { N_("/Debug/Dummy effect"),NULL,     debug_dummy,    0, NULL          },
+	  { N_("/Debug/Dummy effect FP"),NULL,  debug_dummy2,   0, NULL          },
 	  { N_("/Debug/Check opencount"),NULL,  debug_checkoc,  0, NULL          },
 	  { N_("/Debug/Dump chunk info"),NULL,  debug_chunkinfo,0, NULL          },
 #endif
