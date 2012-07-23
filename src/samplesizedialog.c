@@ -25,6 +25,7 @@
 #include "main.h"
 #include "effectbrowser.h"
 #include "gettext.h"
+#include "um.h"
 
 static Chunk *samplesize_apply_proc(Chunk *chunk, StatusBar *bar,
 				    gpointer user_data)

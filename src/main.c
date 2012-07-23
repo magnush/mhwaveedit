@@ -29,6 +29,7 @@
 #include <errno.h>
 #include <locale.h>
 #include <signal.h>
+#include <ctype.h>
 #include <gtk/gtk.h>
 #include "mainloop.h"
 #include "mainwindow.h"
@@ -434,11 +435,11 @@ static void parse_color(gchar *str, GdkColor *color)
 void set_custom_colors(GdkColor *c)
 {
      gint i;
-     gchar *d,*e;
+     gchar *d;
      if (!c) {
 	  set_custom_colors(factory_default_colors);
 	  for (i=FIRST_CUSTOM_COLOR; i<LAST_COLOR; i++) {
-	       e = d = inifile_get(color_inifile_entry[i],NULL);
+	       d = inifile_get(color_inifile_entry[i],NULL);
 	       /* printf("%s -> %s\n",color_inifile_entry[i],d); */
 	       if (d != NULL) {
 		    /* printf("Before: %x,%x,%x\n",color_table[i].red,
@@ -587,7 +588,7 @@ gchar *get_time(guint32 samplerate, off_t samples, off_t samplemax,
 		gchar *timebuf, gint mode)
 {
      static gchar static_buf[64];
-     gfloat secs, ffps, fframes;
+     gfloat secs, ffps;
      guint mins, msecs, hours, maxhours, frames, ifps, isecs;
      guint fptm;
 
@@ -599,7 +600,7 @@ gchar *get_time(guint32 samplerate, off_t samples, off_t samplemax,
      if (mode > 6) mode = 0;
 
      if (mode == 2) {
-	  g_snprintf(timebuf,50,"%05" OFF_T_FORMAT,samples);
+	  g_snprintf(timebuf,50,"%05" OFF_T_FORMAT,(OFF_T_FTYPE)samples);
      } else if (mode < 2) {
 	  secs = (gfloat) samples / (gfloat) samplerate;
 	  mins = (guint) (secs / 60.0);
@@ -637,7 +638,6 @@ gchar *get_time(guint32 samplerate, off_t samples, off_t samplemax,
 	  else if (mode == 5) { ffps=30.0*1.000/1.001; ifps=30; }
 	  else { ffps=30.0; ifps=30; }
 
-	  fframes = secs * ffps;
 	  frames = (guint) (secs * ffps);
 
 	  /* Ten-minute units never need to be dropped. */

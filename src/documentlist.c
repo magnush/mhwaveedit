@@ -30,12 +30,10 @@ static gboolean updating = FALSE;
 
 static void document_list_changed(Combo *combo)
 {
-     gint s;
      Document *d=NULL;
      DocumentList *dl = DOCUMENT_LIST(combo);
 
      if (updating) return;
-     s = list_object_get_size(document_objects);
      d = DOCUMENT(list_object_get(document_objects,
 				  combo_selected_index(combo)));     
      if (d != dl->selected) {

@@ -467,15 +467,15 @@ static gboolean format_to_pulse(Dataformat *format, pa_sample_spec *ss_out)
      pa_sample_format_t sf;
 
      if (format->type == DATAFORMAT_PCM) {
-	  if (format->samplesize == 1 && format->sign == FALSE)
+	  if (format->samplesize == 1 && !format->sign)
 	       sf = PA_SAMPLE_U8;
-	  else if (format->samplesize == 2 && format->sign == TRUE)
+	  else if (format->samplesize == 2 && format->sign)
 	       sf = (format->bigendian)?PA_SAMPLE_S16BE:PA_SAMPLE_S16LE;
 #ifdef HAS24
-	  else if (format->samplesize == 3 && format->sign == TRUE)
+	  else if (format->samplesize == 3 && format->sign)
 	       sf = (format->bigendian)?PA_SAMPLE_S24BE:PA_SAMPLE_S24LE;
 #endif
-	  else if (format->samplesize == 4 && format->sign == TRUE) {
+	  else if (format->samplesize == 4 && format->sign) {
 	       if (format->packing == 0 || format->packing == 1)
 		    sf = (format->bigendian)?PA_SAMPLE_S32BE:PA_SAMPLE_S32LE;
 #ifdef HAS24

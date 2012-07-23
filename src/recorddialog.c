@@ -320,7 +320,7 @@ static gboolean process_input(RecordDialog *rd)
 		   0,buf,default_time_mode);
 	  gtk_label_set_text(rd->time_label,buf);
 	  g_snprintf(buf,200,"%" OFF_T_FORMAT "", 
-		     rd->written_bytes);
+		     (OFF_T_FTYPE)rd->written_bytes);
 	  gtk_label_set_text(rd->bytes_label,buf);
 	  get_time_s(rd->current_format->samplerate,
 		     rd->written_bytes/rd->current_format->samplebytes,

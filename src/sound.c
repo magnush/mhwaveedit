@@ -406,13 +406,12 @@ gboolean sound_poll(void)
 /* We need to filter the output ready event if delayed stop mode is enabled */
 static void sound_output_ready_func(void)
 {
-     guint u;
      output_want_data_cached = TRUE;
      if (sound_delayed_quit) {
 	  while (output_want_data()) {
-	       u = output_play(zerobuf,
-			       sizeof(zerobuf)-
-			       (sizeof(zerobuf)%playing_format.samplebytes));
+	       output_play(zerobuf,
+			   sizeof(zerobuf)-
+			   (sizeof(zerobuf)%playing_format.samplebytes));
 	  }
      } else if (output_ready_func != NULL && output_want_data()) {
 	  output_ready_func();

@@ -640,7 +640,6 @@ gpointer mainloop_io_group_add(int nfds, GPollFD *pfds, int wdtime_ms,
 {
      struct io_group *grp;
      int i;
-     GTimeVal tv;
      grp = g_malloc(sizeof(*grp));
      grp->nfds = nfds;
      grp->pfds = NULL;
@@ -683,7 +682,7 @@ static gint iogroup_watchdog_cb(gpointer timesource, GTimeVal *current_time,
 	  return 0;
 }
 
-gpointer mainloop_io_group_enable(gpointer iogroup, gboolean enable)
+void mainloop_io_group_enable(gpointer iogroup, gboolean enable)
 {
      struct io_group *grp = (struct io_group *)iogroup;
      int i;

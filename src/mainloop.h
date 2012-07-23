@@ -53,7 +53,7 @@ void mainloop_io_source_free(gpointer iosource);
 
 gpointer mainloop_io_group_add(int nfds, GPollFD *pfds, int wdtime_ms, 
 			       iogroup_cb cb, gpointer user_data);
-gpointer mainloop_io_group_enable(gpointer iogroup, gboolean enable);
+void mainloop_io_group_enable(gpointer iogroup, gboolean enable);
 void mainloop_io_group_free(gpointer iogroup);
 
 gpointer mainloop_time_source_add(GTimeVal *tv, timesource_cb cb,

@@ -35,10 +35,11 @@ gboolean um_use_gtk = FALSE;
 
 int user_message_flag=0;
 static int modal_result;
+static const int mr_yes=MR_YES,mr_no=MR_NO,mr_cancel=MR_CANCEL,mr_ok=MR_OK;
 
 static void modal_callback(GtkWidget *widget, gpointer data)
 {
-     modal_result=(int)data;
+     modal_result=*((int *)data);
 }
 
 /* Output each line of msg with "mhWaveEdit: " in front of it. */
@@ -118,7 +119,7 @@ int do_user_message(char *msg, int type, gboolean block)
 			     FALSE,FALSE,0);
 	  gtk_signal_connect(GTK_OBJECT(b),"clicked",
 			     GTK_SIGNAL_FUNC(modal_callback),
-			     (gpointer)MR_YES);
+			     (gpointer)&mr_yes);
 	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
 	  gtk_widget_show(b);
 	  b=gtk_button_new_with_label(_("No"));
@@ -126,13 +127,13 @@ int do_user_message(char *msg, int type, gboolean block)
 			     FALSE,FALSE,0);
 	  gtk_signal_connect(GTK_OBJECT(b),"clicked",
 			     GTK_SIGNAL_FUNC(modal_callback),
-			     (gpointer)MR_NO);
+			     (gpointer)&mr_no);
 	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
 	  gtk_widget_show(b);
 	  b=gtk_button_new_with_label(_("Cancel"));
 	  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(wnd)->action_area),b,
 			     FALSE,FALSE,0);
-	  gtk_signal_connect(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(modal_callback),(gpointer)MR_CANCEL);
+	  gtk_signal_connect(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(modal_callback),(gpointer)&mr_cancel);
 	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
 	  gtk_widget_show(b);
 	  modal_result=MR_CANCEL;
@@ -143,13 +144,13 @@ int do_user_message(char *msg, int type, gboolean block)
 			     FALSE,FALSE,0);
 	  gtk_signal_connect(GTK_OBJECT(b),"clicked",
 			     GTK_SIGNAL_FUNC(modal_callback),
-			     (gpointer)MR_OK);
+			     (gpointer)&mr_ok);
 	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
 	  gtk_widget_show(b);
 	  b=gtk_button_new_with_label(_("Cancel"));
 	  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(wnd)->action_area),b,
 			     FALSE,FALSE,0);
-	  gtk_signal_connect(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(modal_callback),(gpointer)MR_CANCEL);
+	  gtk_signal_connect(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(modal_callback),(gpointer)&mr_cancel);
 	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
 	  gtk_widget_show(b);
 	  modal_result=MR_CANCEL;
@@ -365,9 +366,8 @@ gchar *user_input(gchar *label, gchar *title, gchar *defvalue,
 static gboolean user_input_float_validator(gchar *c)
 {
      gchar *d;
-     double dbl;
      errno = 0;
-     dbl = strtod(c,&d);
+     strtod(c,&d);
      return (errno == 0 && *d == 0);
 }
 
@@ -384,16 +384,16 @@ gboolean user_input_float(gchar *label, gchar *title, gfloat defvalue,
      return FALSE;     
 }
 
-static guint user_choice_choice;
+static gpointer user_choice_choice;
 
 static gboolean echo_func(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
-     return (gboolean)user_data;
+     return *((int *)user_data) == MR_OK;
 }
 
 static void user_choice_toggle(GtkToggleButton *button, gpointer user_data)
 {
-     user_choice_choice = (guint) user_data;
+     user_choice_choice = user_data;
 }
 
 gint user_choice(gchar **choices, guint def, gchar *windowtitle, 
@@ -407,10 +407,10 @@ gint user_choice(gchar **choices, guint def, gchar *windowtitle,
      gtk_container_set_border_width(GTK_CONTAINER(a),5);
      if (allow_cancel) 
 	  gtk_signal_connect(GTK_OBJECT(a),"delete_event",
-			     GTK_SIGNAL_FUNC(echo_func),(gpointer)FALSE);
+			     GTK_SIGNAL_FUNC(echo_func),(gpointer)&mr_cancel);
      else
 	  gtk_signal_connect(GTK_OBJECT(a),"delete_event",
-			     GTK_SIGNAL_FUNC(echo_func),(gpointer)TRUE);
+			     GTK_SIGNAL_FUNC(echo_func),(gpointer)&mr_ok);
      gtk_signal_connect(GTK_OBJECT(a),"destroy",
 			GTK_SIGNAL_FUNC(user_input_destroy),NULL);
      b = gtk_vbox_new(FALSE,5);
@@ -430,7 +430,7 @@ gint user_choice(gchar **choices, guint def, gchar *windowtitle,
 	  if (i == def)
 	       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(c),TRUE);
 	  gtk_signal_connect(GTK_OBJECT(c),"toggled",
-			     GTK_SIGNAL_FUNC(user_choice_toggle),(gpointer)i);
+			     GTK_SIGNAL_FUNC(user_choice_toggle),choices+i);
 	  gtk_container_add(GTK_CONTAINER(b),c);
      }
      c = gtk_hseparator_new();
@@ -458,7 +458,7 @@ gint user_choice(gchar **choices, guint def, gchar *windowtitle,
 	  gtk_container_add(GTK_CONTAINER(c),d);
      }
 
-     user_choice_choice = def;
+     user_choice_choice = choices+def;
      modal_result = MR_CANCEL;
      gtk_widget_show_all(a);
 
@@ -469,6 +469,6 @@ gint user_choice(gchar **choices, guint def, gchar *windowtitle,
      g_assert(modal_result==MR_OK || allow_cancel);
 
      if (modal_result==MR_CANCEL) return -1;
-     else return user_choice_choice;
+     else return (guint) (((gchar **)user_choice_choice)-choices);
 }
 

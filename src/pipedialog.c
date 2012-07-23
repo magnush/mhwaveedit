@@ -129,10 +129,9 @@ GtkType pipe_dialog_get_type(void)
 
 static void add_error_text(GtkWidget *t,gchar *text)
 {
-     GtkWidget *w = t;
 #if GTK_MAJOR_VERSION < 2
-     gtk_text_insert(GTK_TEXT(t),gtk_style_get_font(w->style),w->style->fg,
-		     &(w->style->white),text,-1);     
+     gtk_text_insert(GTK_TEXT(t),gtk_style_get_font(t->style),t->style->fg,
+		     &(t->style->white),text,-1);
 #else
      GtkTextBuffer *tb;
      GtkTextIter iter;

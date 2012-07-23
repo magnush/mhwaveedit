@@ -68,7 +68,7 @@ gboolean dataformat_equal(Dataformat *f1, Dataformat *f2)
 		f1->channels==f2->channels && 
 		(f1->samplesize == 1 || BOOLEQ(f1->bigendian,f2->bigendian)) &&
 		(f1->type != DATAFORMAT_PCM || 
-		 (f1->sign==f2->sign && 
+		 (BOOLEQ(f1->sign,f2->sign) &&
 		  (f1->samplesize != 4 || f1->packing == f2->packing))));
 }
 
@@ -77,7 +77,7 @@ gboolean dataformat_samples_equal(Dataformat *f1, Dataformat *f2)
      return (f1->type == f2->type && f1->samplesize==f2->samplesize &&
 	     (f1->samplesize == 1 || BOOLEQ(f1->bigendian,f2->bigendian)) &&
 	     (f1->type != DATAFORMAT_PCM || 
-	      (f1->sign==f2->sign && 
+	      (BOOLEQ(f1->sign,f2->sign) &&
 	       (f1->samplesize != 4 || f1->packing == f2->packing))));
 }
 
@@ -745,13 +745,13 @@ sample_t minimum_float_value(Dataformat *x)
 
 sample_t convert_factor(Dataformat *infmt, Dataformat *outfmt)
 {
-     sample_t fpos, fneg;
+     sample_t fneg;
      fneg = minimum_float_value(outfmt) / minimum_float_value(infmt);
      return fneg;
 }
 
-sample_t apply_convert_factor(Dataformat *infmt, Dataformat *outfmt,
-			      sample_t *buffer, guint count)
+void apply_convert_factor(Dataformat *infmt, Dataformat *outfmt,
+			  sample_t *buffer, guint count)
 {
      sample_t f;
      guint i;

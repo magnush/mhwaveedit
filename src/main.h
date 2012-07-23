@@ -89,8 +89,10 @@ void gtk_widget_set_can_focus(GtkWidget *w, gboolean can_focus);
 
 #if SIZEOF_OFF_T > 4
 #define OFF_T_FORMAT "lld"
+#define OFF_T_FTYPE long long
 #else
 #define OFF_T_FORMAT "ld"
+#define OFF_T_FTYPE long
 #endif
 
 #define BOOLEQ(x,y) (((x) && (y)) || (!(x) && !(y)))

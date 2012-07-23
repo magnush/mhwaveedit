@@ -30,7 +30,6 @@
 static gboolean goto_dialog_apply(GotoDialog *gd)
 {
      off_t p=0,q;
-     off_t o;
      float f;
      Document *d = gd->mw->doc;
      int i, j;

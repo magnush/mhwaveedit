@@ -547,10 +547,12 @@ static void register_drivers(void)
 {
      static int already_run = 0;
      struct driver_data *d,d2;
+#ifdef HAVE_LIBSAMPLERATE
      const char *c;
      int i;
      c = NULL; 
      i = 0;
+#endif
      if (already_run) return;
      already_run++;
 

@@ -21,6 +21,7 @@
 
 #include <config.h>
 
+#include <string.h>
 #include "historybox.h"
 #include "inifile.h"
 

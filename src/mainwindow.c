@@ -878,7 +878,7 @@ static void edit_redo(GtkMenuItem *menuitem, gpointer user_data)
 
 static void update_clipboard_items(Mainwindow *w, gpointer user_data)
 {
-     set_sensitive(w->need_clipboard_items,(int)user_data);
+     set_sensitive(w->need_clipboard_items,user_data != NULL);
 }
 
 static void edit_cut(GtkMenuItem *menuitem, gpointer user_data)
@@ -897,7 +897,7 @@ static void edit_cut(GtkMenuItem *menuitem, gpointer user_data)
 
      document_update(w->doc, chunk, w->doc->selstart, -(clipboard->length));
      list_object_foreach(mainwindow_objects, (GFunc)update_clipboard_items, 
-			 (gpointer)1);
+			 (gpointer)w);
 }
 
 static void edit_crop(GtkMenuItem *menu_item, gpointer user_data)
@@ -920,7 +920,7 @@ static void edit_copy(GtkMenuItem *menu_item, gpointer user_data)
      gtk_object_sink(GTK_OBJECT(clipboard));
 
      list_object_foreach(mainwindow_objects, (GFunc)update_clipboard_items, 
-			 (gpointer)1);
+			 (gpointer)w);
 }
 
 static void edit_paste(GtkMenuItem *menu_item, gpointer user_data)
@@ -1247,7 +1247,7 @@ static void effects_mixchannels(GtkMenuItem *menuitem, gpointer user_data)
      }
 }
 
-static void effects_splitchannel(GtkMenuItem *menuitem, gboolean user_data)
+static void effects_splitchannel(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW (user_data);
      Chunk *c;
@@ -1642,7 +1642,7 @@ static void edit_clearclipboard(GtkMenuItem *menuitem, gpointer user_data)
      gtk_object_unref(GTK_OBJECT(clipboard));
      clipboard = NULL;
      list_object_foreach(mainwindow_objects, 
-			 (GFunc)update_clipboard_items, (gpointer)0);
+			 (GFunc)update_clipboard_items, NULL);
 }
 
 static void edit_positioncursor(GtkMenuItem *menuitem, gpointer user_data)
@@ -2433,7 +2433,7 @@ static void mainwindow_zoom_changed(GtkAdjustment *adjustment,
      max_samp = w->doc->chunk->length;
      target_samp = max_samp * pow(min_samp/max_samp,adjustment->value);
      follow_cursor = target_samp <= current_samp;
-     document_zoom(w->doc,current_samp/target_samp,(target_samp<=current_samp));
+     document_zoom(w->doc,current_samp/target_samp,follow_cursor);
 }
 
 static void mainwindow_vertical_zoom_changed(GtkAdjustment *adjustment,
