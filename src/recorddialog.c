@@ -260,7 +260,7 @@ static gboolean process_input(RecordDialog *rd)
      }
      convert_array(rd->analysis_buf,rd->current_format,
 		   rd->analysis_sbuf,&dataformat_sample_t,
-		   rd->analysis_samples, DITHER_NONE);
+		   rd->analysis_samples, DITHER_NONE, NULL);
      /* Calculate statistics */
      sq = &(rd->analysis_sbuf[rd->analysis_samples]);
      d = rd->current_format->channels;

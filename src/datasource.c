@@ -629,11 +629,8 @@ static guint datasource_read_array_main(Datasource *source,
 	  if (u > 0) {
 	       apply_convert_factor(&(source->data.clone->format), &(source->format),
 				    (sample_t *)c, u*source->format.channels);
-	       if (clipcount != NULL)
-		    *clipcount += 
-			 unnormalized_count(c,u*source->format.channels,&(source->format));
 	       convert_array(c,&dataformat_sample_t,buffer,&(source->format),
-			     u*source->format.channels,dither_mode);
+			     u*source->format.channels,dither_mode,clipcount);
 	  }
 	  return u * source->format.samplebytes;
      case DATASOURCE_CHANMAP:	  
@@ -726,7 +723,7 @@ guint datasource_read_array_fp(Datasource *source, off_t sampleno,
 	  g_assert(x==s || x==0);
 	  if (x==s) {
 	       convert_array(p,&(source->format),buffer,&dataformat_sample_t,
-			     samples*source->format.channels,dither_mode);
+			     samples*source->format.channels,dither_mode,clipcount);
 	       return samples;
 	  }
 	  return 0;

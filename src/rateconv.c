@@ -141,7 +141,7 @@ static int rateconv_src_write(gpointer convdata, gpointer buf, guint bufsize)
 		   &(cd->data.data_in[cd->data.input_frames * 
 				      cd->format.channels]),
 		   &dataformat_single, wf * cd->format.channels,
-		   cd->dither_mode);
+		   cd->dither_mode, NULL);
      cd->data.input_frames += wf;
      /* puts("rateconv_src_write ends"); */
      return wf * cd->format.samplebytes;
@@ -169,7 +169,7 @@ static int rateconv_src_read(gpointer convdata, gpointer buf, guint bufsize)
      if (rf > 0)
 	  convert_array(cd->data.data_out, &dataformat_single, buf,
 			&(cd->format), rf * cd->format.channels, 
-			cd->dither_mode);
+			cd->dither_mode, NULL);
      if (cd->data.input_frames_used < cd->data.input_frames) {
 	  l = cd->data.input_frames - cd->data.input_frames_used;
 	  memmove(cd->data.data_in, 
@@ -347,7 +347,7 @@ static gint sox_write(gpointer convdata, gpointer buf, guint bufsize)
 	  p = g_malloc(ns);
 	  convert_array(buf,&(cd->convert_from_format),
 			p,&(cd->format),frames*cd->format.channels,
-			cd->dither_mode);
+			cd->dither_mode,NULL);
 	  i = sox_write_main(cd,p,ns);
 	  g_free(p);
 	  if (i<=0) return i;
@@ -438,7 +438,7 @@ static gint sox_read(gpointer convdata, gpointer buf, guint bufsize)
 	  i = sox_read_main(cd,p,ns);
 	  if (i > 0) {
 	       convert_array(p,&(cd->format),buf,&(cd->convert_from_format),
-			     i/cd->format.samplesize, cd->dither_mode); 
+			     i/cd->format.samplesize, cd->dither_mode, NULL);
 	  }
 	  g_free(p);
 	  if (i<=0) return i;

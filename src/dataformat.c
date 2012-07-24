@@ -423,206 +423,207 @@ void dataformat_save_to_inifile(gchar *ini_prefix, Dataformat *format,
 
 #include "convert_inc.c"
 
-typedef void (*convert_function)(void *in, void *out, guint count);
+typedef void (*convert_function_pf)(void *in, void *out, guint count);
+typedef int (*convert_function_fp)(void *in, void *out, guint count);
 
 /* (PZ-mode) (PCM size) (PCM sign) (PCM endian) (FP isdouble) */
-static convert_function pcm_fp_functions[] = {
-     (convert_function)convert_pcm8u_float,
-     (convert_function)convert_pcm8u_double,
-     (convert_function)convert_pcm8u_float,
-     (convert_function)convert_pcm8u_double,
-     (convert_function)convert_pcm8s_float,
-     (convert_function)convert_pcm8s_double,
-     (convert_function)convert_pcm8s_float,
-     (convert_function)convert_pcm8s_double,
-     (convert_function)convert_pcm16ule_float,
-     (convert_function)convert_pcm16ule_double,
-     (convert_function)convert_pcm16ube_float,
-     (convert_function)convert_pcm16ube_double,
-     (convert_function)convert_pcm16sle_float,
-     (convert_function)convert_pcm16sle_double,
-     (convert_function)convert_pcm16sbe_float,
-     (convert_function)convert_pcm16sbe_double,
-     (convert_function)convert_pcm24ule_float,
-     (convert_function)convert_pcm24ule_double,
-     (convert_function)convert_pcm24ube_float,
-     (convert_function)convert_pcm24ube_double,
-     (convert_function)convert_pcm24sle_float,
-     (convert_function)convert_pcm24sle_double,
-     (convert_function)convert_pcm24sbe_float,
-     (convert_function)convert_pcm24sbe_double,
-     (convert_function)convert_pcm32ule_float,
-     (convert_function)convert_pcm32ule_double,
-     (convert_function)convert_pcm32ube_float,
-     (convert_function)convert_pcm32ube_double,
-     (convert_function)convert_pcm32sle_float,
-     (convert_function)convert_pcm32sle_double,
-     (convert_function)convert_pcm32sbe_float,
-     (convert_function)convert_pcm32sbe_double,
-     (convert_function)convert_pcm24ulepm_float,
-     (convert_function)convert_pcm24ulepm_double,
-     (convert_function)convert_pcm24ubepm_float,
-     (convert_function)convert_pcm24ubepm_double,
-     (convert_function)convert_pcm24slepm_float,
-     (convert_function)convert_pcm24slepm_double,
-     (convert_function)convert_pcm24sbepm_float,
-     (convert_function)convert_pcm24sbepm_double,
-     (convert_function)convert_pcm24ulepl_float,
-     (convert_function)convert_pcm24ulepl_double,
-     (convert_function)convert_pcm24ubepl_float,
-     (convert_function)convert_pcm24ubepl_double,
-     (convert_function)convert_pcm24slepl_float,
-     (convert_function)convert_pcm24slepl_double,
-     (convert_function)convert_pcm24sbepl_float,
-     (convert_function)convert_pcm24sbepl_double,
-     (convert_function)convert_pcm8u_float_pz,
-     (convert_function)convert_pcm8u_double_pz,
-     (convert_function)convert_pcm8u_float_pz,
-     (convert_function)convert_pcm8u_double_pz,
-     (convert_function)convert_pcm8s_float_pz,
-     (convert_function)convert_pcm8s_double_pz,
-     (convert_function)convert_pcm8s_float_pz,
-     (convert_function)convert_pcm8s_double_pz,
-     (convert_function)convert_pcm16ule_float_pz,
-     (convert_function)convert_pcm16ule_double_pz,
-     (convert_function)convert_pcm16ube_float_pz,
-     (convert_function)convert_pcm16ube_double_pz,
-     (convert_function)convert_pcm16sle_float_pz,
-     (convert_function)convert_pcm16sle_double_pz,
-     (convert_function)convert_pcm16sbe_float_pz,
-     (convert_function)convert_pcm16sbe_double_pz,
-     (convert_function)convert_pcm24ule_float_pz,
-     (convert_function)convert_pcm24ule_double_pz,
-     (convert_function)convert_pcm24ube_float_pz,
-     (convert_function)convert_pcm24ube_double_pz,
-     (convert_function)convert_pcm24sle_float_pz,
-     (convert_function)convert_pcm24sle_double_pz,
-     (convert_function)convert_pcm24sbe_float_pz,
-     (convert_function)convert_pcm24sbe_double_pz,
-     (convert_function)convert_pcm32ule_float_pz,
-     (convert_function)convert_pcm32ule_double_pz,
-     (convert_function)convert_pcm32ube_float_pz,
-     (convert_function)convert_pcm32ube_double_pz,
-     (convert_function)convert_pcm32sle_float_pz,
-     (convert_function)convert_pcm32sle_double_pz,
-     (convert_function)convert_pcm32sbe_float_pz,
-     (convert_function)convert_pcm32sbe_double_pz,
-     (convert_function)convert_pcm24ulepm_float_pz,
-     (convert_function)convert_pcm24ulepm_double_pz,
-     (convert_function)convert_pcm24ubepm_float_pz,
-     (convert_function)convert_pcm24ubepm_double_pz,
-     (convert_function)convert_pcm24slepm_float_pz,
-     (convert_function)convert_pcm24slepm_double_pz,
-     (convert_function)convert_pcm24sbepm_float_pz,
-     (convert_function)convert_pcm24sbepm_double_pz,
-     (convert_function)convert_pcm24ulepl_float_pz,
-     (convert_function)convert_pcm24ulepl_double_pz,
-     (convert_function)convert_pcm24ubepl_float_pz,
-     (convert_function)convert_pcm24ubepl_double_pz,
-     (convert_function)convert_pcm24slepl_float_pz,
-     (convert_function)convert_pcm24slepl_double_pz,
-     (convert_function)convert_pcm24sbepl_float_pz,
-     (convert_function)convert_pcm24sbepl_double_pz
+static convert_function_pf pcm_fp_functions[96] = {
+     (convert_function_pf)convert_pcm8u_float,
+     (convert_function_pf)convert_pcm8u_double,
+     (convert_function_pf)convert_pcm8u_float,
+     (convert_function_pf)convert_pcm8u_double,
+     (convert_function_pf)convert_pcm8s_float,
+     (convert_function_pf)convert_pcm8s_double,
+     (convert_function_pf)convert_pcm8s_float,
+     (convert_function_pf)convert_pcm8s_double,
+     (convert_function_pf)convert_pcm16ule_float,
+     (convert_function_pf)convert_pcm16ule_double,
+     (convert_function_pf)convert_pcm16ube_float,
+     (convert_function_pf)convert_pcm16ube_double,
+     (convert_function_pf)convert_pcm16sle_float,
+     (convert_function_pf)convert_pcm16sle_double,
+     (convert_function_pf)convert_pcm16sbe_float,
+     (convert_function_pf)convert_pcm16sbe_double,
+     (convert_function_pf)convert_pcm24ule_float,
+     (convert_function_pf)convert_pcm24ule_double,
+     (convert_function_pf)convert_pcm24ube_float,
+     (convert_function_pf)convert_pcm24ube_double,
+     (convert_function_pf)convert_pcm24sle_float,
+     (convert_function_pf)convert_pcm24sle_double,
+     (convert_function_pf)convert_pcm24sbe_float,
+     (convert_function_pf)convert_pcm24sbe_double,
+     (convert_function_pf)convert_pcm32ule_float,
+     (convert_function_pf)convert_pcm32ule_double,
+     (convert_function_pf)convert_pcm32ube_float,
+     (convert_function_pf)convert_pcm32ube_double,
+     (convert_function_pf)convert_pcm32sle_float,
+     (convert_function_pf)convert_pcm32sle_double,
+     (convert_function_pf)convert_pcm32sbe_float,
+     (convert_function_pf)convert_pcm32sbe_double,
+     (convert_function_pf)convert_pcm24ulepm_float,
+     (convert_function_pf)convert_pcm24ulepm_double,
+     (convert_function_pf)convert_pcm24ubepm_float,
+     (convert_function_pf)convert_pcm24ubepm_double,
+     (convert_function_pf)convert_pcm24slepm_float,
+     (convert_function_pf)convert_pcm24slepm_double,
+     (convert_function_pf)convert_pcm24sbepm_float,
+     (convert_function_pf)convert_pcm24sbepm_double,
+     (convert_function_pf)convert_pcm24ulepl_float,
+     (convert_function_pf)convert_pcm24ulepl_double,
+     (convert_function_pf)convert_pcm24ubepl_float,
+     (convert_function_pf)convert_pcm24ubepl_double,
+     (convert_function_pf)convert_pcm24slepl_float,
+     (convert_function_pf)convert_pcm24slepl_double,
+     (convert_function_pf)convert_pcm24sbepl_float,
+     (convert_function_pf)convert_pcm24sbepl_double,
+     (convert_function_pf)convert_pcm8u_float_pz,
+     (convert_function_pf)convert_pcm8u_double_pz,
+     (convert_function_pf)convert_pcm8u_float_pz,
+     (convert_function_pf)convert_pcm8u_double_pz,
+     (convert_function_pf)convert_pcm8s_float_pz,
+     (convert_function_pf)convert_pcm8s_double_pz,
+     (convert_function_pf)convert_pcm8s_float_pz,
+     (convert_function_pf)convert_pcm8s_double_pz,
+     (convert_function_pf)convert_pcm16ule_float_pz,
+     (convert_function_pf)convert_pcm16ule_double_pz,
+     (convert_function_pf)convert_pcm16ube_float_pz,
+     (convert_function_pf)convert_pcm16ube_double_pz,
+     (convert_function_pf)convert_pcm16sle_float_pz,
+     (convert_function_pf)convert_pcm16sle_double_pz,
+     (convert_function_pf)convert_pcm16sbe_float_pz,
+     (convert_function_pf)convert_pcm16sbe_double_pz,
+     (convert_function_pf)convert_pcm24ule_float_pz,
+     (convert_function_pf)convert_pcm24ule_double_pz,
+     (convert_function_pf)convert_pcm24ube_float_pz,
+     (convert_function_pf)convert_pcm24ube_double_pz,
+     (convert_function_pf)convert_pcm24sle_float_pz,
+     (convert_function_pf)convert_pcm24sle_double_pz,
+     (convert_function_pf)convert_pcm24sbe_float_pz,
+     (convert_function_pf)convert_pcm24sbe_double_pz,
+     (convert_function_pf)convert_pcm32ule_float_pz,
+     (convert_function_pf)convert_pcm32ule_double_pz,
+     (convert_function_pf)convert_pcm32ube_float_pz,
+     (convert_function_pf)convert_pcm32ube_double_pz,
+     (convert_function_pf)convert_pcm32sle_float_pz,
+     (convert_function_pf)convert_pcm32sle_double_pz,
+     (convert_function_pf)convert_pcm32sbe_float_pz,
+     (convert_function_pf)convert_pcm32sbe_double_pz,
+     (convert_function_pf)convert_pcm24ulepm_float_pz,
+     (convert_function_pf)convert_pcm24ulepm_double_pz,
+     (convert_function_pf)convert_pcm24ubepm_float_pz,
+     (convert_function_pf)convert_pcm24ubepm_double_pz,
+     (convert_function_pf)convert_pcm24slepm_float_pz,
+     (convert_function_pf)convert_pcm24slepm_double_pz,
+     (convert_function_pf)convert_pcm24sbepm_float_pz,
+     (convert_function_pf)convert_pcm24sbepm_double_pz,
+     (convert_function_pf)convert_pcm24ulepl_float_pz,
+     (convert_function_pf)convert_pcm24ulepl_double_pz,
+     (convert_function_pf)convert_pcm24ubepl_float_pz,
+     (convert_function_pf)convert_pcm24ubepl_double_pz,
+     (convert_function_pf)convert_pcm24slepl_float_pz,
+     (convert_function_pf)convert_pcm24slepl_double_pz,
+     (convert_function_pf)convert_pcm24sbepl_float_pz,
+     (convert_function_pf)convert_pcm24sbepl_double_pz
 };
 
 /* (PZ-mode) (PCM size) (PCM sign) (PCM endian) (FP isdouble) */
-static convert_function fp_pcm_functions[] = {
-     (convert_function)convert_float_pcm8u,
-     (convert_function)convert_double_pcm8u,
-     (convert_function)convert_float_pcm8u,
-     (convert_function)convert_double_pcm8u,
-     (convert_function)convert_float_pcm8s,
-     (convert_function)convert_double_pcm8s,
-     (convert_function)convert_float_pcm8s,
-     (convert_function)convert_double_pcm8s,
-     (convert_function)convert_float_pcm16ule,
-     (convert_function)convert_double_pcm16ule,
-     (convert_function)convert_float_pcm16ube,
-     (convert_function)convert_double_pcm16ube,
-     (convert_function)convert_float_pcm16sle,
-     (convert_function)convert_double_pcm16sle,
-     (convert_function)convert_float_pcm16sbe,
-     (convert_function)convert_double_pcm16sbe,
-     (convert_function)convert_float_pcm24ule,
-     (convert_function)convert_double_pcm24ule,
-     (convert_function)convert_float_pcm24ube,
-     (convert_function)convert_double_pcm24ube,
-     (convert_function)convert_float_pcm24sle,
-     (convert_function)convert_double_pcm24sle,
-     (convert_function)convert_float_pcm24sbe,
-     (convert_function)convert_double_pcm24sbe,
-     (convert_function)convert_float_pcm32ule,
-     (convert_function)convert_double_pcm32ule,
-     (convert_function)convert_float_pcm32ube,
-     (convert_function)convert_double_pcm32ube,
-     (convert_function)convert_float_pcm32sle,
-     (convert_function)convert_double_pcm32sle,
-     (convert_function)convert_float_pcm32sbe,
-     (convert_function)convert_double_pcm32sbe,
-     (convert_function)convert_float_pcm24ulepm,
-     (convert_function)convert_double_pcm24ulepm,
-     (convert_function)convert_float_pcm24ubepm,
-     (convert_function)convert_double_pcm24ubepm,
-     (convert_function)convert_float_pcm24slepm,
-     (convert_function)convert_double_pcm24slepm,
-     (convert_function)convert_float_pcm24sbepm,
-     (convert_function)convert_double_pcm24sbepm,
-     (convert_function)convert_float_pcm24ulepl,
-     (convert_function)convert_double_pcm24ulepl,
-     (convert_function)convert_float_pcm24ubepl,
-     (convert_function)convert_double_pcm24ubepl,
-     (convert_function)convert_float_pcm24slepl,
-     (convert_function)convert_double_pcm24slepl,
-     (convert_function)convert_float_pcm24sbepl,
-     (convert_function)convert_double_pcm24sbepl,
-     (convert_function)convert_float_pcm8u_pz,
-     (convert_function)convert_double_pcm8u_pz,
-     (convert_function)convert_float_pcm8u_pz,
-     (convert_function)convert_double_pcm8u_pz,
-     (convert_function)convert_float_pcm8s_pz,
-     (convert_function)convert_double_pcm8s_pz,
-     (convert_function)convert_float_pcm8s_pz,
-     (convert_function)convert_double_pcm8s_pz,
-     (convert_function)convert_float_pcm16ule_pz,
-     (convert_function)convert_double_pcm16ule_pz,
-     (convert_function)convert_float_pcm16ube_pz,
-     (convert_function)convert_double_pcm16ube_pz,
-     (convert_function)convert_float_pcm16sle_pz,
-     (convert_function)convert_double_pcm16sle_pz,
-     (convert_function)convert_float_pcm16sbe_pz,
-     (convert_function)convert_double_pcm16sbe_pz,
-     (convert_function)convert_float_pcm24ule_pz,
-     (convert_function)convert_double_pcm24ule_pz,
-     (convert_function)convert_float_pcm24ube_pz,
-     (convert_function)convert_double_pcm24ube_pz,
-     (convert_function)convert_float_pcm24sle_pz,
-     (convert_function)convert_double_pcm24sle_pz,
-     (convert_function)convert_float_pcm24sbe_pz,
-     (convert_function)convert_double_pcm24sbe_pz,
-     (convert_function)convert_float_pcm32ule_pz,
-     (convert_function)convert_double_pcm32ule_pz,
-     (convert_function)convert_float_pcm32ube_pz,
-     (convert_function)convert_double_pcm32ube_pz,
-     (convert_function)convert_float_pcm32sle_pz,
-     (convert_function)convert_double_pcm32sle_pz,
-     (convert_function)convert_float_pcm32sbe_pz,
-     (convert_function)convert_double_pcm32sbe_pz,
-     (convert_function)convert_float_pcm24ulepm_pz,
-     (convert_function)convert_double_pcm24ulepm_pz,
-     (convert_function)convert_float_pcm24ubepm_pz,
-     (convert_function)convert_double_pcm24ubepm_pz,
-     (convert_function)convert_float_pcm24slepm_pz,
-     (convert_function)convert_double_pcm24slepm_pz,
-     (convert_function)convert_float_pcm24sbepm_pz,
-     (convert_function)convert_double_pcm24sbepm_pz,
-     (convert_function)convert_float_pcm24ulepl_pz,
-     (convert_function)convert_double_pcm24ulepl_pz,
-     (convert_function)convert_float_pcm24ubepl_pz,
-     (convert_function)convert_double_pcm24ubepl_pz,
-     (convert_function)convert_float_pcm24slepl_pz,
-     (convert_function)convert_double_pcm24slepl_pz,
-     (convert_function)convert_float_pcm24sbepl_pz,
-     (convert_function)convert_double_pcm24sbepl_pz
+static convert_function_fp fp_pcm_functions[96] = {
+     (convert_function_fp)convert_float_pcm8u,
+     (convert_function_fp)convert_double_pcm8u,
+     (convert_function_fp)convert_float_pcm8u,
+     (convert_function_fp)convert_double_pcm8u,
+     (convert_function_fp)convert_float_pcm8s,
+     (convert_function_fp)convert_double_pcm8s,
+     (convert_function_fp)convert_float_pcm8s,
+     (convert_function_fp)convert_double_pcm8s,
+     (convert_function_fp)convert_float_pcm16ule,
+     (convert_function_fp)convert_double_pcm16ule,
+     (convert_function_fp)convert_float_pcm16ube,
+     (convert_function_fp)convert_double_pcm16ube,
+     (convert_function_fp)convert_float_pcm16sle,
+     (convert_function_fp)convert_double_pcm16sle,
+     (convert_function_fp)convert_float_pcm16sbe,
+     (convert_function_fp)convert_double_pcm16sbe,
+     (convert_function_fp)convert_float_pcm24ule,
+     (convert_function_fp)convert_double_pcm24ule,
+     (convert_function_fp)convert_float_pcm24ube,
+     (convert_function_fp)convert_double_pcm24ube,
+     (convert_function_fp)convert_float_pcm24sle,
+     (convert_function_fp)convert_double_pcm24sle,
+     (convert_function_fp)convert_float_pcm24sbe,
+     (convert_function_fp)convert_double_pcm24sbe,
+     (convert_function_fp)convert_float_pcm32ule,
+     (convert_function_fp)convert_double_pcm32ule,
+     (convert_function_fp)convert_float_pcm32ube,
+     (convert_function_fp)convert_double_pcm32ube,
+     (convert_function_fp)convert_float_pcm32sle,
+     (convert_function_fp)convert_double_pcm32sle,
+     (convert_function_fp)convert_float_pcm32sbe,
+     (convert_function_fp)convert_double_pcm32sbe,
+     (convert_function_fp)convert_float_pcm24ulepm,
+     (convert_function_fp)convert_double_pcm24ulepm,
+     (convert_function_fp)convert_float_pcm24ubepm,
+     (convert_function_fp)convert_double_pcm24ubepm,
+     (convert_function_fp)convert_float_pcm24slepm,
+     (convert_function_fp)convert_double_pcm24slepm,
+     (convert_function_fp)convert_float_pcm24sbepm,
+     (convert_function_fp)convert_double_pcm24sbepm,
+     (convert_function_fp)convert_float_pcm24ulepl,
+     (convert_function_fp)convert_double_pcm24ulepl,
+     (convert_function_fp)convert_float_pcm24ubepl,
+     (convert_function_fp)convert_double_pcm24ubepl,
+     (convert_function_fp)convert_float_pcm24slepl,
+     (convert_function_fp)convert_double_pcm24slepl,
+     (convert_function_fp)convert_float_pcm24sbepl,
+     (convert_function_fp)convert_double_pcm24sbepl,
+     (convert_function_fp)convert_float_pcm8u_pz,
+     (convert_function_fp)convert_double_pcm8u_pz,
+     (convert_function_fp)convert_float_pcm8u_pz,
+     (convert_function_fp)convert_double_pcm8u_pz,
+     (convert_function_fp)convert_float_pcm8s_pz,
+     (convert_function_fp)convert_double_pcm8s_pz,
+     (convert_function_fp)convert_float_pcm8s_pz,
+     (convert_function_fp)convert_double_pcm8s_pz,
+     (convert_function_fp)convert_float_pcm16ule_pz,
+     (convert_function_fp)convert_double_pcm16ule_pz,
+     (convert_function_fp)convert_float_pcm16ube_pz,
+     (convert_function_fp)convert_double_pcm16ube_pz,
+     (convert_function_fp)convert_float_pcm16sle_pz,
+     (convert_function_fp)convert_double_pcm16sle_pz,
+     (convert_function_fp)convert_float_pcm16sbe_pz,
+     (convert_function_fp)convert_double_pcm16sbe_pz,
+     (convert_function_fp)convert_float_pcm24ule_pz,
+     (convert_function_fp)convert_double_pcm24ule_pz,
+     (convert_function_fp)convert_float_pcm24ube_pz,
+     (convert_function_fp)convert_double_pcm24ube_pz,
+     (convert_function_fp)convert_float_pcm24sle_pz,
+     (convert_function_fp)convert_double_pcm24sle_pz,
+     (convert_function_fp)convert_float_pcm24sbe_pz,
+     (convert_function_fp)convert_double_pcm24sbe_pz,
+     (convert_function_fp)convert_float_pcm32ule_pz,
+     (convert_function_fp)convert_double_pcm32ule_pz,
+     (convert_function_fp)convert_float_pcm32ube_pz,
+     (convert_function_fp)convert_double_pcm32ube_pz,
+     (convert_function_fp)convert_float_pcm32sle_pz,
+     (convert_function_fp)convert_double_pcm32sle_pz,
+     (convert_function_fp)convert_float_pcm32sbe_pz,
+     (convert_function_fp)convert_double_pcm32sbe_pz,
+     (convert_function_fp)convert_float_pcm24ulepm_pz,
+     (convert_function_fp)convert_double_pcm24ulepm_pz,
+     (convert_function_fp)convert_float_pcm24ubepm_pz,
+     (convert_function_fp)convert_double_pcm24ubepm_pz,
+     (convert_function_fp)convert_float_pcm24slepm_pz,
+     (convert_function_fp)convert_double_pcm24slepm_pz,
+     (convert_function_fp)convert_float_pcm24sbepm_pz,
+     (convert_function_fp)convert_double_pcm24sbepm_pz,
+     (convert_function_fp)convert_float_pcm24ulepl_pz,
+     (convert_function_fp)convert_double_pcm24ulepl_pz,
+     (convert_function_fp)convert_float_pcm24ubepl_pz,
+     (convert_function_fp)convert_double_pcm24ubepl_pz,
+     (convert_function_fp)convert_float_pcm24slepl_pz,
+     (convert_function_fp)convert_double_pcm24slepl_pz,
+     (convert_function_fp)convert_float_pcm24sbepl_pz,
+     (convert_function_fp)convert_double_pcm24sbepl_pz
 };
 
 
@@ -648,12 +649,12 @@ static const float dither_amp_scaled_double[4] = {
      0.007874015751697883, 3.051850948998556e-05, 1.192093035951025e-07, 4.656611765022771e-10
 };
 
-static void dither_convert_float(float *indata, char *outdata, int count,
-				 convert_function fn, int outdata_ssize)
+static int dither_convert_float(float *indata, char *outdata, int count,
+				convert_function_fp fn, int outdata_ssize)
 {
      float amp_factor;
      float databuf[4096];
-     int i,j;
+     int i,j,r=0;
      /* amp_factor = powf(2.0f,(float)(1-outdata_ssize*8)); */
      if (sample_convert_mode == CONVERT_MODE_BIASED)
 	  amp_factor = dither_amp_biased_float[outdata_ssize-1];
@@ -665,19 +666,20 @@ static void dither_convert_float(float *indata, char *outdata, int count,
 	  for (j=0; j<i; j++)
 	       databuf[j] += (((float)(rand()/2 - rand()/2))/
 			      ((float)RAND_MAX)) * amp_factor;
-	  fn(databuf,outdata,i);
+	  r += fn(databuf,outdata,i);
 	  indata += i;
 	  outdata += outdata_ssize * i;
 	  count -= i;
      }
+     return r;
 }
 
-static void dither_convert_double(double *indata, char *outdata, int count,
-				  convert_function fn, int outdata_ssize)
+static int dither_convert_double(double *indata, char *outdata, int count,
+				 convert_function_fp fn, int outdata_ssize)
 {
      double amp_factor;
      double databuf[4096];
-     int i,j;
+     int i,j,r=0;
      /* amp_factor = pow(2.0,(double)(1-outdata_ssize*8)); */
      if (sample_convert_mode == CONVERT_MODE_BIASED)
 	  amp_factor = dither_amp_biased_double[outdata_ssize-1];
@@ -689,11 +691,12 @@ static void dither_convert_double(double *indata, char *outdata, int count,
 	  for (j=0; j<i; j++)
 	       databuf[j] += (((double)(rand()/2 - rand()/2))/
 			      ((double)RAND_MAX)) * amp_factor;
-	  fn(databuf,outdata,i);
+	  r += fn(databuf,outdata,i);
 	  indata += i;
 	  outdata += outdata_ssize * i;
 	  count -= i;
      }
+     return r;
 }
 
 static int real_ssize(Dataformat *f)
@@ -738,9 +741,9 @@ sample_t apply_convert_factor(Dataformat *infmt, Dataformat *outfmt,
 
 void convert_array(void *indata, Dataformat *indata_format,
 		   void *outdata, Dataformat *outdata_format,
-		   guint count, int dither_mode)
+		   guint count, int dither_mode, off_t *clipcount)
 {     
-     int i;
+     int i,cc;
      char *c;
      if (dataformat_samples_equal(indata_format,outdata_format)) {
 	  memcpy(outdata,indata,count*indata_format->samplesize);
@@ -751,11 +754,11 @@ void convert_array(void *indata, Dataformat *indata_format,
 		    dither_mode = DITHER_NONE;
 	       c = g_malloc(count * sizeof(sample_t));	       
 	       convert_array(indata,indata_format,c,&dataformat_sample_t,
-			     count,dither_mode);
+			     count,dither_mode,clipcount);
 	       apply_convert_factor(indata_format,outdata_format,
 				    (sample_t *)c, count);
 	       convert_array(c,&dataformat_sample_t,outdata,outdata_format,
-			     count,dither_mode);
+			     count,dither_mode,clipcount);
 	       g_free(c);
 	  } else {
 	       /* PCM -> FP conversion */
@@ -790,19 +793,20 @@ void convert_array(void *indata, Dataformat *indata_format,
 	  g_assert(dither_mode != DITHER_UNSPEC);
 	  if (dither_mode != DITHER_NONE) {
 	       if (indata_format->samplesize == sizeof(float))
-		    dither_convert_float(indata,outdata,count,
-					 fp_pcm_functions[i],
-					 real_ssize(outdata_format));
+		    cc = dither_convert_float(indata,outdata,count,
+					      fp_pcm_functions[i],
+					      real_ssize(outdata_format));
 	       else
-		    dither_convert_double(indata,outdata,count,
-					  fp_pcm_functions[i],
-					  real_ssize(outdata_format));
+		    cc = dither_convert_double(indata,outdata,count,
+					       fp_pcm_functions[i],
+					       real_ssize(outdata_format));
 	  } else
-	       fp_pcm_functions[i](indata,outdata,count);
+	       cc = fp_pcm_functions[i](indata,outdata,count);
 	  if (XOR(indata_format->bigendian, dataformat_sample_t.bigendian)) {
 	       byteswap(indata,indata_format->samplesize,
 			count*indata_format->samplesize);
 	  }
+	  if (clipcount != NULL) *clipcount += cc;
      } else {
 	  /* FP -> FP conversion */
 	  if (indata_format->samplesize == outdata_format->samplesize) {
@@ -925,11 +929,11 @@ void conversion_selftest(void)
 		    fmt[0].channels = 1;
 		    fmt[0].packing = 0;
 		    convert_array(sbuf,&dataformat_sample_t,pcm_buf2,fmt,
-				  SBUFLEN,dm);
+				  SBUFLEN,dm,NULL);
 		    convert_array(pcm_buf2,fmt,sbuf2,&dataformat_sample_t,
-				  SBUFLEN,dm);
+				  SBUFLEN,dm,NULL);
 		    convert_array(sbuf2,&dataformat_sample_t,pcm_buf3,fmt,
-				  SBUFLEN,dm);
+				  SBUFLEN,dm,NULL);
 
 		    if ((sbuf2[0] != -1.0) ||
 			(sbuf2[SBUFLEN-1] != 1.0) ||
@@ -961,7 +965,7 @@ void conversion_selftest(void)
 		    fmt[0].bigendian = endians[i];
 		    fmt[0].packing = 0;
 		    convert_array(sbuf,&dataformat_sample_t,pcm_buf,fmt,
-				  ARRAY_LENGTH(sbuf),dm);
+				  ARRAY_LENGTH(sbuf),dm,NULL);
 		    for (j=0; j<ARRAY_LENGTH(samplesizes); j++) {
 			 fmt[1].type = types[j];
 			 fmt[1].samplesize = samplesizes[j];
@@ -980,9 +984,9 @@ void conversion_selftest(void)
 			      expect_fail = FALSE;
 			 if (expect_fail) continue;
 			 convert_array(pcm_buf,fmt,pcm_buf2,fmt+1,ARRAY_LENGTH(sbuf),
-				       dm);
+				       dm,NULL);
 			 convert_array(pcm_buf2,fmt+1,pcm_buf3,fmt,ARRAY_LENGTH(sbuf),
-				       dm);
+				       dm,NULL);
 			 if (memcmp(pcm_buf,pcm_buf3,
 				    ARRAY_LENGTH(sbuf)*fmt[0].samplesize)) {
 			      if (expect_fail) fputs(_("(expected) "),stdout);
@@ -1055,7 +1059,7 @@ void conversion_performance_test(void)
 	  fmt[0].sign = signs[i];
 	  fmt[0].bigendian = endians[i];
 	  fmt[0].packing = 0;
-	  convert_array(sbuf,&dataformat_sample_t,buf,fmt,SBUFLEN,DITHER_NONE);
+	  convert_array(sbuf,&dataformat_sample_t,buf,fmt,SBUFLEN,DITHER_NONE,NULL);
 	  for (j=0; j<FORMATS; j++) {
 	       fmt[1].type = types[j];
 	       fmt[1].samplesize = samplesizes[j];
@@ -1064,9 +1068,9 @@ void conversion_performance_test(void)
 	       fmt[1].packing = 0;
 	       fputs(".",stdout);
 	       fflush(stdout);
-	       convert_array(buf,fmt,buf2,fmt+1,SBUFLEN,DITHER_NONE);
+	       convert_array(buf,fmt,buf2,fmt+1,SBUFLEN,DITHER_NONE,NULL);
 	       g_get_current_time(&start_time);
-	       convert_array(buf,fmt,buf2,fmt+1,SBUFLEN,DITHER_NONE);
+	       convert_array(buf,fmt,buf2,fmt+1,SBUFLEN,DITHER_NONE,NULL);
 	       g_get_current_time(&end_time);
 	       timeval_subtract(&test_times[i*FORMATS+j],&end_time,
 				&start_time);

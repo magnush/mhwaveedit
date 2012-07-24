@@ -119,7 +119,7 @@ sample_t minimum_float_value(Dataformat *x);
 
 void convert_array(void *indata, Dataformat *indata_format,
 		   void *outdata, Dataformat *outdata_format,
-		   guint count, int dither_mode);
+		   guint count, int dither_mode, off_t *clipcount);
 
 sample_t apply_convert_factor(Dataformat *infmt, Dataformat *outfmt,
 			      sample_t *buffer, guint count);
