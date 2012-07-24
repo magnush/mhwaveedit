@@ -108,7 +108,7 @@ int do_user_message(char *msg, int type, gboolean block)
      case UM_OK:
 	  b=gtk_button_new_with_label(_("OK"));
 	  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(wnd)->action_area),b,FALSE,FALSE,0);
-	  if (block) gtk_signal_connect(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(modal_callback),(gpointer)MR_OK);
+	  if (block) gtk_signal_connect(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(modal_callback),(gpointer)&mr_ok);
 	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
 	  gtk_widget_show(b);
 	  modal_result=MR_OK;
@@ -346,7 +346,7 @@ gchar *user_input(gchar *label, gchar *title, gchar *defvalue,
      gtk_widget_grab_default(d);
      d = gtk_button_new_with_label(_("Cancel"));
      gtk_signal_connect(GTK_OBJECT(d),"clicked",GTK_SIGNAL_FUNC(modal_callback),
-			(gpointer)MR_CANCEL);
+			(gpointer)&mr_cancel);
      gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
 			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
 			       GTK_OBJECT(a));
@@ -441,7 +441,7 @@ gint user_choice(gchar **choices, guint def, gchar *windowtitle,
      
      d = gtk_button_new_with_label(_("OK"));
      gtk_signal_connect(GTK_OBJECT(d),"clicked",GTK_SIGNAL_FUNC(modal_callback),
-			(gpointer)MR_OK);
+			(gpointer)&mr_ok);
      gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
 			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
 			       GTK_OBJECT(a));
@@ -451,7 +451,7 @@ gint user_choice(gchar **choices, guint def, gchar *windowtitle,
 	  d = gtk_button_new_with_label(_("Cancel"));
 	  gtk_signal_connect(GTK_OBJECT(d),"clicked",
 			     GTK_SIGNAL_FUNC(modal_callback),
-			     (gpointer)MR_CANCEL);
+			     (gpointer)&mr_cancel);
 	  gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
 				    GTK_SIGNAL_FUNC(gtk_widget_destroy),
 				    GTK_OBJECT(a));
