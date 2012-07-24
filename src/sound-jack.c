@@ -582,7 +582,7 @@ static guint mhjack_output_play(gchar *buffer, guint bufsize)
      
      /* Convert data to floats */
      convert_array(buffer,&(mhjack.current_format),fbuf,&dataformat_single,
-		   frames*mhjack.current_format.channels,DITHER_NONE);
+		   frames*mhjack.current_format.channels,DITHER_NONE,NULL);
 
      /* De-interleave and write data to the different ring buffers. */
 
@@ -690,7 +690,7 @@ static void mhjack_input_store(Ringbuf *buffer)
      /* Convert data (in case sample_t == double, otherwise, convert_array
       * just does a memcpy). Dithering never matters in this conversion. */
      convert_array(fbuf2,&dataformat_single,sbuf,&(mhjack.current_format),
-		   frames*mhjack.current_format.channels,DITHER_NONE);
+		   frames*mhjack.current_format.channels,DITHER_NONE,NULL);
      /* Add to ring buffer */
      s = ringbuf_enqueue(buffer,sbuf,frames*mhjack.current_format.samplebytes);
      g_assert(s == frames*mhjack.current_format.samplebytes);
