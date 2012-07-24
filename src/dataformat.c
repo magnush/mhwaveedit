@@ -764,7 +764,7 @@ void convert_array(void *indata, Dataformat *indata_format,
 		    (indata_format->sign?4:0) +
 		    (indata_format->bigendian?2:0) +
 		    (outdata_format->samplesize/sizeof(double));
-	       if (indata_format->samplesize == 4) i += 8*outdata_format->packing;
+	       if (indata_format->samplesize == 4) i += 8*indata_format->packing;
 	       /* printf("convert_array: i=%d\n",i); */
 	       g_assert(i<ARRAY_LENGTH(pcm_fp_functions));
 	       pcm_fp_functions[i](indata,outdata,count);
@@ -808,32 +808,34 @@ void convert_array(void *indata, Dataformat *indata_format,
 	  if (indata_format->samplesize == outdata_format->samplesize) {
 	       g_assert(XOR(indata_format->bigendian, outdata_format->bigendian));
 	       memcpy(outdata,indata,count*indata_format->samplesize);
-	       byteswap(outdata,count,count*indata_format->samplesize);
+	       byteswap(outdata,outdata_format->samplesize,count*outdata_format->samplesize);
 	       return;
 	  }
 
 	  if (XOR(indata_format->bigendian, dataformat_sample_t.bigendian))
 	       byteswap(indata,indata_format->samplesize,
-			count*indata_format->samplebytes);
+			count*indata_format->samplesize);
 	  if (indata_format->samplesize == sizeof(float)) {
 	       g_assert(outdata_format->samplesize == sizeof(double));
 	       float *f = indata;
 	       double *d = outdata;
-	       for (; count>0; count--,f++,d++)
+	       int c = count;
+	       for (; c>0; c--,f++,d++)
 		    *d = (double)(*f);
 	  } else {
 	       g_assert(outdata_format->samplesize == sizeof(float));
 	       double *d = indata;
 	       float *f = outdata;
-	       for (; count>0; count--,f++,d++)
+	       int c = count;
+	       for (; c>0; c--,f++,d++)
 		    *f = (float)(*d);
 	  }
 	  if (XOR(indata_format->bigendian, dataformat_sample_t.bigendian))
 	       byteswap(indata,indata_format->samplesize,
-			count*indata_format->samplebytes);
+			count*indata_format->samplesize);
 	  if (XOR(outdata_format->bigendian, dataformat_sample_t.bigendian))
 	       byteswap(outdata,outdata_format->samplesize,
-			count*outdata_format->samplebytes);
+			count*outdata_format->samplesize);
      }
 }
 

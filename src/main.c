@@ -523,7 +523,7 @@ void byteswap(void *buffer, int element_size, int buffer_size)
      int i,j;
      char *c,*d,*bufend=NULL;
      char tempbuf[BYTESWAP_BSIZE];
-     g_assert(element_size < 7);
+     g_assert(element_size < 7 || element_size==8);
      if (element_size == 1) return;
      while (buffer_size != 0) {
 	  i = BYTESWAP_BSIZE;

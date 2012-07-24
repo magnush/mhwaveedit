@@ -771,7 +771,7 @@ static void C_FLOAT_PCM24SNEPL(FTYPE *in, guint32 *out, int count)
 
 static void C_FLOAT_PCM24SOEPL(FTYPE *in, guint32 *out, int count)
 {
-     C_FLOAT_PCM24SOEPL(in,out,count);
+     C_FLOAT_PCM24SNEPL(in,out,count);
      byteswap(out,4,count*4);
 }
 
