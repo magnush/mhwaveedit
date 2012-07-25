@@ -21,12 +21,6 @@
 
 /* JACK sound driver */
 
-/* Currently, this driver has some limitations: 
- *   - Output is always in the (-1.0,1.0) range.
- *   - Input is expected to be normalized so absolute values > 1.0 will be
- *     clipped.
- */
-
 #include <jack/jack.h>
 #include <jack/ringbuffer.h>
 
