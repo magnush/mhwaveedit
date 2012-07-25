@@ -1,3 +1,12 @@
+New features in version 1.4.22:
+
+ * Improvements and fixes in the sample conversion and dithering code
+ * Display zoom and speed settings next to status bar
+ * Bug fix for value truncation in position cursor dialog
+ * For ogg files, choose between decompression to temporary file and
+   on-the-fly access
+ * Various bug fixes
+
 New features in version 1.4.21:
 
  * A few new keyboard shortcuts added for navigation
