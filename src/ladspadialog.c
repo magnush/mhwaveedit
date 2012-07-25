@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 2005, Magnus Hjorth
+ * Copyright (C) 2004 2005 2007 2008 2011, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *

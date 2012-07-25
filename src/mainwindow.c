@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2002 2003 2004 2005 2006 2007, Magnus Hjorth
+ * Copyright (C) 2002 2003 2004 2005 2006 2007 2008 2009 2010, Magnus Hjorth
+ * Copyright (C) 2011 2012, Magnus Hjorth
  *
  * This file is part of mhWaveEdit.
  *
@@ -1461,7 +1462,7 @@ gtk_window_set_modal(GTK_WINDOW(a),TRUE);
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
      gtk_widget_show(c);
      c = gtk_label_new(_("Created by Magnus Hjorth (magnus.hjorth@home.se)\n"
-	  "Copyright 2002-2007, Magnus Hjorth"));
+	  "Copyright 2002-2012, Magnus Hjorth"));
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
      gtk_widget_show(c);
      c = gtk_hseparator_new();
