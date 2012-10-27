@@ -110,6 +110,7 @@ static void build_preset_list(void)
 	       rf->fmt.samplerate = ((guint)strtod(s4,NULL));
 	       rf->fmt.sign = FALSE;
 	       rf->fmt.bigendian = IS_BIGENDIAN;
+	       rf->fmt.packing = 0;
 	       for (; *s5 != 0; s5++) {
 		    if (*s5 == 'B') rf->fmt.bigendian = !IS_BIGENDIAN; 
 		    else if (*s5 == 'S') rf->fmt.sign = TRUE;
