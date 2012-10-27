@@ -44,7 +44,7 @@ echo "Compiling..."
 sh cvscompile
 make distclean
 rm -rf autom4te.cache po/*~ docgen/*~
-chmod 755 mkinstalldirs po/mkinstalldirs missing
+chmod 755 mkinstalldirs po/mkinstalldirs missing install-sh
 
 cd ..
 echo "Packaging version $VERSION ..."
