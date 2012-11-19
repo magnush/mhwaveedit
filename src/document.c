@@ -326,11 +326,13 @@ void document_play(Document *d, off_t start, off_t end, gboolean loop,
      } else {
 
 	  /* General case */
+	  /* Stop the player if running, this should lead to cursor_cb
+	   * being called and clearing playing_document */
+	  player_stop();
+	  g_assert(playing_document == NULL);
 	  /* playing_document must be setup before calling player_play,
 	   * since for very short files the cursor_cb might be called
 	   * immediately with is_running==FALSE */
-	  if (playing_document != NULL)
-	       gtk_object_unref(GTK_OBJECT(playing_document));
 	  playing_document = d;
 	  gtk_object_ref(GTK_OBJECT(d));
 	  if (player_play(d->chunk,start,end,loop,cursor_cb)) {
