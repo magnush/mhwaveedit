@@ -412,8 +412,13 @@ dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([sys/time.h time.h sys/ioctl.h sys/types.h unistd.h fcntl.h sched.h libintl.h locale.h])
 
+dnl Ladspa
 HAVE_LADSPA=yes
-AC_CHECK_HEADER(ladspa.h,,HAVE_LADSPA=no)
+HAVE_LADSPA_GLOBAL=yes
+AC_CHECK_HEADER(ladspa.h,,HAVE_LADSPA_GLOBAL=no)
+AC_ARG_ENABLE(ladspa,
+  [  --disable-ladspa        Don't include any Ladspa support],
+  [if test "x$enableval" = "xno"; then HAVE_LADSPA=no; fi])
 if test "x$HAVE_LADSPA" = "xyes"; then
 	AC_CHECK_HEADER(dlfcn.h,,HAVE_LADSPA=no)
 fi
@@ -422,6 +427,9 @@ if test "x$HAVE_LADSPA" = "xyes"; then
 fi
 if test "x$HAVE_LADSPA" = "xyes"; then
 	AC_DEFINE(HAVE_LADSPA,[],[Enable LADSPA support])
+fi
+if test "x$HAVE_LADSPA_GLOBAL" = "xyes"; then
+        AC_DEFINE(HAVE_SYS_LADSPA_H,[],[Use system LADSPA header])
 fi
 
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -506,6 +514,12 @@ echo    "Other settings:"
 
 echo    "  LADSPA Support:         $HAVE_LADSPA"
 if test "x$HAVE_LADSPA" = "xyes"; then
+echo -n "    ladspa.h header file: "
+if test "x$HAVE_LADSPA_GLOBAL" = "xyes"; then
+echo "system"
+else
+echo "local"
+fi
 echo    "    Default plugin path:  $DEFAULT_LADSPA_PATH"
 fi
 

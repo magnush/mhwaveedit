@@ -22,7 +22,11 @@
 #ifndef LADSPACORE_H_INCLUDED
 #define LADSPACORE_H_INCLUDED
 
+#if defined(HAVE_SYS_LADSPA_H)
 #include <ladspa.h>
+#else
+#include "../ext/ladspa.h"
+#endif
 #include "chunk.h"
 
 typedef struct {
