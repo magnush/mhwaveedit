@@ -83,7 +83,7 @@ static gchar *samplesize_switch_v13[] = { NULL,"-1","-2","-3","-4" };
 
 void sox_dialog_format_string(gchar *buf, guint bufsize, Dataformat *fmt)
 {
-     g_assert(fmt->type == DATAFORMAT_PCM && fmt->samplesize != 3 && fmt->packing != 0);
+     g_assert(fmt->type == DATAFORMAT_PCM && fmt->samplesize != 3 && fmt->packing == 0);
 
      if (v14_mode)
 	  g_snprintf(buf,bufsize,"-t raw -r %d -e %s -b %d -c %d",fmt->samplerate,
