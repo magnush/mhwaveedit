@@ -391,15 +391,16 @@ static gboolean echo_func(GtkWidget *widget, GdkEvent *event, gpointer user_data
      return *((int *)user_data) == MR_OK;
 }
 
-static void user_choice_toggle(GtkToggleButton *button, gpointer user_data)
+static void user_choice_select_child(GtkList *list, GtkWidget *widget,
+				     gpointer user_data)
 {
-     user_choice_choice = user_data;
+     user_choice_choice = gtk_object_get_data(GTK_OBJECT(widget),"choice");
 }
 
 gint user_choice(gchar **choices, guint def, gchar *windowtitle, 
 		 gchar *windowtext, gboolean allow_cancel)
 {
-     GtkWidget *a,*b,*c,*d;
+     GtkWidget *a,*b,*c,*d,*list=NULL,*w;
      guint i;
      a = gtk_window_new(GTK_WINDOW_DIALOG);
      gtk_window_set_modal(GTK_WINDOW(a),TRUE);
@@ -418,26 +419,32 @@ gint user_choice(gchar **choices, guint def, gchar *windowtitle,
      if (windowtext) {
 	  c = gtk_label_new(windowtext);
 	  gtk_label_set_line_wrap(GTK_LABEL(c),TRUE);
-	  gtk_container_add(GTK_CONTAINER(b),c);
+	  gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
 	  c = gtk_hseparator_new();
-	  gtk_container_add(GTK_CONTAINER(b),c);
+	  gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
      }
-     for (i=0,c=NULL; choices[i]; i++) {
-	  if (c)
-	       c = gtk_radio_button_new_with_label_from_widget(
-		    GTK_RADIO_BUTTON(c),choices[i]);
-	  else c = gtk_radio_button_new_with_label(NULL,choices[i]);
-	  if (i == def)
-	       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(c),TRUE);
-	  gtk_signal_connect(GTK_OBJECT(c),"toggled",
-			     GTK_SIGNAL_FUNC(user_choice_toggle),choices+i);
-	  gtk_container_add(GTK_CONTAINER(b),c);
+     c = gtk_scrolled_window_new(NULL,NULL);
+     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(c),
+				    GTK_POLICY_NEVER,
+				    GTK_POLICY_AUTOMATIC);
+     gtk_widget_set_usize(GTK_WIDGET(c),-1,300);
+     gtk_box_pack_start(GTK_BOX(b),c,TRUE,TRUE,0);
+     d = list = gtk_list_new();
+     gtk_list_set_selection_mode(GTK_LIST(list),GTK_SELECTION_SINGLE);
+     for (i=0; choices[i]!=NULL; i++) {
+	  w = gtk_list_item_new_with_label(choices[i]);
+	  gtk_object_set_data(GTK_OBJECT(w),"choice",choices+i);
+	  gtk_container_add(GTK_CONTAINER(list),w);
+	  if (i == def) gtk_list_select_child(GTK_LIST(list),w);
      }
+     gtk_signal_connect(GTK_OBJECT(list),"select_child",
+			(GtkSignalFunc)user_choice_select_child,NULL);
+     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(c),d);
      c = gtk_hseparator_new();
-     gtk_container_add(GTK_CONTAINER(b),c);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
      
      c = gtk_hbutton_box_new();
-     gtk_container_add(GTK_CONTAINER(b),c);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
      
      d = gtk_button_new_with_label(_("OK"));
      gtk_signal_connect(GTK_OBJECT(d),"clicked",GTK_SIGNAL_FUNC(modal_callback),
