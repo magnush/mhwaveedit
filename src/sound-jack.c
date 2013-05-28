@@ -544,6 +544,7 @@ static gboolean mhjack_output_suggest_format(Dataformat *format,
      result->bigendian = ieee_be_compatible;
      result->samplebytes = result->samplesize * result->channels;
      result->samplerate = jack_get_sample_rate(mhjack.myself);
+     result->packing = 0;
      return TRUE;
 }
 
@@ -713,9 +714,11 @@ static GList *mhjack_input_supported_formats(gboolean *complete)
 	  fmt = g_malloc(sizeof(*fmt));
 	  fmt->type = DATAFORMAT_FLOAT;
 	  fmt->samplesize = sizeof(float);
+	  fmt->packing = 0;
 	  fmt->channels = i;
 	  fmt->samplebytes = fmt->samplesize * fmt->channels;
 	  fmt->samplerate = r;
+	  fmt->bigendian = ieee_be_compatible;
 	  l = g_list_append(l, fmt);
      }
      *complete = TRUE;
