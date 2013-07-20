@@ -939,7 +939,7 @@ static void pulse_input_store(Ringbuf *buf)
      int i;
      size_t b;
 
-     if (pulse_data.overflow_report_count > pulse_data.overflow_count) {
+     if (pulse_data.overflow_report_count < pulse_data.overflow_count) {
 	  console_message("Overrun occured!");
 	  pulse_data.overflow_report_count = pulse_data.overflow_count;
      }
