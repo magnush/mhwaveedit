@@ -387,11 +387,11 @@ static struct {
      int ctx_errno;
      pa_stream *stream;
      pa_stream_state_t stream_state;
+     pa_sample_spec stream_sspec;
      gboolean record_flag;
      const char *record_data;
      size_t record_bytes,record_pos;
      gint overflow_count,overflow_report_count;
-     gboolean clear_flag;
      gboolean flush_state; /* 0 = no flush requested yet, 1 = waiting, 2 = done */
      gboolean recursing_mainloop;
      gpointer ready_constsource;
@@ -583,13 +583,34 @@ static void pulse_overflow_func(pa_stream *p, void *userdata)
      pulse_data.overflow_count ++;
 }
 
+static int pulse_wait_connect(int silent)
+{
+     gchar *c;
+
+     pulse_data.recursing_mainloop = TRUE;
+     while (pulse_data.stream_state != PA_STREAM_READY &&
+	    pulse_data.stream_state != PA_STREAM_FAILED &&
+	    pulse_data.stream_state != PA_STREAM_TERMINATED)
+	  pulse_api_block();
+     pulse_data.recursing_mainloop = FALSE;
+
+     if (!silent && pulse_data.stream_state != PA_STREAM_READY) {
+	  c = g_strdup_printf(_("Connection to PulseAudio server failed: %s"),
+			      pa_strerror(pa_context_errno(pulse_data.ctx)));
+	  user_error(c);
+	  g_free(c);
+	  return 1;
+     }
+
+     return 0;
+}
+
 static gint pulse_select_format_main(Dataformat *format, gboolean record,
 				     gboolean silent, 
 				     pa_stream_request_cb_t ready_func, 
 				     gpointer rf_userdata)
 {
      pa_sample_spec ss;
-     gchar *c;
      int i;
 
      /* printf("pulse_output_select_format, silent==%d\n",silent); */
@@ -603,6 +624,7 @@ static gint pulse_select_format_main(Dataformat *format, gboolean record,
      pulse_data.stream_state = PA_STREAM_UNCONNECTED;
      pulse_data.stream = pa_stream_new(pulse_data.ctx, "p", &ss, NULL);
      g_assert(pulse_data.stream != NULL);
+     memcpy(&pulse_data.stream_sspec, &ss, sizeof(pa_sample_spec));
      pa_stream_set_state_callback(pulse_data.stream, pulse_stream_state_cb,
 				  NULL);
      
@@ -623,20 +645,7 @@ static gint pulse_select_format_main(Dataformat *format, gboolean record,
      
      g_assert(i == 0 || pulse_data.stream == NULL);
 
-     pulse_data.recursing_mainloop = TRUE;
-     while (pulse_data.stream_state != PA_STREAM_READY &&
-	    pulse_data.stream_state != PA_STREAM_FAILED &&
-	    pulse_data.stream_state != PA_STREAM_TERMINATED)
-	  pulse_api_block();
-     pulse_data.recursing_mainloop = FALSE;
-
-     if (!silent && pulse_data.stream_state != PA_STREAM_READY) {
-	  c = g_strdup_printf(_("Connection to PulseAudio server failed: %s"),
-			      pa_strerror(pa_context_errno(pulse_data.ctx)));
-	  user_error(c);
-	  g_free(c);
-	  return 1;
-     }
+     if (pulse_wait_connect(silent)) return 1;
 
      if (pulse_data.stream_state != PA_STREAM_READY)
 	  return -1;
@@ -741,10 +750,8 @@ static guint pulse_output_play(gchar *buffer, guint bufsize)
      s = pa_stream_writable_size(pulse_data.stream);
      if (bufsize > s) bufsize = s;
      i = pa_stream_write(pulse_data.stream, buffer, bufsize, NULL, 0, 
-			 pulse_data.clear_flag?
-			 PA_SEEK_ABSOLUTE:PA_SEEK_RELATIVE);
+			 PA_SEEK_RELATIVE);
      g_assert(i == 0);
-     pulse_data.clear_flag = FALSE;
      if (pulse_data.flush_state == 2)
 	  pulse_data.flush_state = 0;
      if (bufsize < s) 
@@ -754,10 +761,28 @@ static guint pulse_output_play(gchar *buffer, guint bufsize)
 
 static void pulse_output_clear_buffers(void)
 {
-     /* pulse_data.clear_flag = TRUE; */
      pa_operation *p;
-     p = pa_stream_flush(pulse_data.stream, NULL, NULL);
-     pa_operation_unref(p);
+     int i;
+     if (pulse_data.stream == NULL) return;
+     if (inifile_get_gboolean("pulseReconnect",TRUE)) {
+	  pa_stream_set_write_callback(pulse_data.stream, NULL, NULL);
+	  pa_stream_set_state_callback(pulse_data.stream, NULL, NULL);
+	  pa_stream_disconnect(pulse_data.stream);
+	  pa_stream_unref(pulse_data.stream);
+	  pulse_data.stream_state = PA_STREAM_UNCONNECTED;
+	  pulse_data.stream = pa_stream_new(pulse_data.ctx, "p", &pulse_data.stream_sspec, NULL);
+	  pa_stream_set_state_callback(pulse_data.stream, pulse_stream_state_cb, NULL);
+	  pa_stream_set_write_callback(pulse_data.stream,pulse_ready_func, NULL);
+	  i = pa_stream_connect_playback(pulse_data.stream,NULL,NULL,0,NULL,
+					 NULL);
+	  g_assert(i==0 && pulse_data.stream!=NULL);
+	  i = pulse_wait_connect(0);
+	  g_assert(pulse_data.stream_state == PA_STREAM_READY ||
+		   (i != 0 && pulse_data.stream==NULL) );
+     } else {
+	  p = pa_stream_flush(pulse_data.stream, NULL, NULL);
+	  pa_operation_unref(p);
+     }
 }
 
 static gboolean pulse_output_stop(gboolean must_flush)
