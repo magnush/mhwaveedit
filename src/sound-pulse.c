@@ -1029,18 +1029,21 @@ static void pulse_input_store(Ringbuf *buf)
 
 static void pulse_input_stop(void)
 {
+     pulse_data.stopping = TRUE;
      if (pulse_data.ready_constsource != NULL)
 	  mainloop_constant_source_enable(pulse_data.ready_constsource,FALSE);
 
-     if (pulse_data.stream == NULL) return;
+     if (pulse_data.stream != NULL) {
 
-     g_assert(pulse_data.record_flag);
+	  g_assert(pulse_data.record_flag);
 
-     pa_stream_disconnect(pulse_data.stream);
-     pulse_data.recursing_mainloop = TRUE;
-     while (pulse_data.stream != NULL)
-	  pulse_api_block();
-     pulse_data.recursing_mainloop = FALSE;    
+	  pa_stream_disconnect(pulse_data.stream);
+	  pulse_data.recursing_mainloop = TRUE;
+	  while (pulse_data.stream != NULL)
+	       pulse_api_block();
+	  pulse_data.recursing_mainloop = FALSE;
+     }
+     pulse_data.stopping = FALSE;
 }
 
 static int pulse_input_overrun_count(void)
