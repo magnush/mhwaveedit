@@ -1048,3 +1048,69 @@ static int pulse_input_overrun_count(void)
      return pulse_data.overflow_count;
 }
 
+
+
+/* --------------------------------
+ *  Preferences UI
+ */
+
+struct pulse_prefs_ui {
+     GtkWidget *wnd;
+     GtkToggleButton *reconn;
+     Intbox *pblat;
+};
+
+static void pulse_prefs_ok(GtkButton *button, gpointer user_data)
+{
+     struct pulse_prefs_ui *up = (struct pulse_prefs_ui *)user_data;
+     if (intbox_check_limit(up->pblat,0,10000,_("playback latency")))
+	  return;
+     inifile_set_guint32("pulseLatency",up->pblat->val);
+     inifile_set_gboolean("pulseReconnect",
+			  gtk_toggle_button_get_active(up->reconn));
+     gtk_widget_destroy(up->wnd);
+}
+
+static void pulse_preferences(void)
+{
+     GtkWidget *a,*b,*c,*d;
+     struct pulse_prefs_ui *up;
+     up = g_malloc(sizeof(*up));
+     a = gtk_window_new(GTK_WINDOW_DIALOG);
+     up->wnd = a;
+     gtk_window_set_title(GTK_WINDOW(a),_("PulseAudio Preferences"));
+     gtk_window_set_modal(GTK_WINDOW(a),TRUE);
+     gtk_window_set_position(GTK_WINDOW(a),GTK_WIN_POS_MOUSE);
+     gtk_container_set_border_width(GTK_CONTAINER(a),5);
+     gtk_signal_connect_object(GTK_OBJECT(a),"destroy",
+			       GTK_SIGNAL_FUNC(g_free),(GtkObject *)up);
+     b = gtk_vbox_new(FALSE,5);
+     gtk_container_add(GTK_CONTAINER(a),b);
+     c = gtk_hbox_new(FALSE,3);
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
+     d = gtk_label_new(_("Playback latency: "));
+     gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
+     d = intbox_new(inifile_get_guint32("pulseLatency",0));
+     up->pblat = INTBOX(d);
+     gtk_box_pack_start(GTK_BOX(c),d,TRUE,TRUE,0);
+     d = gtk_label_new(_("ms (0 for maximum)"));
+     gtk_box_pack_start(GTK_BOX(c),d,FALSE,FALSE,0);
+     c = gtk_check_button_new_with_label(_("Reconnect when moving playback"));
+     up->reconn = GTK_TOGGLE_BUTTON(c);
+     gtk_toggle_button_set_active(up->reconn,inifile_get_gboolean("pulseReconnect",TRUE));
+     gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
+     c = gtk_hseparator_new();
+     gtk_box_pack_end(GTK_BOX(b),c,FALSE,FALSE,0);
+     c = gtk_hbutton_box_new();
+     gtk_box_pack_end(GTK_BOX(b),c,FALSE,FALSE,0);
+     d = gtk_button_new_with_label(_("OK"));
+     gtk_signal_connect(GTK_OBJECT(d),"clicked",GTK_SIGNAL_FUNC(pulse_prefs_ok),
+			up);
+     gtk_container_add(GTK_CONTAINER(c),d);
+     d = gtk_button_new_with_label(_("Cancel"));
+     gtk_signal_connect_object(GTK_OBJECT(d),"clicked",
+			       GTK_SIGNAL_FUNC(gtk_widget_destroy),
+			       GTK_OBJECT(a));
+     gtk_container_add(GTK_CONTAINER(c),d);
+     gtk_widget_show_all(a);
+}

@@ -195,7 +195,7 @@ static struct sound_driver drivers[] = {
 
 #ifdef HAVE_PULSEAUDIO
 
-     { "PulseAudio", "pulse", NULL, pulse_init, pulse_quit, 
+     { "PulseAudio", "pulse", pulse_preferences, pulse_init, pulse_quit,
        pulse_output_select_format, pulse_output_want_data, pulse_output_play,
        pulse_output_stop, pulse_output_clear_buffers, NULL, 
        pulse_needs_polling, 
