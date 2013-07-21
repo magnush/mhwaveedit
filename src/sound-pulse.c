@@ -388,6 +388,8 @@ static struct {
      pa_stream *stream;
      pa_stream_state_t stream_state;
      pa_sample_spec stream_sspec;
+     pa_buffer_attr stream_attr;
+     pa_stream_flags_t stream_flags;
      gboolean record_flag;
      const char *record_data;
      size_t record_bytes,record_pos;
@@ -612,6 +614,7 @@ static gint pulse_select_format_main(Dataformat *format, gboolean record,
 {
      pa_sample_spec ss;
      int i;
+     guint32 u;
 
      /* printf("pulse_output_select_format, silent==%d\n",silent); */
      if (format_to_pulse(format,&ss)) return -1;
@@ -637,10 +640,30 @@ static gint pulse_select_format_main(Dataformat *format, gboolean record,
 	  pa_stream_set_write_callback(pulse_data.stream,ready_func,
 				       rf_userdata);
 
+     memset(&pulse_data.stream_attr, 0xFF, sizeof(pulse_data.stream_attr));
+     pulse_data.stream_flags = 0;
+
+     if (record) {
+	  pulse_data.stream_flags |= PA_STREAM_ADJUST_LATENCY;
+	  pulse_data.stream_attr.fragsize = (format->samplerate *
+					     format->samplebytes) / 10;
+     } else {
+	  u = inifile_get_guint32("pulseLatency", 0);
+	  if (u != 0) {
+	       pulse_data.stream_flags |= PA_STREAM_ADJUST_LATENCY;
+	       pulse_data.stream_attr.tlength =
+		    (u * format->samplerate * format->samplebytes) / 1000;
+	  }
+     }
+
      if (record)
-	  i = pa_stream_connect_record(pulse_data.stream,NULL,NULL,0);
+	  i = pa_stream_connect_record(pulse_data.stream,NULL,
+				       &pulse_data.stream_attr,
+				       pulse_data.stream_flags);
      else
-	  i = pa_stream_connect_playback(pulse_data.stream,NULL,NULL,0,NULL,
+	  i = pa_stream_connect_playback(pulse_data.stream,NULL,
+					 &pulse_data.stream_attr,
+					 pulse_data.stream_flags,NULL,
 					 NULL);     
      
      g_assert(i == 0 || pulse_data.stream == NULL);
@@ -773,7 +796,9 @@ static void pulse_output_clear_buffers(void)
 	  pulse_data.stream = pa_stream_new(pulse_data.ctx, "p", &pulse_data.stream_sspec, NULL);
 	  pa_stream_set_state_callback(pulse_data.stream, pulse_stream_state_cb, NULL);
 	  pa_stream_set_write_callback(pulse_data.stream,pulse_ready_func, NULL);
-	  i = pa_stream_connect_playback(pulse_data.stream,NULL,NULL,0,NULL,
+	  i = pa_stream_connect_playback(pulse_data.stream,NULL,
+					 &pulse_data.stream_attr,
+					 pulse_data.stream_flags,NULL,
 					 NULL);
 	  g_assert(i==0 && pulse_data.stream!=NULL);
 	  i = pulse_wait_connect(0);
