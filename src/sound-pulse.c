@@ -1048,7 +1048,10 @@ static void pulse_input_stop(void)
 
 static int pulse_input_overrun_count(void)
 {
-     return pulse_data.overflow_count;
+     /* Pulse does not report internal overruns in the source,
+      * therefore just using the overflow_count could give a false
+      * impression */
+     return -1;
 }
 
 
