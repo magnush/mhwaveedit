@@ -37,12 +37,16 @@ static struct {
      guint maxoutports, maxinports;
      gchar *inportnames[8],*outportnames[8];
      jack_port_t *inports[8],*outports[8];
-     volatile gboolean is_playing, is_recording, is_stopping, is_clearing;
+     volatile gboolean is_playing, is_recording, is_stopping;
      volatile unsigned int xrun_count;
      volatile off_t played_bytes;
+     volatile int skipreq, skippos;
+     int cb_skipcount;
      Dataformat current_format;
      size_t buffer_size;     
      jack_ringbuffer_t *buffers[8];
+     gboolean refill;
+     guint refillframes, refillpos;
 } mhjack = { 0 };
 
 struct mhjack_prefdlg {
@@ -321,19 +325,40 @@ static int mhjack_xrun_callback(void *arg)
      return 0;
 }
 
+/* Move read pointer ahead to position pos, but only if pos is within the
+ * readable part of the buffer */
+static void mhjack_jrb_skipto(jack_ringbuffer_t *rb, size_t pos)
+{
+     size_t w,r;
+     w = rb->write_ptr;
+     r = rb->read_ptr;
+     if (w >= r) {
+	  if (pos > r && pos <= w)
+	       rb->read_ptr = pos;
+     } else {
+	  if (pos > r || pos <= w)
+	       rb->read_ptr = pos;
+     }
+}
+
 static int mhjack_process_callback(jack_nframes_t nframes, void *arg)
 {     
-     guint i,first_silent_port=0;
-     gboolean xrun = FALSE, first = TRUE;
+     guint i,first_silent_port=0,skippos;
+     gboolean xrun = FALSE, first = TRUE, do_skip=FALSE;
      size_t sz = nframes * sizeof(float), sz2;
      gchar *p;
-     if (mhjack.is_clearing) {
-	  for (i=0; i<mhjack.current_format.channels; i++)
-	       if (mhjack.outports[i] != NULL)
-		    jack_ringbuffer_reset(mhjack.buffers[i]);
-     } else if (mhjack.is_playing) {
+     if (mhjack.is_playing) {
+	  i = mhjack.skipreq;
+	  if (i != mhjack.cb_skipcount) {
+	       mhjack.cb_skipcount = i;
+	       do_skip = TRUE;
+	       skippos = mhjack.skippos;
+	  }
 	  for (i=0; i<mhjack.current_format.channels; i++) {
 	       if (mhjack.outports[i] == NULL) continue;
+	       if (do_skip) {
+		    mhjack_jrb_skipto(mhjack.buffers[i],skippos);
+	       }
 	       p = jack_port_get_buffer(mhjack.outports[i],nframes);
 	       sz2 = jack_ringbuffer_read(mhjack.buffers[i],p,sz);
 	       if (sz2 < sz) {
@@ -526,8 +551,9 @@ static gint mhjack_output_select_format(Dataformat *format, gboolean silent,
 
      mhjack_setup_buffers();     
 
-     /* We don't set the is_playing/is_recording flag here, instead we
-      * set it after the first mhjack_output_play call to avoid xruns */     
+     mhjack.refill = TRUE;
+     mhjack.refillpos = 0;
+     mhjack.refillframes = 0;
 
      return 0;
 }
@@ -548,6 +574,48 @@ static gboolean mhjack_output_suggest_format(Dataformat *format,
      return TRUE;
 }
 
+/* We have two different buffer modes during playback:
+ *   Normal mode:
+ *     Keep the buffer filled to capacity minus 1/2 second
+ *   Refill mode:
+ *     Write 1/2 second of data into the buffer and then switch into
+ *     normal mode. When switching over, playback is started if it
+ *     was stopped, and a skip request (for dropping data) can be sent.
+ *
+ * The mode only matters to the user side, the playback thread plays what's
+ * in the ring buffer.
+ *
+ * Playback skipping without gaps or underruns is implemented as follows:
+ * - When output_clear_buffers is called, we switch to refill mode but the
+ *   callback thread keeps playing from the >0.5 s of old sound currently in
+ *   the ring buffers.
+ * - When enough new data has been written into the ring buffers, a skip
+ *   request is sent to the callback thread with the new data's starting
+ *   position in the ring buffer.
+ * - The next time the player thread wakes up it sees the skip request and
+ *   jumps the read position ahead to the new data. If it has already
+ *   played past that point, it ignores the skip request.
+ */
+
+static guint mhjack_writable(void)
+{
+     int writable,i,s;
+     writable = s = mhjack_ringbuffer_space(FALSE,FALSE) / sizeof(float);
+     i = (mhjack.buffer_size / 2) / sizeof(float);
+     if (mhjack.refill) {
+	  /* Return remaining part of refill before switching to normal */
+	  if (i > mhjack.refillframes) i-=mhjack.refillframes; else i=0;
+	  if (writable > i) writable=i;
+     } else {
+	  /* Leave half the buffer for refilling later */
+	  if (writable > i) writable-=i; else writable=0;
+     }
+     /* if (writable > 0)
+	  printf("writable: s=%d refill=%d refillframes=%d -> %d\n",s,
+	  mhjack.refill,mhjack.refillframes,writable); */
+     return writable;
+}
+
 static guint mhjack_output_play(gchar *buffer, guint bufsize)
 {
      guint writable,frames,i,j;
@@ -566,7 +634,7 @@ static guint mhjack_output_play(gchar *buffer, guint bufsize)
      /* write(dumpfile, buffer, bufsize); */
 
      /* Calculate room in the ring buffers */
-     writable = mhjack_ringbuffer_space(FALSE,FALSE) / sizeof(float); 
+     writable = mhjack_writable();
 
      /* Calculate how many frames we can write out */
      frames = bufsize / mhjack.current_format.samplebytes;
@@ -600,11 +668,20 @@ static guint mhjack_output_play(gchar *buffer, guint bufsize)
 	  }
      }
 
-     if (!mhjack.is_playing && 
-	 mhjack_ringbuffer_space(FALSE,FALSE) < 64*sizeof(float)) {
-	  /* Let the processing function work next time it's called */
-	  mhjack.is_stopping = FALSE;
-	  mhjack.is_playing = TRUE;
+     mhjack.refillframes += frames;
+     writable -= frames;
+
+     if (writable < 64) {
+	  if (mhjack.refill) {
+	       mhjack.skippos = mhjack.refillpos;
+	       mhjack.skipreq++;
+	       mhjack.refill = FALSE;
+	  }
+	  if (!mhjack.is_playing) {
+	       /* Let the processing function work next time it's called */
+	       mhjack.is_stopping = FALSE;
+	       mhjack.is_playing = TRUE;
+	  }
      }
 
      return frames * mhjack.current_format.samplebytes;
@@ -612,12 +689,9 @@ static guint mhjack_output_play(gchar *buffer, guint bufsize)
 
 static void mhjack_clear_buffers(void)
 {
-     /* FIXME: Click-free algo for this (start filling another buffer while 
-      * clearing).. */
-     mhjack.is_clearing = TRUE;
-     while (mhjack_ringbuffer_space(FALSE,TRUE) > 0) do_yield(FALSE);
-     mhjack.is_playing = FALSE;
-     mhjack.is_clearing = FALSE;
+     mhjack.refill = TRUE;
+     mhjack.refillframes = 0;
+     mhjack.refillpos = mhjack.buffers[0]->write_ptr;
 }
 
 static gboolean mhjack_output_stop(gboolean must_flush)
@@ -626,18 +700,20 @@ static gboolean mhjack_output_stop(gboolean must_flush)
 	  if (mhjack_ringbuffer_space(FALSE,TRUE) == 0)
 	       return TRUE;
      }
-     mhjack.is_clearing = !must_flush;
+     if (!must_flush) {
+	  mhjack.skippos = mhjack.buffers[0]->write_ptr;
+	  mhjack.skipreq++;
+     }
      mhjack.is_stopping = TRUE;
      mhjack.is_playing = TRUE;
      while (mhjack_ringbuffer_space(FALSE,TRUE) > 0) do_yield(FALSE);
      mhjack.is_playing = FALSE;
-     mhjack.is_clearing = FALSE;
      return must_flush;
 }
 
 static gboolean mhjack_output_want_data(void)
 {
-     return (mhjack_ringbuffer_space(FALSE,FALSE) >= sizeof(float));
+     return (mhjack_writable() > 0);
 }
 
 /* Input */
