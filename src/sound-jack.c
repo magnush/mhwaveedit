@@ -30,6 +30,13 @@
 /* All variables/functions prefixed with mhjack_ since the jack library
  * already uses the jack_ prefix */
 
+#define MHJACK_PLAY    0x80000000
+#define MHJACK_STOP    0x40000000
+#define MHJACK_REC     0x20000000
+#define MHJACK_SKIPREQ(x) (((x) >> 24) & 15)
+#define MHJACK_SKIPPOS(x) ((x) & 0xFFFFFF)
+#define MHJACK_NEWSKIP(x,p) (((x) & 0xF0000000) | (((x) + 0x01000000) & 0x0F000000) | (p))
+
 static struct {
      gchar *client_name;
      jack_client_t *myself;
@@ -37,10 +44,9 @@ static struct {
      guint maxoutports, maxinports;
      gchar *inportnames[8],*outportnames[8];
      jack_port_t *inports[8],*outports[8];
-     volatile gboolean is_playing, is_recording, is_stopping;
+     volatile guint32 procctrl;
      volatile unsigned int xrun_count;
      volatile off_t played_bytes;
-     volatile int skipreq, skippos;
      int cb_skipcount;
      Dataformat current_format;
      size_t buffer_size;     
@@ -347,12 +353,14 @@ static int mhjack_process_callback(jack_nframes_t nframes, void *arg)
      gboolean xrun = FALSE, first = TRUE, do_skip=FALSE;
      size_t sz = nframes * sizeof(float), sz2;
      gchar *p;
-     if (mhjack.is_playing) {
-	  i = mhjack.skipreq;
+     int pctrl;
+     pctrl = mhjack.procctrl;
+     if ((pctrl & MHJACK_PLAY) != 0) {
+	  i = MHJACK_SKIPREQ(pctrl);
 	  if (i != mhjack.cb_skipcount) {
 	       mhjack.cb_skipcount = i;
 	       do_skip = TRUE;
-	       skippos = mhjack.skippos;
+	       skippos = MHJACK_SKIPPOS(pctrl);
 	  }
 	  for (i=0; i<mhjack.current_format.channels; i++) {
 	       if (mhjack.outports[i] == NULL) continue;
@@ -381,7 +389,7 @@ static int mhjack_process_callback(jack_nframes_t nframes, void *arg)
 	  memset(p,0,sz);
      }
 
-     if (mhjack.is_recording) {
+     if ((pctrl & MHJACK_REC) != 0) {
 	  for (i=0; i<mhjack.current_format.channels; i++) {
 	       if (mhjack.inports[i] == NULL) continue;
 	       p = jack_port_get_buffer(mhjack.inports[i],nframes);
@@ -390,7 +398,7 @@ static int mhjack_process_callback(jack_nframes_t nframes, void *arg)
 		    xrun = TRUE;
 	  }
      }
-     if (xrun && (mhjack.is_recording || !mhjack.is_stopping)) {
+     if (xrun && ((pctrl&MHJACK_REC) != 0 || (pctrl&MHJACK_STOP) == 0)) {
 	  console_message(_("Over/underrun in JACK driver"));
 	  mhjack.xrun_count ++;
      }
@@ -620,14 +628,15 @@ static guint mhjack_output_play(gchar *buffer, guint bufsize)
 {
      guint writable,frames,i,j;
      float fbuf[1024],fbuf2[512];
-     
+     int pctrl = mhjack.procctrl;
+
      if (bufsize == 0) {
-	  if (!mhjack.is_playing && mhjack_ringbuffer_space(FALSE,TRUE)==0) 
+	  if ((pctrl&MHJACK_PLAY) == 0 && mhjack_ringbuffer_space(FALSE,TRUE)==0)
 	       return 0;
 	  /* The caller wants to drain the buffers, therefore set the 
 	   * is_stopping flag so underrun messages aren't displayed. */
-	  mhjack.is_stopping = TRUE;
-	  mhjack.is_playing = TRUE;
+	  pctrl |= (MHJACK_PLAY | MHJACK_STOP);
+	  mhjack.procctrl = pctrl;
 	  return mhjack_ringbuffer_space(FALSE,TRUE);
      }
 
@@ -673,15 +682,15 @@ static guint mhjack_output_play(gchar *buffer, guint bufsize)
 
      if (writable < 64) {
 	  if (mhjack.refill) {
-	       mhjack.skippos = mhjack.refillpos;
-	       mhjack.skipreq++;
+	       pctrl = MHJACK_NEWSKIP(pctrl,mhjack.refillpos);
 	       mhjack.refill = FALSE;
 	  }
-	  if (!mhjack.is_playing) {
+	  if ((pctrl&MHJACK_PLAY)==0) {
 	       /* Let the processing function work next time it's called */
-	       mhjack.is_stopping = FALSE;
-	       mhjack.is_playing = TRUE;
+	       pctrl |= MHJACK_PLAY;
+	       pctrl &= ~MHJACK_STOP;
 	  }
+	  mhjack.procctrl = pctrl;
      }
 
      return frames * mhjack.current_format.samplebytes;
@@ -696,18 +705,20 @@ static void mhjack_clear_buffers(void)
 
 static gboolean mhjack_output_stop(gboolean must_flush)
 {
-     if (!mhjack.is_playing) {
+     int pctrl = mhjack.procctrl,w;
+     if ((pctrl&MHJACK_PLAY)==0) {
 	  if (mhjack_ringbuffer_space(FALSE,TRUE) == 0)
 	       return TRUE;
      }
      if (!must_flush) {
-	  mhjack.skippos = mhjack.buffers[0]->write_ptr;
-	  mhjack.skipreq++;
+	  w = mhjack.buffers[0]->write_ptr;
+	  pctrl = MHJACK_NEWSKIP(pctrl, w);
      }
-     mhjack.is_stopping = TRUE;
-     mhjack.is_playing = TRUE;
+     pctrl |= (MHJACK_STOP | MHJACK_PLAY);
+     mhjack.procctrl = pctrl;
      while (mhjack_ringbuffer_space(FALSE,TRUE) > 0) do_yield(FALSE);
-     mhjack.is_playing = FALSE;
+     pctrl &= ~MHJACK_PLAY;
+     mhjack.procctrl = pctrl;
      return must_flush;
 }
 
@@ -821,12 +832,12 @@ static gint mhjack_input_select_format(Dataformat *format, gboolean silent,
 	  } else
 	       return -1;	  
      }
-     mhjack.is_recording = TRUE;
+     mhjack.procctrl |= MHJACK_REC;
      return 0;
 }
 
 /* Also used as input_stop_hint */
 static void mhjack_input_stop(void)
 {
-     mhjack.is_recording = FALSE;
+     mhjack.procctrl &= ~MHJACK_REC;
 }
