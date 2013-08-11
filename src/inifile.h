@@ -44,6 +44,8 @@
 #define INI_SETTING_SPEED_DEFAULT inifile_get_gboolean("varispeed",TRUE)
 #define INI_SETTING_SLABELS "showSliderLabels"
 #define INI_SETTING_SLABELS_DEFAULT FALSE
+#define INI_SETTING_BUFPOS "showBufpos"
+#define INI_SETTING_BUFPOS_DEFAULT FALSE
 #define INI_SETTING_MIXER "mixerUtility"
 #define INI_SETTING_MIXER_DEFAULT DEFAULT_MIXERAPP
 #define INI_SETTING_VIEW_QUALITY "viewQuality"

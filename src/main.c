@@ -360,7 +360,7 @@ GdkColor factory_default_colors[] = {
      { 0, 0, 0, 0 }, { 0, 29952, 50176, 27392 }, { 0, 41216, 39936, 52992 },
      { 0, 62720, 62720, 62720 }, { 0, 60160, 55552, 0 },
      { 0, 43776, 11776, 0 }, { 0, 0xff00, 0xff00, 0xff00 },
-     { 0, 0x8000, 0x8000, 0x8000 }
+     { 0, 0x8000, 0x8000, 0x8000 }, { 0, 0x6200, 0x7c00, 0x5e00 }
 };
 static GdkGC *gc_table[LAST_COLOR] = { };
 
@@ -375,13 +375,14 @@ gchar *color_names[] = {
     N_("Selection"),
     N_("Progress bar"),
     N_("Zero-level"),
+    N_("Buffer position")
 };
 
 gchar *color_inifile_entry[] = { NULL, NULL, "colorBG", 
 				 "colorWave1", "colorWave2",
 				 "colorCursor","colorMark",
 				 "colorSelection","colorProgress",
-				 "colorBars"
+				 "colorBars","colorBufpos"
 };
 
 GdkColor *get_color(enum Color c)

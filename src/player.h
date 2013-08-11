@@ -39,7 +39,8 @@ extern gboolean varispeed_smooth_flag;
 extern Dataformat player_fallback_format;
 
 /* Play a certain chunk. Returns TRUE if anything failed.  */
-typedef void (*player_notify_func)(off_t realpos, gboolean is_running);
+typedef void (*player_notify_func)(off_t realpos, off_t bufpos,
+				   gboolean is_running);
 
 gboolean player_play(Chunk *chunk, off_t startpos, off_t endpos, 
 		     gboolean loop, player_notify_func nf);

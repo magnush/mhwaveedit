@@ -59,6 +59,7 @@ typedef struct _ChunkView {
 
      Document *doc;
      gboolean timescale;        /* Time scale visible flag */
+     gboolean show_bufpos;
 
 } ChunkView;
 

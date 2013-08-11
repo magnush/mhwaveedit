@@ -131,7 +131,7 @@ GtkLabel *attach_label(gchar *text, GtkWidget *table, guint y, guint x);
 
 enum Color { 
      BLACK=0, WHITE, BACKGROUND, WAVE1, WAVE2, CURSOR, MARK, SELECTION, 
-     PROGRESS, BARS, LAST_COLOR
+     PROGRESS, BARS, BUFPOS, LAST_COLOR
 };
 
 #define FIRST_CUSTOM_COLOR BACKGROUND

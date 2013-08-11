@@ -81,6 +81,7 @@ typedef struct {
      off_t old_selstart, old_selend;
      /* Used when sending the cursor_changed signal */
      off_t old_cursorpos;
+     off_t playbufpos, old_playbufpos;
 
      gboolean followmode;       /* Follow mode flag */     
 

@@ -41,7 +41,8 @@ static guint document_signals[LAST_SIGNAL] = { 0 };
 static GtkObjectClass *parent_class;
 
 static void document_set_cursor_main(Document *d, off_t cursorpos, 
-				     gboolean playslave, gboolean running);
+				     gboolean playslave, gboolean running,
+				     off_t bufpos);
 
 static void clear_marklist(struct MarkList *m)
 {
@@ -295,12 +296,12 @@ gboolean document_save(Document *d, gchar *filename, gint type_id,
      return b;
 }
 
-static void cursor_cb(off_t pos, gboolean is_running)
+static void cursor_cb(off_t pos, off_t bufpos, gboolean is_running)
 {     
      Document *d = playing_document;
      if (playing_document != NULL) {
 	  if (!is_running) playing_document=NULL; 
-	  document_set_cursor_main(d,pos,TRUE,is_running);
+	  document_set_cursor_main(d,pos,TRUE,is_running,bufpos);
 	  if (!is_running) gtk_object_unref(GTK_OBJECT(d));
      }     
 }
@@ -610,7 +611,8 @@ gboolean document_apply_cb(Document *d, document_apply_proc proc,
 
 
 static void document_set_cursor_main(Document *d, off_t cursorpos, 
-				     gboolean playslave, gboolean running)
+				     gboolean playslave, gboolean running,
+				     off_t bufpos)
 {
      off_t vs,ve,dist;
 
@@ -657,6 +659,8 @@ static void document_set_cursor_main(Document *d, off_t cursorpos,
      
      d->old_cursorpos = d->cursorpos;
      d->cursorpos = cursorpos;
+     d->old_playbufpos = d->playbufpos;
+     d->playbufpos = running ? bufpos : -1;
 
      gtk_signal_emit(GTK_OBJECT(d),
 		     document_signals[CURSOR_CHANGED_SIGNAL],
@@ -665,7 +669,7 @@ static void document_set_cursor_main(Document *d, off_t cursorpos,
 
 void document_set_cursor(Document *d, off_t cursorpos)
 {
-     document_set_cursor_main(d,cursorpos,FALSE,(playing_document == d && player_playing()));
+     document_set_cursor_main(d,cursorpos,FALSE,(playing_document == d && player_playing()),cursorpos);
 }
 
 off_t document_nudge_cursor(Document *d, off_t delta)

@@ -76,7 +76,7 @@ static gint notify_wd_cb(gpointer timesource, GTimeVal *current_time,
 			 gpointer user_data)
 {
      if (ch == NULL) return 0;
-     notify_func(get_realpos_main(rateest_frames_played()),TRUE);
+     notify_func(get_realpos_main(rateest_frames_played()),curpos,TRUE);
      return 50;
 }
 
@@ -158,7 +158,7 @@ static gboolean player_work(void)
 	       o = rateest_frames_played();
 	       if (i > 0 || o<rateest_frames_written()) {
 		    if (notify_func != NULL)
-			 notify_func(get_realpos_main(o),TRUE);
+			 notify_func(get_realpos_main(o),curpos,TRUE);
 		    /* The sound layer will not call us again so we must
 		     * do it ourselves */
 		    mainloop_defer_once((defer_once_cb)player_work, 50, NULL);
@@ -169,7 +169,7 @@ static gboolean player_work(void)
 	       chunk_close(ch);
 	       gtk_object_unref(GTK_OBJECT(ch));
 	       ch=NULL;
-	       if (notify_func != NULL) notify_func(loopstart,FALSE);
+	       if (notify_func != NULL) notify_func(loopstart,curpos,FALSE);
 	       return FALSE;
 	  }
      }
@@ -179,7 +179,7 @@ static gboolean player_work(void)
      player_bufpos += i;
      rateest_log_data(i/ch->format.samplebytes);
      if (i>0 && notify_func!=NULL) {
-	  notify_func(player_get_real_pos(),TRUE);
+	  notify_func(player_get_real_pos(),curpos,TRUE);
 	  g_get_current_time(&tv);
 	  tv.tv_usec += 50000;
 	  if (tv.tv_usec >= 1000000) { tv.tv_sec++; tv.tv_usec-=1000000; }
@@ -507,7 +507,7 @@ static void player_stop_main(gboolean read_stoppos)
      if (read_stoppos)
 	  realpos_atstop = get_realpos_main(b ? rateest_frames_written() : 
 					    rateest_frames_played());
-     if (notify_func) notify_func(realpos_atstop,FALSE);
+     if (notify_func) notify_func(realpos_atstop,curpos,FALSE);
      gtk_object_unref(GTK_OBJECT(ch));
      ch = NULL;
 }

@@ -1641,6 +1641,13 @@ static void view_sliderlabels(GtkCheckMenuItem *checkmenuitem, gpointer user_dat
      }
 }
 
+static void view_bufpos(GtkCheckMenuItem *checkmenuitem, gpointer user_data)
+{
+     Mainwindow *w = MAINWINDOW(user_data);
+     w->view->show_bufpos = checkmenuitem->active;
+     gtk_widget_queue_draw(GTK_WIDGET(w->view));
+}
+
 static void edit_insertsilence(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *w = MAINWINDOW ( user_data );
@@ -1944,6 +1951,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  { N_("/View/_Vertical zoom"),NULL,    view_vertzoom,  0, "<CheckItem>" },
 	  { N_("/View/Sp_eed slider"),NULL,     view_speed,     0, "<CheckItem>" },
 	  { N_("/View/Slider labels"),NULL,     view_sliderlabels,0,"<CheckItem>"},
+	  { N_("/View/Buffer position"),NULL,   view_bufpos,    0, "<CheckItem>" },
 	  { N_("/_Cursor"),       NULL,         NULL,           0, "<Branch>"    },
 	  {N_("/Cursor/Set selection start"),"<control>Q",edit_selstartcursor,0,
 	   NULL},
@@ -2139,6 +2147,11 @@ static GtkWidget *create_menu(Mainwindow *w)
      gtk_check_menu_item_set_active
 	  (GTK_CHECK_MENU_ITEM(item),
 	   inifile_get_gboolean(INI_SETTING_SLABELS,INI_SETTING_SLABELS_DEFAULT));
+
+     item = gtk_item_factory_get_item(item_factory,"/View/Buffer position");
+     gtk_check_menu_item_set_active
+	  (GTK_CHECK_MENU_ITEM(item),
+	   inifile_get_gboolean(INI_SETTING_BUFPOS,INI_SETTING_BUFPOS_DEFAULT));
 
      item = gtk_item_factory_get_item(item_factory,"/Play/Record...");
      gtk_widget_set_sensitive(item,input_supported());
@@ -2562,6 +2575,8 @@ static void mainwindow_init(Mainwindow *obj)
      chunk_view_set_timescale(
 	  obj->view, inifile_get_gboolean(INI_SETTING_TIMESCALE,
 					  INI_SETTING_TIMESCALE_DEFAULT));
+     obj->view->show_bufpos = inifile_get_gboolean
+	  (INI_SETTING_BUFPOS,INI_SETTING_BUFPOS_DEFAULT);
      gtk_signal_connect( GTK_OBJECT(obj->view), "double-click",
 			 GTK_SIGNAL_FUNC(mainwindow_view_double_click), obj);
      obj->view_adj = GTK_ADJUSTMENT( gtk_adjustment_new ( 0,0,0,0,0,0 ));

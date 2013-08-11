@@ -93,6 +93,8 @@ static void config_dialog_ok(GtkButton *button, gpointer user_data)
 			 gtk_toggle_button_get_active(cd->speed_default));
     inifile_set_gboolean(INI_SETTING_SLABELS,
 			 gtk_toggle_button_get_active(cd->labels_default));
+    inifile_set_gboolean(INI_SETTING_BUFPOS,
+			 gtk_toggle_button_get_active(cd->bufpos_default));
     inifile_set(INI_SETTING_MIXER,
 		(char *)gtk_entry_get_text(cd->mixer_utility));
     inifile_set_gboolean("useGeometry",
@@ -582,6 +584,16 @@ static void config_dialog_init(ConfigDialog *cd)
 				 inifile_get_gboolean(INI_SETTING_SLABELS,
 						      INI_SETTING_SLABELS_DEFAULT));
 
+    w = gtk_check_button_new_with_label("");
+    key = gtk_label_parse_uline(GTK_LABEL (GTK_BIN (w)->child),
+				_("Show playback buffer positio_n by default"));
+    gtk_widget_add_accelerator (w, "clicked", ag, key, GDK_MOD1_MASK,
+				(GtkAccelFlags) 0);
+    cd->bufpos_default = GTK_TOGGLE_BUTTON(w);
+    gtk_toggle_button_set_active(cd->bufpos_default,
+				 inifile_get_gboolean(INI_SETTING_BUFPOS,
+						      INI_SETTING_BUFPOS_DEFAULT));
+
     w = gtk_button_new_with_label("");
     key = gtk_label_parse_uline(GTK_LABEL(GTK_BIN(w)->child), _("_Settings"));
     gtk_widget_add_accelerator(w, "clicked", ag, key, GDK_MOD1_MASK, 
@@ -905,6 +917,8 @@ static void config_dialog_init(ConfigDialog *cd)
     f = GTK_WIDGET(cd->speed_default);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
     f = GTK_WIDGET(cd->labels_default);
+    gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
+    f = GTK_WIDGET(cd->bufpos_default);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);
     f = gtk_hbox_new(FALSE,3);
     gtk_box_pack_start(GTK_BOX(e),f,FALSE,FALSE,0);

@@ -99,24 +99,28 @@ static void chunk_view_cursor_changed(Document *d, gboolean rolling,
 				      gpointer user_data)
 {     
      ChunkView *cv = CHUNKVIEW(user_data);
-     gboolean old_in_view,new_in_view;
-     int curpix=0,oldpix=0;
+     off_t pos[4];
+     int npos,pix[4],npix,i,p,j, w=GTK_WIDGET(cv)->allocation.width;
 
-     old_in_view = (d->old_cursorpos >= d->viewstart && 
-		    d->old_cursorpos <  d->viewend);
-     new_in_view = (d->cursorpos     >= d->viewstart && 
-		    d->cursorpos     <  d->viewend);
-     if (old_in_view)
-	  oldpix = calc_x(cv,d->old_cursorpos,
-			  GTK_WIDGET(cv)->allocation.width);
-     if (new_in_view)
-	  curpix = calc_x(cv,d->cursorpos,GTK_WIDGET(cv)->allocation.width);
-     if (old_in_view && (!new_in_view || oldpix != curpix))
-	  gtk_widget_queue_draw_area(GTK_WIDGET(cv),oldpix,0,1,
-				     cv->image_height);
-     if (new_in_view && (!old_in_view || oldpix != curpix))
-	  gtk_widget_queue_draw_area(GTK_WIDGET(cv),curpix,0,1,
-				     cv->image_height);
+     npos = 0;
+     pos[npos++] = d->old_cursorpos;
+     pos[npos++] = d->cursorpos;
+     if (cv->show_bufpos) {
+	  pos[npos++] = d->old_playbufpos;
+	  pos[npos++] = d->playbufpos;
+     }
+     npix = npos;
+     for (i=0; i<npos; i++)
+	  pix[i]=calc_x(cv,pos[i],w);
+     while (npix > 0 && pix[0] == pix[1]) {
+	  pix[0] = pix[2]; pix[1] = pix[3];
+	  npix -= 2;
+     }
+     for (i=0; i<npix; i++) {
+	  if (pix[i] > -1 && pix[i] < w)
+	       gtk_widget_queue_draw_area(GTK_WIDGET(cv),pix[i],0,1,
+					  cv->image_height);
+     }
 }
 
 static void chunk_view_destroy (GtkObject *object)
@@ -442,6 +446,16 @@ static gint chunk_view_expose(GtkWidget *widget, GdkEventExpose *event)
 	       }
 	  }
 
+     /* Draw playback indicator */
+     if ( (cv->show_bufpos) &&
+	  d->playbufpos >= d->viewstart && d->playbufpos <= d->viewend ) {
+	  i = calc_x( cv, d->playbufpos, widget->allocation.width );
+	  if (event->area.x <= i && event->area.x+event->area.width > i) {
+	       gdk_draw_line( widget->window, get_gc(BUFPOS,widget), i,
+			      event->area.y, i,
+			      event->area.y+event->area.height-1 );
+	  }
+     }
      /* Draw the marks */
      dd.view = cv;
      dd.event = event;
