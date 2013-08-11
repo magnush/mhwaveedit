@@ -87,8 +87,8 @@ static Chunk *clipboard = NULL;
 gboolean autoplay_mark_flag = FALSE;
 gboolean varispeed_reset_flag = FALSE;
 
-static void mainwindow_set_document(Mainwindow *w, Document *doc, 
-				    gchar *filename);
+static Mainwindow *mainwindow_set_document(Mainwindow *w, Document *doc,
+					   gchar *filename);
 static void mainwindow_view_changed(Document *d, gpointer user_data);
 static void mainwindow_selection_changed(Document *d, gpointer user_data);
 static void mainwindow_cursor_changed(Document *d, gboolean rolling, 
@@ -724,7 +724,7 @@ static void mainwindow_class_init(GtkObjectClass *klass)
 	  mainwindow_drag_data_received;
 }
 
-static void mainwindow_set_document(Mainwindow *w, Document *d, 
+static Mainwindow *mainwindow_set_document(Mainwindow *w, Document *d,
 				    gchar *filename)
 {
      if (w->doc != NULL) {
@@ -752,13 +752,14 @@ static void mainwindow_set_document(Mainwindow *w, Document *d,
 	  gtk_widget_set_sensitive(w->speed_slider,FALSE);
      list_object_add(mainwindow_objects,w);
      mainwindow_view_changed(w->doc,w);
+     return w;
 }
 
-static void mainwindow_set_chunk(Mainwindow *w, Chunk *c, gchar *filename)
+static Mainwindow *mainwindow_set_chunk(Mainwindow *w, Chunk *c, gchar *filename)
 {
      Document *d;
      d = document_new_with_chunk(c,filename,w->statusbar);
-     mainwindow_set_document(w,d,filename);
+     return mainwindow_set_document(w,d,filename);
 }
 
 void mainwindow_set_speed_sensitive(gboolean sensitive)
@@ -1535,9 +1536,29 @@ static void edit_record(GtkMenuItem *menuitem, gpointer user_data)
 {
      Mainwindow *wnd = MAINWINDOW (user_data);
      Chunk *c;
+     int noverruns, i;
+     off_t overrun_locs[10];
+     gchar s[2], *str;
      player_stop();
-     c = record_dialog_execute();
-     if (c) mainwindow_set_chunk(wnd,c,NULL);
+     c = record_dialog_execute(&noverruns, overrun_locs);
+     if (c) {
+	  wnd = mainwindow_set_chunk(wnd,c,NULL);
+	  if (noverruns > 0) {
+	       for (i=0; i<noverruns && i<10; i++) {
+		    s[0] = '0'+i;
+		    s[1] = 0;
+		    document_set_mark(wnd->doc, s,
+				      overrun_locs[i]/c->format.samplebytes);
+	       }
+	       str = g_strdup_printf
+		    ("%d overruns where detected while recording. "
+		     "This means the recording may be damaged. The "
+		     "locations where the overruns happened have been "
+		     "indicated with markers.",noverruns);
+	       user_warning(str);
+	       g_free(str);
+	  }
+     }
 }
 
 static void edit_preferences(GtkMenuItem *menuitem, gpointer user_data)

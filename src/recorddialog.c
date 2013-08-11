@@ -333,7 +333,13 @@ static gboolean process_input(RecordDialog *rd)
 	  }
 	  i = input_overrun_count();
 	  if (i>=0) {
-	       g_snprintf(buf,sizeof(buf),"%d",i-rd->overruns_before_start);
+	       i -= rd->overruns_before_start;
+	       while (i > rd->overruns) {
+		    if (rd->overruns < 10)
+			 rd->overrun_locs[rd->overruns] = rd->written_bytes;
+		    rd->overruns++;
+	       }
+	       g_snprintf(buf,sizeof(buf),"%d",i);
 	       gtk_label_set_text(rd->overruns_label,buf);
 	  }
 
@@ -819,6 +825,7 @@ static void record_dialog_start(GtkButton *button, gpointer user_data)
 	  rd->overruns_before_start = i;
 	  gtk_label_set_text(rd->overruns_title,_("Overruns: "));
      }
+     rd->overruns = 0;
      gtk_label_set_text(rd->bytes_text_label,_("Bytes written: "));
      gtk_label_set_text(rd->limit_text_label,_("Auto stop in: "));
      update_limit(rd);
@@ -1047,7 +1054,7 @@ GtkType record_dialog_get_type(void)
      return id;
 }
 
-Chunk *record_dialog_execute(void)
+Chunk *record_dialog_execute(int *noverruns, off_t overrun_locs[10])
 {
      RecordDialog *rd;
      Chunk *ds;
@@ -1067,6 +1074,8 @@ Chunk *record_dialog_execute(void)
 	  while (process_input(rd) && i<128) { i++; }
 	  input_stop();
 	  ds = tempfile_finished(rd->tf);
+	  *noverruns = rd->overruns;
+	  memcpy(overrun_locs,rd->overrun_locs,10*sizeof(off_t));
 	  gtk_widget_destroy(GTK_WIDGET(rd));
 	  return ds;
      } else {

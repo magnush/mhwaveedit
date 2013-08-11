@@ -68,8 +68,8 @@ typedef struct {
      guint32 analysis_samples;
      gchar *analysis_buf;
      sample_t *analysis_sbuf;
-     guint overruns_before_start;
-
+     guint overruns_before_start, overruns;
+     off_t overrun_locs[10];
 } RecordDialog;
 
 typedef struct {
@@ -77,6 +77,6 @@ typedef struct {
 } RecordDialogClass;
 
 GtkType record_dialog_get_type(void);
-Chunk *record_dialog_execute(void);
+Chunk *record_dialog_execute(int *noverruns, off_t overrun_locs[10]);
 
 #endif
