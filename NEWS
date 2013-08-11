@@ -1,3 +1,12 @@
+New features in version 1.4.23:
+
+ * After recording, place marks where overruns happened
+ * Playback jumping improvements for PulseAudio and JACK
+ * Make cursor movement more smooth under PulseAudio
+ * Add PulseAudio preferences for configuring latency
+ * Add option to display buffer position during playback
+ * Various bug fixes
+
 New features in version 1.4.22:
 
  * Improvements and fixes in the sample conversion and dithering code
