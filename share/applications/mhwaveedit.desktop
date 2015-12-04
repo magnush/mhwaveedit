@@ -2,7 +2,9 @@
 Type=Application
 Name=mhWaveEdit
 GenericName=Sound file editor
+GenericName[fr]=Éditeur de fichier-son
 Comment=Record, play, edit and convert sound files
+Comment[fr]=Enregistre, joue, édite et convertit des fichiers-son
 Icon=mhwaveedit
 Exec=mhwaveedit
 Terminal=false
