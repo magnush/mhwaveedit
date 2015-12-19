@@ -2409,7 +2409,7 @@ msgstr ""
 
 #: src/mainwindow.c:362
 msgid "Save File"
-msgstr "Sauvgarder le fichier"
+msgstr "Sauvegarder le fichier"
 
 #: src/mainwindow.c:387
 #, c-format
