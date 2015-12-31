@@ -1546,8 +1546,7 @@ msgid ""
 msgstr ""
 "mhWaveEdit supporte les effets LADSPA et peut aussi utiliser la plupart des "
 "effets de l'utilitaire SoX. Pour trouver les greffons LADSPA, la variable "
-"d'environnement LADSPA_PATH doit être correctement paramétrée (et elle "
-"l'est par LibraZiK).\n"
+"d'environnement LADSPA_PATH doit être correctement paramétrée.\n"
 
 #: src/help.c:161
 #, no-c-format
@@ -1650,9 +1649,8 @@ msgstr ""
 "Même si mhWaveEdit ait été pensé originellement pour éditer des fichiers "
 "wav, il est également possible de charger et sauver dans quelques autres "
 "formats. mhWaveEdit supporte toujours les wav et les fichiers au format brut "
-"(raw) maisn s'il est construit avec la bibliothèque libsndfile (et il l'est "
-"pas LibraZiK), mhWaveEdit supporte un bon nombre d'autres formats "
-"également.\n"
+"(raw) mais s'il est construit avec la bibliothèque libsndfile, mhWaveEdit "
+"supporte un bon nombre d'autres formats également.\n"
 
 #: src/help.c:186
 #, no-c-format
@@ -2409,7 +2407,7 @@ msgstr ""
 
 #: src/mainwindow.c:362
 msgid "Save File"
-msgstr "Sauvgarder le fichier"
+msgstr "Sauvegarder le fichier"
 
 #: src/mainwindow.c:387
 #, c-format
