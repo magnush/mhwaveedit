@@ -19,9 +19,8 @@
  */
 
 
-/* This is a dropdown read-only combo box with text items. Under GTK 1.2-2.2 
- * this is done as a subclass of GtkCombo with some extra trickery and under 
- * 2.4 and later it's a simple subclass of GtkComboBox. */
+/* This is a dropdown read-only combo box with text items. Under GTK 2.4
+ * and later it's a simple subclass of GtkComboBox. */
 
 
 #ifndef COMBO_H_INCLUDED
@@ -32,28 +31,16 @@
 #define COMBO(obj) GTK_CHECK_CAST(obj,combo_get_type(),Combo)
 #define COMBO_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,combo_get_type(),ComboClass)
 #define IS_COMBO(obj) GTK_CHECK_TYPE(obj,combo_get_type())
-
-#if (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 4)
-#define COMBO_OLDSCHOOL
-#define COMBO_PARENT_TYPE GtkCombo
-#define COMBO_PARENT_CLASS GtkComboClass
-#define COMBO_PARENT_TYPE_FUNC gtk_combo_get_type
-#else
 #define COMBO_PARENT_TYPE GtkComboBox
 #define COMBO_PARENT_CLASS GtkComboBoxClass
 #define COMBO_PARENT_TYPE_FUNC gtk_combo_box_get_type
-#endif
 
 typedef struct {
      COMBO_PARENT_TYPE parent;
-#ifdef COMBO_OLDSCHOOL
-     int chosen_index, next_chosen_index;
-#else
      /* Until GTK+ 2.6 comes out with the
 	gtk_combo_box_get_active_text function, this will have to
         make do. */ 
      GList *strings;
-#endif
      int max_request_width;
 } Combo;
 

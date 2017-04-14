@@ -41,11 +41,6 @@
 #define GTK_WINDOW_DIALOG GTK_WINDOW_TOPLEVEL
 #define gtk_object_class_add_signals(x,y,z)
 
-#if (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 18)
-void gtk_widget_set_has_window(GtkWidget *w, gboolean has_window);
-void gtk_widget_set_can_focus(GtkWidget *w, gboolean can_focus);
-#endif
-
 /* Global stuff */
 #define PROGRAM_VERSION_STRING PACKAGE " " VERSION
 

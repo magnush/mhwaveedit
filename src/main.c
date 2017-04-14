@@ -80,26 +80,6 @@ static int idle_work(gpointer csource, gpointer user_data)
      return -1;
 }
 
-#if (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 18)
-
-void gtk_widget_set_has_window(GtkWidget *w, gboolean has_window)
-{
-     if (!has_window)
-	  GTK_WIDGET_SET_FLAGS(w,GTK_NO_WINDOW);
-     else
-	  GTK_WIDGET_UNSET_FLAGS(w,GTK_NO_WINDOW);
-}
-
-void gtk_widget_set_can_focus(GtkWidget *w, gboolean can_focus)
-{
-     if (!can_focus)
-	  GTK_WIDGET_SET_FLAGS(w,GTK_CAN_FOCUS);
-     else
-	  GTK_WIDGET_UNSET_FLAGS(w,GTK_CAN_FOCUS);
-}
-
-#endif
-
 int main(int argc, char **argv)
 {
      int i;
