@@ -382,26 +382,8 @@ AC_SUBST(ARTSC_LIBS)
 
 dnl Check for GTK+ without gthread
 
-PKG_CHECK_MODULES([GLIB], [glib-2.0])
+PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.28])
 PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.18])
-
-
-dnl Check for gthread if we're using GTK+ 2
-dnl Not needed by the app itself, but needed for some aRts versions.
-GTHREAD_CFLAGS=""
-GTHREAD_LIBS=""
-HAVE_GTHREAD="no"
-
-HAVE_GTHREAD="yes"
-PKG_CHECK_MODULES(GTHREAD, gthread-2.0, , HAVE_GTHREAD="no")
-
-if test "x$HAVE_GTHREAD" = "xyes"; then
-   AC_DEFINE(HAVE_GTHREAD,[],[Defined if Glib thread support is available])
-fi
-
-AC_SUBST(GTHREAD_CFLAGS)
-AC_SUBST(GTHREAD_LIBS)
-
 
 dnl Check for large file support
 AC_SYS_LARGEFILE

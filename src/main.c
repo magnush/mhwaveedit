@@ -88,12 +88,6 @@ int main(int argc, char **argv)
      gboolean b;
      gchar *c;
 
-     /* Some versions of the aRts C library call g_thread_init internally,
-      * and that confuses GLib2's memory allocation stuff. */
-#ifdef HAVE_GTHREAD
-     g_thread_init(NULL);
-#endif
-
      /* Set default locale */
      setlocale(LC_ALL,"");
 
