@@ -193,107 +193,6 @@ static gboolean iosource_dispatch_main(GTimeVal *current_time)
      return TRUE;
 }
 
-
-
-
-
-#if GLIB_MAJOR_VERSION < 2
-
-static gboolean timesource_prepare(gpointer source_data, 
-				   GTimeVal *current_time, gint *timeout,
-				   gpointer user_data)
-{
-     int i;
-     i = timesource_scan(current_time,FALSE);
-     if (i < 0) 
-	  return FALSE;
-     else if (i == 0)
-	  return TRUE;
-     else {
-	  if (*timeout < 0 || i < *timeout)
-	       *timeout = i;
-	  return FALSE;
-     }
-}
-
-static gboolean timesource_check(gpointer source_data, GTimeVal *current_time,
-				 gpointer user_data)
-{
-     int i;
-     i = timesource_scan(current_time,FALSE);
-     return (i == 0);
-}
-
-static gboolean timesource_dispatch(gpointer source_data, 
-				    GTimeVal *dispatch_time, gpointer user_data)
-{
-     timesource_scan(dispatch_time,TRUE);
-     return TRUE;
-}
-
-static GSourceFuncs tsf = { 
-     timesource_prepare, timesource_check, timesource_dispatch, NULL
-};
-				    
-static void mainloop_time_source_added(struct time_source *src)
-{
-     static gboolean inited = FALSE;
-     if (!inited) {
-	  g_source_add(G_PRIORITY_HIGH, FALSE, &tsf, NULL, NULL, NULL);
-	  inited = TRUE;
-     }
-}
-
-static gboolean iosource_prepare(gpointer source_data, 
-				 GTimeVal *current_time, gint *timeout,
-				 gpointer user_data)
-{
-     return FALSE;
-}
-
-static gboolean iosource_check(gpointer source_data, GTimeVal *current_time,
-			       gpointer user_data)
-{
-     return iosource_check_main();
-}
-
-static gboolean iosource_dispatch(gpointer source_data, 
-				    GTimeVal *dispatch_time, gpointer user_data)
-{
-     iosource_dispatch_main(dispatch_time);
-     return TRUE;
-}
-
-static GSourceFuncs isf = { 
-     iosource_prepare, iosource_check, iosource_dispatch, NULL
-};
-				    
-static void poll_add_main(GPollFD *pfd)
-{
-     static gboolean inited = FALSE;
-     if (!inited) {
-	  g_source_add(G_PRIORITY_HIGH, FALSE, &isf, NULL, NULL, NULL);
-	  inited = TRUE;
-     }
-     g_main_add_poll(pfd, G_PRIORITY_HIGH);
-}
-
-static void poll_remove_main(GPollFD *pfd)
-{
-     g_main_remove_poll(pfd);
-}
-
-
-
-
-
-#else
-
-
-
-
-
-
 static gboolean timesource_prepare(GSource *source, gint *timeout)
 {
      GTimeVal tv;
@@ -383,8 +282,6 @@ static void poll_remove_main(GPollFD *pfd)
 {
      g_source_remove_poll(iosource_handle, pfd);
 }
-
-#endif
 
 
 

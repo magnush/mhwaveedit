@@ -382,6 +382,7 @@ AC_SUBST(ARTSC_LIBS)
 
 dnl Check for GTK+ without gthread
 
+PKG_CHECK_MODULES([GLIB], [glib-2.0])
 PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.18])
 
 
