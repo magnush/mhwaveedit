@@ -294,7 +294,7 @@ static void cleanup_filename(gchar *fn)
      }     
 }
 
-#if (GTK_MAJOR_VERSION < 2) || (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 4) || defined(DISABLE_FILECHOOSER)
+#if (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 4) || defined(DISABLE_FILECHOOSER)
 
 /* Use the GtkFileSelection */
 

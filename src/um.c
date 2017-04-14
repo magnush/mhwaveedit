@@ -71,129 +71,6 @@ void user_perror(const char *msg){
      g_free(d);
 }
 
-#if GTK_MAJOR_VERSION == 1
-
-static GtkWidget *wnd = NULL;
-
-static void window_destroy(GtkWidget *widget, gpointer user_data)
-{
-     wnd = NULL;
-     // puts("window_destroy!");
-}
-
-int do_user_message(char *msg, int type, gboolean block)
-{
-     GtkWidget *l,*b;
-     /* If we're called recursively with UM_OK it's probably some kind of error
-      * message so spit it out to stderr... */
-     if (!um_use_gtk || (user_message_flag && type==UM_OK)) {
-	  g_assert(type == UM_OK);
-	  console_message(msg);
-	  return MR_OK;
-     }
-     g_assert(!user_message_flag);
-     g_assert(block || type==UM_OK);
-     wnd=gtk_dialog_new();
-     gtk_window_set_title(GTK_WINDOW(wnd),_("Message"));
-     gtk_window_set_modal(GTK_WINDOW(wnd),TRUE);
-     gtk_window_set_position(GTK_WINDOW(wnd),GTK_WIN_POS_CENTER);
-     /*gtk_container_set_border_width(GTK_CONTAINER(GTK_DIALOG(wnd)->vbox),10);*/
-     gtk_container_set_border_width(GTK_CONTAINER(wnd),10);
-     if (block) gtk_signal_connect(GTK_OBJECT(wnd),"destroy",GTK_SIGNAL_FUNC(window_destroy),NULL);
-     l = gtk_label_new(msg);
-     gtk_label_set_line_wrap(GTK_LABEL(l),TRUE);
-     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(wnd)->vbox),l,TRUE,FALSE,8);
-     gtk_widget_show(l);
-     switch (type) {
-     case UM_OK:
-	  b=gtk_button_new_with_label(_("OK"));
-	  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(wnd)->action_area),b,FALSE,FALSE,0);
-	  if (block) gtk_signal_connect(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(modal_callback),(gpointer)&mr_ok);
-	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
-	  gtk_widget_show(b);
-	  modal_result=MR_OK;
-	  break;
-     case UM_YESNOCANCEL:
-	  b=gtk_button_new_with_label(_("Yes"));
-	  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(wnd)->action_area),b,
-			     FALSE,FALSE,0);
-	  gtk_signal_connect(GTK_OBJECT(b),"clicked",
-			     GTK_SIGNAL_FUNC(modal_callback),
-			     (gpointer)&mr_yes);
-	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
-	  gtk_widget_show(b);
-	  b=gtk_button_new_with_label(_("No"));
-	  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(wnd)->action_area),b,
-			     FALSE,FALSE,0);
-	  gtk_signal_connect(GTK_OBJECT(b),"clicked",
-			     GTK_SIGNAL_FUNC(modal_callback),
-			     (gpointer)&mr_no);
-	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
-	  gtk_widget_show(b);
-	  b=gtk_button_new_with_label(_("Cancel"));
-	  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(wnd)->action_area),b,
-			     FALSE,FALSE,0);
-	  gtk_signal_connect(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(modal_callback),(gpointer)&mr_cancel);
-	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
-	  gtk_widget_show(b);
-	  modal_result=MR_CANCEL;
-	  break;
-     case UM_OKCANCEL:
-	  b=gtk_button_new_with_label(_("OK"));
-	  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(wnd)->action_area),b,
-			     FALSE,FALSE,0);
-	  gtk_signal_connect(GTK_OBJECT(b),"clicked",
-			     GTK_SIGNAL_FUNC(modal_callback),
-			     (gpointer)&mr_ok);
-	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
-	  gtk_widget_show(b);
-	  b=gtk_button_new_with_label(_("Cancel"));
-	  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(wnd)->action_area),b,
-			     FALSE,FALSE,0);
-	  gtk_signal_connect(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(modal_callback),(gpointer)&mr_cancel);
-	  gtk_signal_connect_object(GTK_OBJECT(b),"clicked",GTK_SIGNAL_FUNC(gtk_widget_destroy),GTK_OBJECT(wnd));
-	  gtk_widget_show(b);
-	  modal_result=MR_CANCEL;
-	  break;	  
-     }
-     gtk_widget_show(wnd);
-     if (block) {
-	  user_message_flag++;
-	  while (wnd)
-	       mainloop();
-	  user_message_flag--;
-	  // puts("Out!");
-	  return modal_result;
-     } else return MR_OK;
-}
-
-int user_message(char *msg, int type)
-{
-     return do_user_message(msg,type,TRUE);
-}
-
-void user_info(char *msg)
-{
-     user_message(msg,UM_OK);
-}
-
-void user_error(char *msg)
-{
-     user_message(msg,UM_OK);
-}
-
-void popup_error(char *msg)
-{
-     do_user_message(msg,UM_OK,FALSE);
-}
-
-void user_warning(char *msg)
-{
-     user_message(msg,UM_OK);
-}
-
-#else
-
 static gboolean responded = FALSE;
 static gint r;
 
@@ -277,8 +154,6 @@ void user_warning(char *msg)
 }
 
 
-#endif
-
 struct user_input_data {
      gboolean (*validator)(gchar *c);
      GtkWidget *entry,*window;
@@ -330,9 +205,7 @@ gchar *user_input(gchar *label, gchar *title, gchar *defvalue,
      }
      ent = gtk_entry_new();
      gtk_entry_set_text(GTK_ENTRY(ent),defvalue);
-#if GTK_MAJOR_VERSION > 1
      gtk_entry_set_activates_default(GTK_ENTRY(ent),TRUE);
-#endif
      gtk_box_pack_start(GTK_BOX(b),ent,FALSE,FALSE,0);
      c = gtk_hseparator_new();
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,3);

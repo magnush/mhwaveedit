@@ -219,29 +219,6 @@ static void chunk_view_update_image_main(ChunkView *cv, GdkDrawable *image,
 
 static void chunk_view_update_image(ChunkView *cv, guint xs, guint xe)
 {
-#if GTK_MAJOR_VERSION < 2
-     GtkWidget *wid = GTK_WIDGET(cv);
-     gint w,h;
-     /* printf("chunk_view_update_image: %d->%d\n",xs,xe); */
-     /* gint cx,v1,v2,pv1,pv2; */
-     
-     /* Skapa pixmap */          
-     w = wid->allocation.width;
-     h = wid->allocation.height;
-     if (cv->timescale) h-=font_height;
-     if (cv->image!=NULL && (w != cv->image_width || h != cv->image_height)) {
-	  gdk_pixmap_unref(cv->image);
-	  cv->image = NULL;	  
-     }
-     if (cv->image == NULL) {
-	  cv->image = gdk_pixmap_new(wid->window, w, h, -1);
-	  cv->image_width = w;
-	  cv->image_height = h;
-	  xs = 0;
-	  xe = w-1;
-     }
-     chunk_view_update_image_main(cv,cv->image,xs,xe);
-#endif
 }
 
 struct draw_mark_data {
@@ -283,9 +260,7 @@ static void draw_time_bars(ChunkView *view, GdkEventExpose *event,
 {
      char buf[32];
      gint c,i,j;
-#if GTK_MAJOR_VERSION == 2
      PangoLayout *pl;
-#endif
      GtkWidget *widget = GTK_WIDGET(view);
      Document *d = view->doc;
      char *s;
@@ -318,13 +293,6 @@ static void draw_time_bars(ChunkView *view, GdkEventExpose *event,
 
 	       if (s == NULL) continue;
 	       
-	       
-#if GTK_MAJOR_VERSION == 1
-	       i = gdk_string_width( widget->style->font, buf ) / 2;
-	       gtk_draw_string( widget->style, widget->window, 
-				GTK_STATE_NORMAL, j-i, 
-				widget->allocation.height-1, buf );
-#else
 	       /* puts(buf); */
 	       pl = gtk_widget_create_pango_layout( widget, buf );
 	       pango_layout_get_pixel_size(pl, &i, NULL);
@@ -332,7 +300,6 @@ static void draw_time_bars(ChunkView *view, GdkEventExpose *event,
 				j-i/2, widget->allocation.height-font_height,
 				pl);
 	       g_object_unref(G_OBJECT(pl));
-#endif
 	  }
      } 
 }
@@ -419,19 +386,8 @@ static gint chunk_view_expose(GtkWidget *widget, GdkEventExpose *event)
 
      /* printf("Expose: (%d,%d)+(%d,%d)\n",event->area.x,event->area.y,
 	event->area.width,event->area.height); */
-#if GTK_MAJOR_VERSION < 2
-     /* This call creates the pixmap if it doesn't exist,
-      * otherwise does nothing (because xe<xs) */	     
-     chunk_view_update_image(cv,1,0);
-
-     gdk_draw_pixmap ( widget->window, get_gc(BLACK,widget), cv->image,
-		       event->area.x, event->area.y, event->area.x, 
-		       event->area.y, event->area.width, 
-		       event->area.height );
-#else
      chunk_view_update_image_main( cv, widget->window, event->area.x, 
 				   event->area.x + event->area.width - 1 );
-#endif
 
      if (d == NULL) return FALSE;
 
@@ -548,13 +504,11 @@ static gint scroll_wheel(GtkWidget *widget, gdouble mouse_x, int direction)
      return FALSE;
 }
 
-#if GTK_MAJOR_VERSION == 2
 static gint chunk_view_scrollwheel(GtkWidget *widget, GdkEventScroll *event)
 {
      if (event->direction == GDK_SCROLL_DOWN) return scroll_wheel(widget, event->x, -1);
      else return scroll_wheel(widget, event->x, 1);
 }
-#endif
 
 static gint chunk_view_button_press(GtkWidget *widget, GdkEventButton *event)
 {     
@@ -767,9 +721,7 @@ static void chunk_view_class_init(GtkObjectClass *klass)
      wc->button_press_event = chunk_view_button_press;
      wc->motion_notify_event = chunk_view_motion_notify;
      wc->button_release_event = chunk_view_button_release;
-#if GTK_MAJOR_VERSION == 2
      wc->scroll_event = chunk_view_scrollwheel;
-#endif
      cvc->double_click = NULL;
 
      chunk_view_signals[DOUBLE_CLICK_SIGNAL] = 
@@ -794,18 +746,11 @@ static void chunk_view_init(GtkObject *obj)
 			    GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
 			    GDK_POINTER_MOTION_MASK );
      if (!font_height) {
-#if GTK_MAJOR_VERSION == 1
-	  font_height = gdk_string_height( GTK_WIDGET(obj)->style->font, 
-					   "0123456789")+3;
-	  font_width = gdk_string_width( GTK_WIDGET(obj)->style->font,
-					 "0123456789")+3;
-#else
 	  PangoLayout *pl;
 	  pl = gtk_widget_create_pango_layout( GTK_WIDGET(obj), "0123456789" );
 	  pango_layout_get_pixel_size(pl, (gint *)&font_width, 
 				      (gint *)&font_height);
 	  g_object_unref(pl);
-#endif
      }
 }
 

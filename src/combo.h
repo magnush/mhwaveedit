@@ -33,7 +33,7 @@
 #define COMBO_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,combo_get_type(),ComboClass)
 #define IS_COMBO(obj) GTK_CHECK_TYPE(obj,combo_get_type())
 
-#if (GTK_MAJOR_VERSION == 1) || (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 4)
+#if (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 4)
 #define COMBO_OLDSCHOOL
 #define COMBO_PARENT_TYPE GtkCombo
 #define COMBO_PARENT_CLASS GtkComboClass

@@ -28,11 +28,7 @@
 #include "main.h"
 #include "gettext.h"
 
-#if GTK_MAJOR_VERSION==2
 static GtkEntryClass *parent_class;
-#else
-static GtkEditableClass *parent_class;
-#endif
 
 enum {
      NUMCHANGED_SIGNAL,
@@ -42,22 +38,10 @@ enum {
 typedef void (*GtkSignal_NONE__LONG) (GtkObject *object, long int arg1, 
 				       gpointer user_data);
 
-#if GTK_MAJOR_VERSION == 2
 
 #    include "int_box_marsh.c"
 #    define gtk_marshal_NONE__LONG gtk_marshal_VOID__LONG
 
-#else
-
-static void gtk_marshal_NONE__LONG(GtkObject *object, GtkSignalFunc func,
-				    gpointer func_data, GtkArg *args)
-{
-     GtkSignal_NONE__LONG rfunc;
-     rfunc=(GtkSignal_NONE__LONG)func;
-     rfunc(object,GTK_VALUE_LONG(args[0]),func_data);
-}
-
-#endif /* GTK 2 */
 
 static guint intbox_signals[LAST_SIGNAL] = { 0 };
 
@@ -68,11 +52,7 @@ static void intbox_update_text(Intbox *box)
      gtk_entry_set_text(GTK_ENTRY(box),e);
 }
 
-#if GTK_MAJOR_VERSION==2
 static void intbox_activate(GtkEntry *editable)
-#else
-static void intbox_activate(GtkEditable *editable)
-#endif
 {
      long l;
      char *c,*d;
@@ -101,11 +81,7 @@ static gint intbox_focus_out(GtkWidget *widget, GdkEventFocus *event)
 static void intbox_class_init(IntboxClass *klass)
 {
      parent_class = gtk_type_class(gtk_entry_get_type());
-#if GTK_MAJOR_VERSION==2
      GTK_ENTRY_CLASS(klass)->activate = intbox_activate;
-#else
-     GTK_EDITABLE_CLASS(klass)->activate = intbox_activate;
-#endif
      GTK_WIDGET_CLASS(klass)->focus_out_event = intbox_focus_out;
      klass->numchange=NULL;
      intbox_signals[NUMCHANGED_SIGNAL] = 
@@ -121,13 +97,7 @@ static void intbox_class_init(IntboxClass *klass)
 
 static void intbox_init(Intbox *fbox)
 {
-#if GTK_MAJOR_VERSION==2
      gtk_entry_set_width_chars(GTK_ENTRY(fbox),10);
-#else
-     GtkRequisition req;
-     gtk_widget_size_request(GTK_WIDGET(fbox),&req);
-     gtk_widget_set_usize(GTK_WIDGET(fbox),req.width/3,req.height);
-#endif
      fbox->adj = NULL;
 }
 
@@ -220,9 +190,7 @@ static void intbox_adj_changed(GtkAdjustment *adjustment, gpointer user_data)
 GtkWidget *intbox_create_scale(Intbox *box, long minval, long maxval)
 {
      GtkWidget *w;
-#if GTK_MAJOR_VERSION > 1
      GtkRequisition req;
-#endif
 
      if (box->adj == NULL) {	  
 	  box->adj = GTK_ADJUSTMENT(gtk_adjustment_new(minval,minval,
@@ -236,9 +204,7 @@ GtkWidget *intbox_create_scale(Intbox *box, long minval, long maxval)
      }
      w = gtk_hscale_new(box->adj);
      gtk_scale_set_digits(GTK_SCALE(w),0);
-#if GTK_MAJOR_VERSION > 1
      gtk_widget_size_request(w,&req);
      gtk_widget_set_usize(w,req.width*5,req.height);
-#endif
      return w;
 }

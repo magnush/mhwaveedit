@@ -80,25 +80,7 @@ static int idle_work(gpointer csource, gpointer user_data)
      return -1;
 }
 
-#if GTK_MAJOR_VERSION == 1
-
-void gdk_gc_set_rgb_fg_color(GdkGC *gc, GdkColor *clr)
-{
-     static GdkColor cached = {0,-1,-1,-1};
-     if (clr->red == cached.red && clr->green == cached.green && 
-	 clr->blue == cached.blue) 
-	  clr->pixel = cached.pixel;
-     else {
-	  gdk_colormap_alloc_color(gdk_colormap_get_system(), 
-				   clr,FALSE,TRUE);
-	  memcpy(&cached,clr,sizeof(cached));
-     }
-     gdk_gc_set_foreground(gc, clr);
-}
-
-#endif
-
-#if GTK_MAJOR_VERSION == 1 || (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 18)
+#if (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 18)
 
 void gtk_widget_set_has_window(GtkWidget *w, gboolean has_window)
 {
@@ -141,17 +123,13 @@ int main(int argc, char **argv)
     /* Disable gtk's ability to set the locale. */
     /* If gtk is allowed to set the locale, then it will override the above */
     /* setlocale for LC_NUMERIC. */
-#if GTK_MAJOR_VERSION == 2
      gtk_disable_setlocale();
-#endif
 
 #ifdef ENABLE_NLS
      /* Setup message domain */
      bindtextdomain("mhwaveedit", LOCALEDIR);
      textdomain("mhwaveedit");
-#if GTK_MAJOR_VERSION == 2
      bind_textdomain_codeset("mhwaveedit", "UTF-8");
-#endif
 #endif
 
      floating_point_check();

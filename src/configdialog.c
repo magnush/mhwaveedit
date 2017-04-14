@@ -234,12 +234,7 @@ static void color_select(GtkList *list, GtkWidget *widget,
      color[2] = ((gdouble)(c->blue))/65535.0;
      color[3] = 1.0;
      gtk_color_selection_set_color(cs,color);
-#if GTK_MAJOR_VERSION == 1
-gtk_color_selection_set_color(cs,color);
-#endif
-#if GTK_MAJOR_VERSION == 2
-gtk_color_selection_set_previous_color(cs, c);
-#endif
+     gtk_color_selection_set_previous_color(cs, c);
 }
 
 static void color_set(GtkColorSelection *selection, gpointer user_data)
@@ -278,11 +273,10 @@ static void colors_click(GtkButton *button, gpointer user_data)
 	  memcpy(&ctable[i-FIRST_CUSTOM_COLOR],get_color(i),sizeof(GdkColor));
 
      cs = gtk_color_selection_new();
-#if GTK_MAJOR_VERSION == 2
      gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION(cs), 
 						  FALSE);
      gtk_color_selection_set_has_palette (GTK_COLOR_SELECTION(cs), TRUE);
-#endif
+
      gtk_signal_connect(GTK_OBJECT(cs),"color_changed",
 			GTK_SIGNAL_FUNC(color_set),NULL);
 

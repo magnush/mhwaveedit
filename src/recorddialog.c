@@ -503,21 +503,14 @@ static void other_format_dialog(RecordFormatCombo *rfc, RecordDialog *rd)
      GtkWidget *a,*b,*c,*d,*e,*f,*item;
      GtkAccelGroup* ag;
      GtkRequisition req;
-#if GTK_MAJOR_VERSION > 1
      static GtkWindowGroup *wg = NULL;
-#endif     
-     
     
      ag = gtk_accel_group_new();
 
      other_dialog.wnd = GTK_WINDOW(gtk_window_new(GTK_WINDOW_DIALOG));
      gtk_window_set_title(other_dialog.wnd,_("Custom format"));
-#if GTK_MAJOR_VERSION < 2
-     gtk_window_set_modal(other_dialog.wnd,TRUE);
-#else
      if (wg == NULL) wg = gtk_window_group_new();
      gtk_window_group_add_window(wg,other_dialog.wnd);
-#endif
      gtk_window_set_transient_for(other_dialog.wnd,GTK_WINDOW(rd));
 
      other_dialog.fs = FORMAT_SELECTOR(format_selector_new(TRUE));
