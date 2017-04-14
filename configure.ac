@@ -1,19 +1,21 @@
-dnl Process this file with autoconf to produce a configure script.
-AC_INIT
-AC_PREREQ(2.59)
-AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_SRCDIR([src/chunk.c])
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ([2.68])
+AC_INIT([mhWaveEdit],[1.4.25pre],[https://github.com/magnush/mhwaveedit])
 
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-MHW_VERSION=1.4.25pre
-
-AM_INIT_AUTOMAKE(mhWaveEdit,$MHW_VERSION)
-AM_MAINTAINER_MODE([enable])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign -Wno-portability])
+AC_CONFIG_SRCDIR([src/chunk.c])
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
+AM_SILENT_RULES([yes])
 
 dnl Check for libintl
 AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.18.3])
 
 PKG_PROG_PKG_CONFIG
 
@@ -377,32 +379,11 @@ fi
 AC_SUBST(ARTSC_CFLAGS)
 AC_SUBST(ARTSC_LIBS)
 
-dnl Check for GTK+
-
-AC_DEFUN([AC_DISABLE_GTK2],[
-	if test "x$enableval" = "xno" ; then
-	DISABLE_GTK2='yes'
-	fi
-])
-
-AC_ARG_ENABLE(gtk2, [  --disable-gtk2          Don't use GTK+ 2, use 1.2 instead],
-	      AC_DISABLE_GTK2, DISABLE_GTK2='no')
-
 
 dnl Check for GTK+ without gthread
 
-FOUND_GTK="no"
-USES_GTK2="no"
+PKG_CHECK_MODULES([GTK], [gtk+-2.0])
 
-if test "x$FOUND_GTK" = "xno"; then
-	if test "x$DISABLE_GTK2" != "xyes"; then
-	AM_PATH_GTK_2_0(2.0.0,USES_GTK2="yes" FOUND_GTK="yes")
-	fi
-fi
-
-if test "x$FOUND_GTK" = "xno"; then
-AM_PATH_GTK(1.2.5,FOUND_GTK="yes",AC_MSG_ERROR(mhWaveEdit requires GTK+ version 1.2.5 or higher...))
-fi
 
 dnl Check for gthread if we're using GTK+ 2
 dnl Not needed by the app itself, but needed for some aRts versions.
@@ -410,10 +391,9 @@ GTHREAD_CFLAGS=""
 GTHREAD_LIBS=""
 HAVE_GTHREAD="no"
 
-if test "x$USES_GTK2" = "xyes"; then
-   HAVE_GTHREAD="yes"
-   PKG_CHECK_MODULES(GTHREAD, gthread-2.0, , HAVE_GTHREAD="no")
-fi
+HAVE_GTHREAD="yes"
+PKG_CHECK_MODULES(GTHREAD, gthread-2.0, , HAVE_GTHREAD="no")
+
 if test "x$HAVE_GTHREAD" = "xyes"; then
    AC_DEFINE(HAVE_GTHREAD,[],[Defined if Glib thread support is available])
 fi
@@ -495,15 +475,11 @@ echo "------------------------"
 echo "mhWaveEdit configuration"
 echo "------------------------"
 echo
-echo "Version: $MHW_VERSION"
+echo "Version: $VERSION"
 echo 
 echo "Libraries: "
 echo -n "  GTK+ version:           "
-if test "x$USES_GTK2" = "xyes"; then
-	echo "2.x"
-else
-	echo "1.2"
-fi
+echo `$PKG_CONFIG --modversion gtk+-2.0`
 echo    "  Libsndfile:             $HAVE_SNDFILE"
 echo    "  Libsamplerate:          $HAVE_LIBSAMPLERATE"
 echo
@@ -557,13 +533,4 @@ echo    $CFLAGS
 echo    "  Build date string:      ${FIXED_DATE_STR}"
 echo    "  Build time string:      ${FIXED_TIME_STR}"
 echo
-if test "x$USES_GTK2$MHW_HAVE_ARTSC" = "xnoyes"; then
-        echo "---------------------------------------------------------------"
-        echo "WARNING: There are known issues when building with GTK+ 1.2 "
-	echo "and newer versions of aRts. If you are experiencing problems,"
-	echo "try running configure with the --without-arts option to disable "
-	echo "aRts support"
-	echo "---------------------------------------------------------------"
-        echo
-fi
 echo    "Type make (or gmake) to compile mhWaveEdit!"
