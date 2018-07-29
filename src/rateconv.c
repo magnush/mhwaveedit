@@ -313,7 +313,11 @@ static gint sox_write_main(struct convdata_sox *cd, gpointer buf,
      if (bufsize == 0 || cd->close_status>0 || !fd_canwrite(cd->fds[0])) 
 	  return purged?cd->format.samplebytes:0;     
      /* puts("sox_write: calling write..."); */
+#ifdef PIPE_BUF
      i = write(cd->fds[0],buf,MIN(bufsize,PIPE_BUF));
+#else
+     i = write(cd->fds[0],buf,MIN(bufsize,fpathconf(cd->fds[0], _PC_PIPE_BUF)));
+#endif
      /* printf("tried = %d, got = %d\n",(int)bufsize,i); */
      if (i == 0) {
 	  user_error(_("Unexpected EOF in connection to subprocess"));

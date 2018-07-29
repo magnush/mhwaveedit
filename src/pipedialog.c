@@ -445,7 +445,11 @@ static Chunk *pipe_dialog_pipe_chunk_main(Chunk *chunk, gchar *command,
 	       }
 	       /* printf("Writing data...\n"); */
 	       /* Write data */
+#ifdef PIPE_BUF
 	       i = write(fds[0],outbuf+bp,MIN(bs-bp,PIPE_BUF));
+#else
+	       i = write(fds[0],outbuf+bp,MIN(bs-bp,fpathconf(fds[0], _PC_PIPE_BUF)));
+#endif
 	       /* i = write(fds[0],outbuf+bp,1); */
 	       /* printf("Finished writing.\n"); */
 	       if (i == -1) {
