@@ -1920,7 +1920,7 @@ static GtkWidget *create_menu(Mainwindow *w)
 	  {N_("/File/Save selection as..."),"<control>U",file_saveselection,0,NULL},
 	  { N_("/_Edit"),         NULL,         NULL,           0, "<Branch>"    },
 	  { N_("/Edit/_Undo"),    "<control>Z", edit_undo,      0, NULL          },
-	  { N_("/Edit/_Redo"),    NULL,         edit_redo,      0, NULL },
+	  { N_("/Edit/_Redo"), "<shift><control>Z", edit_redo,  0, NULL },
 	  { N_("/Edit/sep1"),     NULL,         NULL,           0, "<Separator>" },
 	  { N_("/Edit/Cu_t"),     "<control>X", edit_cut,       0, NULL          },
 	  { N_("/Edit/_Copy"),    "<control>C", edit_copy,      0, NULL          },
