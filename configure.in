@@ -7,10 +7,12 @@ AC_CONFIG_SRCDIR([src/chunk.c])
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-MHW_VERSION=1.4.24pre
+MHW_VERSION=1.4.24
 
 AM_INIT_AUTOMAKE(mhWaveEdit,$MHW_VERSION)
-AM_MAINTAINER_MODE([enable])
+# This is disabled in releases because timestamps can not be preserved through
+# the current Github-based release flow.
+AM_MAINTAINER_MODE([disable])
 
 dnl Check for libintl
 AM_GNU_GETTEXT([external])
