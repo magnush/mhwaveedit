@@ -77,6 +77,18 @@
 #define INV_SPEED
 #endif
 
+#ifdef FIXED_DATE
+#define BUILD_DATE FIXED_DATE
+#else
+#define BUILD_DATE __DATE__
+#endif
+
+#ifdef FIXED_TIME
+#define BUILD_TIME FIXED_TIME
+#else
+#define BUILD_TIME __TIME__
+#endif
+
 ListObject *mainwindow_objects = NULL;
 
 static gboolean window_geometry_stack_inited = FALSE;
@@ -1477,7 +1489,7 @@ gtk_window_set_modal(GTK_WINDOW(a),TRUE);
      c = gtk_hseparator_new();
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);
      gtk_widget_show(c);
-     p = g_strdup_printf(_("Compiled %s %s"), __DATE__, __TIME__);
+     p = g_strdup_printf(_("Compiled %s %s"), BUILD_DATE, BUILD_TIME);
      c = gtk_label_new(p);
      g_free(p);
      gtk_box_pack_start(GTK_BOX(b),c,FALSE,FALSE,0);

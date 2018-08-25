@@ -69,6 +69,24 @@ AC_ARG_WITH(default-mixerapp,
 DEFAULT_MIXERAPP=$withval)
 AC_DEFINE_UNQUOTED(DEFAULT_MIXERAPP,"${DEFAULT_MIXERAPP}",[Default mixer application])
 
+FIXED_DATE_STR="__DATE__ (actual compile date)"
+FIXED_TIME_STR="__TIME__ (actual compile time)"
+AC_ARG_WITH(build-date,
+[  --with-build-date=str   Fixed string to use instead of __DATE__],
+if test "x$withval" != "xno" ; then
+AC_DEFINE_UNQUOTED(FIXED_DATE,"${withval}",[Fixed build date])
+FIXED_DATE_STR=${withval}
+fi
+)
+
+AC_ARG_WITH(build-time,
+[  --with-build-time=str   Fixed string to use instead of __TIME__],
+if test "x$withval" != "xno" ; then
+AC_DEFINE_UNQUOTED(FIXED_TIME,"${withval}",[Fixed build date])
+FIXED_TIME_STR=${withval}
+fi
+)
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_GCC_TRADITIONAL
@@ -531,9 +549,12 @@ else
 fi
 
 echo    "  Default mixer app:      $DEFAULT_MIXERAPP"
+echo
+echo "Build settings:"
 echo -n "  Compiler options:       "
 echo    $CFLAGS
-
+echo    "  Build date string:      ${FIXED_DATE_STR}"
+echo    "  Build time string:      ${FIXED_TIME_STR}"
 echo
 if test "x$USES_GTK2$MHW_HAVE_ARTSC" = "xnoyes"; then
         echo "---------------------------------------------------------------"
