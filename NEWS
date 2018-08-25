@@ -1,3 +1,10 @@
+New features in version 1.4.24:
+
+ * Add keyboard shortcut for Redo
+ * Add 64x64 version of icon, update install paths for icons
+ * Build and packaging fixes
+ * Update translations: it,fr
+
 New features in version 1.4.23:
 
  * After recording, place marks where overruns happened
