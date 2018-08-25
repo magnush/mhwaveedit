@@ -10,6 +10,7 @@ AC_CANONICAL_TARGET
 MHW_VERSION=1.4.23
 
 AM_INIT_AUTOMAKE(mhWaveEdit,$MHW_VERSION)
+AM_MAINTAINER_MODE([enable])
 
 dnl Check for libintl
 AM_GNU_GETTEXT([external])
