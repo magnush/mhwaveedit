@@ -1,0 +1,461 @@
+----------------------
+mhWaveEdit README file
+----------------------
+
+mhWaveEdit is a graphical program for editing sound files. It is completely 
+free (GPL).
+
+You can find the latest release of mhWaveEdit at:
+http://gna.org/projects/mhwaveedit/
+
+The contents of this file is also available inside mhWaveEdit from the help 
+menu. 
+
+------------
+Installation
+------------
+
+ * Unpack the source:                 tar xjf mhwaveedit-1.4.24.tar.gz
+ * Go into the source directory:      cd mhwaveedit-1.4.24
+ * Run the configure script:          ./configure
+ * Compile the sources:               make
+ * Install the program:               su -c "make install"
+
+-----------------
+Configure options
+-----------------
+
+For most people, just using ./configure without any arguments should work fine, 
+but here are some options that the configure-script supports:
+
+--disable-gtk2
+
+  If you have both GTK+ 1.2 and GTK+ 2.0 installed and want to use GTK+ 1.2, 
+  specify this option.
+
+--without-portaudio 
+--without-sdl
+--without-alsalib
+--without-oss
+--without-jack
+  
+  Specifying this option will leave out a sound driver, even if 
+  it's libs and headers are found.
+
+--without-libsndfile
+--without-libsamplerate
+
+  Specifying this option will leave out libsndfile/libsamplerate 
+  support, even if the library is found.
+
+--with-libsndfile=prefix
+--with-libsamplerate=prefix
+
+  This lets you specify the prefix where libsndfile/libsamplerate is 
+  installed if it wasn't auto-detected.
+
+--with-double-samples
+
+  Use double precision floating point numbers for sample processing. If
+  you intend to edit 32-bit files, you should enable this. 
+  
+--without-check-casts
+
+  This option disables the run-time type cast checking. It makes some parts of
+  the program faster, but makes it harder to debug.
+
+
+
+--------
+Starting
+--------
+
+To start the program, simply type mhwaveedit. If you want to, you can specify 
+files to open on the command line, for example 'mhwaveedit file.wav'.
+
+-----------
+Sample view
+-----------
+
+The area where you 'see' the contents of the file you are editing, is called 
+the 'sample view'. 
+
+In the sample view there is a grey vertical bar called the 'cursor'. The cursor 
+follows the sound wave when you play the sound. You can position the cursor by 
+clicking with the right (2:nd) mouse button. If you do this while you're 
+playing a file, the playing will continue from the new cursor position. You can 
+also position the cursor more exact by using the 'Position Cursor...' command 
+on the Edit menu.
+
+You can place marks in your file by holding down Ctrl and pressing a number 
+from 0 to 9. This will place a mark (green vertical bar) with the same number 
+at the current cursor position. You can later make the cursor go to that 
+position again by just pressing the number. Setting and jumping to marks can be 
+done while playing. To remove a mark, jump to the mark and set it again.
+
+-------
+Playing
+-------
+
+Playing a file is simple, just load the file and press the play button. The 
+green play button plays from the current position. The yellow play button plays 
+the current selection, or the entire file if nothing is selected. Stop the 
+playback with the stop button (with the red square). 
+
+The playback speed can be varied by adjusting the slider to the far right. 
+
+You can do normal editing while the file is playing.
+
+---------
+Recording
+---------
+
+Recording is done with 'Record...' on the Play menu, or the Record button (the 
+red circle). A dialog box will pop up where you can select what format you want 
+to record in. After selecting the format, meters and numbers will appear 
+showing info about the volume level of the sound input. 
+
+When you want to start recording, press the "Start recording" button. When 
+you've recorded everything you wanted to, press the Finish button and the 
+record dialog will disappear and newly recorded sound will show up in a new 
+window.
+
+Currently it is impossible to play and record at the same time, so the playback 
+will stop when you record.
+
+-------
+Editing
+-------
+
+You make selections by dragging the mouse over the sample view. You can hear 
+what you've currently selected by clicking on the "play selection" button (the 
+button with the yellow arrow) or by selecting 'Play selection' from the Play 
+menu.
+
+You can use the cursor to refine the selection. Use the 'Selection start at 
+cursor' and 'Selection end at cursor' buttons to move the selection starting 
+point or the selection end point to the current cursor position. You can also 
+drag the selection endpoints using the mouse.
+
+The 'Cut' and 'Copy' functions work like in any other software. 
+
+The 'Paste' function insert the clipboard contents at the cursor position. The 
+'Paste over' function works like 'Paste', except that it overwrites the data 
+after the insert position. 
+
+The 'Paste mix' function combines the clipboard data with the data at the 
+cursor position.
+
+The 'Paste as new' function opens a new window and puts the clipboard contents 
+into it. 
+
+The 'Crop' function deletes all parts of the file that are not selected.
+
+The 'Silence selection' function replaces the selected part with silence. To 
+avoid clicks, the silent part is a line that meets the wave at the endpoints.
+
+All editing functions work non-destructively, that is, the file you're editing 
+isn't actually changed until you save it (the effects also work this way).
+
+
+-------
+Effects
+-------
+
+mhWaveEdit has a few simple effects, which are available from the 'Effects' 
+menu. 
+
+ * Fade in/out
+
+   This creates a linear fade in or fade out effect.
+
+ * Normalize, Normalize to...
+
+   This amplifies the sound as much as possible without getting clipping 
+distortion. The "Normalize to..." item lets you specify which level to 
+normalize to.
+
+ * Volume adjust/fade...
+
+   This effect lets you select a starting volume and a ending volume and 
+amplifies the selection fading from the starting volume to the ending volume.
+
+   Note that volumes above 100% may cause sound distortion. Use the 'Find top 
+volume' to find out the maximum amplification possible without distortion. (You 
+can use this for normalizing samples.) 
+
+   By setting starting volume and ending volume to the same value you get a 
+simple amplification of the sound. 
+
+ * Convert samplerate...
+
+   This converts the samplerate of the entire file to one you specify. There 
+are different methods for doing this, usually the one in the top has the best 
+quality but can take longer than the other methode.
+
+ * Convert sample format...
+
+   This converts the sample format of the entire file.
+
+   The 'Don't actually change the data' option can be used if the program was 
+wrong about the file's format.
+
+ * Byte swap
+
+   This "byte swaps" the selected part. It can be used to repair damaged files 
+where the byte order is wrong. Note that if the sound looks alright but plays 
+wrong, you should not use this option, instead you should use the "byte-swap 
+output" option in the Preferences dialog.
+
+ * Mix to mono
+
+   This mixes all channels of the file together to a mono sound.
+
+ * Add channel
+
+   This copies the first channel to a new channel in the sound, converting mono 
+to stereo etc.
+
+ * Map channels...
+   
+   With this effect, you can change the number of channels in the file. You can 
+also rearrange and add (i.e. mix) channels.
+
+ * Combine channels...
+
+   This effect lets you create a new sound by a linear combination of the old 
+channels. This means you can do channel mixing / swapping / balance / panning / 
+amplification etc. by entering different values. For example, to swap the left 
+and right channel, you select that the new Channel 1 should be 0% of the old 
+Channel 1 and 100% of the old Channel 2, and the new Channel 2 should be 100% 
+of the old Channel 1 and 0% of the old Channel 2 
+
+ * Speed adjustment...
+
+   This effect changes the speed of the selection. The tone will change as well.
+ * Pipe through program...
+ 
+   This effect is for advanced users wanting to pipe raw audio data through an 
+external program. The output of the program is read back and replaces the 
+processed part. 
+
+mhWaveEdit supports LADSPA effects and can also make use of most of the SoX 
+utility's effects. To find the LADSPA plugins the environment variable 
+LADSPA_PATH must be properly set up. 
+
+All supported effects can be found by choosing the 'Effects...' menu item. The 
+effects are listed with names beginning with [B] for builtin effects, [L] for 
+LADSPA effects, and [S] for SoX effects.
+
+
+-------
+Quality
+-------
+
+Some notes on sound quality.
+
+The general rule when doing audio editing/processing is to not manipulate the 
+data more than necessary and keep an original copy whenever you're processing 
+your important files. 
+
+Cut, copy and paste operations move the data around without modifying it, so 
+these don't degrade the sound quality. Because of level differences, you may 
+get a "step" at the start and end of the inserted part, which can cause a small 
+clicking sound. 
+
+The mix paste function doesn't decrease quality, unless the peaks become too 
+high and you get clipping. In that case you will get a warning message.
+
+Sound data is normally stored as integer values. Therefore, whenever you 
+normalize, adjust volume, decrease sample size or filter a sound, the result 
+must be rounded. If you use 24 or 32 bit sample sizes, this is not really a 
+problem, but if you use 8 or 16 bits sample size, this rounding causes a 
+decrease in quality. 
+
+The quality decrease that the rounding causes can be masked by adding a small 
+amount of noise before rounding. This is called "dithering". mhWaveEdit 
+supports basic dithering and it's enabled by default.
+
+By default, mhWaveEdit uses floating-point temporary files for storing 
+processed results to avoid rounding until the file is saved.
+------------
+File formats
+------------
+
+Even if mhWaveEdit was originally built for editing wav files, it's also 
+possible to load and save in a few other formats. mhWaveEdit always supports 
+wav and raw files, but if it's compiled with the libsndfile library, mhWaveEdit 
+supports a couple of other formats as well. 
+
+To save a file with a different file format, use "Save as..." and choose a 
+format in the file type selection box. 
+
+mhWaveEdit has basic support for mp3 and ogg formats. For this to work you need 
+to have LAME installed for mp3 support, and OggDec/OggEnc for Ogg support. If 
+you have these programs, you can open and save mp3/ogg files just like any 
+other file format.
+
+If mplayer is installed, mhwaveedit can open all formats that it supports, for 
+example the soundtrack of a video file. Since mplayer is only a player, these 
+files can not be saved back after editing, you have to save the file into a 
+supported format.
+-----
+Files
+-----
+
+mhWaveEdit creates a directory ~/.mhwaveedit where it stores configuration 
+information. 
+
+The configuration file is called config. It can be hand edited, but the easiest 
+way is through 'Preferences' on the Edit menu.
+
+Each mhwaveedit process creates a session file in the .mhwaveedit directory 
+called mhwaveedit-session-<pid>-<session>-<state>, where <session> is the 
+session ID number and <state> is a character code showing the state of the 
+session ('r' for running sessions). 
+
+Temporary files are by default also stored in the ~/.mhwaveedit directory. 
+Which directories to use can be set through the preferences dialog. To get the 
+best performance, you should have one temporary directory for each local 
+filesystem. The temporary files have names of the form 
+"mhwaveedit-temp-<pid>-nnnn-<session>". Do NOT open or remove temporary files 
+with the same pid number as a currently running mhWaveEdit.
+
+mhWaveEdit checks on startup for leftover temporary files and lets the user 
+open them. After opening a crashed session, the files can be saved or thrown 
+away.
+------------------
+Keyboard shortcuts
+------------------
+
+F1            Help
+F12           Record
+
+Ctrl+(number) Set mark
+(number)      Goto mark
+
+Ctrl+P        Preferences
+Ctrl+E        Effects
+
+Ctrl+O        Open file
+Ctrl+S        Save file
+Ctrl+U        Save selection as
+
+Ctrl+C        Copy
+Ctrl+X        Cut
+Ctrl+D        Delete
+Delete        Delete
+Ctrl+V        Paste
+Ctrl+Z        Undo
+Ctrl+A        Select all
+
+Ctrl+G        Position cursor (Go to)
+Ctrl+H        Position cursor at file start
+Ctrl+J        Position cursor at file end
+Ctrl+K        Position cursor at selection start
+Ctrl+L        Position cursor at selection end
+Y,U           Move cursor to nearest all-channel zero-crossing
+I,O           Move cursor to nearest any-channel zero-crossing
+
+Ctrl+Q        Selection start at cursor
+Ctrl+W        Selection end at cursor
+
++,=           Zoom in
+-             Zoom out
+>             Zoom to selection
+<             Zoom all
+Arrow keys    Scroll left/right
+
+Home          Move view to file start
+End           Move view to file end
+Tab           Move view to cursor
+Ctrl+Tab      Move cursor to center of view
+
+Space         Play/Stop
+Shift+Space   Play all
+,             Play from cursor pos
+.             Stop
+/             Play selection
+H,J           Move cursor (and playback) 1/8 of view
+K,L           Move cursor one sample
+Ctrl+arrow    Move cursor (and playback) half second
+(             Play first 3 seconds of selection
+)             Play last 3 seconds of selection
+-------------
+Bug reporting
+-------------
+
+If you find a bug or flaw in the program that's not mentioned in the BUGS file, 
+report the bug in the bug tracker (see contact info) or mail a bug report 
+describing the bug to: magnus.hjorth@home.se
+
+In case of a crash, please do not send me any core dumps. They are huge and 
+completely useless to me. Instead, create a backtrace. Backtraces tell you 
+exactly where the program crashed.
+
+How to create a backtrace:
+1. Enable core dumps: ulimit -c unlimited
+2. Run the program:   mhwaveedit
+3. Make the program crash. You should now get a file named core or core.1234 in 
+the directory you're in.
+4. Run gdb with the program and core file: 
+   gdb /usr/local/bin/mhwaveedit core | tee backtrace.txt
+5. After gdb has loaded, use the command: bt
+6. Quit gdb with the command: quit
+7. Now you should have a back trace in the file backtrace.txt
+
+-----------
+Helping out
+-----------
+
+There are plenty of things you can do if you want to help the development of 
+mhWaveEdit. 
+
+First of all, look for bugs and report all bugs you find into the bug tracker 
+or through e-mail. Sometimes a bug can get overlooked for a long time because 
+nobody reports it, so don't be afraid to report bugs that have been there for a 
+few releases. You don't have to provide fixes or very detailed information, 
+although it helps of course.
+
+Feature requests are also welcome, report them to the mailing list or to the 
+bug tracker.
+
+If you speak a language other than English and mhWaveEdit isn't translated to 
+your language, you can contribute a translation. To do that, copy the template 
+mhwaveedit.pot in the po directory into a new file ll.po, where ll is your 
+language code (see 
+http://www.gnu.org/software/gettext/manual/html_node/gettext_221.html for a 
+list of language codes). 
+
+It's possible to edit po-files by hand, but I recommend a program such as 
+poEdit (http://www.poedit.org) for editing translations. 
+
+Note that for those translatable strings that look like "RecordStatus|Paused", 
+you should ignore what's to the left and only translate the string to the right 
+("Paused" in this example). This convention is there to make it possible to 
+translate the same string to different things depending on context. 
+
+After you've filled in all the translations you want (you don't have to 
+translate all the strings), mail in the po file to me (see contact info) and 
+I'll add it to the next release. 
+
+If a translation is incomplete, you're very welcome to translate the remaining 
+untranslated messages and mail them in. Corrections to translations are also 
+appreciated, but they may need to be checked with the previous translator 
+before including them. 
+
+
+-------
+Contact
+-------
+
+For bug reports, translation updates, patches and PayPal donations:
+magnus.hjorth@home.se
+
+Project page with bug tracker, mailing list membership:
+http://gna.org/projects/mhwaveedit
+
+Mailing list (you must be a subscriber before you can post messages):
+mhwaveedit-discuss@gna.org
+
+
