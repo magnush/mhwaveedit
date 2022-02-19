@@ -1,19 +1,18 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT
-AC_PREREQ(2.59)
+AC_INIT([mhWaveEdit],[1.4.25pre])
+AC_PREREQ([2.71])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/chunk.c])
 
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-MHW_VERSION=1.4.25pre
-
-AM_INIT_AUTOMAKE(mhWaveEdit,$MHW_VERSION)
+AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE([enable])
 
 dnl Check for libintl
 AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_REQUIRE_VERSION([0.21])
 
 PKG_PROG_PKG_CONFIG
 
@@ -400,9 +399,9 @@ if test "x$FOUND_GTK" = "xno"; then
 	fi
 fi
 
-if test "x$FOUND_GTK" = "xno"; then
-AM_PATH_GTK(1.2.5,FOUND_GTK="yes",AC_MSG_ERROR(mhWaveEdit requires GTK+ version 1.2.5 or higher...))
-fi
+#if test "x$FOUND_GTK" = "xno"; then
+#AM_PATH_GTK(1.2.5,FOUND_GTK="yes",AC_MSG_ERROR(mhWaveEdit requires GTK+ version 1.2.5 or higher...))
+#fi
 
 dnl Check for gthread if we're using GTK+ 2
 dnl Not needed by the app itself, but needed for some aRts versions.
@@ -428,7 +427,9 @@ AC_DEFINE(_LARGEFILE_SOURCE,[],[Defined to get fseeko/ftello prototypes])
 AC_CHECK_SIZEOF(off_t)
 
 dnl Checks for header files.
-AC_HEADER_STDC
+AC_CHECK_INCLUDES_DEFAULT
+AC_PROG_EGREP
+
 AC_CHECK_HEADERS([sys/time.h time.h sys/ioctl.h sys/types.h unistd.h fcntl.h sched.h libintl.h locale.h])
 
 dnl Ladspa
@@ -456,8 +457,19 @@ AC_TYPE_SSIZE_T
 AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
 AC_TYPE_PID_T
-AC_TYPE_SIGNAL
-AC_HEADER_TIME
+
+AC_CACHE_CHECK([return type of signal handlers],[ac_cv_type_signal],[AC_COMPILE_IFELSE(
+[AC_LANG_PROGRAM([#include <sys/types.h>
+#include <signal.h>
+],
+		 [return *(signal (0, 0)) (0) == 1;])],
+		   [ac_cv_type_signal=int],
+		   [ac_cv_type_signal=void])])
+AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type of signal handlers
+		    (`int' or `void').])
+
+AC_CHECK_HEADERS_ONCE([sys/time.h])
+
 AC_HEADER_DIRENT
 AC_HEADER_SYS_WAIT
 AC_C_CONST
@@ -496,7 +508,7 @@ echo "------------------------"
 echo "mhWaveEdit configuration"
 echo "------------------------"
 echo
-echo "Version: $MHW_VERSION"
+#echo "Version: $MHW_VERSION"
 echo 
 echo "Libraries: "
 echo -n "  GTK+ version:           "
