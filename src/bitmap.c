@@ -19,7 +19,7 @@
  */
 
 
-#include <config.h>
+#include "config.h"
 
 #include "bitmap.h"
 #include "main.h"

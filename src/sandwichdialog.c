@@ -19,7 +19,7 @@
  */
 
 
-#include <config.h>
+#include "config.h"
 
 #include "sandwichdialog.h"
 #include "gettext.h"

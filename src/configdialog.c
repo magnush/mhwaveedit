@@ -19,7 +19,7 @@
  */
 
 
-#include <config.h>
+#include "config.h"
 #include <gdk/gdkkeysyms.h>
 
 #include <math.h>

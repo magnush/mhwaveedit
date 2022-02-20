@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gtk/gtk.h>
-#include "SDL.h"
+#include <SDL.h>
 #include "sound.h" 
 #include "ringbuf.h"
 #include "gettext.h"

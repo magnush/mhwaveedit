@@ -19,7 +19,7 @@
  */
 
 
-#include <config.h>
+#include "config.h"
 #include "ringbuf.h"
 #include <string.h>
 
