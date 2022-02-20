@@ -129,16 +129,11 @@ GtkType pipe_dialog_get_type(void)
 
 static void add_error_text(GtkWidget *t,gchar *text)
 {
-#if GTK_MAJOR_VERSION < 2
-     gtk_text_insert(GTK_TEXT(t),gtk_style_get_font(t->style),t->style->fg,
-		     &(t->style->white),text,-1);
-#else
      GtkTextBuffer *tb;
      GtkTextIter iter;
      tb = gtk_text_view_get_buffer(GTK_TEXT_VIEW(t));
      gtk_text_buffer_get_end_iter(tb,&iter);
      gtk_text_buffer_insert(tb, &iter, text, -1);
-#endif
 }
 
 static GtkWidget *create_error_window(gchar *command)
@@ -155,11 +150,7 @@ static GtkWidget *create_error_window(gchar *command)
      gtk_window_set_default_size(GTK_WINDOW(a),470,200);
      b = gtk_vbox_new(FALSE,0);
      gtk_container_add(GTK_CONTAINER(a),b);
-#if GTK_MAJOR_VERSION < 2
-     c = gtk_text_new(NULL,NULL);
-#else
      c = gtk_text_view_new();
-#endif
      t = c;
      gtk_container_add(GTK_CONTAINER(b),c);
      c = gtk_button_new_with_label(_("Close"));

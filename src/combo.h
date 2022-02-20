@@ -33,16 +33,9 @@
 #define COMBO_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,combo_get_type(),ComboClass)
 #define IS_COMBO(obj) GTK_CHECK_TYPE(obj,combo_get_type())
 
-#if (GTK_MAJOR_VERSION == 1) || (GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 4)
-#define COMBO_OLDSCHOOL
-#define COMBO_PARENT_TYPE GtkCombo
-#define COMBO_PARENT_CLASS GtkComboClass
-#define COMBO_PARENT_TYPE_FUNC gtk_combo_get_type
-#else
 #define COMBO_PARENT_TYPE GtkComboBox
 #define COMBO_PARENT_CLASS GtkComboBoxClass
 #define COMBO_PARENT_TYPE_FUNC gtk_combo_box_get_type
-#endif
 
 typedef struct {
      COMBO_PARENT_TYPE parent;

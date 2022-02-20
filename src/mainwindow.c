@@ -73,10 +73,6 @@
 
 /* #define SHOW_DEBUG_MENU */
 
-#if GTK_MAJOR_VERSION < 2
-#define INV_SPEED
-#endif
-
 #ifdef FIXED_DATE
 #define BUILD_DATE FIXED_DATE
 #else
@@ -193,12 +189,7 @@ static void procstart(StatusBar *bar, gpointer user_data)
      Mainwindow *w = MAINWINDOW(user_data);
      mainwindow_set_sensitive(w,FALSE);
      w->esc_pressed_flag = FALSE;
-#if GTK_MAJOR_VERSION > 1
      gtk_window_present(GTK_WINDOW(w));
-#else
-     if (GTK_WIDGET(w)->window)
-	  gdk_window_raise(GTK_WIDGET(w)->window);
-#endif
      gtk_grab_add(GTK_WIDGET(w));
 }
 
@@ -1352,10 +1343,8 @@ static void help_readme(GtkMenuItem *menuitem, gpointer user_data)
      int i;
      GtkWidget *scrolledwindow1, *viewport1, *label2;
      gchar *c;
-#if GTK_MAJOR_VERSION == 2
      Mainwindow *mw = MAINWINDOW(user_data);
      PangoFontDescription *pfd;
-#endif
      ag = gtk_accel_group_new();
 
      window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -1400,7 +1389,6 @@ static void help_readme(GtkMenuItem *menuitem, gpointer user_data)
 	c = get_help_page_contents(i);
 	label2 = gtk_label_new (c);
 	g_free(c);
-#if GTK_MAJOR_VERSION == 2
 if (i==HELP_PAGE_SHORTCUTS)	// Keyboard tab only
 {
      pfd = pango_font_description_copy_static(GTK_WIDGET(mw)->style->font_desc);
@@ -1408,7 +1396,6 @@ if (i==HELP_PAGE_SHORTCUTS)	// Keyboard tab only
      gtk_widget_modify_font(label2, pfd);
      pango_font_description_free(pfd);
 }
-#endif
 	gtk_container_add (GTK_CONTAINER (viewport1), label2);
 	GTK_WIDGET_SET_FLAGS (label2, GTK_CAN_FOCUS);
 	gtk_label_set_justify (GTK_LABEL (label2), GTK_JUSTIFY_LEFT);
@@ -1423,11 +1410,7 @@ if (i==HELP_PAGE_SHORTCUTS)	// Keyboard tab only
      }
 
      /* Show default page (defined in help.h) */
-#if GTK_MAJOR_VERSION == 1
-     gtk_notebook_set_page (GTK_NOTEBOOK (notebook), HELP_PAGE_DEFAULT);
-#else
      gtk_notebook_set_current_page (GTK_NOTEBOOK(notebook),HELP_PAGE_DEFAULT);
-#endif
      gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_LEFT);
 
      box2 = gtk_vbox_new (FALSE, 10);
@@ -2201,11 +2184,7 @@ static GtkWidget *create_toolbar(Mainwindow *w)
      GtkWidget *t,*b,*r;
      GdkPixmap *p;
      GdkBitmap *bmp;
-#if GTK_MAJOR_VERSION == 2
      t = gtk_toolbar_new();
-#else
-     t = gtk_toolbar_new(GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-#endif
      p = gdk_pixmap_colormap_create_from_xpm_d(
 	  NULL, gtk_widget_get_colormap(GTK_WIDGET(w)), &bmp, NULL,
 	  button_open_xpm);
@@ -2683,11 +2662,7 @@ static void mainwindow_init(Mainwindow *obj)
      c = gtk_vscale_new ( obj->zoom_adj );
      /* GTK1 doesn't work well with using the right mouse button press event. 
       * As a work around, we use the release event instead */
-#if GTK_MAJOR_VERSION > 1
      gtk_signal_connect(GTK_OBJECT(c),"button_press_event",GTK_SIGNAL_FUNC(hzoom_scale_press),obj);
-#else
-     gtk_signal_connect(GTK_OBJECT(c),"button_release_event",GTK_SIGNAL_FUNC(hzoom_scale_press),obj);
-#endif
      gtk_scale_set_digits(GTK_SCALE(c),3);
      gtk_scale_set_draw_value (GTK_SCALE(c), FALSE);
      gtk_table_attach(GTK_TABLE(b),c,2,3,1,2,0,GTK_EXPAND|GTK_FILL,0,0);
@@ -2695,11 +2670,7 @@ static void mainwindow_init(Mainwindow *obj)
      obj->hzoom_slider = c;
 
      c = gtk_vscale_new ( obj->vertical_zoom_adj );
-#if GTK_MAJOR_VERSION > 1
      gtk_signal_connect(GTK_OBJECT(c),"button_press_event",GTK_SIGNAL_FUNC(vzoom_scale_press),obj);
-#else
-     gtk_signal_connect(GTK_OBJECT(c),"button_release_event",GTK_SIGNAL_FUNC(vzoom_scale_press),obj);
-#endif
      gtk_scale_set_digits(GTK_SCALE(c),3);
      gtk_scale_set_draw_value (GTK_SCALE(c), FALSE);
      gtk_table_attach(GTK_TABLE(b),c,1,2,1,2,0,GTK_EXPAND|GTK_FILL,0,0);
@@ -2707,11 +2678,7 @@ static void mainwindow_init(Mainwindow *obj)
      obj->vzoom_slider = c;
 
      c = gtk_vscale_new ( obj->speed_adj );
-#if GTK_MAJOR_VERSION > 1
      gtk_signal_connect(GTK_OBJECT(c),"button_press_event",GTK_SIGNAL_FUNC(speed_scale_press),obj);
-#else
-     gtk_signal_connect(GTK_OBJECT(c),"button_release_event",GTK_SIGNAL_FUNC(speed_scale_press),obj);
-#endif
      gtk_scale_set_digits(GTK_SCALE(c),2);
      gtk_scale_set_draw_value (GTK_SCALE(c), FALSE);
      /* gtk_range_set_update_policy(GTK_RANGE(c),GTK_UPDATE_DELAYED); */
