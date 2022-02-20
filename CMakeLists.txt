@@ -6,6 +6,7 @@ set(MWE_MAC_COPYRIGHT "© 2002-2018 Magnus Hjorth.")
 set(MWE_MAC_BUNDLE_ID "mh.wave.edit")
 
 set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
 
 project(${MWE_TARGET}
 	VERSION ${MWE_VERSION}
