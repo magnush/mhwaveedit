@@ -36,7 +36,11 @@ link_directories(${GTK2_LIBRARY_DIRS})
 
 # Since we have created a config.h add a global define for it
 add_definitions(${GTK2_CFLAGS_OTHER})
-add_definitions("-DHAVE_CONFIG_H" )
+add_definitions("-DGTK_DISABLE_SINGLE_INCLUDES")
+add_definitions("-DGDK_DISABLE_DEPRECATED")
+#add_definitions("-DGTK_DISABLE_DEPRECATED")
+#add_definitions("-DGSEAL_ENABLE")
+add_definitions("-DHAVE_CONFIG_H")
 add_definitions("-DLOCALEDIR=\"${CMAKE_CURRENT_SOURCE_DIR}/locale\"")
 
 add_subdirectory( src )
