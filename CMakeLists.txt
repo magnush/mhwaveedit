@@ -6,7 +6,7 @@ set(MWE_MAC_COPYRIGHT "© 2002-2018 Magnus Hjorth.")
 set(MWE_MAC_BUNDLE_ID "mh.wave.edit")
 
 set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
+set(CMAKE_C_FLAGS "-O0 -ggdb3 -w")
 
 project(${MWE_TARGET}
 	VERSION ${MWE_VERSION}
@@ -37,9 +37,10 @@ link_directories(${GTK2_LIBRARY_DIRS})
 # Since we have created a config.h add a global define for it
 add_definitions(${GTK2_CFLAGS_OTHER})
 add_definitions("-DGTK_DISABLE_SINGLE_INCLUDES")
+add_definitions("-DGDK_PIXBUF_DISABLE_DEPRECATED")
 add_definitions("-DGDK_DISABLE_DEPRECATED")
-#add_definitions("-DGTK_DISABLE_DEPRECATED")
-#add_definitions("-DGSEAL_ENABLE")
+add_definitions("-DGTK_DISABLE_DEPRECATED")
+add_definitions("-DGSEAL_ENABLE")
 add_definitions("-DHAVE_CONFIG_H")
 add_definitions("-DLOCALEDIR=\"${CMAKE_CURRENT_SOURCE_DIR}/locale\"")
 
