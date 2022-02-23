@@ -27,7 +27,7 @@
 #include "int_box.h"
 #include "combo.h"
 
-#define SOX_DIALOG(obj) GTK_CHECK_CAST(obj,sox_dialog_get_type(),SoxDialog)
+#define SOX_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,sox_dialog_get_type(),SoxDialog)
 #define SOX_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,sox_dialog_get_type(),SoxDialogClass)
 #define IS_SOX_DIALOG(obj) GTK_CHECK_TYPE(obj,sox_dialog_get_type())
 

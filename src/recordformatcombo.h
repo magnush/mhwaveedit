@@ -27,7 +27,7 @@
 #include "dataformat.h"
 #include "listobject.h"
 
-#define RECORD_FORMAT_COMBO(obj) GTK_CHECK_CAST(obj,record_format_combo_get_type(),RecordFormatCombo)
+#define RECORD_FORMAT_COMBO(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,record_format_combo_get_type(),RecordFormatCombo)
 #define RECORD_FORMAT_COMBO_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,record_format_combo_get_type(),RecordFormatComboClass)
 #define IS_RECORD_FORMAT_COMBO(obj) GTK_CHECK_TYPE(obj,record_format_combo_get_type())
 

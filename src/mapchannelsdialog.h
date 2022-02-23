@@ -26,7 +26,7 @@
 #include "effectdialog.h"
 #include "int_box.h"
 
-#define MAP_CHANNELS_DIALOG(obj) GTK_CHECK_CAST(obj,map_channels_dialog_get_type(),MapChannelsDialog)
+#define MAP_CHANNELS_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,map_channels_dialog_get_type(),MapChannelsDialog)
 #define MAP_CHANNELS_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,map_channels_dialog_get_type(),MapChannelsDialogClass)
 #define IS_MAP_CHANNELS_DIALOG(obj) GTK_CHECK_TYPE(obj,map_channels_dialog_get_type())
 

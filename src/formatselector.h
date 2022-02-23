@@ -27,7 +27,7 @@
 #include "dataformat.h"
 #include "int_box.h"
 
-#define FORMAT_SELECTOR(obj) GTK_CHECK_CAST(obj,format_selector_get_type(),FormatSelector)
+#define FORMAT_SELECTOR(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,format_selector_get_type(),FormatSelector)
 #define FORMAT_SELECTOR_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,format_selector_get_type(),FormatSelectorClass)
 #define IS_FORMAT_SELECTOR(obj) GTK_CHECK_TYPE(obj,format_selector_get_type())
 

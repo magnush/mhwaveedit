@@ -30,7 +30,7 @@
 #include "statusbar.h"
 #include "dataformat.h"
 
-#define DATASOURCE(obj) GTK_CHECK_CAST(obj,datasource_get_type(),Datasource)
+#define DATASOURCE(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,datasource_get_type(),Datasource)
 #define DATASOURCE_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,datasource_get_type(),DatasourceClass)
 #define IS_DATASOURCE(obj) GTK_CHECK_TYPE(obj,datasource_get_type())
 

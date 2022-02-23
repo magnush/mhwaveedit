@@ -26,7 +26,7 @@
 #include "float_box.h"
 #include "mainwindow.h"
 
-#define GOTO_DIALOG(obj) GTK_CHECK_CAST(obj,goto_dialog_get_type(),GotoDialog)
+#define GOTO_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,goto_dialog_get_type(),GotoDialog)
 #define GOTO_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,goto_dialog_get_type(),GotoDialogClass)
 #define IS_GOTO_DIALOG(obj) GTK_CHECK_TYPE(obj,goto_dialog_get_type())
 

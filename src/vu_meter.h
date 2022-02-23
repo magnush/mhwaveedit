@@ -24,7 +24,7 @@
 
 #include <gtk/gtk.h>
 
-#define VU_METER(obj) GTK_CHECK_CAST(obj,vu_meter_get_type(),VuMeter)
+#define VU_METER(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,vu_meter_get_type(),VuMeter)
 #define VU_METER_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,vu_meter_get_type(),VuMeterClass)
 #define IS_VU_METER(obj) GTK_CHECK_TYPE(obj,vu_meter_get_type())
 

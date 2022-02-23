@@ -27,7 +27,7 @@
 #include "effectdialog.h"
 
 
-#define EFFECT_BROWSER(obj) GTK_CHECK_CAST(obj,effect_browser_get_type(),EffectBrowser)
+#define EFFECT_BROWSER(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,effect_browser_get_type(),EffectBrowser)
 #define EFFECT_BROWSER_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,effect_browser_get_type(),EffectBrowserClass)
 #define IS_EFFECT_BROWSER(obj) GTK_CHECK_TYPE(obj,effect_browser_get_type())
 

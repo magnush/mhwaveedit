@@ -32,7 +32,7 @@
 #include <gtk/gtk.h>
 #include "main.h"
 
-#define STATUSBAR(obj) GTK_CHECK_CAST(obj,status_bar_get_type(),StatusBar)
+#define STATUSBAR(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,status_bar_get_type(),StatusBar)
 #define STATUSBAR_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,status_bar_get_type(),StatusBarClass)
 #define IS_STATUSBAR(obj) GTK_CHECK_TYPE(obj,status_bar_get_type())
 

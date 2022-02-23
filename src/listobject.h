@@ -26,7 +26,7 @@
 #ifndef LISTOBJECT_H_INCLUDED
 #define LISTOBJECT_H_INCLUDED
 
-#define LIST_OBJECT(obj) GTK_CHECK_CAST(obj,list_object_get_type(),ListObject)
+#define LIST_OBJECT(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,list_object_get_type(),ListObject)
 #define LIST_OBJECT_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,list_object_get_type(),ListObjectClass)
 #define IS_LIST_OBJECT(obj) GTK_CHECK_TYPE(obj,list_object_get_type())
 

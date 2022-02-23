@@ -27,7 +27,7 @@
 #include "statusbar.h"
 #include "listobject.h"
 
-#define MAINWINDOW(obj) GTK_CHECK_CAST(obj,mainwindow_get_type(),Mainwindow)
+#define MAINWINDOW(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,mainwindow_get_type(),Mainwindow)
 #define MAINWINDOW_CLASS(class) GTK_CHECK_CLASS_CAST(class,mainwindow_get_type(),MainwindowClass)
 #define IS_MAINWINDOW(obj) GTK_CHECK_TYPE(obj,mainwindow_get_type())
 

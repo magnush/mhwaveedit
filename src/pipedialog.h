@@ -27,7 +27,7 @@
 #include "historybox.h"
 
 
-#define PIPE_DIALOG(obj) GTK_CHECK_CAST(obj,pipe_dialog_get_type(),PipeDialog)
+#define PIPE_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,pipe_dialog_get_type(),PipeDialog)
 #define PIPE_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,pipe_dialog_get_type(),PipeDialogClass)
 #define IS_PIPE_DIALOG(obj) GTK_CHECK_TYPE(obj,pipe_dialog_get_type())
 

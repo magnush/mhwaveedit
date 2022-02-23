@@ -47,7 +47,7 @@
 #include "statusbar.h"
 #include "gtkfiles.h"
 
-#define CHUNK(obj) GTK_CHECK_CAST(obj,chunk_get_type(),Chunk)
+#define CHUNK(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,chunk_get_type(),Chunk)
 #define CHUNK_CLASS(class) GTK_CHECK_CLASS_CAST(class,chunk_get_type(),ChunkClass)
 #define IS_CHUNK(obj) GTK_CHECK_TYPE(obj,chunk_get_type())
 

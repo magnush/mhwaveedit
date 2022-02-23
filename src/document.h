@@ -25,7 +25,7 @@
 #include "chunk.h"
 #include "listobject.h"
 
-#define DOCUMENT(obj) GTK_CHECK_CAST(obj,document_get_type(),Document)
+#define DOCUMENT(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,document_get_type(),Document)
 #define DOCUMENT_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,document_get_type(),DocumentClass)
 #define IS_DOCUMENT(obj) GTK_CHECK_TYPE(obj,document_get_type())
 

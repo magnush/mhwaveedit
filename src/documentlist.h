@@ -28,7 +28,7 @@
 #include "document.h"
 #include "listobject.h"
 
-#define DOCUMENT_LIST(obj) GTK_CHECK_CAST(obj,document_list_get_type(),DocumentList)
+#define DOCUMENT_LIST(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,document_list_get_type(),DocumentList)
 #define DOCUMENT_LIST_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,document_list_get_type(),DocumentListClass)
 #define IS_DOCUMENT_LIST(obj) GTK_CHECK_TYPE(obj,document_list_get_type())
 typedef struct {

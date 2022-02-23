@@ -27,7 +27,7 @@
 #include "float_box.h"
 #include "effectdialog.h"
 
-#define SPEED_DIALOG(obj) GTK_CHECK_CAST(obj,speed_dialog_get_type(),SpeedDialog)
+#define SPEED_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,speed_dialog_get_type(),SpeedDialog)
 #define SPEED_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,speed_dialog_get_type(),SpeedDialogClass)
 #define IS_SPEED_DIALOG(obj) GTK_CHECK_TYPE(obj,speed_dialog_get_type())
 

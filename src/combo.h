@@ -29,7 +29,7 @@
 
 #include "main.h"
 
-#define COMBO(obj) GTK_CHECK_CAST(obj,combo_get_type(),Combo)
+#define COMBO(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,combo_get_type(),Combo)
 #define COMBO_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,combo_get_type(),ComboClass)
 #define IS_COMBO(obj) GTK_CHECK_TYPE(obj,combo_get_type())
 

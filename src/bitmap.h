@@ -32,7 +32,7 @@
 
 #include <gtk/gtk.h>
 
-#define BITMAP(obj) GTK_CHECK_CAST(obj,bitmap_get_type(),Bitmap)
+#define BITMAP(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,bitmap_get_type(),Bitmap)
 #define BITMAP_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,bitmap_get_type(),BitmapClass)
 #define IS_BITMAP(obj) GTK_CHECK_TYPE(obj,bitmap_get_type())
 

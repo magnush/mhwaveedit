@@ -24,7 +24,7 @@
 
 #include <gtk/gtk.h>
 
-#define HISTORY_BOX(obj) GTK_CHECK_CAST(obj,history_box_get_type(),HistoryBox)
+#define HISTORY_BOX(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,history_box_get_type(),HistoryBox)
 #define HISTORY_BOX_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,history_box_get_type(),HistoryBoxClass)
 #define IS_HISTORY_BOX(obj) GTK_CHECK_TYPE(obj,history_box_get_type())
 

@@ -26,7 +26,7 @@
 #include "combo.h"
 #include "formatselector.h"
 
-#define CONFIG_DIALOG(obj) GTK_CHECK_CAST(obj,config_dialog_get_type(),ConfigDialog)
+#define CONFIG_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,config_dialog_get_type(),ConfigDialog)
 #define CONFIG_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,config_dialog_get_type(),ConfigDialogClass)
 #define IS_CONFIG_DIALOG(obj) GTK_CHECK_TYPE(obj,config_dialog_get_type())
 

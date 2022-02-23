@@ -26,7 +26,7 @@
 #include "effectdialog.h"
 #include "float_box.h"
 
-#define COMBINE_CHANNELS_DIALOG(obj) GTK_CHECK_CAST(obj,combine_channels_dialog_get_type(),CombineChannelsDialog)
+#define COMBINE_CHANNELS_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,combine_channels_dialog_get_type(),CombineChannelsDialog)
 #define COMBINE_CHANNELS_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,combine_channels_dialog_get_type(),CombineChannelsDialogClass)
 #define IS_COMBINE_CHANNELS_DIALOG(obj) GTK_CHECK_TYPE(obj,combine_channels_dialog_get_type())
 

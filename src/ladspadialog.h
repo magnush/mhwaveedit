@@ -27,7 +27,7 @@
 #include "effectdialog.h"
 #include "ladspacore.h"
 
-#define LADSPA_DIALOG(obj) GTK_CHECK_CAST(obj,ladspa_dialog_get_type(),LadspaDialog)
+#define LADSPA_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,ladspa_dialog_get_type(),LadspaDialog)
 #define LADSPA_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,ladspa_dialog_get_type(),LadspaDialogClass)
 #define IS_LADSPA_DIALOG(obj) GTK_CHECK_TYPE(obj,ladspa_dialog_get_type())
 

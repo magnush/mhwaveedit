@@ -39,7 +39,7 @@
 #include <gtk/gtk.h>
 #include "mainwindow.h"
 
-#define EFFECT_DIALOG(obj) GTK_CHECK_CAST(obj,effect_dialog_get_type(),EffectDialog)
+#define EFFECT_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,effect_dialog_get_type(),EffectDialog)
 #define EFFECT_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,effect_dialog_get_type(),EffectDialogClass)
 #define IS_EFFECT_DIALOG(obj) GTK_CHECK_TYPE(obj,effect_dialog_get_type())
 

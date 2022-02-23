@@ -32,7 +32,7 @@
 #include "combo.h"
 #include "recordformatcombo.h"
 
-#define RECORD_DIALOG(obj) GTK_CHECK_CAST(obj, record_dialog_get_type(), RecordDialog)
+#define RECORD_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj, record_dialog_get_type(), RecordDialog)
 #define RECORD_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,record_dialog_get_type(),RecordDialogClass)
 #define IS_RECORD_DIALOG(obj) GTK_CHECK_TYPE(obj, record_dialog_get_type())
 

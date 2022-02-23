@@ -27,7 +27,7 @@
 #include "effectdialog.h"
 #include "float_box.h"
 
-#define VOLUME_DIALOG(obj) GTK_CHECK_CAST(obj,volume_dialog_get_type(),VolumeDialog)
+#define VOLUME_DIALOG(obj) G_TYPE_CHECK_INSTANCE_CAST(obj,volume_dialog_get_type(),VolumeDialog)
 #define VOLUME_DIALOG_CLASS(klass) GTK_CHECK_CLASS_CAST(klass,volume_dialog_get_type(),VolumeDialogClass)
 #define IS_VOLUME_DIALOG(obj) GTK_CHECK_TYPE(obj,volume_dialog_get_type())
 
