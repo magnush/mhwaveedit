@@ -119,9 +119,9 @@ static void samplerate_dialog_init(SamplerateDialog *v)
      gtk_widget_show_all(a);
 }
 
-GtkType samplerate_dialog_get_type(void)
+GType samplerate_dialog_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "SamplerateDialog",

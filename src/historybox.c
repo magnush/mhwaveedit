@@ -68,9 +68,9 @@ static void save_history(HistoryBoxHistory *hist)
      g_assert(i<=HISTORY_BOX_MAXENTRIES+1);
 }
 
-GtkType history_box_get_type(void)
+GType history_box_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "HistoryBox",

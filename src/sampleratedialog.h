@@ -41,6 +41,6 @@ typedef struct _SamplerateDialogClass {
      EffectDialogClass ed_class;
 } SamplerateDialogClass;
 
-GtkType samplerate_dialog_get_type(void);
+GType samplerate_dialog_get_type(void);
 
 #endif

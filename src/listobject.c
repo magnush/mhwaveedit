@@ -69,9 +69,9 @@ static void list_object_init(GtkObject *obj)
      lo->do_ref = FALSE;
 }
 
-GtkType list_object_get_type(void)
+GType list_object_get_type(void)
 {
-     static GtkType id=0;
+     static GType id=0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "ListObject",

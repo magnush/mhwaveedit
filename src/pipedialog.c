@@ -111,9 +111,9 @@ static void pipe_dialog_class_init(EffectDialogClass *edc)
      edc->apply = pipe_dialog_apply;
 }
 
-GtkType pipe_dialog_get_type(void)
+GType pipe_dialog_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "PipeDialog",

@@ -119,9 +119,9 @@ static void status_bar_class_init(GtkObjectClass *klass)
      gtk_object_class_add_signals(klass,status_bar_signals,LAST_SIGNAL);
 }
 
-GtkType status_bar_get_type(void)
+GType status_bar_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "StatusBar",

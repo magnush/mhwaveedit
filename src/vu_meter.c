@@ -83,9 +83,9 @@ static void vu_meter_init(VuMeter *v)
      v->goal = 0.0;
 }
 
-GtkType vu_meter_get_type(void)
+GType vu_meter_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "VuMeter",

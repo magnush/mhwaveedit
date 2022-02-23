@@ -67,9 +67,9 @@ static void speed_dialog_init(SpeedDialog *v)
      gtk_widget_show(c);
 }
 
-GtkType speed_dialog_get_type(void)
+GType speed_dialog_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "SpeedDialog",

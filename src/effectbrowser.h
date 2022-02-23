@@ -82,7 +82,7 @@ void effect_register_add_effect(gchar source_tag, const gchar *name,
 void effect_register_rebuild(void);
 
 
-GtkType effect_browser_get_type(void);
+GType effect_browser_get_type(void);
 GtkWidget *effect_browser_new(Document *doc);
 GtkWidget *effect_browser_new_with_effect(Document *doc, gchar *effect_name, 
 					  gchar source_tag, 

@@ -39,7 +39,7 @@ typedef struct {
      GtkDrawingAreaClass dac;
 } VuMeterClass;
 
-GtkType vu_meter_get_type(void);
+GType vu_meter_get_type(void);
 GtkWidget *vu_meter_new(gfloat value);
 void vu_meter_set_value(VuMeter *v, gfloat value);
 void vu_meter_update(VuMeter *v);

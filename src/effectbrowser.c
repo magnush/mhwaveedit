@@ -119,7 +119,7 @@ static void builtin_rebuild_func(gchar source_tag, gpointer user_data)
 static EffectDialog *builtin_get_func(gchar *name, gchar source_tag,
 				      gpointer user_data)
 {
-     GtkType type = -1;
+     GType type = -1;
      if (!strcmp(name,"volume")) type = volume_dialog_get_type();
      else if (!strcmp(name,"srate")) type = samplerate_dialog_get_type();
      else if (!strcmp(name,"ssize")) type = samplesize_dialog_get_type();
@@ -854,9 +854,9 @@ static void effect_browser_init(EffectBrowser *eb)
      gtk_widget_show_all(b);
 }
 
-GtkType effect_browser_get_type(void)
+GType effect_browser_get_type(void)
 {
-     static GtkType id=0;
+     static GType id=0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "EffectBrowser",

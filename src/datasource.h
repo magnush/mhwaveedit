@@ -147,7 +147,7 @@ typedef struct {
 } DatasourceClass;
 
 
-GtkType datasource_get_type(void);
+GType datasource_get_type(void);
 
 /* ------------ 
  * CONSTRUCTORS 

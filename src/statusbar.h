@@ -71,7 +71,7 @@ typedef struct {
  * should update while playing. */
 extern gboolean status_bar_roll_cursor;
 
-GtkType status_bar_get_type(void);
+GType status_bar_get_type(void);
 GtkWidget *status_bar_new(void);
 
 /* Reset the status bar to the original condition ("no file loaded") */

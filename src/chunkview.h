@@ -75,7 +75,7 @@ typedef struct _ChunkViewClass {
 
 } ChunkViewClass;
 
-GtkType chunk_view_get_type(void);
+GType chunk_view_get_type(void);
 
 
 /* Creates a new ChunkView */

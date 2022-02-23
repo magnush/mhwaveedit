@@ -184,9 +184,9 @@ static void map_channels_dialog_init(MapChannelsDialog *obj)
 {
 }
 
-GtkType map_channels_dialog_get_type(void)
+GType map_channels_dialog_get_type(void)
 {
-    static GtkType id = 0;
+    static GType id = 0;
     if (!id) {
         GtkTypeInfo info = {
             "MapChannelsDialog",

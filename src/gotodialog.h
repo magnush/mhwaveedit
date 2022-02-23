@@ -51,7 +51,7 @@ typedef struct _GotoDialogClass {
      GtkWindowClass edc;
 } GotoDialogClass;
 
-GtkType goto_dialog_get_type(void);
+GType goto_dialog_get_type(void);
 GtkWidget *goto_dialog_new(Mainwindow *mw);
 
 #endif

@@ -688,9 +688,9 @@ static void sox_dialog_init(GtkObject *obj)
       * which effect we represent (in sox_dialog_mainwindow_set). */
 }
 
-GtkType sox_dialog_get_type(void)
+GType sox_dialog_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "SoxDialog",

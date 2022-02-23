@@ -199,9 +199,9 @@ static void record_format_combo_init(GtkObject *obj)
 {
 }
 
-GtkType record_format_combo_get_type(void)
+GType record_format_combo_get_type(void)
 {
-     static GtkType id=0;
+     static GType id=0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "RecordFormatCombo",

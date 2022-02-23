@@ -120,9 +120,9 @@ static void bitmap_init(GtkObject *obj)
      b->alpha = 1.0;
 }
 
-GtkType bitmap_get_type(void)
+GType bitmap_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "Bitmap",

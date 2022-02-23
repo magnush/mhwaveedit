@@ -99,9 +99,9 @@ static void floatbox_init(Floatbox *fbox)
      fbox->adj = NULL;
 }
 
-GtkType floatbox_get_type(void)
+GType floatbox_get_type(void)
 {
-     static GtkType id=0;
+     static GType id=0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "Floatbox",

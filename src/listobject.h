@@ -48,7 +48,7 @@ typedef struct {
      void (*item_notify)(ListObject *,gpointer);
 } ListObjectClass;
 
-GtkType list_object_get_type(void);
+GType list_object_get_type(void);
 
 
 /* Creates a new ListObject 

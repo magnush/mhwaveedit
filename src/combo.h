@@ -55,7 +55,7 @@ typedef struct {
      void (*selection_changed)(Combo *obj);
 } ComboClass;
 
-GtkType combo_get_type(void);
+GType combo_get_type(void);
 GtkWidget *combo_new(void);
 void combo_set_items(Combo *combo, GList *item_strings, int default_index);
 void combo_set_selection(Combo *combo, int item_index);

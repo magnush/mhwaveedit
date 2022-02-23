@@ -130,9 +130,9 @@ static void combine_channels_dialog_init(CombineChannelsDialog *obj)
 {
 }
 
-GtkType combine_channels_dialog_get_type(void)
+GType combine_channels_dialog_get_type(void)
 {
-    static GtkType id = 0;
+    static GType id = 0;
     if (!id) {
         GtkTypeInfo info = {
             "CombineChannelsDialog",

@@ -64,7 +64,7 @@ typedef struct {
      void (*format_dialog_request)(RecordFormatCombo *rfc);
 } RecordFormatComboClass;
 
-GtkType record_format_combo_get_type(void);
+GType record_format_combo_get_type(void);
 
 GtkWidget *record_format_combo_new(ListObject *named_presets, 
 				   ListObject *driver_presets,

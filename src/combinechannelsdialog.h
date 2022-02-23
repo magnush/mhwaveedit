@@ -40,6 +40,6 @@ typedef struct {
     EffectDialogClass edc;
 } CombineChannelsDialogClass;
 
-GtkType combine_channels_dialog_get_type();
+GType combine_channels_dialog_get_type();
 
 #endif

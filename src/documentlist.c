@@ -121,9 +121,9 @@ static void document_list_class_init(GtkObjectClass *klass)
      gtk_object_class_add_signals(klass,document_list_signals,LAST_SIGNAL);
 }
 
-GtkType document_list_get_type(void)
+GType document_list_get_type(void)
 {
-     static GtkType id=0;
+     static GType id=0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "DocumentList",

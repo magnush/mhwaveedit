@@ -46,7 +46,7 @@ typedef struct {
      EffectDialogClass ed_class;
 } SoxDialogClass;
 
-GtkType sox_dialog_get_type(void);
+GType sox_dialog_get_type(void);
 void sox_dialog_register(void);
 gchar *sox_dialog_first_effect(void);
 void sox_dialog_format_string(gchar *buf, guint bufsize, Dataformat *fmt);

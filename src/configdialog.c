@@ -1225,9 +1225,9 @@ static void config_dialog_init(ConfigDialog *cd)
 
 }
 
-GtkType config_dialog_get_type(void)
+GType config_dialog_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "ConfigDialog",

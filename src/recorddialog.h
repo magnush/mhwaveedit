@@ -76,7 +76,7 @@ typedef struct {
      GtkWindowClass wc;
 } RecordDialogClass;
 
-GtkType record_dialog_get_type(void);
+GType record_dialog_get_type(void);
 Chunk *record_dialog_execute(int *noverruns, off_t overrun_locs[10]);
 
 #endif

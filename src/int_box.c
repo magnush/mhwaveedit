@@ -99,9 +99,9 @@ static void intbox_init(Intbox *fbox)
      fbox->adj = NULL;
 }
 
-GtkType intbox_get_type(void)
+GType intbox_get_type(void)
 {
-static GtkType id=0;
+static GType id=0;
 if (!id) {
 	GtkTypeInfo info = {
 		"Intbox",

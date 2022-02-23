@@ -40,6 +40,6 @@ typedef struct _VolumeDialogClass {
      EffectDialogClass ed_class;
 } VolumeDialogClass;
 
-GtkType volume_dialog_get_type(void);
+GType volume_dialog_get_type(void);
 
 #endif

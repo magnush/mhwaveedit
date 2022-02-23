@@ -105,9 +105,9 @@ static void format_selector_init(GtkWidget *widget)
      gtk_widget_hide(widget);
 }
 
-GtkType format_selector_get_type(void)
+GType format_selector_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "FormatSelector",

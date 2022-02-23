@@ -77,7 +77,7 @@ typedef struct _EffectDialogClass {
 
 } EffectDialogClass;
 
-GtkType effect_dialog_get_type(void);
+GType effect_dialog_get_type(void);
 
 /* This sets the associated Mainwindow for the dialog. This must be called once
  * and only once for a dialog.

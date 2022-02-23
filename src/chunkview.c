@@ -755,9 +755,9 @@ static void chunk_view_init(GtkObject *obj)
      }
 }
 
-GtkType chunk_view_get_type(void)
+GType chunk_view_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "ChunkView",

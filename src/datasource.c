@@ -141,9 +141,9 @@ static void datasource_class_init(GtkObjectClass *klass)
      klass->destroy = datasource_destroy;
 }
 
-GtkType datasource_get_type(void)
+GType datasource_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 		GtkTypeInfo info = {
 		     "Datasource",

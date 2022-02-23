@@ -385,9 +385,9 @@ void ladspa_dialog_init(GtkObject *obj)
      /* Wait with initialisation until the setup signal */
 }
 
-GtkType ladspa_dialog_get_type(void)
+GType ladspa_dialog_get_type(void)
 {
-     static GtkType id=0;
+     static GType id=0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "LadspaDialog",

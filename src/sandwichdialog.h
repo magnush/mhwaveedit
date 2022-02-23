@@ -41,6 +41,6 @@ typedef struct {
      EffectDialogClass edc;
 } SandwichDialogClass;
 
-GtkType sandwich_dialog_get_type(void);
+GType sandwich_dialog_get_type(void);
 
 #endif

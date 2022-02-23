@@ -44,7 +44,7 @@ typedef struct {
      EffectDialogClass edc;
 } PipeDialogClass;
 
-GtkType pipe_dialog_get_type(void);
+GType pipe_dialog_get_type(void);
 
 gpointer pipe_dialog_open_pipe(gchar *command, int *fds, gboolean open_out);
 gboolean pipe_dialog_error_check(gpointer handle);

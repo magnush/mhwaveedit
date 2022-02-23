@@ -40,6 +40,6 @@ typedef struct _SpeedDialogClass {
      EffectDialogClass ed_class;
 } SpeedDialogClass;
 
-GtkType speed_dialog_get_type(void);
+GType speed_dialog_get_type(void);
 
 #endif

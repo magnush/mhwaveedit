@@ -118,9 +118,9 @@ static void volume_dialog_class_init(EffectDialogClass *klass)
      klass->apply = volume_dialog_apply;
 }
 
-GtkType volume_dialog_get_type(void)
+GType volume_dialog_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "VolumeDialog",

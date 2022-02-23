@@ -166,7 +166,7 @@ extern gboolean chunk_filter_use_floating_tempfiles;
 /*  ------ Creation functions ------  */
 
 
-GtkType chunk_get_type(void);
+GType chunk_get_type(void);
 Chunk *chunk_new_from_datasource(Datasource *ds);
 
 /** Returns a new chunk with the same data as this chunk but assumed to be in a

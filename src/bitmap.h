@@ -51,7 +51,7 @@ typedef struct {
      GtkWidgetClass klass;
 } BitmapClass;
 
-GtkType bitmap_get_type(void);
+GType bitmap_get_type(void);
 GtkWidget *bitmap_new_from_data(unsigned char *data, int width, int height);
 void bitmap_set_color(Bitmap *bmp, GdkColor *clr);
 void bitmap_set_fg(Bitmap *bmp, gfloat alpha);

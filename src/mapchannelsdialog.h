@@ -42,6 +42,6 @@ typedef struct {
     EffectDialogClass edc;
 } MapChannelsDialogClass;
 
-GtkType map_channels_dialog_get_type();
+GType map_channels_dialog_get_type();
 
 #endif

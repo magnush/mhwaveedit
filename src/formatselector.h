@@ -45,7 +45,7 @@ typedef struct {
      GtkTableClass table_class;
 } FormatSelectorClass;
 
-GtkType format_selector_get_type(void);
+GType format_selector_get_type(void);
 GtkWidget *format_selector_new(gboolean show_full);
 void format_selector_set(FormatSelector *fs, Dataformat *format);
 void format_selector_get(FormatSelector *fs, Dataformat *result);

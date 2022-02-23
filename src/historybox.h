@@ -37,7 +37,7 @@ typedef struct {
      GtkComboClass comboclass;
 } HistoryBoxClass;
 
-GtkType history_box_get_type(void);
+GType history_box_get_type(void);
 GtkWidget *history_box_new(gchar *historyname, gchar *value);
 gchar *history_box_get_value(HistoryBox *box);
 void history_box_set_history(HistoryBox *box, gchar *historyname);

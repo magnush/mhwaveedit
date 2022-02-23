@@ -44,6 +44,6 @@ typedef struct _SamplesizeDialogClass {
      EffectDialogClass ed_class;
 } SamplesizeDialogClass;
 
-GtkType samplesize_dialog_get_type(void);
+GType samplesize_dialog_get_type(void);
 
 #endif

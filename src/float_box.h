@@ -40,7 +40,7 @@ struct _FloatboxClass {
 	void (*numchange)(Floatbox *, float);
 	};
 
-GtkType floatbox_get_type(void);
+GType floatbox_get_type(void);
 GtkWidget *floatbox_new(float value);
 GtkWidget *floatbox_create_scale(Floatbox *box, float minval, float maxval);
 void floatbox_set(Floatbox *box, float value);

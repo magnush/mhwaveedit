@@ -125,7 +125,7 @@ typedef Chunk *(*document_apply_proc)(Chunk *chunk, StatusBar *bar,
 
 
 
-GtkType document_get_type(void);
+GType document_get_type(void);
 
 Document *document_new_with_file(gchar *filename, StatusBar *bar);
 Document *document_new_with_chunk(Chunk *chunk, gchar *sourcename, 

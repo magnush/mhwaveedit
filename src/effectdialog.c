@@ -75,9 +75,9 @@ static void effect_dialog_init(EffectDialog *v)
      gtk_container_set_border_width(GTK_CONTAINER(v),5);
 }
 
-GtkType effect_dialog_get_type(void)
+GType effect_dialog_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "EffectDialog",

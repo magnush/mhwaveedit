@@ -43,7 +43,7 @@ typedef struct {
      EffectDialogClass edc;
 } LadspaDialogClass;
 
-GtkType ladspa_dialog_get_type(void);
+GType ladspa_dialog_get_type(void);
 
 #endif /* HAVE_LADSPA */
 

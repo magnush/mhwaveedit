@@ -48,7 +48,7 @@ typedef struct {
      void (*document_changed)(DocumentList *dl);     
 } DocumentListClass;
 
-GtkType document_list_get_type(void);
+GType document_list_get_type(void);
 GtkWidget *document_list_new(Document *chosen);
 void document_list_setup(DocumentList *mwl, Document *chosen);
 

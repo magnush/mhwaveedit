@@ -65,7 +65,7 @@ typedef struct {
      GtkWindowClass wc;
 } ConfigDialogClass;
 
-GtkType config_dialog_get_type(void);
+GType config_dialog_get_type(void);
 GtkWidget *config_dialog_new(void);
 
 #endif

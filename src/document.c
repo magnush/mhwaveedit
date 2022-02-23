@@ -185,9 +185,9 @@ static void document_class_init(GtkObjectClass *klass)
 
 }
 
-GtkType document_get_type(void)
+GType document_get_type(void)
 {
-     static GtkType id = 0;
+     static GType id = 0;
      if (!id) {
 	  GtkTypeInfo info = {
 	       "Document",
