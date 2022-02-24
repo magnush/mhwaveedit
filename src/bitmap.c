@@ -124,14 +124,19 @@ GType bitmap_get_type(void)
 {
      static GType id = 0;
      if (!id) {
-	  GtkTypeInfo info = {
-	       "Bitmap",
-	       sizeof(Bitmap),
-	       sizeof(BitmapClass),
-	       (GtkClassInitFunc)bitmap_class_init,
-	       (GtkObjectInitFunc)bitmap_init
-	  };
-	  id = gtk_type_unique(gtk_widget_get_type(),&info);
+         GTypeInfo info = {
+           .class_size = sizeof(BitmapClass),
+           .base_init = 0,
+           .base_finalize = 0,
+           .class_init = (GClassInitFunc)bitmap_class_init,
+           .class_finalize = 0,
+           .class_data = 0,
+           .instance_size = sizeof(Bitmap),
+           .n_preallocs = 0,
+           .instance_init = (GInstanceInitFunc)bitmap_init,
+           .value_table = 0
+         };
+         id = g_type_register_static(gtk_widget_get_type(), "Bitmap", &info, 0);
      }
      return id;
 }
